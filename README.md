@@ -50,7 +50,7 @@ http://localhost:8000/docs
 
 | Thành viên | Vai trò |
 |-----------|---------|
-| TV1 - Trà | Trưởng nhóm, DB, ERD, tích hợp |
+| TV1 | Trưởng nhóm, DB, ERD, tích hợp |
 | TV2 | Auth, user, phân quyền |
 | TV3 | Nghiệp vụ (bác sĩ, lịch hẹn, thanh toán) |
 | TV4 | Frontend |
