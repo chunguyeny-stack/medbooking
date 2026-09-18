@@ -1,4 +1,4 @@
-# MedBooking - Hệ thống Đặt lịch khám trực tuyến
+# Dự án Website đặt lịch khám và quản lý
 
 Hệ thống đặt lịch khám có gợi ý bác sĩ theo triệu chứng.
 
