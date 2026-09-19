@@ -46,16 +46,6 @@ pytest -v
 
 http://localhost:8000/docs
 
-## 👥 Phân công nhóm
-
-| Thành viên | Vai trò |
-|-----------|---------|
-| TV1 | Trưởng nhóm, DB, ERD, tích hợp |
-| TV2 | Auth, user, phân quyền |
-| TV3 | Nghiệp vụ (bác sĩ, lịch hẹn, thanh toán) |
-| TV4 | Frontend |
-| TV5 | DevOps, Test, Docs |
-
 ## 📄 License
 
 MIT
