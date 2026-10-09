@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MedBooking - Chi tiết Bác sĩ</title>
+</head>
+<body>
+
+    <!-- 1. HEADER: LOGO & MENU ĐIỀU HƯỚNG -->
+    <header>
+        <div>
+            <h1>MedBooking</h1>
+            <p>Chăm sóc sức khỏe toàn diện</p>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="home_bn.html">Trang chủ</a></li>
+                <li><a href="danh_sach_bac_si.html">Tìm kiếm Bác sĩ</a></li>
+                <li><a href="dat_lich.html">Đặt lịch khám</a></li>
+                <li><a href="danh_sach_lich_hen.html">Lịch hẹn của tôi</a></li>
+                <li><a href="ho_so_ca_nhan.html">Hồ sơ cá nhân</a></li>
+                <li><a href="../dk_dn/dn.html">Đăng xuất</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <hr>
+
+    <!-- 2. NỘI DUNG CHÍNH: CHI TIẾT HỒ SƠ BÁC SĨ -->
+    <main>
+        <h2>Thông tin Chi tiết Bác sĩ</h2>
+        <p><a href="danh_sach_bac_si.html">&larr; Quay lại danh sách bác sĩ</a></p>
+
+        <!-- Thông tin tổng quan -->
+        <section>
+            <div>
+                <p>[Ảnh Chân Dung Bác Sĩ]</p>
+                <h3>ThS.BS Nguyễn Văn A</h3>
+                <p><strong>Chuyên khoa:</strong> Nội Tổng Quát</p>
+                <p><strong>Học hàm / Học vị:</strong> Thạc sĩ - Bác sĩ nội trú</p>
+                <p><strong>Kinh nghiệm:</strong> 12 năm kinh nghiệm khám chữa bệnh</p>
+                <p><strong>Đánh giá:</strong> ⭐ 4.9 / 5.0 (Dựa trên 120 lượt đánh giá từ bệnh nhân)</p>
+                <p>
+                    <a href="dat_lich.html?doctor_id=bs01"><button type="button">Đặt lịch khám ngay với bác sĩ này</button></a>
+                </p>
+            </div>
+        </section>
+
+        <hr>
+
+        <!-- Giới thiệu chuyên môn -->
+        <section>
+            <h3>Giới thiệu chuyên môn & Quá trình công tác</h3>
+            <p>ThS.BS Nguyễn Văn A là chuyên gia hàng đầu trong lĩnh vực Nội Tổng Quát với hơn 12 năm kinh nghiệm công tác tại các bệnh viện lớn trên địa bàn Hà Nội. Bác sĩ đã trực tiếp thăm khám và điều trị thành công cho hàng nghìn ca bệnh lý nội khoa phức tạp, tư vấn lối sống và chế độ dinh dưỡng khoa học cho người bệnh.</p>
+            <ul>
+                <li><strong>Quá trình đào tạo:</strong> Tốt nghiệp Bác sĩ Đa khoa và Thạc sĩ Y học tại Trường Đại học Y Hà Nội.</li>
+                <li><strong>Kinh nghiệm làm việc:</strong> Từng công tác tại Khoa Nội tổng hợp - Bệnh viện Bạch Mai.</li>
+                <li><strong>Lĩnh vực thế mạnh:</strong> Chẩn đoán và điều trị các bệnh lý nội khoa mãn tính, rối loạn chuyển hóa, tư vấn sức khỏe tổng quát.</li>
+            </ul>
+        </section>
+
+        <hr>
+
+        <!-- Lịch làm việc trong tuần -->
+        <section>
+            <h3>Lịch khám định kỳ trong tuần</h3>
+            <table border="1" cellpadding="8" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th>Thứ</th>
+                        <th>Ca sáng (08:00 - 11:30)</th>
+                        <th>Ca chiều (13:30 - 16:30)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Thứ Hai</td>
+                        <td>Có lịch khám</td>
+                        <td>Có lịch khám</td>
+                    </tr>
+                    <tr>
+                        <td>Thứ Ba</td>
+                        <td>Có lịch khám</td>
+                        <td>Nghỉ</td>
+                    </tr>
+                    <tr>
+                        <td>Thứ Tư</td>
+                        <td>Có lịch khám</td>
+                        <td>Có lịch khám</td>
+                    </tr>
+                    <tr>
+                        <td>Thứ Năm</td>
+                        <td>Nghỉ</td>
+                        <td>Có lịch khám</td>
+                    </tr>
+                    <tr>
+                        <td>Thứ Sáu</td>
+                        <td>Có lịch khám</td>
+                        <td>Có lịch khám</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <hr>
+
+        <!-- Đánh giá từ bệnh nhân -->
+        <section>
+            <h3>Đánh giá & Nhận xét từ Bệnh nhân</h3>
+            <div>
+                <p><strong>Nguyễn Thị B:</strong> ⭐⭐⭐⭐⭐ (5/5)</p>
+                <p>"Bác sĩ A rất tận tâm, nhẹ nhàng và giải thích chi tiết nguyên nhân bệnh cũng như cách điều trị. Tôi rất yên tâm khi khám."</p>
+                <p><small>Ngày đánh giá: 10/09/2026</small></p>
+            </div>
+            <hr>
+            <div>
+                <p><strong>Trần Văn H:</strong> ⭐⭐⭐⭐⭐ (5/5)</p>
+                <p>"Dịch vụ đặt lịch qua MedBooking rất nhanh chóng, đến nơi được khám đúng giờ, bác sĩ tư vấn kỹ càng."</p>
+                <p><small>Ngày đánh giá: 25/08/2026</small></p>
+            </div>
+        </section>
+    </main>
+
+    <hr>
+
+    <!-- 3. FOOTER: THÔNG TIN CHI TIẾT, ĐỊA CHỈ & LỜI CHÚC SỨC KHỎE -->
+    <footer>
+        <div>
+            <h3>HỆ THỐNG MEDBOOKING</h3>
+            <p>Nền tảng công nghệ y tế kết nối người bệnh với các bệnh viện và phòng khám uy tín hàng đầu. Cam kết quy trình nhanh gọn, minh bạch chi phí và bảo mật thông tin tuyệt đối.</p>
+            <p><strong>"MedBooking chúc quý khách và gia đình luôn có một sức khỏe dồi dào, bình an và hạnh phúc!"</strong></p>
+        </div>
+        <div>
+            <h4>Liên kết nhanh</h4>
+            <ul>
+                <li><a href="home_bn.html">Trang chủ</a></li>
+                <li><a href="danh_sach_bac_si.html">Tìm kiếm Bác sĩ</a></li>
+                <li><a href="dat_lich.html">Đặt lịch khám</a></li>
+                <li><a href="danh_sach_lich_hen.html">Lịch hẹn cá nhân</a></li>
+            </ul>
+        </div>
+        <div>
+            <h4>Thông tin liên hệ & Địa chỉ</h4>
+            <p>Địa chỉ: Số 15, Phố Dịch Vọng Hậu, Quận Cầu Giấy, Hà Nội</p>
+            <p>Hotline: 1900 6868</p>
+            <p>Email: support@medbooking.vn</p>
+        </div>
+        <div>
+            <p>&copy; 2026 MedBooking. Bản quyền thuộc về Đội ngũ phát triển dự án.</p>
+        </div>
+    </footer>
+
+    <script src="../../js/client.js"></script>
+</body>
+</html>

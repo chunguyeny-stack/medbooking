@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bác sĩ - Hồ sơ cá nhân & Lịch trực</title>
+</head>
+<body>
+
+    <!-- Sidebar Menu Bác sĩ -->
+    <aside>
+        <div>MEDBOOKING - BÁC SĨ</div>
+        <nav>
+            <h3>TỔNG QUAN</h3>
+            <ul>
+                <li><a href="home_bs.html">Trang chủ Bác sĩ</a></li>
+            </ul>
+
+            <h3>TÁC NGHIỆP KHÁM BỆNH</h3>
+            <ul>
+                <li><a href="danh_sach_ca_kham.html">Lịch hẹn & Ca khám hôm nay</a></li>
+                <li><a href="ho_so_ca_nhan.html"><strong>Thông tin cá nhân & Lịch trực</strong></a></li>
+            </ul>
+        </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main>
+        <header>
+            <h1>Hồ sơ Cá nhân & Lịch trực Bác sĩ</h1>
+            <div>
+                <span>BS. Nguyễn Văn A</span> | 
+                <a href="../dk_dn/dn.html">Đăng xuất</a>
+            </div>
+        </header>
+
+        <!-- 1. THÔNG TIN CHI TIẾT HỒ SƠ BÁC SĨ -->
+        <section>
+            <h2>Thông tin Chuyên môn & Liên hệ</h2>
+            <div style="display: flex; gap: 30px; align-items: flex-start;">
+                <!-- Ảnh đại diện bác sĩ -->
+                <div>
+                    <div style="width: 150px; height: 180px; border: 1px dashed #ccc; display: flex; align-items: center; justify-content: center; text-align: center;">
+                        <span>Ảnh đại diện</span>
+                    </div>
+                </div>
+
+                <!-- Chi tiết thông tin -->
+                <div style="flex: 1;">
+                    <form id="form-doctor-profile">
+                        <div>
+                            <label>Họ và tên:</label>
+                            <input type="text" id="doc-fullname" value="Nguyễn Văn A" readonly>
+                        </div>
+                        <div>
+                            <label>Học hàm / Học vị:</label>
+                            <input type="text" id="doc-degree" value="Thạc sĩ - Bác sĩ" readonly>
+                        </div>
+                        <div>
+                            <label>Chuyên khoa:</label>
+                            <input type="text" id="doc-specialty" value="Nội Tổng Quát" readonly>
+                        </div>
+                        <div>
+                            <label>Số điện thoại liên hệ:</label>
+                            <input type="text" id="doc-phone" value="0912345678">
+                        </div>
+                        <div>
+                            <label>Email công vụ:</label>
+                            <input type="email" id="doc-email" value="bs.nguyenvana@medbooking.com">
+                        </div>
+                        <div>
+                            <label>Kinh nghiệm & Giới thiệu:</label>
+                            <textarea id="doc-bio" rows="3">Hơn 10 năm kinh nghiệm khám chữa bệnh các bệnh lý nội khoa tại các bệnh viện lớn.</textarea>
+                        </div>
+                        <div>
+                            <button type="button" id="btn-update-profile">Cập nhật thông tin</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </section>
+
+        <!-- 2. LỊCH TRỰC TUẦN CỦA BÁC SĨ -->
+        <section>
+            <h2>Lịch trực trong tuần</h2>
+            <table border="1" style="width: 100%;">
+                <thead>
+                    <tr>
+                        <th>Thứ / Ngày</th>
+                        <th>Ca làm việc</th>
+                        <th>Phòng khám / Khu vực</th>
+                        <th>Trạng thái lịch trực</th>
+                    </tr>
+                </thead>
+                <tbody id="doctor-duty-schedule-body">
+                    <tr>
+                        <td>Thứ Hai (12/10/2026)</td>
+                        <td>Sáng (08:00 - 12:00)</td>
+                        <td>Phòng khám 201 - Tầng 2</td>
+                        <td><span style="color: green;">Đã xác nhận</span></td>
+                    </tr>
+                    <tr>
+                        <td>Thứ Ba (13/10/2026)</td>
+                        <td>Chiều (13:30 - 17:30)</td>
+                        <td>Phòng khám 201 - Tầng 2</td>
+                        <td><span style="color: green;">Đã xác nhận</span></td>
+                    </tr>
+                    <tr>
+                        <td>Thứ Tư (14/10/2026)</td>
+                        <td>Nghỉ ca</td>
+                        <td>--</td>
+                        <td>--</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+    </main>
+
+    <!-- Liên kết tệp JavaScript xử lý logic -->
+    <script src="../../js/doctor.js"></script>
+</body>
+</html>

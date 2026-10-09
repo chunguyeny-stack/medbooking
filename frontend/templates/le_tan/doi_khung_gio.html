@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MedBooking - Đổi Khung Giờ Khám</title>
+</head>
+<body>
+    <header>
+        <h1>MedBooking - Cổng Lễ Tân</h1>
+        <nav><a href="quan_ly_lich_hen.html">&larr; Quay lại Quản lý lịch hẹn</a></nav>
+    </header>
+    <hr>
+    <main>
+        <h2>Thay đổi Khung giờ Khám</h2>
+        <form>
+            <p><strong>Mã lịch hẹn:</strong> LH01</p>
+            <p><strong>Bệnh nhân:</strong> Trần Thị B</p>
+            
+            <label>Chọn khung giờ mới (Theo 3 ca chuẩn):</label><br><br>
+            
+            <!-- Ca sáng: 07:30 - 11:30 -->
+            <p><strong>Ca sáng (07:30 - 11:30):</strong></p>
+            <input type="radio" id="t1" name="new_time" value="07:30-08:30"><label for="t1">07:30 - 08:30</label><br>
+            <input type="radio" id="t2" name="new_time" value="08:30-09:30"><label for="t2">08:30 - 09:30</label><br>
+            <input type="radio" id="t3" name="new_time" value="09:30-10:30"><label for="t3">09:30 - 10:30</label><br>
+            <input type="radio" id="t4" name="new_time" value="10:30-11:30"><label for="t4">10:30 - 11:30</label><br><br>
+
+            <!-- Ca chiều: 13:30 - 18:30 -->
+            <p><strong>Ca chiều (13:30 - 18:30):</strong></p>
+            <input type="radio" id="t5" name="new_time" value="13:30-14:30"><label for="t5">13:30 - 14:30</label><br>
+            <input type="radio" id="t6" name="new_time" value="14:30-15:30"><label for="t6">14:30 - 15:30</label><br>
+            <input type="radio" id="t7" name="new_time" value="15:30-16:30"><label for="t7">15:30 - 16:30</label><br>
+            <input type="radio" id="t8" name="new_time" value="16:30-17:30"><label for="t8">16:30 - 17:30</label><br>
+            <input type="radio" id="t9" name="new_time" value="17:30-18:30"><label for="t9">17:30 - 18:30</label><br><br>
+
+            <!-- Ca tối ngoài giờ: 18:30 - 22:30 (+10% phí) -->
+            <p><strong>Ca tối ngoài giờ (18:30 - 22:30) - Phụ thu +10% phí:</strong></p>
+            <input type="radio" id="t10" name="new_time" value="18:30-19:30"><label for="t10">18:30 - 19:30</label><br>
+            <input type="radio" id="t11" name="new_time" value="19:30-20:30"><label for="t11">19:30 - 20:30</label><br>
+            <input type="radio" id="t12" name="new_time" value="20:30-21:30"><label for="t12">20:30 - 21:30</label><br>
+            <input type="radio" id="t13" name="new_time" value="21:30-22:30"><label for="t13">21:30 - 22:30</label><br><br>
+
+            <button type="submit">Cập nhật khung giờ mới</button>
+        </form>
+    </main>
+    <hr>
+    <footer><p>&copy; 2026 MedBooking.</p></footer>
+</body>
+</html>

@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MedBooking - Thu Viện Phí</title>
+</head>
+<body>
+    <header>
+        <h1>MedBooking - Cổng Lễ Tân</h1>
+        <nav>
+            <ul>
+                <li><a href="dashboard.html">Tổng quan</a></li>
+                <li><a href="check_in.html">Check-in</a></li>
+                <li><a href="vien_phi.html"><strong>Viện phí</strong></a></li>
+                <li><a href="ho_so_ca_nhan.html">Hồ sơ cá nhân</a></li>
+            </ul>
+        </nav>
+    </header>
+    <hr>
+    <main>
+        <h2>Quản lý Viện phí & Thanh toán</h2>
+        <form>
+            <label>Nhập mã bệnh nhân / Mã lịch hẹn:</label><br>
+            <input type="text" placeholder="VD: LH01">
+            <button type="submit">Tra cứu chi phí</button>
+        </form>
+        <hr>
+        <section>
+            <h3>Chi tiết hóa đơn thanh toán</h3>
+            <p>Bệnh nhân: <strong>Trần Thị B</strong></p>
+            <p>Khung giờ khám: <strong>Ca tối ngoài giờ (18:30 - 19:30)</strong></p>
+            <table border="1" cellpadding="8" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th>Khoản mục</th>
+                        <th>Đơn giá</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Tiền khám chuyên khoa</td>
+                        <td>300,000 VNĐ</td>
+                    </tr>
+                    <tr>
+                        <td>Phụ thu ca tối ngoài giờ (+10%)</td>
+                        <td>30,000 VNĐ</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Tổng cộng</strong></td>
+                        <td><strong>330,000 VNĐ</strong></td>
+                    </tr>
+                </tbody>
+            </table>
+            <br>
+            <label>Hình thức thanh toán:</label><br>
+            <input type="radio" id="pay-cash" name="payment" checked><label for="pay-cash">Tiền mặt</label><br>
+            <input type="radio" id="pay-card" name="payment"><label for="pay-card">Chuyển khoản / Thẻ</label><br><br>
+            
+            <button type="button">Xác nhận thanh toán & In hóa đơn</button>
+        </section>
+    </main>
+    <hr>
+    <footer><p>&copy; 2026 MedBooking.</p></footer>
+</body>
+</html>

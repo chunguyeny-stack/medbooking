@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MedBooking - Danh sách Lịch hẹn & Lịch sử Khám</title>
+</head>
+<body>
+
+    <!-- 1. HEADER: LOGO & MENU ĐIỀU HƯỚNG -->
+    <header>
+        <div>
+            <h1>MedBooking</h1>
+            <p>Chăm sóc sức khỏe toàn diện</p>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="home_bn.html">Trang chủ</a></li>
+                <li><a href="danh_sach_bac_si.html">Tìm kiếm Bác sĩ</a></li>
+                <li><a href="dat_lich.html">Đặt lịch khám</a></li>
+                <li><a href="danh_sach_lich_hen.html"><strong>Lịch hẹn của tôi</strong></a></li>
+                <li><a href="ho_so_ca_nhan.html">Hồ sơ cá nhân</a></li>
+                <li><a href="../dk_dn/dn.html">Đăng xuất</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <hr>
+
+    <!-- 2. NỘI DUNG CHÍNH: QUẢN LÝ LỊCH HẸN -->
+    <main>
+        <h2>Quản lý Lịch hẹn & Lịch sử Khám bệnh</h2>
+        <p>Theo dõi các lịch hẹn sắp tới, lịch sử khám bệnh và trạng thái xử lý.</p>
+
+        <!-- Bộ lọc trạng thái -->
+        <div>
+            <label for="filter-status">Lọc theo trạng thái lịch hẹn:</label>
+            <select id="filter-status" name="status">
+                <option value="all">Tất cả lịch hẹn</option>
+                <option value="pending">Chờ khám / Sắp tới</option>
+                <option value="completed">Đã hoàn thành (Lịch sử)</option>
+                <option value="cancelled">Đã hủy</option>
+            </select>
+            <button type="button">Lọc</button>
+        </div>
+
+        <br>
+
+        <!-- Bảng danh sách lịch hẹn -->
+        <table border="1" cellpadding="10" cellspacing="0">
+            <thead>
+                <tr>
+                    <th>Mã lịch hẹn</th>
+                    <th>Ngày & Giờ</th>
+                    <th>Bác sĩ khám</th>
+                    <th>Chuyên khoa</th>
+                    <th>Triệu chứng ban đầu</th>
+                    <th>Trạng thái</th>
+                    <th>Thao tác</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>LH00123</td>
+                    <td>12/10/2026 - 08:30</td>
+                    <td>ThS.BS Nguyễn Văn A</td>
+                    <td>Nội Tổng Quát</td>
+                    <td>Đau đầu kéo dài, mệt mỏi</td>
+                    <td><strong>Chờ khám</strong></td>
+                    <td>
+                        <button type="button">Hủy lịch</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>LH00098</td>
+                    <td>01/09/2026 - 14:00</td>
+                    <td>BS.CKI Trần Thị C</td>
+                    <td>Tim Mạch</td>
+                    <td>Đau thắt ngực nhẹ khi vận động</td>
+                    <td><strong style="color: green;">Đã hoàn thành</strong></td>
+                    <td>
+                        <button type="button">Xem đơn thuốc</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td>LH00045</td>
+                    <td>15/08/2026 - 09:00</td>
+                    <td>TS.BS Lê Hoàng D</td>
+                    <td>Thần Kinh</td>
+                    <td>Mất ngủ kinh niên</td>
+                    <td><strong style="color: gray;">Đã hủy</strong></td>
+                    <td>
+                        <button type="button">Đặt lại</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </main>
+
+    <hr>
+
+    <!-- 3. FOOTER: THÔNG TIN CHI TIẾT, ĐỊA CHỈ & LỜI CHÚC SỨC KHỎE -->
+    <footer>
+        <div>
+            <h3>HỆ THỐNG MEDBOOKING</h3>
+            <p>Nền tảng công nghệ y tế kết nối người bệnh với các bệnh viện và phòng khám uy tín hàng đầu. Cam kết quy trình nhanh gọn, minh bạch chi phí và bảo mật thông tin tuyệt đối.</p>
+            <p><strong>"MedBooking chúc quý khách và gia đình luôn có một sức khỏe dồi dào, bình an và hạnh phúc!"</strong></p>
+        </div>
+        <div>
+            <h4>Liên kết nhanh</h4>
+            <ul>
+                <li><a href="home_bn.html">Trang chủ</a></li>
+                <li><a href="danh_sach_bac_si.html">Tìm kiếm Bác sĩ</a></li>
+                <li><a href="dat_lich.html">Đặt lịch khám</a></li>
+                <li><a href="danh_sach_lich_hen.html">Lịch hẹn cá nhân</a></li>
+            </ul>
+        </div>
+        <div>
+            <h4>Thông tin liên hệ & Địa chỉ</h4>
+            <p>Địa chỉ: Số 15, Phố Dịch Vọng Hậu, Quận Cầu Giấy, Hà Nội</p>
+            <p>Hotline: 1900 6868</p>
+            <p>Email: support@medbooking.vn</p>
+        </div>
+        <div>
+            <p>&copy; 2026 MedBooking. Bản quyền thuộc về Đội ngũ phát triển dự án.</p>
+        </div>
+    </footer>
+
+    <script src="../../js/client.js"></script>
+</body>
+</html>

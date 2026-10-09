@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bác sĩ - Chẩn đoán & Kê đơn thuốc</title>
+</head>
+<body>
+
+    <!-- Sidebar Menu Bác sĩ -->
+    <aside>
+        <div>MEDBOOKING - BÁC SĨ</div>
+        <nav>
+            <h3>TỔNG QUAN</h3>
+            <ul>
+                <li><a href="home_bs.html">Trang chủ Bác sĩ</a></li>
+            </ul>
+
+            <h3>TÁC NGHIỆP KHÁM BỆNH</h3>
+            <ul>
+                <li><a href="danh_sach_ca_kham.html">Lịch hẹn & Ca khám hôm nay</a></li>
+                <li><a href="ho_so_ca_nhan.html">Thông tin cá nhân & Lịch trực</a></li>
+            </ul>
+        </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main>
+        <header>
+            <h1>Màn hình Khám bệnh & Kê đơn</h1>
+            <div>
+                <span>BS. Nguyễn Văn A</span> | 
+                <a href="danh_sach_ca_kham.html"><button type="button">Quay lại danh sách</button></a>
+            </div>
+        </header>
+
+        <!-- 1. THÔNG TIN HÀNH CHÍNH & TRIỆU CHỨNG BỆNH NHÂN -->
+        <section>
+            <h2>Thông tin Bệnh nhân</h2>
+            <div style="border: 1px solid #ccc; padding: 15px; margin-bottom: 20px;">
+                <p><strong>Mã lịch hẹn:</strong> LH00123</p>
+                <p><strong>Họ và tên:</strong> Trần Thị B | <strong>Tuổi:</strong> 28 | <strong>Giới tính:</strong> Nữ</p>
+                <p><strong>Triệu chứng khai báo:</strong> Đau đầu, chóng mặt kéo dài 3 ngày, ngủ kém.</p>
+            </div>
+        </section>
+
+        <!-- 2. FORM NHẬP KẾT QUẢ KHÁM & CHẨN ĐOÁN -->
+        <section>
+            <form id="form-diagnosis">
+                <h2>1. Kết quả Khám lâm sàng & Chẩn đoán</h2>
+                <div>
+                    <label for="clinical-notes">Triệu chứng thực thể / Kết quả khám:</label><br>
+                    <textarea id="clinical-notes" rows="3" style="width: 100%;" placeholder="Nhập kết quả thăm khám lâm sàng..."></textarea>
+                </div>
+                <br>
+                <div>
+                    <label for="diagnosis-result">Chẩn đoán bệnh (ICD / Tên bệnh):</label><br>
+                    <input type="text" id="diagnosis-result" style="width: 100%;" placeholder="Ví dụ: Rối loạn tiền đình / Thiếu máu não thoáng qua">
+                </div>
+                <br>
+
+                <!-- 3. KÊ ĐƠN THUỐC -->
+                <h2>2. Kê đơn thuốc</h2>
+                <table border="1" style="width: 100%; margin-bottom: 10px;">
+                    <thead>
+                        <tr>
+                            <th>STT</th>
+                            <th>Tên thuốc</th>
+                            <th>Liều lượng / Cách dùng</th>
+                            <th>Số lượng</th>
+                            <th>Thao tác</th>
+                        </tr>
+                    </thead>
+                    <tbody id="prescription-list-body">
+                        <tr>
+                            <td>1</td>
+                            <td><input type="text" value="Betaserc 16mg" placeholder="Tên thuốc..."></td>
+                            <td><input type="text" value="Ngày uống 2 lần, sáng/chiều sau ăn mỗi lần 1 viên"></td>
+                            <td><input type="number" value="30" style="width: 60px;"> viên</td>
+                            <td><button type="button">Xóa</button></td>
+                        </tr>
+                    </tbody>
+                </table>
+                <button type="button" id="btn-add-medicine">+ Thêm thuốc vào đơn</button>
+                <br><br>
+
+                <div>
+                    <label for="doctor-advice">Lời dặn của Bác sĩ / Lịch hẹn tái khám:</label><br>
+                    <textarea id="doctor-advice" rows="2" style="width: 100%;" placeholder="Ăn uống nghỉ ngơi điều độ, tái khám sau 1 tuần nếu không đỡ."></textarea>
+                </div>
+                <br>
+
+                <!-- 4. NÚT HOÀN TẤT CA KHÁM (HÀNH ĐỘNG CỐT LÕI) -->
+                <div style="border-top: 2px solid #333; padding-top: 15px; margin-top: 15px;">
+                    <button type="button" id="btn-save-draft" style="margin-right: 10px;">Lưu nháp bệnh án</button>
+                    <!-- Nút bấm quan trọng kích hoạt hoàn thành ca khám -->
+                    <button type="button" id="btn-complete-examination" style="background-color: green; color: white; font-weight: bold; padding: 10px 20px;">Hoàn thành ca khám & Gửi đơn thuốc</button>
+                </div>
+            </form>
+        </section>
+    </main>
+
+    <!-- Liên kết tệp JavaScript xử lý logic tác nghiệp -->
+    <script src="../../js/doctor.js"></script>
+</body>
+</html>

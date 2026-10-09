@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Thùng rác hệ thống</title>
+</head>
+<body>
+    <header>
+        <h1>Thùng rác Hệ thống (Xóa ẩn / Khôi phục)</h1>
+        <nav><a href="home_a.html">&larr; Quay lại Trang chủ Admin</a></nav>
+    </header>
+    <hr>
+    <main>
+        <p>Danh sách các bản ghi (Tài khoản, Bác sĩ, Chuyên khoa, Lịch hẹn) đã bị xóa mềm (xóa ẩn). Bạn có thể chọn khôi phục hoặc xóa vĩnh viễn (xóa thẳng).</p>
+        
+        <table border="1" cellpadding="8" cellspacing="0">
+            <thead>
+                <tr>
+                    <th>Mã bản ghi</th>
+                    <th>Loại dữ liệu</th>
+                    <th>Tên hiển thị</th>
+                    <th>Thời gian xóa</th>
+                    <th>Thao tác</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>BS992</td>
+                    <td>Bác sĩ</td>
+                    <td>BS. Lê Văn Xóa</td>
+                    <td>08:00 - 05/10/2026</td>
+                    <td>
+                        <button type="button">Khôi phục</button>
+                        <button type="button" style="color: red;">Xóa vĩnh viễn (Xóa thẳng)</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </main>
+    <hr>
+    <footer><p>&copy; 2026 MedBooking.</p></footer>
+</body>
+</html>

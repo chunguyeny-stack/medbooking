@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bác sĩ - Danh sách Lịch hẹn & Ca khám</title>
+</head>
+<body>
+
+    <!-- Sidebar Menu Bác sĩ -->
+    <aside>
+        <div>MEDBOOKING - BÁC SĨ</div>
+        <nav>
+            <h3>TỔNG QUAN</h3>
+            <ul>
+                <li><a href="home_bs.html">Trang chủ Bác sĩ</a></li>
+            </ul>
+
+            <h3>TÁC NGHIỆP KHÁM BỆNH</h3>
+            <ul>
+                <li><a href="danh_sach_ca_kham.html"><strong>Lịch hẹn & Ca khám hôm nay</strong></a></li>
+                <li><a href="ho_so_ca_nhan.html">Thông tin cá nhân & Lịch trực</a></li>
+            </ul>
+        </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main>
+        <header>
+            <h1>Quản lý Danh sách Ca khám & Lịch hẹn</h1>
+            <div>
+                <span>BS. Nguyễn Văn A (Khoa Nội Tổng Quát)</span> | 
+                <a href="../dk_dn/dn.html">Đăng xuất</a>
+            </div>
+        </header>
+
+        <!-- 1. THANH CÔNG CỤ TÌM KIẾM & LỌC CA KHÁM -->
+        <section>
+            <div>
+                <div>
+                    <label for="filter-date">Chọn ngày:</label>
+                    <input type="date" id="filter-date" value="2026-10-10">
+                </div>
+                <div>
+                    <label for="search-patient">Tìm kiếm bệnh nhân:</label>
+                    <input type="text" id="search-patient" placeholder="Nhập tên hoặc số điện thoại bệnh nhân...">
+                </div>
+                <div>
+                    <label for="filter-status">Trạng thái:</label>
+                    <select id="filter-status">
+                        <option value="all">Tất cả trạng thái</option>
+                        <option value="waiting">Chờ khám</option>
+                        <option value="in-progress">Đang khám</option>
+                        <option value="completed">Đã hoàn thành</option>
+                        <option value="cancelled">Đã hủy</option>
+                    </select>
+                </div>
+                <button type="button" id="btn-apply-filter">Lọc dữ liệu</button>
+            </div>
+        </section>
+
+        <!-- 2. BẢNG DANH SÁCH CA KHÁM TRONG NGÀY -->
+        <section>
+            <h2>Danh sách Bệnh nhân chờ khám</h2>
+            <table border="1" style="width: 100%;">
+                <thead>
+                    <tr>
+                        <th>Giờ khám dự kiến</th>
+                        <th>Mã lịch hẹn</th>
+                        <th>Họ tên Bệnh nhân</th>
+                        <th>Độ tuổi / Giới tính</th>
+                        <th>Triệu chứng ban đầu</th>
+                        <th>Trạng thái</th>
+                        <th>Hành động tác nghiệp</th>
+                    </tr>
+                </thead>
+                <tbody id="appointment-table-body">
+                    <!-- Dữ liệu mẫu minh họa -->
+                    <tr>
+                        <td>08:30 - 09:00</td>
+                        <td>LH00123</td>
+                        <td>Trần Thị B</td>
+                        <td>28 / Nữ</td>
+                        <td>Đau đầu, chóng mặt kéo dài 3 ngày</td>
+                        <td><span style="color: orange; font-weight: bold;">Chờ khám</span></td>
+                        <td>
+                            <a href="chan_doan_ke_don.html?id=LH00123">
+                                <button type="button">Vào khám & Kê đơn</button>
+                            </a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>09:00 - 09:30</td>
+                        <td>LH00124</td>
+                        <td>Nguyễn Văn C</td>
+                        <td>35 / Nam</td>
+                        <td>Ho khan, đau rát họng, sốt nhẹ</td>
+                        <td><span style="color: green; font-weight: bold;">Đã hoàn thành</span></td>
+                        <td>
+                            <a href="chan_doan_ke_don.html?id=LH00124">
+                                <button type="button">Xem lại bệnh án</button>
+                            </a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+    </main>
+
+    <!-- Liên kết tệp JavaScript xử lý logic phía bác sĩ -->
+    <script src="../../js/doctor.js"></script>
+</body>
+</html>

@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MedBooking - Cổng thông tin & Đặt lịch khám bệnh</title>
+</head>
+<body>
+
+    <!-- 1. HEADER: LOGO & MENU ĐIỀU HƯỚNG -->
+    <header>
+        <div>
+            <h1>MedBooking</h1>
+            <p>Chăm sóc sức khỏe toàn diện</p>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="home_bn.html"><strong>Trang chủ</strong></a></li>
+                <li><a href="danh_sach_bac_si.html">Tìm kiếm Bác sĩ</a></li>
+                <li><a href="dat_lich.html">Đặt lịch khám</a></li>
+                <li><a href="danh_sach_lich_hen.html">Lịch hẹn của tôi</a></li>
+                <li><a href="ho_so_ca_nhan.html">Hồ sơ cá nhân</a></li>
+                <li><a href="../dk_dn/dn.html">Đăng xuất</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <hr>
+
+    <!-- 2. HERO SECTION: GIỚI THIỆU & ĐẶT LỊCH -->
+    <section>
+        <div>
+            <h2>Hệ thống Đặt lịch Khám bệnh Trực tuyến MedBooking</h2>
+            <p>Kết nối nhanh chóng với các chuyên gia, bác sĩ đầu ngành tại Hà Nội. Chủ động thời gian, giảm thiểu chờ đợi, chăm sóc sức khỏe thông minh cho cả gia đình.</p>
+            <a href="dat_lich.html"><button type="button">Đặt lịch khám ngay</button></a>
+        </div>
+    </section>
+
+    <hr>
+
+    <!-- 3. THANH MỤC TÌM KIẾM RIÊNG 1 DÒNG TO -->
+    <section>
+        <h2>Tra cứu & Tìm kiếm Nhanh Bác sĩ</h2>
+        <form action="danh_sach_bac_si.html" method="GET">
+            <div>
+                <label for="search-spec">Chuyên khoa:</label><br>
+                <select id="search-spec" name="specialty">
+                    <option value="">-- Tất cả chuyên khoa --</option>
+                    <option value="noi">1. Nội Tổng Quát</option>
+                    <option value="tim-mach">2. Tim Mạch</option>
+                    <option value="nhi">3. Nhi Khoa</option>
+                    <option value="than-kinh">4. Thần Kinh</option>
+                    <option value="xuong-khop">5. Cơ Xương Khớp</option>
+                    <option value="da-lieu">6. Da Liễu</option>
+                    <option value="tai-mui-hong">7. Tai Mũi Họng</option>
+                    <option value="mat">8. Mắt</option>
+                    <option value="rang-ham-mat">9. Răng Hàm Mặt</option>
+                    <option value="y-hoc-co-truyen">10. Y Học Cổ Truyền</option>
+                </select>
+            </div>
+            <div>
+                <label for="search-rating">Đánh giá (Rating):</label><br>
+                <select id="search-rating" name="rating">
+                    <option value="">-- Tất cả mức rating --</option>
+                    <option value="4.5">Từ 4.5 sao trở lên</option>
+                    <option value="4.0">Từ 4.0 sao trở lên</option>
+                </select>
+            </div>
+            <div>
+                <label for="search-exp">Kinh nghiệm:</label><br>
+                <select id="search-exp" name="experience">
+                    <option value="">-- Tất cả kinh nghiệm --</option>
+                    <option value="5">Trên 5 năm</option>
+                    <option value="10">Trên 10 năm</option>
+                </select>
+            </div>
+            <div>
+                <label for="search-keyword">Từ khóa / Triệu chứng:</label><br>
+                <input type="text" id="search-keyword" name="keyword" placeholder="Nhập triệu chứng, tên bác sĩ...">
+            </div>
+            <div>
+                <br>
+                <button type="submit">Tìm kiếm ngay</button>
+            </div>
+        </form>
+    </section>
+
+    <hr>
+
+    <!-- 4. [SẢNH] BÁC SĨ NỔI BẬT (4 Bác sĩ / trang, phân trang 4 trang) -->
+    <section>
+        <h2>[Sảnh] Bác sĩ Nổi bật & Tiêu biểu</h2>
+        
+        <div>
+            <!-- Bác sĩ 1 -->
+            <div>
+                <p>[Ảnh BS]</p>
+                <h3><a href="chi_tiet_bac_si.html?id=bs01">ThS.BS Nguyễn Văn A</a></h3>
+                <p>Chuyên khoa: Nội Tổng Quát</p>
+                <p>Đánh giá: 4.9 (120 đánh giá) | Kinh nghiệm: 12 năm</p>
+                <p>
+                    <a href="chi_tiet_bac_si.html?id=bs01"><button type="button">Xem chi tiết hồ sơ</button></a>
+                    <a href="dat_lich.html?doctor_id=bs01"><button type="button">Đặt lịch</button></a>
+                </p>
+            </div>
+            <hr>
+            <!-- Bác sĩ 2 -->
+            <div>
+                <p>[Ảnh BS]</p>
+                <h3><a href="chi_tiet_bac_si.html?id=bs02">BS.CKI Trần Thị C</a></h3>
+                <p>Chuyên khoa: Tim Mạch</p>
+                <p>Đánh giá: 4.8 (98 đánh giá) | Kinh nghiệm: 10 năm</p>
+                <p>
+                    <a href="chi_tiet_bac_si.html?id=bs02"><button type="button">Xem chi tiết hồ sơ</button></a>
+                    <a href="dat_lich.html?doctor_id=bs02"><button type="button">Đặt lịch</button></a>
+                </p>
+            </div>
+            <hr>
+            <!-- Bác sĩ 3 -->
+            <div>
+                <p>[Ảnh BS]</p>
+                <h3><a href="chi_tiet_bac_si.html?id=bs03">TS.BS Lê Hoàng D</a></h3>
+                <p>Chuyên khoa: Thần Kinh</p>
+                <p>Đánh giá: 5.0 (150 đánh giá) | Kinh nghiệm: 18 năm</p>
+                <p>
+                    <a href="chi_tiet_bac_si.html?id=bs03"><button type="button">Xem chi tiết hồ sơ</button></a>
+                    <a href="dat_lich.html?doctor_id=bs03"><button type="button">Đặt lịch</button></a>
+                </p>
+            </div>
+            <hr>
+            <!-- Bác sĩ 4 -->
+            <div>
+                <p>[Ảnh BS]</p>
+                <h3><a href="chi_tiet_bac_si.html?id=bs04">BS.CKII Phạm Văn E</a></h3>
+                <p>Chuyên khoa: Cơ Xương Khớp</p>
+                <p>Đánh giá: 4.7 (85 đánh giá) | Kinh nghiệm: 15 năm</p>
+                <p>
+                    <a href="chi_tiet_bac_si.html?id=bs04"><button type="button">Xem chi tiết hồ sơ</button></a>
+                    <a href="dat_lich.html?doctor_id=bs04"><button type="button">Đặt lịch</button></a>
+                </p>
+            </div>
+        </div>
+
+        <!-- Thanh phân trang 4 trang -->
+        <p>
+            Trang bác sĩ nổi bật:
+            <button type="button">1</button>
+            <button type="button">2</button>
+            <button type="button">3</button>
+            <button type="button">4</button>
+        </p>
+
+        <!-- Nút Xem thêm bác sĩ trỏ về danh sách bác sĩ -->
+        <p>
+            <a href="danh_sach_bac_si.html"><button type="button">Xem thêm tất cả bác sĩ</button></a>
+        </p>
+    </section>
+
+    <hr>
+
+    <!-- 5. TRIỆU CHỨNG NỔI BẬT THEO 10 CHUYÊN KHOA -->
+    <section>
+        <h2>10 Chuyên khoa Y tế & Triệu chứng Phổ biến</h2>
+        <ul>
+            <li><strong>1. Nội Tổng Quát:</strong> Sốt, mệt mỏi, sụt cân, đau tức ngực, khó thở...</li>
+            <li><strong>2. Tim Mạch:</strong> Đau thắt ngực, hồi hộp, huyết áp cao, chóng mặt...</li>
+            <li><strong>3. Nhi Khoa:</strong> Trẻ sốt cao, ho có đờm, biếng ăn, rối loạn tiêu hóa...</li>
+            <li><strong>4. Thần Kinh:</strong> Đau đầu kinh niên, mất ngủ, tê bì chân tay, sa sút...</li>
+            <li><strong>5. Cơ Xương Khớp:</strong> Đau lưng, mỏi cổ vai gáy, cứng khớp buổi sáng...</li>
+            <li><strong>6. Da Liễu:</strong> Phát ban, mụn trứng cá nặng, mẩn ngứa, viêm da...</li>
+            <li><strong>7. Tai Mũi Họng:</strong> Đau rát họng, ù tai, nghẹt mũi, viêm xoang kéo dài...</li>
+            <li><strong>8. Mắt:</strong> Mờ mắt, nhức mỏi mắt, khô rát, cộm mắt...</li>
+            <li><strong>9. Răng Hàm Mặt:</strong> Đau răng, sâu răng, viêm lợi, chảy máu chân răng...</li>
+            <li><strong>10. Y Học Cổ Truyền:</strong> Bồi bổ cơ thể, châm cứu, điều hòa khí huyết...</li>
+        </ul>
+    </section>
+
+    <hr>
+
+    <!-- 6. FOOTER: THÔNG TIN CHI TIẾT, ĐỊA CHỈ & LỜI CHÚC SỨC KHỎE -->
+    <footer>
+        <div>
+            <h3>HỆ THỐNG MEDBOOKING</h3>
+            <p>Nền tảng công nghệ y tế kết nối người bệnh với các bệnh viện và phòng khám uy tín hàng đầu. Cam kết quy trình nhanh gọn, minh bạch chi phí và bảo mật thông tin tuyệt đối.</p>
+            <p><strong>"MedBooking chúc quý khách và gia đình luôn có một sức khỏe dồi dào, bình an và hạnh phúc!"</strong></p>
+        </div>
+        <div>
+            <h4>Liên kết nhanh</h4>
+            <ul>
+                <li><a href="home_bn.html">Trang chủ</a></li>
+                <li><a href="danh_sach_bac_si.html">Tìm kiếm Bác sĩ</a></li>
+                <li><a href="dat_lich.html">Đặt lịch khám</a></li>
+                <li><a href="danh_sach_lich_hen.html">Lịch hẹn cá nhân</a></li>
+            </ul>
+        </div>
+        <div>
+            <h4>Thông tin liên hệ & Địa chỉ</h4>
+            <p>Địa chỉ: Số 15, Phố Dịch Vọng Hậu, Quận Cầu Giấy, Hà Nội</p>
+            <p>Hotline: 1900 6868</p>
+            <p>Email: support@medbooking.vn</p>
+        </div>
+        <div>
+            <p>&copy; 2026 MedBooking. Bản quyền thuộc về Đội ngũ phát triển dự án.</p>
+        </div>
+    </footer>
+
+    <script src="../../js/client.js"></script>
+</body>
+</html>
