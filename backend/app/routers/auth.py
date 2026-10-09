@@ -1,60 +1,62 @@
+from app.auth import (
+    create_access_token,
+    get_current_user,
+    get_password_hash,
+    verify_password,
+)
+from app.database import get_db
 from fastapi import APIRouter, Depends, HTTPException, status
+from app.models import NguoiDung
+from app.schemas import Token, UserCreate, UserLogin
 from sqlalchemy.orm import Session
-from fastapi.security import OAuth2PasswordRequestForm
-from app.database.database import get_db
-from app.models.models import NguoiDung, BenhNhan, BacSi
-from app.schemas.schemas import UserRegister, Token, UserResponse
-from app.auth import get_password_hash, verify_password, create_access_token, get_current_user
 
-router = APIRouter(prefix="/api/auth", tags=["Auth"])
+router = APIRouter(prefix="/auth", tags=["Authentication"])
 
-@router.post("/register", response_model=UserResponse, status_code=status.HTTP_201_CREATED)
-def register(user_data: UserRegister, db: Session = Depends(get_db)):
-    existing_user = db.query(NguoiDung).filter(NguoiDung.email == user_data.email).first()
-    if existing_user:
-        raise HTTPException(status_code=400, detail="Email đã được đăng ký hệ thống")
-    
-    hashed_password = get_password_hash(user_data.mat_khau)
-    new_user = NguoiDung(
-        email=user_data.email,
-        mat_khau=hashed_password,
-        ho_ten=user_data.ho_ten,
-        so_dien_thoai=user_data.so_dien_thoai,
-        vai_tro=user_data.vai_tro
-    )
-    db.add(new_user)
-    db.commit()
-    db.refresh(new_user)
 
-    if user_data.vai_tro == "benh_nhan":
-        benh_nhan = BenhNhan(
-            nguoi_dung_id=new_user.id,
-            ngay_sinh=user_data.ngay_sinh,
-            gioi_tinh=user_data.gioi_tinh,
-            dia_chi=user_data.dia_chi
-        )
-        db.add(benh_nhan)
-        db.commit()
-    elif user_data.vai_tro == "bac_si":
-        bac_si = BacSi(nguoi_dung_id=new_user.id, mo_ta="Bác sĩ chuyên khoa")
-        db.add(bac_si)
-        db.commit()
+@router.post("/register", status_code=status.HTTP_201_CREATED)
+def register(user_data: UserCreate, db: Session = Depends(get_db)):
+  existing = (
+      db.query(NguoiDung)
+      .filter(
+          (NguoiDung.username == user_data.username)
+          | (NguoiDung.email == user_data.email)
+      )
+      .first()
+  )
+  if existing:
+    raise HTTPException(status_code=400, detail="Username hoặc email đã tồn tại")
 
-    return new_user
+  new_user = NguoiDung(
+      username=user_data.username,
+      email=user_data.email,
+      hashed_password=get_password_hash(user_data.password),
+      role=user_data.role,
+  )
+  db.add(new_user)
+  db.commit()
+  db.refresh(new_user)
+  return {"message": "Đăng ký thành công", "user_id": new_user.id}
+
 
 @router.post("/login", response_model=Token)
-def login(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
-    user = db.query(NguoiDung).filter(NguoiDung.email == form_data.username).first()
-    if not user or not verify_password(form_data.password, user.mat_khau):
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Email hoặc mật khẩu không chính xác",
-            headers={"WWW-Authenticate": "Bearer"},
-        )
-    
-    access_token = create_access_token(data={"sub": user.email, "vai_tro": user.vai_tro})
-    return {"access_token": access_token, "token_type": "bearer"}
+def login(form_data: UserLogin, db: Session = Depends(get_db)):
+  user = (
+      db.query(NguoiDung)
+      .filter(NguoiDung.username == form_data.username)
+      .first()
+  )
+  if not user or not verify_password(form_data.password, user.hashed_password):
+    raise HTTPException(status_code=401, detail="Sai username hoặc password")
 
-@router.get("/me", response_model=UserResponse)
+  token = create_access_token(data={"sub": user.username, "role": user.role})
+  return {"access_token": token, "token_type": "bearer"}
+
+
+@router.get("/me")
 def get_me(current_user: NguoiDung = Depends(get_current_user)):
-    return current_user
+  return {
+      "id": current_user.id,
+      "username": current_user.username,
+      "email": current_user.email,
+      "role": current_user.role,
+  }
