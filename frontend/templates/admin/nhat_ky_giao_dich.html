@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Nhật ký Giao dịch & Kiểm toán</title>
+</head>
+<body>
+
+    <!-- Sidebar Menu Điều hướng Quản trị -->
+    <aside>
+        <div>MEDBOOKING ADMIN</div>
+        <nav>
+            <h3>QUẢN LÝ NHÂN SỰ & NGƯỜI DÙNG</h3>
+            <ul>
+                <li><a href="home.html">Trang chủ Admin</a></li>
+                <li><a href="quan_ly_tai_khoan.html">Quản lý tài khoản</a></li>
+                <li><a href="quan_ly_bac_si.html">Quản lý bác sĩ</a></li>
+            </ul>
+
+            <h3>DANH MỤC Y TẾ</h3>
+            <ul>
+                <li><a href="quan_ly_chuyen_khoa.html">Quản lý chuyên khoa</a></li>
+                <li><a href="quan_ly_dich_vu.html">Quản lý dịch vụ & giá</a></li>
+                <li><a href="quan_ly_mapping.html">Quản lý Mapping Triệu chứng - Bác sĩ</a></li>
+            </ul>
+
+            <h3>BÁO CÁO & THỐNG KÊ</h3>
+            <ul>
+                <li><a href="dashboard.html">Dashboard Thống kê & Báo cáo</a></li>
+                <li><a href="nhat_ky_giao_dich.html"><strong>Nhật ký Giao dịch Chi tiết</strong></a></li>
+            </ul>
+        </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main>
+        <header>
+            <h1>Nhật ký Giao dịch & Kiểm toán Lịch khám</h1>
+            <div>
+                <span>AD Tên Admin</span> | 
+                <a href="../dk_dn/dn.html">Đăng xuất</a>
+            </div>
+        </header>
+
+        <!-- 1. THANH BỘ LỌC CHI TIẾT THEO NĂM VÀ 12 THÁNG -->
+        <section>
+            <div>
+                <label for="filter-year">Chọn Năm:</label>
+                <select id="filter-year" name="filter_year">
+                    <option value="2026">2026</option>
+                    <option value="2025">2025</option>
+                </select>
+
+                <label for="filter-month">Chọn Tháng (12 Tháng):</label>
+                <select id="filter-month" name="filter_month">
+                    <option value="all">Tất cả các tháng</option>
+                    <option value="1">Tháng 1</option>
+                    <option value="2">Tháng 2</option>
+                    <option value="3">Tháng 3</option>
+                    <option value="4">Tháng 4</option>
+                    <option value="5">Tháng 5</option>
+                    <option value="6">Tháng 6</option>
+                    <option value="7">Tháng 7</option>
+                    <option value="8">Tháng 8</option>
+                    <option value="9">Tháng 9</option>
+                    <option value="10">Tháng 10</option>
+                    <option value="11">Tháng 11</option>
+                    <option value="12">Tháng 12</option>
+                </select>
+
+                <label for="filter-status">Trạng thái:</label>
+                <select id="filter-status" name="filter_status">
+                    <option value="all">Tất cả trạng thái</option>
+                    <option value="completed">Đã hoàn thành & xác nhận</option>
+                    <option value="cancelled">Đã hủy</option>
+                </select>
+            </div>
+            <div>
+                <button type="button" id="btn-search-log">Tra cứu</button>
+                <button type="button" id="btn-export-log">Xuất Excel Nhật ký</button>
+            </div>
+        </section>
+
+        <!-- 2. BẢNG THÔNG TIN CHI TIẾT NHẬT KÝ GIAO DỊCH -->
+        <section>
+            <h2>Danh sách Vết thao tác & Doanh thu chi tiết</h2>
+            <p>Ghi nhận thời gian thực khi Bác sĩ tích hoàn thành ca khám và Lễ tân xác nhận thanh toán.</p>
+            
+            <table border="1">
+                <thead>
+                    <tr>
+                        <th>Mã GD / Lịch hẹn</th>
+                        <th>Ngày khám</th>
+                        <th>Bệnh nhân</th>
+                        <th>Doanh thu</th>
+                        <th>Lợi nhuận</th>
+                        <th>Bác sĩ tích hoàn thành</th>
+                        <th>Lễ tân xác nhận</th>
+                        <th>Thời gian cập nhật</th>
+                        <th>Trạng thái</th>
+                    </tr>
+                </thead>
+                <tbody id="audit-log-table-body">
+                    <tr>
+                        <td colspan="9" style="text-align: center;">
+                            Chưa có dữ liệu nhật ký giao dịch nào trong tháng này.
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+    </main>
+
+    <!-- Liên kết tệp JavaScript chuyên xử lý logic Nhật ký bên ngoài -->
+    <script src="../../js/admin.js"></script>
+</body>
+</html>

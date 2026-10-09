@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Dashboard Thống kê & Báo cáo</title>
+</head>
+<body>
+
+    <!-- Sidebar Menu Điều hướng Quản trị -->
+    <aside>
+        <div>MEDBOOKING ADMIN</div>
+        <nav>
+            <h3>QUẢN LÝ NHÂN SỰ & NGƯỜI DÙNG</h3>
+            <ul>
+                <li><a href="home.html">Trang chủ Admin</a></li>
+                <li><a href="quan_ly_tai_khoan.html">Quản lý tài khoản</a></li>
+                <li><a href="quan_ly_bac_si.html">Quản lý bác sĩ</a></li>
+            </ul>
+
+            <h3>DANH MỤC Y TẾ</h3>
+            <ul>
+                <li><a href="quan_ly_chuyen_khoa.html">Quản lý chuyên khoa</a></li>
+                <li><a href="quan_ly_dich_vu.html">Quản lý dịch vụ & giá</a></li>
+                <li><a href="quan_ly_mapping.html">Quản lý Mapping Triệu chứng - Bác sĩ</a></li>
+            </ul>
+
+            <h3>BÁO CÁO & THỐNG KÊ</h3>
+            <ul>
+                <li><a href="dashboard.html"><strong>Dashboard Thống kê & Báo cáo</strong></a></li>
+                <li><a href="nhat_ky_giao_dich.html">Nhật ký Giao dịch Chi tiết</a></li>
+            </ul>
+        </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main>
+        <header>
+            <h1>Dashboard Thống kê & Báo cáo Doanh thu</h1>
+            <div>
+                <span>AD Tên Admin</span> | 
+                <a href="../dk_dn/dn.html">Đăng xuất</a>
+            </div>
+        </header>
+
+        <!-- 1. THANH CÔNG CỤ & BỘ LỌC KỲ TRONG NĂM -->
+        <section>
+            <div>
+                <label for="filter-year">Năm:</label>
+                <select id="filter-year" name="filter_year">
+                    <option value="2026">2026</option>
+                    <option value="2025">2025</option>
+                </select>
+
+                <label for="filter-quarter">Kỳ thống kê (4 kỳ/năm):</label>
+                <select id="filter-quarter" name="filter_quarter">
+                    <option value="all">Cả năm</option>
+                    <option value="Q1">Kỳ 1 (Tháng 1 - Tháng 3)</option>
+                    <option value="Q2">Kỳ 2 (Tháng 4 - Tháng 6)</option>
+                    <option value="Q3">Kỳ 3 (Tháng 7 - Tháng 9)</option>
+                    <option value="Q4">Kỳ 4 (Tháng 10 - Tháng 12)</option>
+                </select>
+            </div>
+            <button type="button" id="btn-export-pdf">Xuất Báo cáo PDF / Excel</button>
+        </section>
+
+        <!-- 2. CÁC THẺ CARD THỐNG KÊ TỔNG QUAN -->
+        <section>
+            <div>
+                <h3>Tổng lịch hẹn</h3>
+                <p id="total-appointments">0</p>
+            </div>
+            <div>
+                <h3>Tổng doanh thu khám</h3>
+                <p id="total-revenue">0 ₫</p>
+            </div>
+            <div>
+                <h3>Tổng lợi nhuận thực tế</h3>
+                <p id="total-profit">0 ₫</p>
+            </div>
+            <div>
+                <h3>Tỉ lệ hủy lịch</h3>
+                <p id="cancellation-rate">0%</p>
+            </div>
+            <div>
+                <h3>Bác sĩ rating cao nhất</h3>
+                <p id="top-doctor">--</p>
+            </div>
+        </section>
+
+        <!-- 3. KHUNG BIỂU ĐỒ TRỰC QUAN (Trạng thái ẩn/hiển thị dựa trên dữ liệu) -->
+        <section>
+            <div>
+                <h2>Biểu đồ Lịch khám & Doanh thu theo kỳ</h2>
+                <div id="chart-revenue-empty">Chưa có dữ liệu giao dịch trong kỳ này.</div>
+                <canvas id="revenueChart"></canvas>
+            </div>
+            <div>
+                <h2>Top Bác sĩ theo Đánh giá (Rating)</h2>
+                <div id="chart-rating-empty">Chưa có dữ liệu đánh giá bác sĩ.</div>
+                <canvas id="doctorRatingChart"></canvas>
+            </div>
+        </section>
+    </main>
+
+    <!-- Liên kết tệp JavaScript chuyên xử lý logic Dashboard bên ngoài -->
+    <script src="../../js/admin.js"></script>
+</body>
+</html>
