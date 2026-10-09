@@ -2,40 +2,42 @@ import os
 from sqlalchemy import create_engine
 from sqlalchemy.orm import declarative_base, sessionmaker
 
-# 1. Cấu hình chuỗi kết nối Database (ưu tiên đọc từ biến môi trường .env)
-# Ví dụ các định dạng chuỗi kết nối:
-# - SQLite (chạy dev nội bộ/test nhanh): "sqlite:///./medbooking.db"
-# - PostgreSQL: "postgresql://user:password@localhost:5432/medbooking"
-# - MySQL: "mysql+pymysql://user:password@localhost:3306/medbooking"
-# - SQL Server: "mssql+pyodbc://sa:YourPassword@localhost:1433/medbooking?driver=ODBC+Driver+17+for+SQL+Server"
+# 1. Cấu hình chuỗi kết nối cơ sở dữ liệu (Database URL)
+# Bạn có thể dùng SQLite (mặc định cho dev/test) hoặc MySQL / PostgreSQL theo cấu hình dự án
+# Ví dụ SQLite:
+SQLALCHEMY_DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///./medbooking.db")
 
-DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///./medbooking.db")
+# Nếu dùng MySQL:
+# SQLALCHEMY_DATABASE_URL = "mysql+pymysql://root:password@localhost:3306/medbooking?charset=utf8mb4"
 
-# Cấu hình engine: nếu dùng SQLite thì cần check_same_thread=False
-connect_args = {"check_same_thread": False} if DATABASE_URL.startswith("sqlite") else {}
+# Nếu dùng PostgreSQL:
+# SQLALCHEMY_DATABASE_URL = "postgresql://postgres:password@localhost:5432/medbooking"
+
+# 2. Khởi tạo Engine
+# connect_args={"check_same_thread": False} chỉ cần thiết khi sử dụng SQLite
+connect_args = {}
+if SQLALCHEMY_DATABASE_URL.startswith("sqlite"):
+    connect_args = {"check_same_thread": False}
 
 engine = create_engine(
-    DATABASE_URL,
+    SQLALCHEMY_DATABASE_URL,
     connect_args=connect_args,
-    echo=False  # Đổi thành True nếu bạn muốn in log câu lệnh SQL ra terminal khi dev
+    echo=False  # Đặt True nếu muốn in chi tiết các câu lệnh SQL ra terminal
 )
 
-# 2. Tạo SessionLocal để quản lý phiên làm việc với database
+# 3. Khởi tạo SessionFactory
 SessionLocal = sessionmaker(
     autocommit=False,
     autoflush=False,
     bind=engine
 )
 
-# 3. Khởi tạo Base class cho tất cả các SQLAlchemy Models kế thừa
+# 4. Khởi tạo Base Model (Tất cả model như bac_si, nguoi_dung... sẽ kế thừa từ Base này)
 Base = declarative_base()
 
-# 4. Dependency cấp Session cho FastAPI Router
+
+# 5. Dependency injection lấy DB session cho các Router trong FastAPI
 def get_db():
-    """
-    Dependency injection được truyền vào các endpoint trong router.
-    Tự động mở session khi có request và đóng session sau khi request kết thúc.
-    """
     db = SessionLocal()
     try:
         yield db
