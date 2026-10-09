@@ -5,9 +5,9 @@ from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel
 from sqlalchemy.orm import Session
 
-from datadase.database import get_db
-from models.models import NguoiDung
-from models.lich_hen import LichHen, LogTrangThai
+from app.datadase.database import get_db
+from app.models.models import NguoiDung
+from app.models.lich_hen import LichHen, LogTrangThai
 
 root_auth = importlib.import_module("auth")
 

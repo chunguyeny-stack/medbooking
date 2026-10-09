@@ -3,10 +3,10 @@ from typing import Optional, List
 from fastapi import APIRouter, Depends, Query, status
 from sqlalchemy.orm import Session
 
-from datadase.database import get_db
-from models.models import NguoiDung
-from models.lich_hen import LichHen
-from schemas.bac_si import (
+from app.datadase.database import get_db
+from app.models.models import NguoiDung
+from app.models.lich_hen import LichHen
+from app.schemas.bac_si import (
     BacSiCreate,
     BacSiUpdate,
     BacSiResponse,
