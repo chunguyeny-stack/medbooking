@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Quản lý Chuyên khoa</title>
+</head>
+<body>
+
+    <!-- Sidebar Menu Điều hướng Quản trị -->
+    <aside>
+        <div>MEDBOOKING ADMIN</div>
+        <nav>
+            <h3>QUẢN LÝ NHÂN SỰ & NGƯỜI DÙNG</h3>
+            <ul>
+                <li><a href="home.html">Trang chủ Admin</a></li>
+                <li><a href="quan_ly_tai_khoan.html">Quản lý tài khoản</a></li>
+                <li><a href="quan_ly_bac_si.html">Quản lý bác sĩ</a></li>
+            </ul>
+
+            <h3>DANH MỤC Y TẾ</h3>
+            <ul>
+                <li><a href="quan_ly_chuyen_khoa.html"><strong>Quản lý chuyên khoa</strong></a></li>
+                <li><a href="quan_ly_dich_vu.html">Quản lý dịch vụ & giá</a></li>
+                <li><a href="quan_ly_mapping.html">Quản lý Mapping Triệu chứng - Bác sĩ</a></li>
+            </ul>
+
+            <h3>BÁO CÁO & THỐNG KÊ</h3>
+            <ul>
+                <li><a href="dashboard.html">Dashboard Thống kê & Báo cáo</a></li>
+                <li><a href="nhat_ky_giao_dich.html">Nhật ký Giao dịch Chi tiết</a></li>
+            </ul>
+        </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main>
+        <header>
+            <h1>Quản lý Danh mục Chuyên khoa</h1>
+            <div>
+                <span>AD Tên Admin</span> | 
+                <a href="../dk_dn/dn.html">Đăng xuất</a>
+            </div>
+        </header>
+
+        <!-- 1. THANH CÔNG CỤ & TÌM KIẾM -->
+        <section>
+            <div>
+                <input type="text" id="search-specialty" placeholder="Tìm kiếm tên chuyên khoa...">
+            </div>
+            <button type="button" id="btn-add-specialty">+ Thêm Chuyên khoa Mới</button>
+        </section>
+
+        <!-- 2. BẢNG DANH SÁCH CHUYÊN KHOA -->
+        <section>
+            <h2>Danh sách Chuyên khoa Y tế</h2>
+            <table border="1">
+                <thead>
+                    <tr>
+                        <th>Mã CK</th>
+                        <th>Tên chuyên khoa</th>
+                        <th>Mô tả sơ lược</th>
+                        <th>Số lượng bác sĩ thuộc khoa</th>
+                        <th>Hành động</th>
+                    </tr>
+                </thead>
+                <tbody id="specialty-table-body">
+                    <tr>
+                        <td colspan="5" style="text-align: center;">
+                            Đang tải danh sách chuyên khoa...
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <!-- 3. KHUNG FORM THÊM / SỬA CHUYÊN KHOA (Mặc định ẩn, bật lên bằng JS) -->
+        <section id="specialty-form-modal" style="display: none;">
+            <h3 id="form-specialty-title">Thêm Chuyên khoa Mới</h3>
+            <form id="form-specialty-info">
+                <div>
+                    <label for="spec-name">Tên chuyên khoa:</label>
+                    <input type="text" id="spec-name" required>
+                </div>
+                <div>
+                    <label for="spec-desc">Mô tả chi tiết:</label>
+                    <textarea id="spec-desc" rows="4"></textarea>
+                </div>
+                <div>
+                    <button type="submit" id="btn-save-specialty">Lưu thông tin</button>
+                    <button type="button" id="btn-cancel-specialty">Hủy bỏ</button>
+                </div>
+            </form>
+        </section>
+    </main>
+
+    <!-- Liên kết tệp JavaScript xử lý logic bên ngoài -->
+    <script src="../../js/admin.js"></script>
+</body>
+</html>

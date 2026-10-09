@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Quản lý Dịch vụ & Giá khám</title>
+</head>
+<body>
+
+    <!-- Sidebar Menu Điều hướng Quản trị -->
+    <aside>
+        <div>MEDBOOKING ADMIN</div>
+        <nav>
+            <h3>QUẢN LÝ NHÂN SỰ & NGƯỜI DÙNG</h3>
+            <ul>
+                <li><a href="home.html">Trang chủ Admin</a></li>
+                <li><a href="quan_ly_tai_khoan.html">Quản lý tài khoản</a></li>
+                <li><a href="quan_ly_bac_si.html">Quản lý bác sĩ</a></li>
+            </ul>
+
+            <h3>DANH MỤC Y TẾ</h3>
+            <ul>
+                <li><a href="quan_ly_chuyen_khoa.html">Quản lý chuyên khoa</a></li>
+                <li><a href="quan_ly_dich_vu.html"><strong>Quản lý dịch vụ & giá</strong></a></li>
+                <li><a href="quan_ly_mapping.html">Quản lý Mapping Triệu chứng - Bác sĩ</a></li>
+            </ul>
+
+            <h3>BÁO CÁO & THỐNG KÊ</h3>
+            <ul>
+                <li><a href="dashboard.html">Dashboard Thống kê & Báo cáo</a></li>
+                <li><a href="nhat_ky_giao_dich.html">Nhật ký Giao dịch Chi tiết</a></li>
+            </ul>
+        </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main>
+        <header>
+            <h1>Quản lý Dịch vụ & Bảng giá Khám chữa bệnh</h1>
+            <div>
+                <span>AD Tên Admin</span> | 
+                <a href="../dk_dn/dn.html">Đăng xuất</a>
+            </div>
+        </header>
+
+        <!-- 1. THANH CÔNG CỤ & TÌM KIẾM -->
+        <section>
+            <div>
+                <input type="text" id="search-service" placeholder="Tìm kiếm tên dịch vụ, mã dịch vụ...">
+                <select id="filter-service-specialty">
+                    <option value="all">Tất cả chuyên khoa</option>
+                    <!-- Dữ liệu chuyên khoa sẽ được JS đổ vào đây -->
+                </select>
+            </div>
+            <button type="button" id="btn-add-service">+ Thêm Dịch Vụ Mới</button>
+        </section>
+
+        <!-- 2. BẢNG DANH SÁCH DỊCH VỤ & GIÁ -->
+        <section>
+            <h2>Danh sách Dịch vụ Y tế</h2>
+            <table border="1">
+                <thead>
+                    <tr>
+                        <th>Mã DV</th>
+                        <th>Tên dịch vụ</th>
+                        <th>Chuyên khoa trực thuộc</th>
+                        <th>Giá niêm yết (VNĐ)</th>
+                        <th>Mô tả dịch vụ</th>
+                        <th>Hành động</th>
+                    </tr>
+                </thead>
+                <tbody id="service-table-body">
+                    <tr>
+                        <td colspan="6" style="text-align: center;">
+                            Đang tải danh sách dịch vụ...
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+
+        <!-- 3. KHUNG FORM THÊM / SỬA DỊCH VỤ (Mặc định ẩn, bật lên bằng JS) -->
+        <section id="service-form-modal" style="display: none;">
+            <h3 id="form-service-title">Thêm Dịch Vụ Mới</h3>
+            <form id="form-service-info">
+                <div>
+                    <label for="serv-name">Tên dịch vụ:</label>
+                    <input type="text" id="serv-name" required>
+                </div>
+                <div>
+                    <label for="serv-specialty">Thuộc chuyên khoa:</label>
+                    <select id="serv-specialty" required>
+                        <!-- Danh sách chuyên khoa -->
+                    </select>
+                </div>
+                <div>
+                    <label for="serv-price">Giá niêm yết (VNĐ):</label>
+                    <input type="number" id="serv-price" min="0" step="1000" required>
+                </div>
+                <div>
+                    <label for="serv-desc">Mô tả chi tiết:</label>
+                    <textarea id="serv-desc" rows="3"></textarea>
+                </div>
+                <div>
+                    <button type="submit" id="btn-save-service">Lưu thông tin</button>
+                    <button type="button" id="btn-cancel-service">Hủy bỏ</button>
+                </div>
+            </form>
+        </section>
+    </main>
+
+    <!-- Liên kết tệp JavaScript xử lý logic bên ngoài -->
+    <script src="../../js/admin.js"></script>
+</body>
+</html>
