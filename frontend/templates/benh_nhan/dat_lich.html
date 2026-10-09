@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MedBooking - Đặt lịch Khám bệnh</title>
+</head>
+<body>
+
+    <!-- 1. HEADER: LOGO & MENU ĐIỀU HƯỚNG -->
+    <header>
+        <div>
+            <h1>MedBooking</h1>
+            <p>Chăm sóc sức khỏe toàn diện</p>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="home_bn.html">Trang chủ</a></li>
+                <li><a href="danh_sach_bac_si.html">Tìm kiếm Bác sĩ</a></li>
+                <li><a href="dat_lich.html"><strong>Đặt lịch khám</strong></a></li>
+                <li><a href="danh_sach_lich_hen.html">Lịch hẹn của tôi</a></li>
+                <li><a href="ho_so_ca_nhan.html">Hồ sơ cá nhân</a></li>
+                <li><a href="../dk_dn/dn.html">Đăng xuất</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <hr>
+
+    <!-- 2. NỘI DUNG CHÍNH: FORM ĐẶT LỊCH KHÁM -->
+    <main>
+        <h2>Đăng ký Lịch khám Bệnh</h2>
+        <p>Vui lòng điền đầy đủ thông tin bên dưới để đặt lịch hẹn với bác sĩ chuyên khoa.</p>
+
+        <form action="danh_sach_lich_hen.html" method="GET">
+            <!-- Bước 1: Chọn Chuyên khoa & Bác sĩ -->
+            <fieldset>
+                <legend>Bước 1: Chọn Chuyên khoa & Bác sĩ khám</legend>
+                <br>
+                <div>
+                    <label for="select-specialty">Chọn chuyên khoa:</label><br>
+                    <select id="select-specialty" name="specialty">
+                        <option value="">-- Chọn chuyên khoa khám --</option>
+                        <option value="noi">1. Nội Tổng Quát</option>
+                        <option value="tim-mach">2. Tim Mạch</option>
+                        <option value="nhi">3. Nhi Khoa</option>
+                        <option value="than-kinh">4. Thần Kinh</option>
+                        <option value="xuong-khop">5. Cơ Xương Khớp</option>
+                        <option value="da-lieu">6. Da Liễu</option>
+                        <option value="tai-mui-hong">7. Tai Mũi Họng</option>
+                        <option value="mat">8. Mắt</option>
+                        <option value="rang-ham-mat">9. Răng Hàm Mặt</option>
+                        <option value="y-hoc-co-truyen">10. Y Học Cổ Truyền</option>
+                    </select>
+                </div>
+                <br>
+                <div>
+                    <label for="select-doctor">Chọn Bác sĩ (Tùy chọn):</label><br>
+                    <select id="select-doctor" name="doctor_id">
+                        <option value="">-- Bất kỳ bác sĩ nào phù hợp --</option>
+                        <option value="bs01">ThS.BS Nguyễn Văn A (Nội Tổng Quát)</option>
+                        <option value="bs02">BS.CKI Trần Thị C (Tim Mạch)</option>
+                        <option value="bs03">TS.BS Lê Hoàng D (Thần Kinh)</option>
+                        <option value="bs04">BS.CKII Phạm Văn E (Cơ Xương Khớp)</option>
+                    </select>
+                </div>
+            </fieldset>
+
+            <br>
+
+            <!-- Bước 2: Chọn Thời gian khám -->
+            <fieldset>
+                <legend>Bước 2: Chọn Thời gian khám dự kiến</legend>
+                <br>
+                <div>
+                    <label for="appointment-date">Ngày khám:</label><br>
+                    <input type="date" id="appointment-date" name="date">
+                </div>
+                <br>
+                <div>
+                    <div>
+                    <label>Khung giờ khám:</label><br>
+                    
+                    <!-- Ca sáng: 07:30 - 11:30 -->
+                    <p><strong>Ca sáng (07:30 - 11:30):</strong></p>
+                    <input type="radio" id="time-1" name="time_slot" value="07:30-08:30">
+                    <label for="time-1">07:30 - 08:30</label><br>
+                    
+                    <input type="radio" id="time-2" name="time_slot" value="08:30-09:30">
+                    <label for="time-2">08:30 - 09:30</label><br>
+
+                    <input type="radio" id="time-3" name="time_slot" value="09:30-10:30">
+                    <label for="time-3">09:30 - 10:30</label><br>
+
+                    <input type="radio" id="time-4" name="time_slot" value="10:30-11:30">
+                    <label for="time-4">10:30 - 11:30</label><br>
+                    <br>
+
+                    <!-- Ca chiều: 13:30 - 18:30 -->
+                    <p><strong>Ca chiều (13:30 - 18:30):</strong></p>
+                    <input type="radio" id="time-5" name="time_slot" value="13:30-14:30">
+                    <label for="time-5">13:30 - 14:30</label><br>
+
+                    <input type="radio" id="time-6" name="time_slot" value="14:30-15:30">
+                    <label for="time-6">14:30 - 15:30</label><br>
+
+                    <input type="radio" id="time-7" name="time_slot" value="15:30-16:30">
+                    <label for="time-7">15:30 - 16:30</label><br>
+
+                    <input type="radio" id="time-8" name="time_slot" value="16:30-17:30">
+                    <label for="time-8">16:30 - 17:30</label><br>
+
+                    <input type="radio" id="time-9" name="time_slot" value="17:30-18:30">
+                    <label for="time-9">17:30 - 18:30</label><br>
+                    <br>
+
+                    <!-- Ca tối ngoài giờ: 18:30 - 22:30 (+10% phí) -->
+                    <p><strong>Ca tối ngoài giờ (18:30 - 22:30) - Phụ thu +10% phí:</strong></p>
+                    <input type="radio" id="time-10" name="time_slot" value="18:30-19:30">
+                    <label for="time-10">18:30 - 19:30</label><br>
+
+                    <input type="radio" id="time-11" name="time_slot" value="19:30-20:30">
+                    <label for="time-11">19:30 - 20:30</label><br>
+
+                    <input type="radio" id="time-12" name="time_slot" value="20:30-21:30">
+                    <label for="time-12">20:30 - 21:30</label><br>
+
+                    <input type="radio" id="time-13" name="time_slot" value="21:30-22:30">
+                    <label for="time-13">21:30 - 22:30</label>
+                    </div>
+                </div>
+            </fieldset>
+
+            <br>
+
+            <!-- Bước 3: Triệu chứng & Thông tin bổ sung -->
+            <fieldset>
+                <legend>Bước 3: Triệu chứng ban đầu & Lý do khám</legend>
+                <br>
+                <div>
+                    <label for="patient-symptoms">Mô tả triệu chứng / Ghi chú cho bác sĩ:</label><br>
+                    <textarea id="patient-symptoms" name="symptoms" rows="4" cols="50" placeholder="Ví dụ: Đau đầu kéo dài, sốt nhẹ về chiều, mệt mỏi..."></textarea>
+                </div>
+            </fieldset>
+
+            <br>
+
+            <div>
+                <button type="submit">Xác nhận đặt lịch khám</button>
+                <button type="reset">Nhập lại</button>
+            </div>
+        </form>
+    </main>
+
+    <hr>
+
+    <!-- 3. FOOTER: THÔNG TIN CHI TIẾT, ĐỊA CHỈ & LỜI CHÚC SỨC KHỎE -->
+    <footer>
+        <div>
+            <h3>HỆ THỐNG MEDBOOKING</h3>
+            <p>Nền tảng công nghệ y tế kết nối người bệnh với các bệnh viện và phòng khám uy tín hàng đầu. Cam kết quy trình nhanh gọn, minh bạch chi phí và bảo mật thông tin tuyệt đối.</p>
+            <p><strong>"MedBooking chúc quý khách và gia đình luôn có một sức khỏe dồi dào, bình an và hạnh phúc!"</strong></p>
+        </div>
+        <div>
+            <h4>Liên kết nhanh</h4>
+            <ul>
+                <li><a href="home_bn.html">Trang chủ</a></li>
+                <li><a href="danh_sach_bac_si.html">Tìm kiếm Bác sĩ</a></li>
+                <li><a href="dat_lich.html">Đặt lịch khám</a></li>
+                <li><a href="danh_sach_lich_hen.html">Lịch hẹn cá nhân</a></li>
+            </ul>
+        </div>
+        <div>
+            <h4>Thông tin liên hệ & Địa chỉ</h4>
+            <p>Địa chỉ: Số 15, Phố Dịch Vọng Hậu, Quận Cầu Giấy, Hà Nội</p>
+            <p>Hotline: 1900 6868</p>
+            <p>Email: support@medbooking.vn</p>
+        </div>
+        <div>
+            <p>&copy; 2026 MedBooking. Bản quyền thuộc về Đội ngũ phát triển dự án.</p>
+        </div>
+    </footer>
+
+    <script src="../../js/client.js"></script>
+</body>
+</html>

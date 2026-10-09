@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MedBooking - Dashboard Lễ Tân</title>
+</head>
+<body>
+    <header>
+        <h1>MedBooking - Cổng Lễ Tân</h1>
+        <p>Xin chào, Nhân viên Lễ tân</p>
+        <nav>
+            <ul>
+                <li><a href="dashboard.html"><strong>Tổng quan</strong></a></li>
+                <li><a href="quan_ly_lich_hen.html">Quản lý lịch hẹn</a></li>
+                <li><a href="danh_sach_lich_hen.html">Danh sách ca trực</a></li>
+                <li><a href="check_in.html">Check-in</a></li>
+                <li><a href="vien_phi.html">Viện phí</a></li>
+                <li><a href="ho_so_ca_nhan.html">Hồ sơ cá nhân</a></li>
+                <li><a href="../dk_dn/dn.html">Đăng xuất</a></li>
+            </ul>
+        </nav>
+    </header>
+    <hr>
+    <main>
+        <h2>Bảng điều khiển Tổng quan trong Ngày</h2>
+        <section>
+            <h3>Thống kê ca trực & Lịch hẹn</h3>
+            <ul>
+                <li>Ca sáng (07:30 - 11:30): <strong>18 lịch hẹn</strong></li>
+                <li>Ca chiều (13:30 - 18:30): <strong>22 lịch hẹn</strong></li>
+                <li>Ca tối ngoài giờ (+10% phí) (18:30 - 22:30): <strong>5 lịch hẹn</strong></li>
+            </ul>
+        </section>
+        <hr>
+        <section>
+            <h3>Lịch hẹn cần xử lý gấp</h3>
+            <table border="1" cellpadding="8" cellspacing="0">
+                <thead>
+                    <tr>
+                        <th>Mã LH</th>
+                        <th>Bệnh nhân</th>
+                        <th>Bác sĩ</th>
+                        <th>Khung giờ khám</th>
+                        <th>Trạng thái</th>
+                        <th>Hành động</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>LH101</td>
+                        <td>Nguyễn Văn X</td>
+                        <td>ThS.BS Nguyễn Văn A</td>
+                        <td>08:30 - 09:30 (Ca sáng)</td>
+                        <td>Chờ xác nhận</td>
+                        <td><a href="xac_nhan_lich.html"><button type="button">Xác nhận</button></a></td>
+                    </tr>
+                    <tr>
+                        <td>LH102</td>
+                        <td>Trần Thị B</td>
+                        <td>BS.CKI Trần Thị C</td>
+                        <td>18:30 - 19:30 (Ca tối - Phụ thu 10%)</td>
+                        <td>Đã xác nhận</td>
+                        <td><a href="check_in.html"><button type="button">Check-in ngay</button></a></td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+    </main>
+    <hr>
+    <footer>
+        <p>&copy; 2026 MedBooking. Hệ thống quản lý y tế.</p>
+    </footer>
+</body>
+</html>

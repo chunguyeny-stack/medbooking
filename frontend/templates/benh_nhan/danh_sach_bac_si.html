@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MedBooking - Danh sách Bác sĩ & Chuyên khoa</title>
+</head>
+<body>
+
+    <!-- 1. HEADER: LOGO & MENU ĐIỀU HƯỚNG -->
+    <header>
+        <div>
+            <h1>MedBooking</h1>
+            <p>Chăm sóc sức khỏe toàn diện</p>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="home_bn.html">Trang chủ</a></li>
+                <li><a href="danh_sach_bac_si.html"><strong>Tìm kiếm Bác sĩ</strong></a></li>
+                <li><a href="dat_lich.html">Đặt lịch khám</a></li>
+                <li><a href="danh_sach_lich_hen.html">Lịch hẹn của tôi</a></li>
+                <li><a href="ho_so_ca_nhan.html">Hồ sơ cá nhân</a></li>
+                <li><a href="../dk_dn/dn.html">Đăng xuất</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <hr>
+
+    <!-- 2. NỘI DUNG CHÍNH -->
+    <main>
+        <h2>Danh sách Bác sĩ & Chuyên gia Y tế</h2>
+        <p>Tra cứu thông tin chi tiết về đội ngũ bác sĩ đầu ngành theo chuyên khoa hoặc tìm kiếm nâng cao.</p>
+
+        <!-- A. KHỐI CHỌN NHANH THEO CHUYÊN KHOA (Hiển thị trực quan ngay trên giao diện) -->
+        <section>
+            <h3>Chọn nhanh Chuyên khoa phổ biến</h3>
+            <p>Bấm vào chuyên khoa để lọc nhanh danh sách bác sĩ tương ứng:</p>
+            <ul>
+                <li><a href="danh_sach_bac_si.html?specialty=noi">[Nội Tổng Quát]</a></li>
+                <li><a href="danh_sach_bac_si.html?specialty=tim-mach">[Tim Mạch]</a></li>
+                <li><a href="danh_sach_bac_si.html?specialty=nhi">[Nhi Khoa]</a></li>
+                <li><a href="danh_sach_bac_si.html?specialty=than-kinh">[Thần Kinh]</a></li>
+                <li><a href="danh_sach_bac_si.html?specialty=xuong-khop">[Cơ Xương Khớp]</a></li>
+                <li><a href="danh_sach_bac_si.html?specialty=da-lieu">[Da Liễu]</a></li>
+                <li><a href="danh_sach_bac_si.html?specialty=tai-mui-hong">[Tai Mũi Họng]</a></li>
+                <li><a href="danh_sach_bac_si.html?specialty=mat">[Mắt]</a></li>
+                <li><a href="danh_sach_bac_si.html?specialty=rang-ham-mat">[Răng Hàm Mặt]</a></li>
+                <li><a href="danh_sach_bac_si.html?specialty=y-hoc-co-truyen">[Y Học Cổ Truyền]</a></li>
+            </ul>
+        </section>
+
+        <hr>
+
+        <!-- B. BỘ LỌC TÌM KIẾM NÂNG CAO -->
+        <section>
+            <form action="danh_sach_bac_si.html" method="GET">
+                <fieldset>
+                    <legend>Bộ lọc tìm kiếm chi tiết</legend>
+                    <br>
+                    <div>
+                        <label for="filter-spec">Lọc theo Chuyên khoa:</label><br>
+                        <select id="filter-spec" name="specialty">
+                            <option value="">-- Tất cả chuyên khoa --</option>
+                            <option value="noi">1. Nội Tổng Quát</option>
+                            <option value="tim-mach">2. Tim Mạch</option>
+                            <option value="nhi">3. Nhi Khoa</option>
+                            <option value="than-kinh">4. Thần Kinh</option>
+                            <option value="xuong-khop">5. Cơ Xương Khớp</option>
+                            <option value="da-lieu">6. Da Liễu</option>
+                            <option value="tai-mui-hong">7. Tai Mũi Họng</option>
+                            <option value="mat">8. Mắt</option>
+                            <option value="rang-ham-mat">9. Răng Hàm Mặt</option>
+                            <option value="y-hoc-co-truyen">10. Y Học Cổ Truyền</option>
+                        </select>
+                    </div>
+                    <br>
+                    <div>
+                        <label for="filter-rating">Đánh giá tối thiểu:</label><br>
+                        <select id="filter-rating" name="rating">
+                            <option value="">-- Tất cả mức rating --</option>
+                            <option value="4.5">Từ 4.5 sao trở lên</option>
+                            <option value="4.0">Từ 4.0 sao trở lên</option>
+                        </select>
+                    </div>
+                    <br>
+                    <div>
+                        <label for="filter-exp">Kinh nghiệm tối thiểu:</label><br>
+                        <select id="filter-exp" name="experience">
+                            <option value="">-- Tất cả kinh nghiệm --</option>
+                            <option value="5">Trên 5 năm</option>
+                            <option value="10">Trên 10 năm</option>
+                        </select>
+                    </div>
+                    <br>
+                    <div>
+                        <label for="filter-keyword">Tìm theo tên bác sĩ hoặc từ khóa:</label><br>
+                        <input type="text" id="filter-keyword" name="keyword" placeholder="Nhập tên bác sĩ...">
+                    </div>
+                    <br>
+                    <div>
+                        <button type="submit">Áp dụng bộ lọc</button>
+                        <button type="reset">Đặt lại</button>
+                    </div>
+                </fieldset>
+            </form>
+        </section>
+
+        <hr>
+
+        <!-- C. KẾT QUẢ DANH SÁCH BÁC SĨ (ĐƯỢC NHÓM THEO CHUYÊN KHOA) -->
+        <section>
+            <h3>Kết quả danh sách Bác sĩ</h3>
+
+            <!-- Nhóm chuyên khoa: Nội Tổng Quát -->
+            <div>
+                <h4>Chuyên khoa: Nội Tổng Quát</h4>
+                
+                <div>
+                    <p>[Ảnh BS]</p>
+                    <h5><a href="chi_tiet_bac_si.html?id=bs01">ThS.BS Nguyễn Văn A</a></h5>
+                    <p>Chuyên khoa: Nội Tổng Quát</p>
+                    <p>Đánh giá: 4.9 (120 đánh giá) | Kinh nghiệm: 12 năm</p>
+                    <p>Học hàm / Học vị: Thạc sĩ - Bác sĩ nội trú</p>
+                    <p>
+                        <a href="chi_tiet_bac_si.html?id=bs01"><button type="button">Xem chi tiết hồ sơ</button></a>
+                        <a href="dat_lich.html?doctor_id=bs01"><button type="button">Đặt lịch khám</button></a>
+                    </p>
+                </div>
+                <hr>
+            </div>
+
+            <!-- Nhóm chuyên khoa: Tim Mạch -->
+            <div>
+                <h4>Chuyên khoa: Tim Mạch</h4>
+                
+                <div>
+                    <p>[Ảnh BS]</p>
+                    <h5><a href="chi_tiet_bac_si.html?id=bs02">BS.CKI Trần Thị C</a></h5>
+                    <p>Chuyên khoa: Tim Mạch</p>
+                    <p>Đánh giá: 4.8 (98 đánh giá) | Kinh nghiệm: 10 năm</p>
+                    <p>Học hàm / Học vị: Bác sĩ Chuyên khoa I</p>
+                    <p>
+                        <a href="chi_tiet_bac_si.html?id=bs02"><button type="button">Xem chi tiết hồ sơ</button></a>
+                        <a href="dat_lich.html?doctor_id=bs02"><button type="button">Đặt lịch khám</button></a>
+                    </p>
+                </div>
+                <hr>
+            </div>
+
+            <!-- Nhóm chuyên khoa: Thần Kinh -->
+            <div>
+                <h4>Chuyên khoa: Thần Kinh</h4>
+                
+                <div>
+                    <p>[Ảnh BS]</p>
+                    <h5><a href="chi_tiet_bac_si.html?id=bs03">TS.BS Lê Hoàng D</a></h5>
+                    <p>Chuyên khoa: Thần Kinh</p>
+                    <p>Đánh giá: 5.0 (150 đánh giá) | Kinh nghiệm: 18 năm</p>
+                    <p>Học hàm / Học vị: Tiến sĩ - Bác sĩ</p>
+                    <p>
+                        <a href="chi_tiet_bac_si.html?id=bs03"><button type="button">Xem chi tiết hồ sơ</button></a>
+                        <a href="dat_lich.html?doctor_id=bs03"><button type="button">Đặt lịch khám</button></a>
+                    </p>
+                </div>
+                <hr>
+            </div>
+
+            <!-- Nhóm chuyên khoa: Cơ Xương Khớp -->
+            <div>
+                <h4>Chuyên khoa: Cơ Xương Khớp</h4>
+                
+                <div>
+                    <p>[Ảnh BS]</p>
+                    <h5><a href="chi_tiet_bac_si.html?id=bs04">BS.CKII Phạm Văn E</a></h5>
+                    <p>Chuyên khoa: Cơ Xương Khớp</p>
+                    <p>Đánh giá: 4.7 (85 đánh giá) | Kinh nghiệm: 15 năm</p>
+                    <p>Học hàm / Học vị: Bác sĩ Chuyên khoa II</p>
+                    <p>
+                        <a href="chi_tiet_bac_si.html?id=bs04"><button type="button">Xem chi tiết hồ sơ</button></a>
+                        <a href="dat_lich.html?doctor_id=bs04"><button type="button">Đặt lịch khám</button></a>
+                    </p>
+                </div>
+            </div>
+
+            <br>
+            <!-- Phân trang danh sách bác sĩ -->
+            <p>
+                Trang:
+                <button type="button">1</button>
+                <button type="button">2</button>
+                <button type="button">3</button>
+            </p>
+        </section>
+    </main>
+
+    <hr>
+
+    <!-- 3. FOOTER: THÔNG TIN CHI TIẾT, ĐỊA CHỈ & LỜI CHÚC SỨC KHỎE -->
+    <footer>
+        <div>
+            <h3>HỆ THỐNG MEDBOOKING</h3>
+            <p>Nền tảng công nghệ y tế kết nối người bệnh với các bệnh viện và phòng khám uy tín hàng đầu. Cam kết quy trình nhanh gọn, minh bạch chi phí và bảo mật thông tin tuyệt đối.</p>
+            <p><strong>"MedBooking chúc quý khách và gia đình luôn có một sức khỏe dồi dào, bình an và hạnh phúc!"</strong></p>
+        </div>
+        <div>
+            <h4>Liên kết nhanh</h4>
+            <ul>
+                <li><a href="home_bn.html">Trang chủ</a></li>
+                <li><a href="danh_sach_bac_si.html">Tìm kiếm Bác sĩ</a></li>
+                <li><a href="dat_lich.html">Đặt lịch khám</a></li>
+                <li><a href="danh_sach_lich_hen.html">Lịch hẹn cá nhân</a></li>
+            </ul>
+        </div>
+        <div>
+            <h4>Thông tin liên hệ & Địa chỉ</h4>
+            <p>Địa chỉ: Số 15, Phố Dịch Vọng Hậu, Quận Cầu Giấy, Hà Nội</p>
+            <p>Hotline: 1900 6868</p>
+            <p>Email: support@medbooking.vn</p>
+        </div>
+        <div>
+            <p>&copy; 2026 MedBooking. Bản quyền thuộc về Đội ngũ phát triển dự án.</p>
+        </div>
+    </footer>
+
+    <script src="../../js/client.js"></script>
+</body>
+</html>

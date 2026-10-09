@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MedBooking - Hồ sơ Cá nhân Bệnh nhân</title>
+</head>
+<body>
+
+    <!-- 1. HEADER: LOGO & MENU ĐIỀU HƯỚNG -->
+    <header>
+        <div>
+            <h1>MedBooking</h1>
+            <p>Chăm sóc sức khỏe toàn diện</p>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="home_bn.html">Trang chủ</a></li>
+                <li><a href="danh_sach_bac_si.html">Tìm kiếm Bác sĩ</a></li>
+                <li><a href="dat_lich.html">Đặt lịch khám</a></li>
+                <li><a href="danh_sach_lich_hen.html">Lịch hẹn của tôi</a></li>
+                <li><a href="ho_so_ca_nhan.html"><strong>Hồ sơ cá nhân</strong></a></li>
+                <li><a href="../dk_dn/dn.html">Đăng xuất</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <hr>
+
+    <!-- 2. NỘI DUNG CHÍNH: QUẢN LÝ HỒ SƠ CÁ NHÂN -->
+    <main>
+        <h2>Thông tin Tài khoản & Hồ sơ Bệnh nhân</h2>
+        
+        <!-- Form cập nhật thông tin cá nhân -->
+        <form action="#" method="POST">
+            <div>
+                <label for="patient-name">Họ và tên:</label><br>
+                <input type="text" id="patient-name" name="name" value="Nông Phương Trà">
+            </div>
+            <br>
+            <div>
+                <label for="patient-phone">Số điện thoại:</label><br>
+                <input type="text" id="patient-phone" name="phone" value="0912345678">
+            </div>
+            <br>
+            <div>
+                <label for="patient-email">Email đăng ký:</label><br>
+                <input type="email" id="patient-email" name="email" value="tratara1612@gmail.com" readonly>
+            </div>
+            <br>
+            <div>
+                <label for="patient-dob">Ngày sinh:</label><br>
+                <input type="date" id="patient-dob" name="dob" value="2007-12-16">
+            </div>
+            <br>
+            <div>
+                <label for="patient-gender">Giới tính:</label><br>
+                <select id="patient-gender" name="gender">
+                    <option value="female" selected>Nữ</option>
+                    <option value="male">Nam</option>
+                    <option value="other">Khác</option>
+                </select>
+            </div>
+            <br>
+            <div>
+                <label for="patient-address">Địa chỉ liên hệ:</label><br>
+                <input type="text" id="patient-address" name="address" value="Hà Nội, Việt Nam">
+            </div>
+            <br>
+            <div>
+                <button type="submit">Cập nhật thông tin hồ sơ</button>
+            </div>
+        </form>
+
+        <hr>
+
+        <!-- Phần đổi mật khẩu -->
+        <h3>Đổi Mật khẩu Bảo mật</h3>
+        <form action="#" method="POST">
+            <div>
+                <label for="current-password">Mật khẩu hiện tại:</label><br>
+                <input type="password" id="current-password" name="current_password">
+            </div>
+            <br>
+            <div>
+                <label for="new-password">Mật khẩu mới:</label><br>
+                <input type="password" id="new-password" name="new_password">
+            </div>
+            <br>
+            <div>
+                <label for="confirm-password">Xác nhận mật khẩu mới:</label><br>
+                <input type="password" id="confirm-password" name="confirm_password">
+            </div>
+            <br>
+            <div>
+                <button type="submit">Đổi mật khẩu</button>
+            </div>
+        </form>
+    </main>
+
+    <hr>
+
+    <!-- 3. FOOTER: THÔNG TIN CHI TIẾT, ĐỊA CHỈ & LỜI CHÚC SỨC KHỎE -->
+    <footer>
+        <div>
+            <h3>HỆ THỐNG MEDBOOKING</h3>
+            <p>Nền tảng công nghệ y tế kết nối người bệnh với các bệnh viện và phòng khám uy tín hàng đầu. Cam kết quy trình nhanh gọn, minh bạch chi phí và bảo mật thông tin tuyệt đối.</p>
+            <p><strong>"MedBooking chúc quý khách và gia đình luôn có một sức khỏe dồi dào, bình an và hạnh phúc!"</strong></p>
+        </div>
+        <div>
+            <h4>Liên kết nhanh</h4>
+            <ul>
+                <li><a href="home_bn.html">Trang chủ</a></li>
+                <li><a href="danh_sach_bac_si.html">Tìm kiếm Bác sĩ</a></li>
+                <li><a href="dat_lich.html">Đặt lịch khám</a></li>
+                <li><a href="danh_sach_lich_hen.html">Lịch hẹn cá nhân</a></li>
+            </ul>
+        </div>
+        <div>
+            <h4>Thông tin liên hệ & Địa chỉ</h4>
+            <p>Địa chỉ: Số 15, Phố Dịch Vọng Hậu, Quận Cầu Giấy, Hà Nội</p>
+            <p>Hotline: 1900 6868</p>
+            <p>Email: support@medbooking.vn</p>
+        </div>
+        <div>
+            <p>&copy; 2026 MedBooking. Bản quyền thuộc về Đội ngũ phát triển dự án.</p>
+        </div>
+    </footer>
+
+    <script src="../../js/client.js"></script>
+</body>
+</html>

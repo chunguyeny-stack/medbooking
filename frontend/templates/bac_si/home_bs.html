@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bác sĩ - Trang chủ Tổng quan</title>
+</head>
+<body>
+
+    <!-- Sidebar Menu Bác sĩ -->
+    <aside>
+        <div>MEDBOOKING - BÁC SĨ</div>
+        <nav>
+            <h3>TỔNG QUAN</h3>
+            <ul>
+                <li><a href="home_bs.html"><strong>Trang chủ Bác sĩ</strong></a></li>
+            </ul>
+
+            <h3>TÁC NGHIỆP KHÁM BỆNH</h3>
+            <ul>
+                <li><a href="danh_sach_ca_kham.html">Lịch hẹn & Ca khám hôm nay</a></li>
+                <li><a href="ho_so_ca_nhan.html">Thông tin cá nhân & Lịch trực</a></li>
+            </ul>
+        </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main>
+        <header>
+            <h1>Xin chào, BS. Nguyễn Văn A</h1>
+            <div>
+                <span>Khoa Nội Tổng Quát</span> | 
+                <a href="../dk_dn/dn.html">Đăng xuất</a>
+            </div>
+        </header>
+
+        <!-- 1. THỐNG KÊ NHANH TRONG NGÀY (QUICK STATS) -->
+        <section>
+            <h2>Tổng quan công việc hôm nay</h2>
+            <div style="display: flex; gap: 20px;">
+                <div style="border: 1px solid #ccc; padding: 15px; flex: 1;">
+                    <h3>Lịch hẹn chờ khám</h3>
+                    <p id="stat-waiting-count" style="font-size: 24px; font-weight: bold;">--</p>
+                </div>
+                <div style="border: 1px solid #ccc; padding: 15px; flex: 1;">
+                    <h3>Đã hoàn thành</h3>
+                    <p id="stat-completed-count" style="font-size: 24px; font-weight: bold;">--</p>
+                </div>
+                <div style="border: 1px solid #ccc; padding: 15px; flex: 1;">
+                    <h3>Tổng ca khám trong ngày</h3>
+                    <p id="stat-total-count" style="font-size: 24px; font-weight: bold;">--</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 2. LỐI TẮT NHANH ĐẾN TÁC NGHIỆP -->
+        <section>
+            <h2>Truy cập nhanh</h2>
+            <div>
+                <a href="danh_sach_ca_kham.html"><button type="button">Vào danh sách ca khám ngay</button></a>
+                <a href="ho_so_ca_nhan.html"><button type="button">Xem lịch trực cá nhân</button></a>
+            </div>
+        </section>
+
+        <!-- 3. THÔNG BÁO TỪ PHÒNG KHÁM / HỆ THỐNG -->
+        <section>
+            <h2>Thông báo hệ thống & Lịch trực</h2>
+            <table border="1" style="width: 100%;">
+                <thead>
+                    <tr>
+                        <th>Thời gian</th>
+                        <th>Nội dung thông báo</th>
+                        <th>Người gửi / Khoa</th>
+                    </tr>
+                </thead>
+                <tbody id="notification-table-body">
+                    <tr>
+                        <td>08:00 - 10/10/2026</td>
+                        <td>Lịch họp chuyên môn định kỳ khối nội tổng quát tại phòng họp lớn tầng 3.</td>
+                        <td>Ban Giám Đốc</td>
+                    </tr>
+                </tbody>
+            </table>
+        </section>
+    </main>
+
+    <!-- Liên kết tệp JavaScript xử lý logic phía bác sĩ -->
+    <script src="../../js/doctor.js"></script>
+</body>
+</html>
