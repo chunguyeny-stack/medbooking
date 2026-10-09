@@ -1,60 +1,93 @@
+import importlib
+from datetime import timedelta
 from fastapi import APIRouter, Depends, HTTPException, status
-from sqlalchemy.orm import Session
 from fastapi.security import OAuth2PasswordRequestForm
-from app.database.database import get_db
-from app.models.models import NguoiDung, BenhNhan, BacSi
-from app.schemas.schemas import UserRegister, Token, UserResponse
-from app.auth import get_password_hash, verify_password, create_access_token, get_current_user
+from pydantic import BaseModel, EmailStr
+from sqlalchemy.orm import Session
 
-router = APIRouter(prefix="/api/auth", tags=["Auth"])
+from datadase.database import get_db
+from models.models import NguoiDung, BenhNhan
 
-@router.post("/register", response_model=UserResponse, status_code=status.HTTP_201_CREATED)
-def register(user_data: UserRegister, db: Session = Depends(get_db)):
-    existing_user = db.query(NguoiDung).filter(NguoiDung.email == user_data.email).first()
-    if existing_user:
-        raise HTTPException(status_code=400, detail="Email đã được đăng ký hệ thống")
-    
-    hashed_password = get_password_hash(user_data.mat_khau)
-    new_user = NguoiDung(
-        email=user_data.email,
-        mat_khau=hashed_password,
-        ho_ten=user_data.ho_ten,
-        so_dien_thoai=user_data.so_dien_thoai,
-        vai_tro=user_data.vai_tro
+# Nạp trực tiếp module auth ở thư mục gốc (không bị trùng với routers/auth.py)
+root_auth = importlib.import_module("auth")
+
+router = APIRouter(prefix="/auth", tags=["Xác thực & Tài khoản"])
+
+
+class RegisterPatientRequest(BaseModel):
+    ho_ten: str
+    email: EmailStr
+    so_dien_thoai: str
+    mat_khau: str
+
+
+class TokenResponse(BaseModel):
+    access_token: str
+    token_type: str
+    vai_tro: str
+    user_id: int
+    ho_ten: str
+
+
+@router.post("/register", status_code=status.HTTP_201_CREATED, summary="Đăng ký tài khoản Bệnh nhân")
+def register_patient(payload: RegisterPatientRequest, db: Session = Depends(get_db)):
+    exist = db.query(NguoiDung).filter(NguoiDung.email == payload.email).first()
+    if exist:
+        raise HTTPException(status_code=400, detail="Email này đã được sử dụng.")
+
+    user = NguoiDung(
+        email=payload.email,
+        mat_khau=root_auth.get_password_hash(payload.mat_khau),
+        ho_ten=payload.ho_ten,
+        so_dien_thoai=payload.so_dien_thoai,
+        vai_tro="benh_nhan",
+        trang_thai=1
     )
-    db.add(new_user)
+    db.add(user)
+    db.flush()
+
+    patient_profile = BenhNhan(ma_benh_nhan=user.user_id)
+    db.add(patient_profile)
     db.commit()
-    db.refresh(new_user)
+    return {"message": "Đăng ký tài khoản thành công.", "user_id": user.user_id}
 
-    if user_data.vai_tro == "benh_nhan":
-        benh_nhan = BenhNhan(
-            nguoi_dung_id=new_user.id,
-            ngay_sinh=user_data.ngay_sinh,
-            gioi_tinh=user_data.gioi_tinh,
-            dia_chi=user_data.dia_chi
-        )
-        db.add(benh_nhan)
-        db.commit()
-    elif user_data.vai_tro == "bac_si":
-        bac_si = BacSi(nguoi_dung_id=new_user.id, mo_ta="Bác sĩ chuyên khoa")
-        db.add(bac_si)
-        db.commit()
 
-    return new_user
-
-@router.post("/login", response_model=Token)
+@router.post("/login", response_model=TokenResponse, summary="Đăng nhập hệ thống lấy JWT Token")
 def login(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depends(get_db)):
     user = db.query(NguoiDung).filter(NguoiDung.email == form_data.username).first()
-    if not user or not verify_password(form_data.password, user.mat_khau):
+    if not user or not root_auth.verify_password(form_data.password, user.mat_khau):
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Email hoặc mật khẩu không chính xác",
-            headers={"WWW-Authenticate": "Bearer"},
+            detail="Tài khoản hoặc mật khẩu không chính xác."
         )
-    
-    access_token = create_access_token(data={"sub": user.email, "vai_tro": user.vai_tro})
-    return {"access_token": access_token, "token_type": "bearer"}
 
-@router.get("/me", response_model=UserResponse)
-def get_me(current_user: NguoiDung = Depends(get_current_user)):
-    return current_user
+    if user.trang_thai == 0:
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Tài khoản đã bị tạm khóa."
+        )
+
+    access_token_expires = timedelta(minutes=root_auth.ACCESS_TOKEN_EXPIRE_MINUTES)
+    token = root_auth.create_access_token(
+        data={"id": user.user_id, "sub": user.email, "role": user.vai_tro},
+        expires_delta=access_token_expires
+    )
+
+    return {
+        "access_token": token,
+        "token_type": "bearer",
+        "vai_tro": user.vai_tro,
+        "user_id": user.user_id,
+        "ho_ten": user.ho_ten
+    }
+
+
+@router.get("/me", summary="Lấy thông tin tài khoản hiện tại")
+def get_me(current_user: NguoiDung = Depends(root_auth.get_current_user)):
+    return {
+        "user_id": current_user.user_id,
+        "email": current_user.email,
+        "ho_ten": current_user.ho_ten,
+        "so_dien_thoai": current_user.so_dien_thoai,
+        "vai_tro": current_user.vai_tro
+    }
