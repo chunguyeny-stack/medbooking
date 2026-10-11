@@ -3,60 +3,530 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MEDBOOKING - Trang chủ</title>
+    <title>MEDBOOKING - Cổng Y Tế Cao Cấp</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg-color: #fbf9fb; /* Nền trắng hồng nhẹ nhàng, tinh tế */
+            --text-main: #1e1b24; 
+            --medical-primary: #0284c7; /* Xanh y tế chủ đạo */
+            --medical-deep: #2e1065; /* Tím đậm chiều sâu */
+            --accent-pink: #db2777; /* Hồng điểm nhấn sang trọng */
+            --accent-purple: #b45fe5; /* Tím hiện đại */
+            --rose-soft: #fdf2f8; /* Nền hồng pastel nhẹ */
+            --card-bg: #ffffff;
+            --border-color: rgba(124, 58, 237, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            overflow-x: hidden;
+            letter-spacing: -0.01em;
+        }
+
+        /* --- HEADER --- */
+        .site-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 22px 6%;
+            border-bottom: 1px solid var(--border-color);
+            background: rgba(251, 249, 251, 0.85);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            backdrop-filter: blur(12px);
+        }
+
+        .logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 26px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            color: var(--text-main);
+            text-transform: uppercase;
+        }
+
+        .logo span {
+            color: var(--accent-pink);
+            font-style: italic;
+        }
+
+        .contact-info span {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: #71717a;
+            font-weight: 500;
+        }
+
+        .auth-navigation {
+            display: flex;
+            gap: 24px;
+            align-items: center;
+        }
+
+        .auth-navigation a {
+            text-decoration: none;
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            font-weight: 500;
+            transition: opacity 0.3s ease;
+        }
+
+        .btn-outline {
+            color: var(--text-main);
+        }
+
+        .btn-outline:hover {
+            opacity: 0.6;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--accent-purple), var(--accent-pink));
+            color: #ffffff !important;
+            padding: 12px 28px;
+            border-radius: 50px;
+            box-shadow: 0 10px 20px rgba(219, 39, 119, 0.2);
+            transition: transform 0.3s ease, opacity 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            opacity: 0.9;
+        }
+
+        /* --- HERO SECTION (Đa tầng hình ảnh & Chiều sâu phối màu hồng/tím) --- */
+        .hero-section {
+            padding: 80px 6% 60px 6%;
+            position: relative;
+            background: linear-gradient(135deg, #fbf9fb 0%, #fef2f2 50%, #f3e8ff 100%);
+            overflow: hidden;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .hero-grid {
+            display: grid;
+            grid-template-columns: 1.1fr 0.9fr;
+            gap: 50px;
+            align-items: center;
+            position: relative;
+            z-index: 2;
+        }
+
+        .hero-badge {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            color: var(--accent-pink);
+            font-weight: 600;
+            margin-bottom: 20px;
+            display: inline-block;
+            background: var(--rose-soft);
+            padding: 6px 14px;
+            border-radius: 20px;
+        }
+
+        .hero-content h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 54px;
+            font-weight: 500;
+            line-height: 1.15;
+            color: var(--text-main);
+            margin-bottom: 20px;
+        }
+
+        .hero-content h1 i {
+            font-family: 'Playfair Display', serif;
+            color: var(--accent-purple);
+        }
+
+        .hero-content p {
+            font-size: 16px;
+            line-height: 1.8;
+            color: #52525b;
+            max-width: 500px;
+            margin-bottom: 30px;
+            font-weight: 300;
+        }
+
+        .btn-cta {
+            display: inline-block;
+            background: var(--text-main);
+            color: white;
+            padding: 16px 36px;
+            border-radius: 50px;
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .btn-cta:hover {
+            background: var(--accent-purple);
+            transform: translateY(-2px);
+        }
+
+        /* Bố cục chồng ảnh tạo chiều sâu đa tầng */
+        .hero-visual-wrapper {
+            position: relative;
+            height: 480px;
+        }
+
+        .hero-img-main {
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 78%;
+            height: 400px;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 25px 50px rgba(124, 58, 237, 0.15);
+            z-index: 2;
+        }
+
+        .hero-img-main img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .hero-img-secondary {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 55%;
+            height: 260px;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 20px 40px rgba(219, 39, 119, 0.15);
+            z-index: 3;
+            border: 4px solid var(--bg-color);
+        }
+
+        .hero-img-secondary img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* --- SUB FEATURES SHOWCASE --- */
+        .sub-features-section {
+            padding: 50px 6%;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+            background: #ffffff;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .sub-feature-card {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            padding: 20px;
+            border-radius: 10px;
+            background: #fdfcff;
+            border: 1px solid var(--border-color);
+            transition: transform 0.3s ease;
+        }
+
+        .sub-feature-card:hover {
+            transform: translateY(-4px);
+        }
+
+        .sub-feature-card img {
+            width: 70px;
+            height: 70px;
+            border-radius: 8px;
+            object-fit: cover;
+        }
+
+        .sub-feature-info h4 {
+            font-family: 'Playfair Display', serif;
+            font-size: 18px;
+            margin-bottom: 6px;
+            color: var(--text-main);
+        }
+
+        .sub-feature-info p {
+            font-size: 13px;
+            color: #71717a;
+        }
+
+        /* --- CAM KẾT DỊCH VỤ --- */
+        .service-commitments {
+            padding: 90px 6%;
+            background: var(--bg-color);
+        }
+
+        .section-header {
+            text-align: center;
+            max-width: 600px;
+            margin: 0 auto 60px auto;
+        }
+
+        .section-header h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 38px;
+            font-weight: 500;
+            color: var(--text-main);
+        }
+
+        .commitments-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 25px;
+        }
+
+        .commitment-card {
+            background: var(--card-bg);
+            padding: 40px 30px;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            transition: transform 0.4s ease, box-shadow 0.4s ease;
+        }
+
+        .commitment-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(124, 58, 237, 0.08);
+        }
+
+        .commitment-card h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 22px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: var(--text-main);
+        }
+
+        .commitment-card p {
+            font-size: 14px;
+            color: #71717a;
+            line-height: 1.7;
+            font-weight: 300;
+        }
+
+        /* Điểm nhấn màu hồng và tím cho 4 thẻ cam kết */
+        .card-pink { border-top: 4px solid var(--accent-pink); }
+        .card-purple { border-top: 4px solid var(--accent-purple); }
+        .card-blue { border-top: 4px solid var(--medical-primary); }
+        .card-teal { border-top: 4px solid #0d9488; }
+
+        /* --- SPOTLIGHT BANNER --- */
+        .spotlight-section {
+            padding: 0 6% 90px 6%;
+            background: var(--bg-color);
+        }
+
+        .spotlight-banner {
+            position: relative;
+            border-radius: 20px;
+            overflow: hidden;
+            height: 380px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            color: #ffffff;
+            box-shadow: 0 20px 40px rgba(46, 16, 101, 0.25);
+        }
+
+        .spotlight-banner img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: brightness(0.4);
+        }
+
+        .spotlight-content {
+            position: relative;
+            z-index: 2;
+            max-width: 650px;
+            padding: 0 20px;
+        }
+
+        .spotlight-content h3 {
+            font-family: 'Playfair Display', serif;
+            font-size: 36px;
+            margin-bottom: 15px;
+        }
+
+        .spotlight-content p {
+            font-size: 15px;
+            margin-bottom: 25px;
+            font-weight: 300;
+            opacity: 0.9;
+        }
+
+        /* --- FOOTER --- */
+        footer {
+            background: var(--medical-deep);
+            color: #cbd5e1;
+            padding: 70px 6% 40px 6%;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+
+        .footer-brand h3 {
+            font-family: 'Playfair Display', serif;
+            color: #ffffff;
+            font-size: 22px;
+            margin-bottom: 12px;
+            letter-spacing: 1px;
+        }
+
+        .footer-brand p {
+            font-size: 14px;
+            line-height: 1.6;
+            font-weight: 300;
+            max-width: 350px;
+        }
+
+        .footer-info p {
+            font-size: 14px;
+            margin-bottom: 10px;
+            font-weight: 300;
+            color: #e2e8f0;
+        }
+
+        @media (max-width: 968px) {
+            .hero-grid { grid-template-columns: 1fr; text-align: center; }
+            .hero-content p { margin: 0 auto 30px auto; }
+            .hero-visual-wrapper { height: 380px; margin-top: 20px; }
+            .sub-features-section { grid-template-columns: 1fr; }
+            .commitments-grid { grid-template-columns: repeat(2, 1fr); }
+            footer { flex-direction: column; gap: 30px; }
+        }
+    </style>
 </head>
 <body>
-        <!-- Hero / Giới thiệu -->
-    <section class="hero-section">
-        <span>+ Tiêu Chuẩn Y Khoa Toàn Diện</span>
-        <h1>Cổng Y Tế Trực Tuyến MedBooking</h1>
-        <p>Đặt khám nhanh chóng, tra cứu lịch sử bệnh án và kết quả xét nghiệm bảo mật theo tiêu chuẩn y khoa.</p>
-        <div>
-            <a href="dk.html">Đăng ký tài khoản bệnh nhân</a>
-        </div>
-    </section>
-
 
     <!-- Header -->
-    <header>
-        <div class="logo">MEDBOOKING</div>
+    <header class="site-header">
+        <div class="logo">MED<span>BOOKING</span></div>
         <div class="contact-info">
             <span>Hotline: 1999 0081</span>
         </div>
         <nav class="auth-navigation">
-            <a href="dk.html">Đăng ký</a>
-            <a href="dn.html">Đăng nhập</a>
+            <a href="dk.html" class="btn-outline">Đăng ký</a>
+            <a href="dn.html" class="btn-primary">Đăng nhập</a>
         </nav>
     </header>
 
+    <!-- Hero Section với nhiều lớp ảnh và tone hồng/tím tinh tế -->
+    <section class="hero-section">
+        <div class="hero-grid">
+            <div class="hero-content">
+                <span class="hero-badge">+ Tiêu Chuẩn Y Khoa Toàn Diện</span>
+                <h1>Cổng Y Tế Trực Tuyến <i>MedBooking</i></h1>
+                <p>Đặt khám nhanh chóng, tra cứu lịch sử bệnh án và kết quả xét nghiệm bảo mật theo tiêu chuẩn y khoa quốc tế với trải nghiệm tinh tế nhất.</p>
+                <div>
+                    <a href="dk.html" class="btn-cta">Đăng ký tài khoản bệnh nhân</a>
+                </div>
+            </div>
+            <div class="hero-visual-wrapper">
+                <!-- Ảnh chính lớn -->
+                <div class="hero-img-main">
+                    <img src="https://images.unsplash.com/photo-1559839734-2b71ea197ec2?auto=format&fit=crop&w=800&q=80" alt="Bác sĩ chuyên khoa MedBooking">
+                </div>
+                <!-- Ảnh phụ chồng tạo chiều sâu -->
+                <div class="hero-img-secondary">
+                    <img src="https://images.unsplash.com/photo-1584515979956-d9f6e5d09982?auto=format&fit=crop&w=600&q=80" alt="Phòng khám công nghệ cao">
+                </div>
+            </div>
+        </div>
+    </section>
 
-    <!-- Thông tin đi kèm / Cam kết dịch vụ -->
+    <!-- Sub Features Showcase -->
+    <section class="sub-features-section">
+        <div class="sub-feature-card">
+            <img src="https://images.unsplash.com/photo-1579684385127-1ef15d508118?auto=format&fit=crop&w=200&q=80" alt="Xét nghiệm">
+            <div class="sub-feature-info">
+                <h4>Xét Nghiệm Nhanh</h4>
+                <p>Kết quả điện tử số hóa chính xác tuyệt đối.</p>
+            </div>
+        </div>
+        <div class="sub-feature-card">
+            <img src="https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?auto=format&fit=crop&w=200&q=80" alt="Tư vấn">
+            <div class="sub-feature-info">
+                <h4>Tư Vấn 24/7</h4>
+                <p>Hỗ trợ giải đáp y tế trực tuyến mọi lúc.</p>
+            </div>
+        </div>
+        <div class="sub-feature-card">
+            <img src="https://images.unsplash.com/photo-1532938911079-1b06ac7ceec7?auto=format&fit=crop&w=200&q=80" alt="Dược phẩm">
+            <div class="sub-feature-info">
+                <h4>Nhà Thuốc Chuẩn GPP</h4>
+                <p>Thuốc chính hãng, giao tận nhà an toàn.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Cam kết dịch vụ -->
     <section class="service-commitments">
-        <h2>Cam Kết Dịch Vụ Tại MedBooking</h2>
-        <div>
-            <h3>Đúng Giờ Hẹn</h3>
-            <p>Giảm thiểu tối đa thời gian chờ đợi. Quy trình tiếp đón số hóa qua thẻ VNeID/BHYT giúp phân luồng vào phòng khám tức thì.</p>
+        <div class="section-header">
+            <h2>Cam Kết Dịch Vụ Tại MedBooking</h2>
         </div>
-        <div>
-            <h3>Minh Bạch Chi Phí</h3>
-            <p>Công khai toàn bộ bảng giá dịch vụ kỹ thuật, danh mục thuốc và hỗ trợ đầy đủ quyền lợi thanh toán theo BHYT hiện hành.</p>
+        <div class="commitments-grid">
+            <div class="commitment-card card-pink">
+                <h3>Đúng Giờ Hẹn</h3>
+                <p>Giảm thiểu tối đa thời gian chờ đợi. Quy trình tiếp đón số hóa qua thẻ VNeID/BHYT giúp phân luồng vào phòng khám tức thì.</p>
+            </div>
+            <div class="commitment-card card-purple">
+                <h3>Minh Bạch Chi Phí</h3>
+                <p>Công khai toàn bộ bảng giá dịch vụ kỹ thuật, danh mục thuốc và hỗ trợ đầy đủ quyền lợi thanh toán theo BHYT hiện hành.</p>
+            </div>
+            <div class="commitment-card card-blue">
+                <h3>Bảo Mặt Bệnh Án</h3>
+                <p>Hồ sơ bệnh án điện tử, kết quả chẩn đoán hình ảnh và xét nghiệm được mã hóa an toàn theo tiêu chuẩn y khoa quốc gia.</p>
+            </div>
+            <div class="commitment-card card-teal">
+                <h3>Chuyên Gia Đầu Ngành</h3>
+                <p>Đội ngũ hơn 80+ Bác sĩ Chuyên khoa giàu kinh nghiệm thăm khám và tư vấn trực tiếp.</p>
+            </div>
         </div>
-        <div>
-            <h3>Bảo Mặt Bệnh Án</h3>
-            <p>Hồ sơ bệnh án điện tử, kết quả chẩn đoán hình ảnh và xét nghiệm được mã hóa an toàn theo tiêu chuẩn y khoa quốc gia.</p>
-        </div>
-        <div>
-            <h3>Chuyên Gia Đầu Ngành</h3>
-            <p>Đội ngũ hơn 80+ Bác sĩ Chuyên khoa giàu kinh nghiệm thăm khám và tư vấn.</p>
+    </section>
+
+    <!-- Banner Spotlight -->
+    <section class="spotlight-section">
+        <div class="spotlight-banner">
+            <img src="https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?auto=format&fit=crop&w=1200&q=80" alt="Bệnh viện hiện đại">
+            <div class="spotlight-content">
+                <h3>Trải Nghiệm Y Tế Đẳng Cấp Quốc Tế</h3>
+                <p>Hệ thống trang thiết bị tối tân kết hợp không gian nghỉ dưỡng tiện nghi, mang lại sự an tâm tuyệt đối cho sức khỏe của bạn và gia đình.</p>
+                <a href="dk.html" class="btn-primary" style="display: inline-block;">Đặt lịch khám ngay</a>
+            </div>
         </div>
     </section>
 
     <!-- Footer -->
     <footer>
-        <p><strong>Bệnh viện MedBooking</strong></p>
-        <p>Địa chỉ: Trường Đại học CMC</p>
-        <p>Email: benhvienmedbooking@gmail.com</p>
-        <p>Hotline: 1999 0081</p>
+        <div class="footer-brand">
+            <h3>Bệnh viện MedBooking</h3>
+            <p>Cổng y tế trực tuyến hàng đầu mang lại sự an tâm tuyệt đối cho sức khỏe của bạn.</p>
+        </div>
+        <div class="footer-info">
+            <p>📍 Địa chỉ: Trường Đại học CMC</p>
+            <p>✉️ Email: benhvienmedbooking@gmail.com</p>
+            <p>☎️ Hotline: 1999 0081</p>
+        </div>
     </footer>
 
 </body>

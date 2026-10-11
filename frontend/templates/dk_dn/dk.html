@@ -4,42 +4,290 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MEDBOOKING - Đăng ký tài khoản bệnh nhân</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --bg-color: #f4f8fb; /* Nền trắng kem ánh xanh dương nhẹ nhàng */
+            --text-main: #0f172a;
+            --accent-blue: #0284c7; /* Xanh dương y tế chủ đạo */
+            --accent-blue-dark: #0369a1;
+            --accent-pink: #db2777; /* Hồng điểm nhấn sang trọng */
+            --accent-pink-deep: #9d174d;
+            --card-bg: #ffffff;
+            --border-color: rgba(2, 132, 199, 0.15);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+        }
+
+        /* --- HEADER --- */
+        .site-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 24px 6%;
+            background: transparent;
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 10;
+        }
+
+        .logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 24px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            color: var(--text-main);
+            text-transform: uppercase;
+        }
+
+        .logo span {
+            color: var(--accent-pink);
+            font-style: italic;
+        }
+
+        .hotline {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: #64748b;
+            font-weight: 500;
+        }
+
+        /* --- MAIN LAYOUT CHIA ĐÔI THEO MẪU --- */
+        .register-container {
+            display: grid;
+            grid-template-columns: 1.1fr 0.9fr;
+            min-height: 100vh;
+            width: 100%;
+        }
+
+        /* Cột trái: Form đăng ký trên nền gradient Xanh dương - Hồng */
+        .register-left-side {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 100px 8% 50px 10%;
+            background: linear-gradient(135deg, #f4f8fb 0%, #e0f2fe 50%, #fdf2f8 100%);
+            position: relative;
+        }
+
+        .back-home {
+            display: inline-block;
+            text-decoration: none;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: #64748b;
+            font-weight: 600;
+            margin-bottom: 20px;
+            transition: color 0.3s;
+        }
+
+        .back-home:hover {
+            color: var(--accent-blue);
+        }
+
+        .register-left-side h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 40px;
+            font-weight: 500;
+            color: var(--text-main);
+            margin-bottom: 12px;
+            line-height: 1.2;
+        }
+
+        .register-left-side h1 i {
+            color: var(--accent-pink);
+        }
+
+        .register-desc {
+            font-size: 14px;
+            color: #475569;
+            margin-bottom: 25px;
+            font-weight: 300;
+            line-height: 1.6;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1.2px;
+            font-weight: 600;
+            color: #475569;
+            margin-bottom: 6px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 13px 18px;
+            border-radius: 12px;
+            border: 1px solid rgba(2, 132, 199, 0.2);
+            background: rgba(255, 255, 255, 0.75);
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: 14px;
+            color: var(--text-main);
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus {
+            border-color: var(--accent-pink);
+            box-shadow: 0 0 0 4px rgba(219, 39, 119, 0.1);
+            background: #ffffff;
+        }
+
+        .btn-submit {
+            width: 100%;
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-pink));
+            color: #ffffff;
+            padding: 15px;
+            border-radius: 50px;
+            border: none;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 10px 20px rgba(2, 132, 199, 0.2);
+            transition: transform 0.3s ease, opacity 0.3s ease;
+            margin-top: 10px;
+            margin-bottom: 20px;
+        }
+
+        .btn-submit:hover {
+            transform: translateY(-2px);
+            opacity: 0.95;
+        }
+
+        .login-redirect {
+            text-align: center;
+        }
+
+        .login-redirect p {
+            font-size: 13px;
+            color: #64748b;
+        }
+
+        .login-redirect a {
+            color: var(--text-main);
+            font-weight: 600;
+            text-decoration: none;
+            border-bottom: 1px solid var(--text-main);
+            padding-bottom: 2px;
+            transition: color 0.3s, border-color 0.3s;
+        }
+
+        .login-redirect a:hover {
+            color: var(--accent-pink);
+            border-color: var(--accent-pink);
+        }
+
+        /* Cột phải: Khung ảnh nghệ thuật mới tone Xanh - Hồng đầy chiều sâu */
+        .register-right-side {
+            position: relative;
+            overflow: hidden;
+            background: #0c4a6e;
+        }
+
+        .register-right-side img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            filter: brightness(0.92);
+        }
+
+        /* Dải chuyển màu mịn màng ngăn cách 2 bên */
+        .register-right-side::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 140px;
+            height: 100%;
+            background: linear-gradient(to right, rgba(244, 248, 251, 1), rgba(244, 248, 251, 0));
+            z-index: 2;
+        }
+
+        @media (max-width: 968px) {
+            .register-container {
+                grid-template-columns: 1fr;
+            }
+            .register-right-side {
+                display: none;
+            }
+            .register-left-side {
+                padding: 100px 6% 40px 6%;
+            }
+        }
+    </style>
 </head>
 <body>
 
-    <header>
-        <div class="logo">MEDBOOKING</div>
-        <span>Hotline: 1999 0081</span>
+    <!-- Header -->
+    <header class="site-header">
+        <div class="logo">MED<span>BOOKING</span></div>
+        <div class="hotline">Hotline: 1999 0081</div>
     </header>
 
-    <main>
-        <section class="register-form-container">
-            <a href="home.html">← Quay lại trang chủ</a>
-            <h1>Đăng ký tài khoản dành cho bệnh nhân mới</h1>
+    <!-- Main Content Layout -->
+    <main class="register-container">
+        <!-- Cột trái: Form Đăng ký -->
+        <section class="register-left-side">
+            <a href="home.html" class="back-home">← Quay lại trang chủ</a>
+            <h1>Đăng ký tài khoản <i>Bệnh nhân mới</i></h1>
+            <p class="register-desc">Điền thông tin bên dưới để tạo hồ sơ số hóa y tế và trải nghiệm dịch vụ đặt lịch khám nhanh chóng.</p>
 
             <form action="#" method="POST">
-                <div>
+                <div class="form-group">
                     <label for="hoten">Họ và tên</label>
-                    <input type="text" id="hoten" name="hoten" placeholder="Nhập họ và tên" required>
+                    <input type="text" id="hoten" name="hoten" placeholder="Nhập họ và tên đầy đủ" required>
                 </div>
 
-                <div>
+                <div class="form-group">
                     <label for="email">Gmail</label>
                     <input type="email" id="email" name="email" placeholder="example@gmail.com" required>
                 </div>
 
-                <div>
+                <div class="form-group">
                     <label for="password">Mật khẩu</label>
-                    <input type="password" id="password" name="password" placeholder="Nhập mật khẩu" required>
+                    <input type="password" id="password" name="password" placeholder="Tối thiểu 6 ký tự" required>
                 </div>
 
-                <button type="submit">Chấp nhận</button>
+                <button type="submit" class="btn-submit">Chấp nhận</button>
             </form>
 
             <div class="login-redirect">
                 <p>Đã có tài khoản? <a href="dn.html">Đăng nhập</a></p>
             </div>
         </section>
+
+        <!-- Cột phải: Hình ảnh y tế chất lượng cao mới -->
+        <div class="register-right-side">
+            <img src="https://i.pinimg.com/736x/c1/e4/f9/c1e4f92fd014f025cf45d378b573977d.jpg" alt="Bác sĩ MedBooking tận tâm">
+        </div>
     </main>
 
 </body>
