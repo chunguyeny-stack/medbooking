@@ -1,128 +1,85 @@
-import importlib
-from datetime import date, time, datetime, timezone
-from typing import Optional
-from fastapi import APIRouter, Depends, HTTPException, Query, status
-from pydantic import BaseModel
-from sqlalchemy.orm import Session
-
-from datadase.database import get_db
-from models.models import NguoiDung
-from models.lich_hen import LichHen, LogTrangThai
-from models.bac_si import BacSi
-
-root_auth = importlib.import_module("auth")
-
-router = APIRouter(prefix="/appointments", tags=["Quản lý Lịch hẹn"])
+from datetime import datetime
+from decimal import Decimal
+from typing import List, Optional
+from pydantic import BaseModel, EmailStr, Field
 
 
-class BookingRequest(BaseModel):
+# --- Dị bản (Variants / Chi nhánh / Chuyên khoa phụ) ---
+class BacSiVariantBase(BaseModel):
+    ten_co_so: Optional[str] = None
+    dia_chi_co_so: Optional[str] = None
+    chuyen_khoa_phu: Optional[str] = None
+    khung_gio_phu: Optional[str] = None
+
+
+class BacSiVariantCreate(BacSiVariantBase):
+    pass
+
+
+class BacSiVariantResponse(BacSiVariantBase):
+    id: int
     ma_bac_si: int
-    ngay_kham: date
-    gio_kham: time
-    ghi_chu: Optional[str] = None
-    ma_bhyt: Optional[str] = None
+
+    class Config:
+        from_attributes = True
 
 
-class UpdateStatusRequest(BaseModel):
-    trang_thai_moi: str  # 'Confirmed', 'In Progress', 'Completed', 'Cancelled', 'DaDen'
-    ghi_chu: Optional[str] = None
+# --- Tạo mới / Cập nhật Bác sĩ ---
+class BacSiCreate(BaseModel):
+    ho_ten: str = Field(..., min_length=2, max_length=100)
+    email: EmailStr
+    so_dien_thoai: Optional[str] = Field(None, max_length=20)
+    mat_khau: str = Field(..., min_length=8)
+    ma_chuyen_khoa: int
+    hoc_vi: Optional[str] = Field(None, max_length=50)
+    kinh_nghiem: int = Field(0, ge=0)
+    gia_kham: Decimal = Field(..., ge=0)
+    variants: Optional[List[BacSiVariantCreate]] = []
 
 
-@router.post("", status_code=status.HTTP_201_CREATED, summary="Bệnh nhân đặt lịch khám mới")
-def create_appointment(
-    payload: BookingRequest,
-    db: Session = Depends(get_db),
-    current_user: NguoiDung = Depends(root_auth.get_current_user)
-):
-    doctor = db.query(BacSi).filter(BacSi.ma_bac_si == payload.ma_bac_si, BacSi.status == 1).first()
-    if not doctor:
-        raise HTTPException(status_code=404, detail="Bác sĩ không tồn tại hoặc đã bị ẩn.")
-
-    # Kiểm tra ca trùng lịch
-    conflict = db.query(LichHen).filter(
-        LichHen.ma_bac_si == payload.ma_bac_si,
-        LichHen.ngay_kham == payload.ngay_kham,
-        LichHen.gio_kham == payload.gio_kham,
-        LichHen.trang_thai.notin_(["Cancelled"])
-    ).first()
-    if conflict:
-        raise HTTPException(status_code=400, detail="Khung giờ này đã có bệnh nhân khác đặt.")
-
-    appt = LichHen(
-        ma_benh_nhan=current_user.user_id,
-        ma_bac_si=payload.ma_bac_si,
-        ngay_kham=payload.ngay_kham,
-        gio_kham=payload.gio_kham,
-        trang_thai="Pending",
-        ghi_chu=payload.ghi_chu or "",
-        ma_bhyt=payload.ma_bhyt or ""
-    )
-    db.add(appt)
-    db.flush()
-
-    # Truyền chuỗi rỗng thay cho None để thỏa mãn kiểu str
-    log = LogTrangThai(
-        ma_lich_hen=appt.ma_lich_hen,
-        trang_thai_cu="",
-        trang_thai_moi="Pending",
-        thoi_gian=datetime.now(timezone.utc),
-        nguoi_thuc_hien_id=current_user.user_id,
-        ghi_chu="Bệnh nhân đặt lịch thành công qua cổng trực tuyến."
-    )
-    db.add(log)
-    db.commit()
-    db.refresh(appt)
-    return {"message": "Đặt lịch khám thành công.", "ma_lich_hen": appt.ma_lich_hen}
+class BacSiUpdate(BaseModel):
+    ho_ten: Optional[str] = Field(None, min_length=2, max_length=100)
+    so_dien_thoai: Optional[str] = None
+    ma_chuyen_khoa: Optional[int] = None
+    hoc_vi: Optional[str] = None
+    kinh_nghiem: Optional[int] = Field(None, ge=0)
+    gia_kham: Optional[Decimal] = Field(None, ge=0)
+    status: Optional[int] = Field(None, description="1: Active, 0: Soft-deleted/Ẩn")
+    variants: Optional[List[BacSiVariantCreate]] = None
 
 
-@router.get("", summary="Xem danh sách lịch hẹn")
-def get_appointments(
-    status_filter: Optional[str] = Query(None, description="Pending, Confirmed, Completed, Cancelled..."),
-    ngay: Optional[date] = Query(None, description="Lọc theo ngày khám"),
-    db: Session = Depends(get_db),
-    current_user: NguoiDung = Depends(root_auth.get_current_user)
-):
-    query = db.query(LichHen)
+# --- Output trả về client ---
+class BacSiResponse(BaseModel):
+    ma_bac_si: int
+    ho_ten: str
+    email: str
+    so_dien_thoai: Optional[str] = None
+    ma_chuyen_khoa: int
+    ten_chuyen_khoa: Optional[str] = None
+    hoc_vi: Optional[str] = None
+    kinh_nghiem: int
+    gia_kham: Decimal
+    rating: float
+    status: int
+    created_at: datetime
+    updated_at: datetime
+    created_by: Optional[int] = None
+    updated_by: Optional[int] = None
 
-    if current_user.vai_tro == "benh_nhan":
-        query = query.filter(LichHen.ma_benh_nhan == current_user.user_id)
-    elif current_user.vai_tro == "bac_si":
-        query = query.filter(LichHen.ma_bac_si == current_user.user_id)
+    # Badges nhận diện
+    is_hot: bool = False
+    is_new: bool = False
+    is_related: bool = False
 
-    if status_filter:
-        query = query.filter(LichHen.trang_thai == status_filter)
-    if ngay:
-        query = query.filter(LichHen.ngay_kham == ngay)
+    variants: List[BacSiVariantResponse] = []
 
-    return query.order_by(LichHen.ngay_kham.desc(), LichHen.gio_kham.asc()).all()
+    class Config:
+        from_attributes = True
 
 
-@router.put("/{ma_lich_hen}/status", summary="Cập nhật trạng thái lịch hẹn kèm ghi log hệ thống")
-def update_appointment_status(
-    ma_lich_hen: int,
-    payload: UpdateStatusRequest,
-    db: Session = Depends(get_db),
-    current_user: NguoiDung = Depends(root_auth.get_current_user)
-):
-    appt = db.query(LichHen).filter(LichHen.ma_lich_hen == ma_lich_hen).first()
-    if not appt:
-        raise HTTPException(status_code=404, detail="Không tìm thấy lịch hẹn tương ứng.")
-
-    old_status = str(appt.trang_thai)
-    appt.trang_thai = payload.trang_thai_moi
-
-    log = LogTrangThai(
-        ma_lich_hen=appt.ma_lich_hen,
-        trang_thai_cu=old_status,
-        trang_thai_moi=payload.trang_thai_moi,
-        thoi_gian=datetime.now(timezone.utc),
-        nguoi_thuc_hien_id=current_user.user_id,
-        ghi_chu=payload.ghi_chu or f"Chuyển trạng thái từ {old_status} sang {payload.trang_thai_moi}"
-    )
-    db.add(log)
-    db.commit()
-    return {
-        "message": "Cập nhật trạng thái thành công.",
-        "ma_lich_hen": ma_lich_hen,
-        "trang_thai": payload.trang_thai_moi
-    }
+class BacSiPaginationResponse(BaseModel):
+    items: List[BacSiResponse]
+    page: int
+    page_size: int
+    total_records: int
+    total_pages: int
