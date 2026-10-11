@@ -18,7 +18,16 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl="api/auth/login", auto_error=False
 
 
 def verify_password(plain_password: str, hashed_password: str) -> bool:
-    return pwd_context.verify(plain_password, hashed_password)
+    if not hashed_password:
+        return False
+    # 1. Hỗ trợ mật khẩu dạng thô từ file SEED.SQL (chưa qua băm bcrypt)
+    if not hashed_password.startswith("$2b$") and not hashed_password.startswith("$2a$"):
+        return plain_password == hashed_password
+    # 2. Mật khẩu đã băm bcrypt chuẩn sinh từ API
+    try:
+        return pwd_context.verify(plain_password, hashed_password)
+    except (ValueError, TypeError):
+        return False
 
 
 def get_password_hash(password: str) -> str:
@@ -49,7 +58,7 @@ def get_optional_current_user(
         if user_id_val is None:
             return None
         parsed_id = int(str(user_id_val))
-        return db.query(NguoiDung).filter(NguoiDung.user_id == parsed_id).first()
+        return db.query(NguoiDung).filter(NguoiDung.id == parsed_id).first()
     except (JWTError, ValueError):
         return None
 
@@ -79,14 +88,13 @@ def get_current_user(
             detail="Token không hợp lệ hoặc đã hết hạn."
         )
 
-    user = db.query(NguoiDung).filter(NguoiDung.user_id == parsed_id).first()
+    user = db.query(NguoiDung).filter(NguoiDung.id == parsed_id).first()
     if not user:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail="Không tìm thấy người dùng sở hữu token."
         )
     return user
-
 
 def require_role(allowed_roles: List[str]):
     def role_checker(current_user: NguoiDung = Depends(get_current_user)) -> NguoiDung:
