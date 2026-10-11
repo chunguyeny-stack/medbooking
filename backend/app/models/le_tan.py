@@ -10,18 +10,15 @@ def utc_now():
 
 class LeTan(Base):
     __tablename__ = "le_tan"
+    __table_args__ = {"extend_existing": True}
 
     ma_le_tan = Column(
         Integer,
-        ForeignKey("nguoi_dung.user_id", ondelete="CASCADE"),
+        ForeignKey("nguoi_dung.id", ondelete="CASCADE"),
         primary_key=True
     )
     quay_lam_viec = Column(String(50), nullable=True)
-    ca_truc = Column(String(50), nullable=True)  # Sang, Chieu, Toi
-    ngay_vao_lam = Column(DateTime(timezone=True), default=utc_now)
+    ca_truc = Column(String(50), nullable=True)
+    ngay_vao_lam = Column(DateTime, default=utc_now)
 
-    # Dùng dạng chuỗi "[LeTan.ma_le_tan]" để PyCharm nhận diện đúng kiểu tham chiếu
-    user = relationship(
-        "NguoiDung",
-        foreign_keys="[LeTan.ma_le_tan]"
-    )
+    user = relationship("NguoiDung")
