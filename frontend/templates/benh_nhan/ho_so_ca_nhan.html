@@ -4,106 +4,688 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MedBooking - Hồ sơ Cá nhân Bệnh nhân</title>
+    <!-- Nhúng Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Font Awesome cho Icon -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        /* =========================================
+           BIẾN TOÀN CỤC (CSS VARIABLES) & THEME
+           ========================================= */
+        :root {
+            /* Light Mode (Mặc định) */
+            --primary-pink: #FF6B9D;
+            --primary-pink-dark: #E84A7F;
+            --primary-pink-light: #FFE4EC;
+            --secondary-color: #2D3436;
+            --text-gray: #636E72;
+            --bg-body: #FFF9FA;
+            --bg-card: #ffffff;
+            --bg-glass: rgba(255, 255, 255, 0.85);
+            --border-glass: rgba(255, 255, 255, 0.5);
+            --shadow-soft: 0 10px 30px rgba(255, 107, 157, 0.1);
+            --shadow-hover: 0 15px 40px rgba(255, 107, 157, 0.25);
+            --border-radius: 20px;
+            --input-bg: #ffffff;
+            --input-border: #FFD1DC;
+            
+            /* Màu cho nút bấm */
+            --btn-text-color: #ffffff; 
+            --btn-secondary-bg: #2D3436;
+            --btn-secondary-text: #ffffff;
+        }
+
+        /* Dark Mode */
+        [data-theme="dark"] {
+            --primary-pink: #FF85A2;
+            --primary-pink-dark: #FF6B9D;
+            --primary-pink-light: #3A2A30;
+            --secondary-color: #F5F5F5;
+            --text-gray: #B0B0B0;
+            --bg-body: #1A1114;
+            --bg-card: #2A1F23;
+            --bg-glass: rgba(42, 31, 35, 0.85);
+            --border-glass: rgba(255, 255, 255, 0.1);
+            --shadow-soft: 0 10px 30px rgba(0, 0, 0, 0.3);
+            --shadow-hover: 0 15px 40px rgba(255, 107, 157, 0.15);
+            --input-bg: #3A2A30;
+            --input-border: #5A3A45;
+            
+            /* Màu cho nút bấm ở chế độ Tối */
+            --btn-text-color: #1A1114; /* Chữ tối trên nền hồng sáng để dễ đọc */
+            --btn-secondary-bg: #F5F5F5; /* Nút phụ màu trắng */
+            --btn-secondary-text: #1A1114; /* Chữ tối */
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            color: var(--secondary-color);
+            background-color: var(--bg-body);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        h1, h2, h3, h4 {
+            font-family: 'Playfair Display', serif;
+            color: var(--secondary-color);
+        }
+
+        a {
+            text-decoration: none;
+            color: inherit;
+            transition: all 0.3s ease;
+        }
+
+        ul {
+            list-style: none;
+        }
+
+        /* =========================================
+           HEADER
+           ========================================= */
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 5%;
+            background: var(--bg-glass);
+            backdrop-filter: blur(15px);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 20px rgba(0,0,0,0.05);
+            border-bottom: 1px solid var(--border-glass);
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .logo-container:hover {
+            transform: scale(1.02);
+        }
+
+        .logo-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--primary-pink), #ff8fab);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-size: 24px;
+            box-shadow: 0 5px 20px rgba(255, 107, 157, 0.4);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .logo-icon i {
+            animation: heartbeat 1.5s ease-in-out infinite;
+            z-index: 2;
+        }
+
+        @keyframes heartbeat {
+            0% { transform: scale(1); }
+            14% { transform: scale(1.15); }
+            28% { transform: scale(1); }
+            42% { transform: scale(1.15); }
+            70% { transform: scale(1); }
+        }
+
+        .logo-icon::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.4) 0%, transparent 70%);
+            animation: shine 3s infinite linear;
+        }
+
+        @keyframes shine {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .logo-text h1 {
+            font-size: 24px;
+            color: var(--primary-pink);
+            letter-spacing: 1px;
+            margin-bottom: -5px;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 700;
+            text-shadow: 0 2px 4px rgba(255, 107, 157, 0.1);
+        }
+
+        .logo-text p {
+            font-size: 10px;
+            color: var(--text-gray);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-weight: 500;
+            opacity: 0.8;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 30px;
+        }
+
+        nav ul {
+            display: flex;
+            gap: 25px;
+        }
+
+        nav ul li a {
+            font-weight: 500;
+            font-size: 14px;
+            color: var(--secondary-color);
+            position: relative;
+        }
+
+        nav ul li a:hover, nav ul li a strong {
+            color: var(--primary-pink);
+        }
+
+        nav ul li a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: var(--primary-pink);
+            transition: width 0.3s;
+        }
+
+        nav ul li a:hover::after {
+            width: 100%;
+        }
+
+        .theme-toggle {
+            background: var(--primary-pink-light);
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary-pink);
+            font-size: 18px;
+            transition: all 0.3s;
+        }
+
+        .theme-toggle:hover {
+            background: var(--primary-pink);
+            color: #fff;
+            transform: rotate(15deg);
+        }
+
+        /* =========================================
+           MAIN CONTENT
+           ========================================= */
+        main {
+            max-width: 1200px;
+            margin: 40px auto 80px;
+            padding: 0 20px;
+        }
+
+        .page-title {
+            text-align: center;
+            margin-bottom: 50px;
+            position: relative;
+        }
+
+        .page-title h2 {
+            font-size: 36px;
+            color: var(--secondary-color);
+            margin-bottom: 10px;
+        }
+
+        .page-title p {
+            color: var(--text-gray);
+            font-size: 16px;
+        }
+
+        .page-title::after {
+            content: '';
+            display: block;
+            width: 80px;
+            height: 3px;
+            background: var(--primary-pink);
+            margin: 20px auto 0;
+            border-radius: 2px;
+        }
+
+        .profile-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+        }
+
+        .form-card {
+            background: var(--bg-card);
+            padding: 40px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-soft);
+            border: 1px solid var(--border-glass);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .form-card:hover {
+            box-shadow: var(--shadow-hover);
+            border-color: var(--primary-pink-light);
+        }
+
+        .form-card h3 {
+            font-size: 22px;
+            margin-bottom: 30px;
+            color: var(--primary-pink);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid var(--primary-pink-light);
+        }
+
+        .form-card h3 i {
+            font-size: 20px;
+            background: var(--primary-pink-light);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--text-gray);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 14px 20px;
+            border: 1px solid var(--input-border);
+            border-radius: 12px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 15px;
+            background: var(--input-bg);
+            color: var(--secondary-color);
+            transition: all 0.3s;
+            outline: none;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            border-color: var(--primary-pink);
+            background: var(--bg-card);
+            box-shadow: 0 0 0 4px rgba(255, 107, 157, 0.15);
+        }
+
+        .form-group input[readonly] {
+            background: #e9ecef;
+            cursor: not-allowed;
+            color: #6c757d;
+            border-color: #dee2e6;
+        }
+        
+        [data-theme="dark"] .form-group input[readonly] {
+            background: #3D3D5C;
+            color: #B2BEC3;
+            border-color: #4A4A6A;
+        }
+
+        /* =========================================
+           NÚT BẤM (ĐÃ SỬA LỖI MÀU SẮC)
+           ========================================= */
+        .btn-submit {
+            background: var(--primary-pink);
+            color: var(--btn-text-color); /* Sử dụng biến màu chữ thông minh */
+            border: none;
+            padding: 15px 30px;
+            border-radius: 50px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(255, 107, 157, 0.3);
+            width: 100%;
+            margin-top: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .btn-submit:hover {
+            background: var(--primary-pink-dark);
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(255, 107, 157, 0.4);
+            color: #fff; /* Khi hover, chữ luôn trắng trên nền hồng đậm */
+        }
+
+        /* Nút Đổi mật khẩu (Màu tối hơn) */
+        .btn-submit.btn-secondary {
+            background: var(--btn-secondary-bg);
+            color: var(--btn-secondary-text);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .btn-submit.btn-secondary:hover {
+            background: var(--primary-pink);
+            color: #fff; /* Khi hover, chuyển sang màu hồng và chữ trắng */
+            box-shadow: 0 10px 25px rgba(255, 107, 157, 0.3);
+        }
+
+        /* =========================================
+           FOOTER
+           ========================================= */
+        footer {
+            background: #2D3436;
+            color: #fff;
+            padding: 80px 5% 40px;
+            border-radius: 40px 40px 0 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        [data-theme="dark"] footer {
+            background: #150D10;
+        }
+
+        footer::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: url('https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80') center/cover;
+            opacity: 0.05;
+            z-index: 0;
+        }
+
+        footer > div {
+            position: relative;
+            z-index: 1;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        footer > div:first-child {
+            text-align: center;
+            margin-bottom: 60px;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        footer h3 {
+            color: #fff;
+            font-size: 28px;
+            margin-bottom: 20px;
+        }
+
+        footer p {
+            color: rgba(255,255,255,0.7);
+            font-size: 14px;
+            margin-bottom: 15px;
+        }
+
+        footer strong {
+            color: var(--primary-pink);
+            font-style: italic;
+            display: block;
+            margin-top: 20px;
+            font-size: 16px;
+        }
+
+        footer > div:nth-child(2), 
+        footer > div:nth-child(3) {
+            display: inline-block;
+            vertical-align: top;
+            width: 45%;
+            margin-right: 4%;
+            margin-bottom: 40px;
+        }
+        
+        footer > div:nth-child(3) {
+            margin-right: 0;
+        }
+
+        footer h4 {
+            color: #fff;
+            margin-bottom: 20px;
+            font-size: 18px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            padding-bottom: 10px;
+            display: inline-block;
+        }
+
+        footer ul li {
+            margin-bottom: 10px;
+        }
+
+        footer ul li a {
+            color: rgba(255,255,255,0.7);
+        }
+
+        footer ul li a:hover {
+            color: var(--primary-pink);
+            padding-left: 5px;
+        }
+
+        footer > div:last-child {
+            text-align: center;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            padding-top: 20px;
+            font-size: 12px;
+        }
+
+        .footer-logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .footer-logo .logo-icon {
+            background: white;
+            color: var(--primary-pink);
+            box-shadow: none;
+            width: 45px;
+            height: 45px;
+            font-size: 20px;
+        }
+
+        .footer-logo .logo-text h1 {
+            color: white;
+            font-size: 22px;
+        }
+
+        .footer-logo .logo-text p {
+            color: #aaa;
+            font-size: 9px;
+        }
+
+        /* =========================================
+           RESPONSIVE
+           ========================================= */
+        @media (max-width: 900px) {
+            header {
+                flex-direction: column;
+                padding: 15px;
+                gap: 15px;
+            }
+            .header-right {
+                flex-direction: column;
+                gap: 15px;
+                width: 100%;
+            }
+            nav ul {
+                margin-top: 10px;
+                flex-wrap: wrap;
+                justify-content: center;
+                gap: 15px;
+            }
+            
+            .profile-grid {
+                grid-template-columns: 1fr;
+            }
+
+            footer > div:nth-child(2), 
+            footer > div:nth-child(3) {
+                width: 100%;
+                margin-right: 0;
+            }
+            
+            .logo-container { gap: 8px; }
+            .logo-icon { width: 40px; height: 40px; font-size: 18px; }
+            .logo-text h1 { font-size: 20px; }
+            .logo-text p { font-size: 8px; }
+        }
+    </style>
 </head>
 <body>
 
-    <!-- 1. HEADER: LOGO & MENU ĐIỀU HƯỚNG -->
+    <!-- 1. HEADER -->
     <header>
-        <div>
-            <h1>MedBooking</h1>
-            <p>Chăm sóc sức khỏe toàn diện</p>
+        <div class="logo-container">
+            <div class="logo-icon">
+                <i class="fa-solid fa-heart-pulse"></i>
+            </div>
+            <div class="logo-text">
+                <h1>MedBooking</h1>
+                <p>Chăm sóc sức khỏe toàn diện</p>
+            </div>
         </div>
-        <nav>
-            <ul>
-                <li><a href="home_bn.html">Trang chủ</a></li>
-                <li><a href="danh_sach_bac_si.html">Tìm kiếm Bác sĩ</a></li>
-                <li><a href="dat_lich.html">Đặt lịch khám</a></li>
-                <li><a href="danh_sach_lich_hen.html">Lịch hẹn của tôi</a></li>
-                <li><a href="ho_so_ca_nhan.html"><strong>Hồ sơ cá nhân</strong></a></li>
-                <li><a href="../dk_dn/dn.html">Đăng xuất</a></li>
-            </ul>
-        </nav>
+        
+        <div class="header-right">
+            <nav>
+                <ul>
+                    <li><a href="home_bn.html">Trang chủ</a></li>
+                    <li><a href="danh_sach_bac_si.html">Tìm kiếm Bác sĩ</a></li>
+                    <li><a href="dat_lich.html">Đặt lịch khám</a></li>
+                    <li><a href="danh_sach_lich_hen.html">Lịch hẹn của tôi</a></li>
+                    <li><a href="ho_so_ca_nhan.html"><strong>Hồ sơ cá nhân</strong></a></li>
+                    <li><a href="../dk_dn/dn.html">Đăng xuất</a></li>
+                </ul>
+            </nav>
+            <button class="theme-toggle" id="theme-toggle" title="Chuyển đổi chế độ Sáng/Tối">
+                <i class="fas fa-moon"></i>
+            </button>
+        </div>
     </header>
 
-    <hr>
-
-    <!-- 2. NỘI DUNG CHÍNH: QUẢN LÝ HỒ SƠ CÁ NHÂN -->
+    <!-- 2. MAIN CONTENT -->
     <main>
-        <h2>Thông tin Tài khoản & Hồ sơ Bệnh nhân</h2>
+        <div class="page-title">
+            <h2>Thông tin Tài khoản & Hồ sơ Bệnh nhân</h2>
+            <p>Quản lý thông tin cá nhân và bảo mật tài khoản của bạn</p>
+        </div>
         
-        <!-- Form cập nhật thông tin cá nhân -->
-        <form action="#" method="POST">
-            <div>
-                <label for="patient-name">Họ và tên:</label><br>
-                <input type="text" id="patient-name" name="name" value="Nông Phương Trà">
+        <div class="profile-grid">
+            <!-- Cột 1: Form cập nhật thông tin cá nhân -->
+            <div class="form-card">
+                <h3><i class="fas fa-user-circle"></i> Thông tin cá nhân</h3>
+                <form action="#" method="POST">
+                    <div class="form-group">
+                        <label for="patient-name">Họ và tên:</label>
+                        <input type="text" id="patient-name" name="name" value="Nông Phương Trà">
+                    </div>
+                    <div class="form-group">
+                        <label for="patient-phone">Số điện thoại:</label>
+                        <input type="text" id="patient-phone" name="phone" value="0912345678">
+                    </div>
+                    <div class="form-group">
+                        <label for="patient-email">Email đăng ký:</label>
+                        <input type="email" id="patient-email" name="email" value="tratara1612@gmail.com" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label for="patient-dob">Ngày sinh:</label>
+                        <input type="date" id="patient-dob" name="dob" value="2007-12-16">
+                    </div>
+                    <div class="form-group">
+                        <label for="patient-gender">Giới tính:</label>
+                        <select id="patient-gender" name="gender">
+                            <option value="female" selected>Nữ</option>
+                            <option value="male">Nam</option>
+                            <option value="other">Khác</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="patient-address">Địa chỉ liên hệ:</label>
+                        <input type="text" id="patient-address" name="address" value="Hà Nội, Việt Nam">
+                    </div>
+                    <button type="submit" class="btn-submit"><i class="fas fa-save"></i> Cập nhật thông tin</button>
+                </form>
             </div>
-            <br>
-            <div>
-                <label for="patient-phone">Số điện thoại:</label><br>
-                <input type="text" id="patient-phone" name="phone" value="0912345678">
-            </div>
-            <br>
-            <div>
-                <label for="patient-email">Email đăng ký:</label><br>
-                <input type="email" id="patient-email" name="email" value="tratara1612@gmail.com" readonly>
-            </div>
-            <br>
-            <div>
-                <label for="patient-dob">Ngày sinh:</label><br>
-                <input type="date" id="patient-dob" name="dob" value="2007-12-16">
-            </div>
-            <br>
-            <div>
-                <label for="patient-gender">Giới tính:</label><br>
-                <select id="patient-gender" name="gender">
-                    <option value="female" selected>Nữ</option>
-                    <option value="male">Nam</option>
-                    <option value="other">Khác</option>
-                </select>
-            </div>
-            <br>
-            <div>
-                <label for="patient-address">Địa chỉ liên hệ:</label><br>
-                <input type="text" id="patient-address" name="address" value="Hà Nội, Việt Nam">
-            </div>
-            <br>
-            <div>
-                <button type="submit">Cập nhật thông tin hồ sơ</button>
-            </div>
-        </form>
 
-        <hr>
-
-        <!-- Phần đổi mật khẩu -->
-        <h3>Đổi Mật khẩu Bảo mật</h3>
-        <form action="#" method="POST">
-            <div>
-                <label for="current-password">Mật khẩu hiện tại:</label><br>
-                <input type="password" id="current-password" name="current_password">
+            <!-- Cột 2: Form đổi mật khẩu -->
+            <div class="form-card">
+                <h3><i class="fas fa-shield-alt"></i> Đổi Mật khẩu Bảo mật</h3>
+                <form action="#" method="POST">
+                    <div class="form-group">
+                        <label for="current-password">Mật khẩu hiện tại:</label>
+                        <input type="password" id="current-password" name="current_password" placeholder="Nhập mật khẩu cũ...">
+                    </div>
+                    <div class="form-group">
+                        <label for="new-password">Mật khẩu mới:</label>
+                        <input type="password" id="new-password" name="new_password" placeholder="Nhập mật khẩu mới...">
+                    </div>
+                    <div class="form-group">
+                        <label for="confirm-password">Xác nhận mật khẩu mới:</label>
+                        <input type="password" id="confirm-password" name="confirm_password" placeholder="Nhập lại mật khẩu mới...">
+                    </div>
+                    <button type="submit" class="btn-submit btn-secondary"><i class="fas fa-key"></i> Đổi mật khẩu</button>
+                </form>
             </div>
-            <br>
-            <div>
-                <label for="new-password">Mật khẩu mới:</label><br>
-                <input type="password" id="new-password" name="new_password">
-            </div>
-            <br>
-            <div>
-                <label for="confirm-password">Xác nhận mật khẩu mới:</label><br>
-                <input type="password" id="confirm-password" name="confirm_password">
-            </div>
-            <br>
-            <div>
-                <button type="submit">Đổi mật khẩu</button>
-            </div>
-        </form>
+        </div>
     </main>
 
-    <hr>
-
-    <!-- 3. FOOTER: THÔNG TIN CHI TIẾT, ĐỊA CHỈ & LỜI CHÚC SỨC KHỎE -->
+    <!-- 3. FOOTER -->
     <footer>
         <div>
-            <h3>HỆ THỐNG MEDBOOKING</h3>
+            <div class="footer-logo">
+                <div class="logo-icon">
+                    <i class="fa-solid fa-heart-pulse"></i>
+                </div>
+                <div class="logo-text">
+                    <h1>MedBooking</h1>
+                    <p>Chăm sóc sức khỏe toàn diện</p>
+                </div>
+            </div>
             <p>Nền tảng công nghệ y tế kết nối người bệnh với các bệnh viện và phòng khám uy tín hàng đầu. Cam kết quy trình nhanh gọn, minh bạch chi phí và bảo mật thông tin tuyệt đối.</p>
             <p><strong>"MedBooking chúc quý khách và gia đình luôn có một sức khỏe dồi dào, bình an và hạnh phúc!"</strong></p>
         </div>
@@ -128,5 +710,40 @@
     </footer>
 
     <script src="../../js/client.js"></script>
+
+    <!-- Script xử lý chuyển đổi Sáng/Tối -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const themeToggle = document.getElementById('theme-toggle');
+            const icon = themeToggle.querySelector('i');
+            
+            // Lấy theme từ localStorage, mặc định là light
+            const currentTheme = localStorage.getItem('theme') || 'light';
+            
+            // Áp dụng theme ban đầu
+            if (currentTheme === 'dark') {
+                document.documentElement.setAttribute('data-theme', 'dark');
+                icon.classList.remove('fa-moon');
+                icon.classList.add('fa-sun');
+            }
+
+            // Bắt sự kiện click
+            themeToggle.addEventListener('click', function() {
+                let theme = document.documentElement.getAttribute('data-theme');
+                
+                if (theme === 'dark') {
+                    document.documentElement.removeAttribute('data-theme');
+                    localStorage.setItem('theme', 'light');
+                    icon.classList.remove('fa-sun');
+                    icon.classList.add('fa-moon');
+                } else {
+                    document.documentElement.setAttribute('data-theme', 'dark');
+                    localStorage.setItem('theme', 'dark');
+                    icon.classList.remove('fa-moon');
+                    icon.classList.add('fa-sun');
+                }
+            });
+        });
+    </script>
 </body>
 </html>

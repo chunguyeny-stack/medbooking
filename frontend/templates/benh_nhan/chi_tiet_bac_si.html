@@ -4,130 +4,556 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MedBooking - Chi tiết Bác sĩ</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <style>
+        :root {
+            --primary-pink: #FF6B9D;
+            --primary-pink-dark: #E84A7F;
+            --primary-pink-light: #FFE4EC;
+            --secondary-color: #2D3436;
+            --text-gray: #636E72;
+            --bg-body: #FFF9FA;
+            --bg-card: #ffffff;
+            --bg-glass: rgba(255, 255, 255, 0.85);
+            --border-glass: rgba(255, 255, 255, 0.5);
+            --shadow-soft: 0 10px 30px rgba(255, 107, 157, 0.1);
+            --shadow-hover: 0 15px 40px rgba(255, 107, 157, 0.25);
+            --border-radius: 20px;
+            --star-color: #FFC107;
+            --success-bg: #D4EDDA;
+            --success-text: #155724;
+            --off-bg: #E2E3E5;
+            --off-text: #6C757D;
+        }
+
+        [data-theme="dark"] {
+            --primary-pink: #FF85A2;
+            --primary-pink-dark: #FF6B9D;
+            --primary-pink-light: #3A2A30;
+            --secondary-color: #F5F5F5;
+            --text-gray: #B0B0B0;
+            --bg-body: #1A1114;
+            --bg-card: #2A1F23;
+            --bg-glass: rgba(42, 31, 35, 0.85);
+            --border-glass: rgba(255, 255, 255, 0.1);
+            --shadow-soft: 0 10px 30px rgba(0, 0, 0, 0.3);
+            --shadow-hover: 0 15px 40px rgba(255, 107, 157, 0.15);
+            --success-bg: #1A3A22;
+            --success-text: #7FDB8F;
+            --off-bg: #3A3A3A;
+            --off-text: #AAA;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease; }
+        body { font-family: 'Poppins', sans-serif; color: var(--secondary-color); background-color: var(--bg-body); line-height: 1.6; overflow-x: hidden; }
+        h1, h2, h3, h4, h5 { font-family: 'Playfair Display', serif; color: var(--secondary-color); }
+        a { text-decoration: none; color: inherit; transition: all 0.3s ease; }
+        ul { list-style: none; }
+
+        /* HEADER */
+        header {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 15px 5%; background: var(--bg-glass); backdrop-filter: blur(15px);
+            position: sticky; top: 0; z-index: 1000;
+            box-shadow: 0 2px 20px rgba(0,0,0,0.05); border-bottom: 1px solid var(--border-glass);
+        }
+        .logo-container { display: flex; align-items: center; gap: 12px; cursor: pointer; transition: transform 0.3s ease; }
+        .logo-container:hover { transform: scale(1.02); }
+        .logo-icon {
+            width: 50px; height: 50px;
+            background: linear-gradient(135deg, var(--primary-pink), #ff8fab);
+            border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            color: #fff; font-size: 24px;
+            box-shadow: 0 5px 20px rgba(255, 107, 157, 0.4);
+            position: relative; overflow: hidden;
+        }
+        .logo-icon i { animation: heartbeat 1.5s ease-in-out infinite; z-index: 2; }
+        @keyframes heartbeat { 0%{transform:scale(1)} 14%{transform:scale(1.15)} 28%{transform:scale(1)} 42%{transform:scale(1.15)} 70%{transform:scale(1)} }
+        .logo-icon::before {
+            content: ''; position: absolute; top: -50%; left: -50%;
+            width: 200%; height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.4) 0%, transparent 70%);
+            animation: shine 3s infinite linear;
+        }
+        @keyframes shine { 0%{transform:rotate(0deg)} 100%{transform:rotate(360deg)} }
+        .logo-text h1 { font-size: 24px; color: var(--primary-pink); letter-spacing: 1px; margin-bottom: -5px; font-family: 'Poppins', sans-serif; font-weight: 700; }
+        .logo-text p { font-size: 10px; color: var(--text-gray); text-transform: uppercase; letter-spacing: 2px; font-weight: 500; opacity: 0.8; }
+        .header-right { display: flex; align-items: center; gap: 30px; }
+        nav ul { display: flex; gap: 25px; }
+        nav ul li a { font-weight: 500; font-size: 14px; color: var(--secondary-color); position: relative; }
+        nav ul li a:hover, nav ul li a strong { color: var(--primary-pink); }
+        nav ul li a::after {
+            content: ''; position: absolute; bottom: -5px; left: 0;
+            width: 0; height: 2px; background: var(--primary-pink); transition: width 0.3s;
+        }
+        nav ul li a:hover::after { width: 100%; }
+        .theme-toggle {
+            background: var(--primary-pink-light); border: none;
+            width: 40px; height: 40px; border-radius: 50%; cursor: pointer;
+            display: flex; align-items: center; justify-content: center;
+            color: var(--primary-pink); font-size: 18px; transition: all 0.3s;
+        }
+        .theme-toggle:hover { background: var(--primary-pink); color: #fff; transform: rotate(15deg); }
+
+        /* MAIN */
+        main { max-width: 1200px; margin: 40px auto 80px; padding: 0 20px; }
+
+        .back-link {
+            display: inline-flex; align-items: center; gap: 8px;
+            color: var(--text-gray); font-size: 14px; font-weight: 500;
+            margin-bottom: 25px; padding: 10px 20px;
+            background: var(--bg-card); border-radius: 30px;
+            border: 1px solid var(--border-glass);
+            box-shadow: var(--shadow-soft); transition: all 0.3s;
+        }
+        .back-link:hover { color: var(--primary-pink); border-color: var(--primary-pink); transform: translateX(-5px); }
+
+        /* LOADING STATE */
+        .loading-container {
+            text-align: center;
+            padding: 80px 20px;
+            color: var(--text-gray);
+        }
+        .loading-container .spinner {
+            width: 60px; height: 60px;
+            border: 4px solid var(--primary-pink-light);
+            border-top-color: var(--primary-pink);
+            border-radius: 50%;
+            margin: 0 auto 20px;
+            animation: spin 1s linear infinite;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        /* HERO */
+        .doctor-hero {
+            background: var(--bg-card); border-radius: var(--border-radius);
+            padding: 40px; box-shadow: var(--shadow-soft);
+            border: 1px solid var(--border-glass);
+            display: grid; grid-template-columns: auto 1fr auto;
+            gap: 35px; align-items: center; margin-bottom: 30px;
+            position: relative; overflow: hidden;
+        }
+        .doctor-hero::before {
+            content: ''; position: absolute; top: 0; left: 0; right: 0; height: 120px;
+            background: linear-gradient(135deg, var(--primary-pink-light), transparent); z-index: 0;
+        }
+        .hero-avatar {
+            width: 160px; height: 160px; border-radius: 50%;
+            background-size: cover; background-position: center;
+            border: 5px solid var(--bg-card);
+            box-shadow: 0 10px 30px rgba(255, 107, 157, 0.3);
+            position: relative; z-index: 1;
+        }
+        .hero-info { position: relative; z-index: 1; }
+        .hero-info h2 { font-size: 30px; margin-bottom: 10px; font-family: 'Poppins', sans-serif; font-weight: 700; }
+        .hero-info .specialty-badge {
+            display: inline-block; background: var(--primary-pink); color: #fff;
+            padding: 6px 18px; border-radius: 25px;
+            font-size: 13px; font-weight: 600; margin-bottom: 15px;
+        }
+        .hero-info .degree { font-size: 15px; color: var(--text-gray); font-style: italic; margin-bottom: 15px; }
+        .hero-stats { display: flex; flex-wrap: wrap; gap: 20px; }
+        .hero-stat {
+            display: flex; align-items: center; gap: 10px;
+            background: var(--bg-body); padding: 10px 18px;
+            border-radius: 12px; border: 1px solid var(--border-glass);
+        }
+        .hero-stat i { color: var(--primary-pink); font-size: 18px; }
+        .hero-stat .info .value { font-weight: 700; font-size: 16px; color: var(--secondary-color); line-height: 1; }
+        .hero-stat .info .label { font-size: 11px; color: var(--text-gray); text-transform: uppercase; letter-spacing: 0.5px; }
+        .hero-cta { position: relative; z-index: 1; text-align: center; }
+        .hero-cta .btn-book {
+            padding: 16px 32px; border-radius: 50px;
+            background: var(--primary-pink); color: #fff;
+            font-size: 15px; font-weight: 600; cursor: pointer; border: none;
+            box-shadow: 0 10px 25px rgba(255, 107, 157, 0.4);
+            transition: all 0.3s; display: flex; align-items: center; gap: 10px;
+            font-family: 'Poppins', sans-serif; white-space: nowrap;
+        }
+        .hero-cta .btn-book:hover { background: var(--primary-pink-dark); transform: translateY(-3px); box-shadow: 0 15px 35px rgba(255, 107, 157, 0.5); }
+
+        /* LAYOUT */
+        .content-layout { display: grid; grid-template-columns: 2fr 1fr; gap: 30px; }
+        .content-main { display: flex; flex-direction: column; gap: 30px; }
+        .content-sidebar { display: flex; flex-direction: column; gap: 20px; position: sticky; top: 100px; align-self: start; }
+
+        .info-card {
+            background: var(--bg-card); border-radius: var(--border-radius);
+            padding: 30px; box-shadow: var(--shadow-soft);
+            border: 1px solid var(--border-glass);
+        }
+        .info-card h3 {
+            font-size: 20px; margin-bottom: 20px; color: var(--primary-pink);
+            display: flex; align-items: center; gap: 12px;
+            padding-bottom: 15px; border-bottom: 2px solid var(--primary-pink-light);
+        }
+        .info-card h3 i {
+            font-size: 16px; background: var(--primary-pink-light);
+            width: 36px; height: 36px; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+        }
+        .info-card p { color: var(--text-gray); font-size: 14.5px; line-height: 1.8; margin-bottom: 15px; }
+
+        .info-list { margin-top: 15px; }
+        .info-list li {
+            display: flex; gap: 12px; margin-bottom: 15px; padding: 15px;
+            background: var(--bg-body); border-radius: 12px;
+            border-left: 3px solid var(--primary-pink); font-size: 14px;
+            color: var(--secondary-color); align-items: flex-start;
+        }
+        .info-list li i { color: var(--primary-pink); font-size: 16px; margin-top: 3px; flex-shrink: 0; }
+        .info-list li strong { color: var(--secondary-color); font-weight: 600; }
+
+        /* SCHEDULE */
+        .schedule-table { width: 100%; border-collapse: separate; border-spacing: 0 8px; }
+        .schedule-table thead th {
+            text-align: left; font-size: 12px; text-transform: uppercase;
+            color: var(--text-gray); font-weight: 600; letter-spacing: 0.5px;
+            padding: 0 15px 10px;
+        }
+        .schedule-table tbody tr { background: var(--bg-body); border-radius: 12px; }
+        .schedule-table tbody td { padding: 15px; font-size: 14px; color: var(--secondary-color); }
+        .schedule-table tbody td:first-child { border-top-left-radius: 12px; border-bottom-left-radius: 12px; font-weight: 600; }
+        .schedule-table tbody td:last-child { border-top-right-radius: 12px; border-bottom-right-radius: 12px; }
+        .status-badge {
+            display: inline-flex; align-items: center; gap: 6px;
+            padding: 5px 14px; border-radius: 20px; font-size: 12px; font-weight: 600;
+        }
+        .status-badge.available { background: var(--success-bg); color: var(--success-text); }
+        .status-badge.off { background: var(--off-bg); color: var(--off-text); }
+        .status-badge i { font-size: 10px; }
+
+        /* REVIEWS */
+        .review-item {
+            padding: 20px; background: var(--bg-body);
+            border-radius: 15px; margin-bottom: 15px;
+            border-left: 3px solid var(--primary-pink);
+        }
+        .review-header { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
+        .review-avatar {
+            width: 45px; height: 45px; border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary-pink), #ff8fab);
+            display: flex; align-items: center; justify-content: center;
+            color: #fff; font-weight: 600; font-size: 16px; flex-shrink: 0;
+        }
+        .review-meta .name { font-weight: 600; font-size: 14px; color: var(--secondary-color); }
+        .review-meta .stars { color: var(--star-color); font-size: 12px; margin-top: 2px; }
+        .review-meta .date { font-size: 11px; color: var(--text-gray); margin-top: 2px; }
+        .review-text { font-size: 14px; color: var(--text-gray); line-height: 1.7; font-style: italic; }
+
+        /* CTA */
+        .cta-card {
+            background: linear-gradient(135deg, var(--primary-pink), var(--primary-pink-dark));
+            border-radius: var(--border-radius); padding: 30px;
+            color: #fff; text-align: center;
+            box-shadow: 0 15px 40px rgba(255, 107, 157, 0.3);
+            position: relative; overflow: hidden;
+        }
+        .cta-card::before {
+            content: ''; position: absolute; top: -50%; right: -50%;
+            width: 200%; height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.2) 0%, transparent 70%);
+            animation: rotate 10s linear infinite;
+        }
+        @keyframes rotate { from{transform:rotate(0deg)} to{transform:rotate(360deg)} }
+        .cta-card i.cta-icon { font-size: 40px; margin-bottom: 15px; position: relative; z-index: 1; }
+        .cta-card h4 { color: #fff; font-size: 22px; margin-bottom: 10px; position: relative; z-index: 1; }
+        .cta-card p { color: rgba(255,255,255,0.9); font-size: 14px; margin-bottom: 20px; position: relative; z-index: 1; }
+        .cta-card .btn-cta {
+            background: #fff; color: var(--primary-pink);
+            padding: 14px 30px; border-radius: 50px;
+            font-weight: 700; font-size: 15px; border: none; cursor: pointer;
+            transition: all 0.3s; position: relative; z-index: 1;
+            font-family: 'Poppins', sans-serif;
+            display: inline-flex; align-items: center; gap: 8px;
+            width: 100%; justify-content: center;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.15);
+        }
+        .cta-card .btn-cta:hover { transform: translateY(-3px); box-shadow: 0 10px 30px rgba(0,0,0,0.25); }
+
+        .quick-info-card {
+            background: var(--bg-card); border-radius: var(--border-radius);
+            padding: 25px; box-shadow: var(--shadow-soft);
+            border: 1px solid var(--border-glass);
+        }
+        .quick-info-card h4 {
+            font-size: 16px; margin-bottom: 18px; color: var(--secondary-color);
+            display: flex; align-items: center; gap: 10px;
+        }
+        .quick-info-card h4 i { color: var(--primary-pink); }
+        .quick-info-item {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 12px 0; border-bottom: 1px dashed var(--border-glass); font-size: 13.5px;
+        }
+        .quick-info-item:last-child { border-bottom: none; }
+        .quick-info-item .label { color: var(--text-gray); }
+        .quick-info-item .value { font-weight: 600; color: var(--secondary-color); }
+
+        /* NOT FOUND */
+        .not-found {
+            text-align: center;
+            padding: 80px 20px;
+        }
+        .not-found i {
+            font-size: 80px;
+            color: var(--primary-pink-light);
+            margin-bottom: 20px;
+        }
+        .not-found h2 { font-size: 28px; margin-bottom: 15px; }
+        .not-found p { color: var(--text-gray); margin-bottom: 30px; font-size: 16px; }
+        .not-found .btn-home {
+            background: var(--primary-pink); color: #fff;
+            padding: 15px 35px; border-radius: 50px;
+            font-size: 15px; font-weight: 600;
+            border: none; cursor: pointer;
+            display: inline-flex; align-items: center; gap: 10px;
+            box-shadow: 0 10px 25px rgba(255, 107, 157, 0.3);
+            transition: all 0.3s;
+            font-family: 'Poppins', sans-serif;
+        }
+        .not-found .btn-home:hover {
+            background: var(--primary-pink-dark);
+            transform: translateY(-3px);
+            box-shadow: 0 15px 35px rgba(255, 107, 157, 0.5);
+        }
+
+        /* FOOTER */
+        footer {
+            background: #2D3436; color: #fff;
+            padding: 80px 5% 40px;
+            border-radius: 40px 40px 0 0;
+            position: relative; overflow: hidden;
+        }
+        [data-theme="dark"] footer { background: #150D10; }
+        footer::before {
+            content: ''; position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+            background: url('https://images.unsplash.com/photo-1519494026892-80bbd2d6fd0d?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80') center/cover;
+            opacity: 0.05; z-index: 0;
+        }
+        footer > div { position: relative; z-index: 1; max-width: 1200px; margin: 0 auto; }
+        footer > div:first-child { text-align: center; margin-bottom: 60px; max-width: 800px; margin-left: auto; margin-right: auto; }
+        footer h3 { color: #fff; font-size: 28px; margin-bottom: 20px; }
+        footer p { color: rgba(255,255,255,0.7); font-size: 14px; margin-bottom: 15px; }
+        footer strong { color: var(--primary-pink); font-style: italic; display: block; margin-top: 20px; font-size: 16px; }
+        footer > div:nth-child(2), footer > div:nth-child(3) { display: inline-block; vertical-align: top; width: 45%; margin-right: 4%; margin-bottom: 40px; }
+        footer > div:nth-child(3) { margin-right: 0; }
+        footer h4 { color: #fff; margin-bottom: 20px; font-size: 18px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 10px; display: inline-block; }
+        footer ul li { margin-bottom: 10px; }
+        footer ul li a { color: rgba(255,255,255,0.7); }
+        footer ul li a:hover { color: var(--primary-pink); padding-left: 5px; }
+        footer > div:last-child { text-align: center; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 20px; font-size: 12px; }
+        .footer-logo { display: flex; align-items: center; justify-content: center; gap: 12px; margin-bottom: 20px; }
+        .footer-logo .logo-icon { background: white; color: var(--primary-pink); box-shadow: none; width: 45px; height: 45px; font-size: 20px; }
+        .footer-logo .logo-text h1 { color: white; font-size: 22px; }
+        .footer-logo .logo-text p { color: #aaa; font-size: 9px; }
+
+        /* RESPONSIVE */
+        @media (max-width: 992px) {
+            .doctor-hero { grid-template-columns: 1fr; text-align: center; padding: 30px; }
+            .hero-avatar { margin: 0 auto; }
+            .hero-stats { justify-content: center; }
+            .hero-cta { width: 100%; }
+            .hero-cta .btn-book { width: 100%; justify-content: center; }
+            .content-layout { grid-template-columns: 1fr; }
+            .content-sidebar { position: static; }
+        }
+        @media (max-width: 768px) {
+            header { flex-direction: column; padding: 15px; gap: 15px; }
+            .header-right { flex-direction: column; gap: 15px; width: 100%; }
+            nav ul { margin-top: 10px; flex-wrap: wrap; justify-content: center; gap: 15px; }
+            .logo-container { gap: 8px; }
+            .logo-icon { width: 40px; height: 40px; font-size: 18px; }
+            .logo-text h1 { font-size: 20px; }
+            .logo-text p { font-size: 8px; }
+            .hero-info h2 { font-size: 24px; }
+            .schedule-table thead { display: none; }
+            .schedule-table tbody tr { display: flex; flex-direction: column; padding: 15px; margin-bottom: 10px; }
+            .schedule-table tbody td { padding: 5px 0; border: none !important; }
+            footer > div:nth-child(2), footer > div:nth-child(3) { width: 100%; margin-right: 0; }
+        }
+    </style>
 </head>
 <body>
 
-    <!-- 1. HEADER: LOGO & MENU ĐIỀU HƯỚNG -->
+    <!-- 1. HEADER -->
     <header>
-        <div>
-            <h1>MedBooking</h1>
-            <p>Chăm sóc sức khỏe toàn diện</p>
+        <div class="logo-container">
+            <div class="logo-icon"><i class="fa-solid fa-heart-pulse"></i></div>
+            <div class="logo-text">
+                <h1>MedBooking</h1>
+                <p>Chăm sóc sức khỏe toàn diện</p>
+            </div>
         </div>
-        <nav>
-            <ul>
-                <li><a href="home_bn.html">Trang chủ</a></li>
-                <li><a href="danh_sach_bac_si.html">Tìm kiếm Bác sĩ</a></li>
-                <li><a href="dat_lich.html">Đặt lịch khám</a></li>
-                <li><a href="danh_sach_lich_hen.html">Lịch hẹn của tôi</a></li>
-                <li><a href="ho_so_ca_nhan.html">Hồ sơ cá nhân</a></li>
-                <li><a href="../dk_dn/dn.html">Đăng xuất</a></li>
-            </ul>
-        </nav>
+        <div class="header-right">
+            <nav>
+                <ul>
+                    <li><a href="home_bn.html">Trang chủ</a></li>
+                    <li><a href="danh_sach_bac_si.html"><strong>Tìm kiếm Bác sĩ</strong></a></li>
+                    <li><a href="dat_lich.html">Đặt lịch khám</a></li>
+                    <li><a href="danh_sach_lich_hen.html">Lịch hẹn của tôi</a></li>
+                    <li><a href="ho_so_ca_nhan.html">Hồ sơ cá nhân</a></li>
+                    <li><a href="../dk_dn/dn.html">Đăng xuất</a></li>
+                </ul>
+            </nav>
+            <button class="theme-toggle" id="theme-toggle" title="Chuyển đổi chế độ Sáng/Tối">
+                <i class="fas fa-moon"></i>
+            </button>
+        </div>
     </header>
 
-    <hr>
+    <!-- 2. MAIN CONTENT -->
+    <main id="main-content">
+        <!-- Loading state -->
+        <div class="loading-container" id="loading">
+            <div class="spinner"></div>
+            <p>Đang tải thông tin bác sĩ...</p>
+        </div>
 
-    <!-- 2. NỘI DUNG CHÍNH: CHI TIẾT HỒ SƠ BÁC SĨ -->
-    <main>
-        <h2>Thông tin Chi tiết Bác sĩ</h2>
-        <p><a href="danh_sach_bac_si.html">&larr; Quay lại danh sách bác sĩ</a></p>
+        <!-- Nội dung sẽ được render bởi JS -->
+        <div id="content-wrapper" style="display: none;">
+            <a href="danh_sach_bac_si.html" class="back-link">
+                <i class="fas fa-arrow-left"></i> Quay lại danh sách bác sĩ
+            </a>
 
-        <!-- Thông tin tổng quan -->
-        <section>
-            <div>
-                <p>[Ảnh Chân Dung Bác Sĩ]</p>
-                <h3>ThS.BS Nguyễn Văn A</h3>
-                <p><strong>Chuyên khoa:</strong> Nội Tổng Quát</p>
-                <p><strong>Học hàm / Học vị:</strong> Thạc sĩ - Bác sĩ nội trú</p>
-                <p><strong>Kinh nghiệm:</strong> 12 năm kinh nghiệm khám chữa bệnh</p>
-                <p><strong>Đánh giá:</strong> ⭐ 4.9 / 5.0 (Dựa trên 120 lượt đánh giá từ bệnh nhân)</p>
-                <p>
-                    <a href="dat_lich.html?doctor_id=bs01"><button type="button">Đặt lịch khám ngay với bác sĩ này</button></a>
-                </p>
+            <!-- HERO PROFILE -->
+            <div class="doctor-hero">
+                <div class="hero-avatar" id="doctor-avatar"></div>
+                <div class="hero-info">
+                    <h2 id="doctor-name"></h2>
+                    <span class="specialty-badge" id="doctor-specialty"></span>
+                    <p class="degree" id="doctor-degree"></p>
+                    <div class="hero-stats">
+                        <div class="hero-stat">
+                            <i class="fas fa-star" style="color: var(--star-color);"></i>
+                            <div class="info">
+                                <div class="value" id="doctor-rating"></div>
+                                <div class="label" id="doctor-reviews"></div>
+                            </div>
+                        </div>
+                        <div class="hero-stat">
+                            <i class="fas fa-briefcase"></i>
+                            <div class="info">
+                                <div class="value" id="doctor-exp"></div>
+                                <div class="label">Kinh nghiệm</div>
+                            </div>
+                        </div>
+                        <div class="hero-stat">
+                            <i class="fas fa-user-md"></i>
+                            <div class="info">
+                                <div class="value" id="doctor-patients"></div>
+                                <div class="label">Ca khám</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="hero-cta">
+                    <a id="doctor-book-link" href="#">
+                        <button class="btn-book">
+                            <i class="fas fa-calendar-plus"></i> Đặt lịch khám ngay
+                        </button>
+                    </a>
+                </div>
             </div>
-        </section>
 
-        <hr>
+            <!-- LAYOUT -->
+            <div class="content-layout">
+                <div class="content-main">
+                    <!-- Giới thiệu chuyên môn -->
+                    <div class="info-card">
+                        <h3><i class="fas fa-user-md"></i> Giới thiệu chuyên môn & Quá trình công tác</h3>
+                        <p id="doctor-bio"></p>
+                        <ul class="info-list" id="doctor-info-list"></ul>
+                    </div>
 
-        <!-- Giới thiệu chuyên môn -->
-        <section>
-            <h3>Giới thiệu chuyên môn & Quá trình công tác</h3>
-            <p>ThS.BS Nguyễn Văn A là chuyên gia hàng đầu trong lĩnh vực Nội Tổng Quát với hơn 12 năm kinh nghiệm công tác tại các bệnh viện lớn trên địa bàn Hà Nội. Bác sĩ đã trực tiếp thăm khám và điều trị thành công cho hàng nghìn ca bệnh lý nội khoa phức tạp, tư vấn lối sống và chế độ dinh dưỡng khoa học cho người bệnh.</p>
-            <ul>
-                <li><strong>Quá trình đào tạo:</strong> Tốt nghiệp Bác sĩ Đa khoa và Thạc sĩ Y học tại Trường Đại học Y Hà Nội.</li>
-                <li><strong>Kinh nghiệm làm việc:</strong> Từng công tác tại Khoa Nội tổng hợp - Bệnh viện Bạch Mai.</li>
-                <li><strong>Lĩnh vực thế mạnh:</strong> Chẩn đoán và điều trị các bệnh lý nội khoa mãn tính, rối loạn chuyển hóa, tư vấn sức khỏe tổng quát.</li>
-            </ul>
-        </section>
+                    <!-- Lịch làm việc -->
+                    <div class="info-card">
+                        <h3><i class="fas fa-calendar-alt"></i> Lịch khám định kỳ trong tuần</h3>
+                        <table class="schedule-table">
+                            <thead>
+                                <tr>
+                                    <th>Thứ</th>
+                                    <th>Ca sáng (08:00 - 11:30)</th>
+                                    <th>Ca chiều (13:30 - 16:30)</th>
+                                </tr>
+                            </thead>
+                            <tbody id="schedule-body"></tbody>
+                        </table>
+                    </div>
 
-        <hr>
+                    <!-- Đánh giá -->
+                    <div class="info-card">
+                        <h3><i class="fas fa-star"></i> Đánh giá & Nhận xét từ Bệnh nhân</h3>
+                        <div id="reviews-container"></div>
+                    </div>
+                </div>
 
-        <!-- Lịch làm việc trong tuần -->
-        <section>
-            <h3>Lịch khám định kỳ trong tuần</h3>
-            <table border="1" cellpadding="8" cellspacing="0">
-                <thead>
-                    <tr>
-                        <th>Thứ</th>
-                        <th>Ca sáng (08:00 - 11:30)</th>
-                        <th>Ca chiều (13:30 - 16:30)</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>Thứ Hai</td>
-                        <td>Có lịch khám</td>
-                        <td>Có lịch khám</td>
-                    </tr>
-                    <tr>
-                        <td>Thứ Ba</td>
-                        <td>Có lịch khám</td>
-                        <td>Nghỉ</td>
-                    </tr>
-                    <tr>
-                        <td>Thứ Tư</td>
-                        <td>Có lịch khám</td>
-                        <td>Có lịch khám</td>
-                    </tr>
-                    <tr>
-                        <td>Thứ Năm</td>
-                        <td>Nghỉ</td>
-                        <td>Có lịch khám</td>
-                    </tr>
-                    <tr>
-                        <td>Thứ Sáu</td>
-                        <td>Có lịch khám</td>
-                        <td>Có lịch khám</td>
-                    </tr>
-                </tbody>
-            </table>
-        </section>
+                <!-- SIDEBAR -->
+                <div class="content-sidebar">
+                    <div class="cta-card">
+                        <i class="fas fa-calendar-check cta-icon"></i>
+                        <h4>Sẵn sàng đặt lịch?</h4>
+                        <p>Đặt lịch khám với bác sĩ chỉ trong 30 giây. Hoàn toàn miễn phí!</p>
+                        <a id="sidebar-book-link" href="#">
+                            <button class="btn-cta">
+                                <i class="fas fa-calendar-plus"></i> Đặt lịch ngay
+                            </button>
+                        </a>
+                    </div>
 
-        <hr>
-
-        <!-- Đánh giá từ bệnh nhân -->
-        <section>
-            <h3>Đánh giá & Nhận xét từ Bệnh nhân</h3>
-            <div>
-                <p><strong>Nguyễn Thị B:</strong> ⭐⭐⭐⭐⭐ (5/5)</p>
-                <p>"Bác sĩ A rất tận tâm, nhẹ nhàng và giải thích chi tiết nguyên nhân bệnh cũng như cách điều trị. Tôi rất yên tâm khi khám."</p>
-                <p><small>Ngày đánh giá: 10/09/2026</small></p>
+                    <div class="quick-info-card">
+                        <h4><i class="fas fa-info-circle"></i> Thông tin nhanh</h4>
+                        <div class="quick-info-item">
+                            <span class="label">Chuyên khoa</span>
+                            <span class="value" id="quick-specialty"></span>
+                        </div>
+                        <div class="quick-info-item">
+                            <span class="label">Học vị</span>
+                            <span class="value" id="quick-degree"></span>
+                        </div>
+                        <div class="quick-info-item">
+                            <span class="label">Kinh nghiệm</span>
+                            <span class="value" id="quick-exp"></span>
+                        </div>
+                        <div class="quick-info-item">
+                            <span class="label">Đánh giá</span>
+                            <span class="value" style="color: var(--star-color);" id="quick-rating"></span>
+                        </div>
+                        <div class="quick-info-item">
+                            <span class="label">Phí khám</span>
+                            <span class="value" style="color: var(--primary-pink);" id="quick-fee"></span>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <hr>
-            <div>
-                <p><strong>Trần Văn H:</strong> ⭐⭐⭐⭐⭐ (5/5)</p>
-                <p>"Dịch vụ đặt lịch qua MedBooking rất nhanh chóng, đến nơi được khám đúng giờ, bác sĩ tư vấn kỹ càng."</p>
-                <p><small>Ngày đánh giá: 25/08/2026</small></p>
-            </div>
-        </section>
+        </div>
+
+        <!-- Not found -->
+        <div class="not-found" id="not-found" style="display: none;">
+            <i class="fas fa-user-slash"></i>
+            <h2>Không tìm thấy bác sĩ</h2>
+            <p>Bác sĩ bạn đang tìm kiếm không tồn tại hoặc đã bị xóa khỏi hệ thống.</p>
+            <a href="danh_sach_bac_si.html">
+                <button class="btn-home">
+                    <i class="fas fa-arrow-left"></i> Quay lại danh sách
+                </button>
+            </a>
+        </div>
     </main>
 
-    <hr>
-
-    <!-- 3. FOOTER: THÔNG TIN CHI TIẾT, ĐỊA CHỈ & LỜI CHÚC SỨC KHỎE -->
+    <!-- 3. FOOTER -->
     <footer>
         <div>
-            <h3>HỆ THỐNG MEDBOOKING</h3>
+            <div class="footer-logo">
+                <div class="logo-icon"><i class="fa-solid fa-heart-pulse"></i></div>
+                <div class="logo-text">
+                    <h1>MedBooking</h1>
+                    <p>Chăm sóc sức khỏe toàn diện</p>
+                </div>
+            </div>
             <p>Nền tảng công nghệ y tế kết nối người bệnh với các bệnh viện và phòng khám uy tín hàng đầu. Cam kết quy trình nhanh gọn, minh bạch chi phí và bảo mật thông tin tuyệt đối.</p>
             <p><strong>"MedBooking chúc quý khách và gia đình luôn có một sức khỏe dồi dào, bình an và hạnh phúc!"</strong></p>
         </div>
@@ -152,5 +578,264 @@
     </footer>
 
     <script src="../../js/client.js"></script>
+
+    <script>
+        // ============================================================
+        // 1. DỮ LIỆU GIẢ LẬP (MOCK DATA)
+        // Khi nối API: thay bằng fetch('GET /api/doctors/{id}')
+        // ============================================================
+        const doctorsDatabase = {
+            'bs01': {
+                id: 'bs01',
+                name: 'ThS.BS Nguyễn Văn A',
+                specialty: 'Nội Tổng Quát',
+                degree: 'Thạc sĩ - Bác sĩ nội trú',
+                rating: 4.9,
+                reviews: 120,
+                experience: 12,
+                patients: '5000+',
+                fee: '300.000đ',
+                avatar: 'https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80',
+                bio: 'ThS.BS Nguyễn Văn A là chuyên gia hàng đầu trong lĩnh vực Nội Tổng Quát với hơn 12 năm kinh nghiệm công tác tại các bệnh viện lớn trên địa bàn Hà Nội. Bác sĩ đã trực tiếp thăm khám và điều trị thành công cho hàng nghìn ca bệnh lý nội khoa phức tạp, tư vấn lối sống và chế độ dinh dưỡng khoa học cho người bệnh.',
+                infoList: [
+                    { icon: 'fa-graduation-cap', title: 'Quá trình đào tạo:', text: 'Tốt nghiệp Bác sĩ Đa khoa và Thạc sĩ Y học tại Trường Đại học Y Hà Nội.' },
+                    { icon: 'fa-hospital', title: 'Kinh nghiệm làm việc:', text: 'Từng công tác tại Khoa Nội tổng hợp - Bệnh viện Bạch Mai.' },
+                    { icon: 'fa-heart-pulse', title: 'Lĩnh vực thế mạnh:', text: 'Chẩn đoán và điều trị các bệnh lý nội khoa mãn tính, rối loạn chuyển hóa, tư vấn sức khỏe tổng quát.' }
+                ],
+                schedule: [
+                    { day: 'Thứ Hai', morning: true, afternoon: true },
+                    { day: 'Thứ Ba', morning: true, afternoon: false },
+                    { day: 'Thứ Tư', morning: true, afternoon: true },
+                    { day: 'Thứ Năm', morning: false, afternoon: true },
+                    { day: 'Thứ Sáu', morning: true, afternoon: true }
+                ],
+                reviewsData: [
+                    { name: 'Nguyễn Thị B', rating: 5, date: '10/09/2026', text: 'Bác sĩ A rất tận tâm, nhẹ nhàng và giải thích chi tiết nguyên nhân bệnh cũng như cách điều trị. Tôi rất yên tâm khi khám.', color: 'linear-gradient(135deg, var(--primary-pink), #ff8fab)' },
+                    { name: 'Trần Văn H', rating: 5, date: '25/08/2026', text: 'Dịch vụ đặt lịch qua MedBooking rất nhanh chóng, đến nơi được khám đúng giờ, bác sĩ tư vấn kỹ càng.', color: 'linear-gradient(135deg, #667eea, #764ba2)' }
+                ]
+            },
+            'bs02': {
+                id: 'bs02',
+                name: 'BS.CKI Trần Thị C',
+                specialty: 'Tim Mạch',
+                degree: 'Bác sĩ Chuyên khoa I',
+                rating: 4.8,
+                reviews: 98,
+                experience: 10,
+                patients: '3500+',
+                fee: '350.000đ',
+                avatar: 'https://images.unsplash.com/photo-1594824476967-48c8b964273f?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80',
+                bio: 'BS.CKI Trần Thị C là bác sĩ chuyên khoa Tim Mạch với hơn 10 năm kinh nghiệm trong lĩnh vực chẩn đoán và điều trị các bệnh lý tim mạch. Bác sĩ đặc biệt có thế mạnh trong việc điều trị tăng huyết áp, suy tim và các bệnh mạch vành.',
+                infoList: [
+                    { icon: 'fa-graduation-cap', title: 'Quá trình đào tạo:', text: 'Tốt nghiệp Bác sĩ Đa khoa và Chuyên khoa I Tim Mạch tại Đại học Y Dược TP.HCM.' },
+                    { icon: 'fa-hospital', title: 'Kinh nghiệm làm việc:', text: 'Nguyên bác sĩ Khoa Tim Mạch - Bệnh viện Chợ Rẫy.' },
+                    { icon: 'fa-heart-pulse', title: 'Lĩnh vực thế mạnh:', text: 'Điều trị tăng huyết áp, suy tim, rối loạn nhịp tim, tư vấn phòng ngừa đột quỵ.' }
+                ],
+                schedule: [
+                    { day: 'Thứ Hai', morning: true, afternoon: false },
+                    { day: 'Thứ Ba', morning: true, afternoon: true },
+                    { day: 'Thứ Tư', morning: false, afternoon: true },
+                    { day: 'Thứ Năm', morning: true, afternoon: true },
+                    { day: 'Thứ Sáu', morning: true, afternoon: false }
+                ],
+                reviewsData: [
+                    { name: 'Lê Thị D', rating: 5, date: '15/09/2026', text: 'Bác sĩ C rất chuyên nghiệp, giải thích cặn kẽ về tình trạng huyết áp của tôi. Rất hài lòng!', color: 'linear-gradient(135deg, #f093fb, #f5576c)' }
+                ]
+            },
+            'bs03': {
+                id: 'bs03',
+                name: 'TS.BS Lê Hoàng D',
+                specialty: 'Thần Kinh',
+                degree: 'Tiến sĩ - Bác sĩ',
+                rating: 5.0,
+                reviews: 150,
+                experience: 18,
+                patients: '8000+',
+                fee: '500.000đ',
+                avatar: 'https://images.unsplash.com/photo-1622253692010-333f2da6031d?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80',
+                bio: 'TS.BS Lê Hoàng D là Tiến sĩ Y học chuyên ngành Thần Kinh với hơn 18 năm kinh nghiệm. Bác sĩ đã công bố nhiều công trình nghiên cứu khoa học về các bệnh lý thần kinh và được đánh giá là một trong những chuyên gia đầu ngành.',
+                infoList: [
+                    { icon: 'fa-graduation-cap', title: 'Quá trình đào tạo:', text: 'Tiến sĩ Y học tại Đại học Y Hà Nội, tu nghiệp tại Pháp.' },
+                    { icon: 'fa-hospital', title: 'Kinh nghiệm làm việc:', text: 'Trưởng khoa Thần Kinh - Bệnh viện Việt Đức.' },
+                    { icon: 'fa-brain', title: 'Lĩnh vực thế mạnh:', text: 'Điều trị đau đầu, mất ngủ, động kinh, Parkinson, đột quỵ.' }
+                ],
+                schedule: [
+                    { day: 'Thứ Hai', morning: true, afternoon: true },
+                    { day: 'Thứ Ba', morning: true, afternoon: true },
+                    { day: 'Thứ Tư', morning: true, afternoon: true },
+                    { day: 'Thứ Năm', morning: true, afternoon: false },
+                    { day: 'Thứ Sáu', morning: false, afternoon: true }
+                ],
+                reviewsData: [
+                    { name: 'Phạm Văn K', rating: 5, date: '20/09/2026', text: 'Bác sĩ D rất giỏi, chẩn đoán chính xác bệnh của tôi chỉ sau một lần khám.', color: 'linear-gradient(135deg, #4facfe, #00f2fe)' }
+                ]
+            }
+        };
+
+        // ============================================================
+        // 2. ĐỌC ID TỪ URL
+        // ============================================================
+        function getDoctorIdFromUrl() {
+            const params = new URLSearchParams(window.location.search);
+            return params.get('id');
+        }
+
+        // ============================================================
+        // 3. RENDER FUNCTIONS
+        // ============================================================
+        function renderStars(rating) {
+            let html = '';
+            const fullStars = Math.floor(rating);
+            const hasHalf = rating % 1 >= 0.5;
+            for (let i = 0; i < fullStars; i++) html += '<i class="fas fa-star"></i>';
+            if (hasHalf) html += '<i class="fas fa-star-half-alt"></i>';
+            return html;
+        }
+
+        function renderSchedule(schedule) {
+            const tbody = document.getElementById('schedule-body');
+            tbody.innerHTML = schedule.map(row => `
+                <tr>
+                    <td>${row.day}</td>
+                    <td>${row.morning 
+                        ? '<span class="status-badge available"><i class="fas fa-check-circle"></i> Có lịch khám</span>' 
+                        : '<span class="status-badge off"><i class="fas fa-times-circle"></i> Nghỉ</span>'}
+                    </td>
+                    <td>${row.afternoon 
+                        ? '<span class="status-badge available"><i class="fas fa-check-circle"></i> Có lịch khám</span>' 
+                        : '<span class="status-badge off"><i class="fas fa-times-circle"></i> Nghỉ</span>'}
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        function renderReviews(reviews) {
+            const container = document.getElementById('reviews-container');
+            if (!reviews || reviews.length === 0) {
+                container.innerHTML = '<p style="text-align:center; color:var(--text-gray);">Chưa có đánh giá nào.</p>';
+                return;
+            }
+            container.innerHTML = reviews.map(r => `
+                <div class="review-item">
+                    <div class="review-header">
+                        <div class="review-avatar" style="background: ${r.color}">${r.name.charAt(0)}</div>
+                        <div class="review-meta">
+                            <div class="name">${r.name}</div>
+                            <div class="stars">${renderStars(r.rating)}</div>
+                            <div class="date"><i class="far fa-clock"></i> ${r.date}</div>
+                        </div>
+                    </div>
+                    <p class="review-text">"${r.text}"</p>
+                </div>
+            `).join('');
+        }
+
+        function renderDoctorInfo(doc) {
+            // Cập nhật Page Title (SEO)
+            document.title = `${doc.name} - ${doc.specialty} | MedBooking`;
+
+            // Hero
+            document.getElementById('doctor-avatar').style.backgroundImage = `url('${doc.avatar}')`;
+            document.getElementById('doctor-name').textContent = doc.name;
+            document.getElementById('doctor-specialty').textContent = doc.specialty;
+            document.getElementById('doctor-degree').innerHTML = `<i class="fas fa-graduation-cap"></i> ${doc.degree}`;
+            document.getElementById('doctor-rating').textContent = `${doc.rating} / 5.0`;
+            document.getElementById('doctor-reviews').textContent = `${doc.reviews} đánh giá`;
+            document.getElementById('doctor-exp').textContent = `${doc.experience} năm`;
+            document.getElementById('doctor-patients').textContent = doc.patients;
+
+            // Book links
+            const bookUrl = `dat_lich.html?doctor_id=${doc.id}`;
+            document.getElementById('doctor-book-link').href = bookUrl;
+            document.getElementById('sidebar-book-link').href = bookUrl;
+
+            // Bio
+            document.getElementById('doctor-bio').textContent = doc.bio;
+
+            // Info List
+            document.getElementById('doctor-info-list').innerHTML = doc.infoList.map(item => `
+                <li>
+                    <i class="fas ${item.icon}"></i>
+                    <div><strong>${item.title}</strong> ${item.text}</div>
+                </li>
+            `).join('');
+
+            // Schedule
+            renderSchedule(doc.schedule);
+
+            // Reviews
+            renderReviews(doc.reviewsData);
+
+            // Quick Info
+            document.getElementById('quick-specialty').textContent = doc.specialty;
+            document.getElementById('quick-degree').textContent = doc.degree.split(' - ')[0];
+            document.getElementById('quick-exp').textContent = `${doc.experience} năm`;
+            document.getElementById('quick-rating').textContent = `⭐ ${doc.rating}/5.0`;
+            document.getElementById('quick-fee').textContent = doc.fee;
+
+            // Hiển thị nội dung
+            document.getElementById('loading').style.display = 'none';
+            document.getElementById('content-wrapper').style.display = 'block';
+        }
+
+        function showNotFound() {
+            document.getElementById('loading').style.display = 'none';
+            document.getElementById('not-found').style.display = 'block';
+            document.title = 'Không tìm thấy bác sĩ | MedBooking';
+        }
+
+        // ============================================================
+        // 4. KHỞI TẠO
+        // ============================================================
+        document.addEventListener('DOMContentLoaded', function() {
+            // Theme Toggle
+            const themeToggle = document.getElementById('theme-toggle');
+            const icon = themeToggle.querySelector('i');
+            const currentTheme = localStorage.getItem('theme') || 'light';
+            
+            if (currentTheme === 'dark') {
+                document.documentElement.setAttribute('data-theme', 'dark');
+                icon.classList.remove('fa-moon');
+                icon.classList.add('fa-sun');
+            }
+
+            themeToggle.addEventListener('click', function() {
+                let theme = document.documentElement.getAttribute('data-theme');
+                if (theme === 'dark') {
+                    document.documentElement.removeAttribute('data-theme');
+                    localStorage.setItem('theme', 'light');
+                    icon.classList.remove('fa-sun');
+                    icon.classList.add('fa-moon');
+                } else {
+                    document.documentElement.setAttribute('data-theme', 'dark');
+                    localStorage.setItem('theme', 'dark');
+                    icon.classList.remove('fa-moon');
+                    icon.classList.add('fa-sun');
+                }
+            });
+
+            // Đọc ID và render
+            const doctorId = getDoctorIdFromUrl();
+
+            // Nếu không có id, mặc định lấy bs01 (demo)
+            // Trong thực tế nên redirect về trang danh sách
+            if (!doctorId) {
+                showNotFound();
+                return;
+            }
+
+            // Tìm bác sĩ trong database
+            const doctor = doctorsDatabase[doctorId];
+
+            if (doctor) {
+                // Giả lập delay để thấy loading (giống khi gọi API thật)
+                setTimeout(() => {
+                    renderDoctorInfo(doctor);
+                }, 500);
+            } else {
+                showNotFound();
+            }
+        });
+    </script>
 </body>
 </html>
