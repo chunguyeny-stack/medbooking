@@ -1,6 +1,7 @@
 from typing import List, Dict, Any, Optional
+from sqlalchemy import text
 from sqlalchemy.orm import Session
-from models.models import BenhNhan, MappingTrieuChung, NguoiDung
+from models.models import BenhNhan, NguoiDung
 from models.bac_si import BacSi
 
 
@@ -8,7 +9,13 @@ class BenhNhanService:
 
     @staticmethod
     def get_profile(db: Session, patient_id: int) -> Optional[BenhNhan]:
-        return db.query(BenhNhan).filter(BenhNhan.ma_benh_nhan == patient_id).first()
+        """
+        Tìm hồ sơ bệnh nhân theo id bảng BenhNhan hoặc nguoi_dung_id
+        """
+        patient = db.query(BenhNhan).filter(BenhNhan.id == patient_id).first()
+        if not patient:
+            patient = db.query(BenhNhan).filter(BenhNhan.nguoi_dung_id == patient_id).first()
+        return patient
 
     @staticmethod
     def recommend_doctors_by_symptom(db: Session, trieu_chung: str) -> List[Dict[str, Any]]:
@@ -17,39 +24,51 @@ class BenhNhanService:
         và sắp xếp theo rating giảm dần
         """
         kw = f"%{trieu_chung.strip().lower()}%"
-        mappings = db.query(MappingTrieuChung).filter(
-            MappingTrieuChung.trieu_chung.ilike(kw)
-        ).all()
 
-        matched_doc_ids = set()
-        matched_specialty_ids = set()
+        # 1. Tra cứu các chuyên khoa liên quan từ bảng trieu_chung qua SQL Raw để tránh phụ thuộc Model
+        sql_symptom = text(
+            "SELECT chuyen_khoa_id FROM trieu_chung WHERE LOWER(ten_trieu_chung) LIKE :kw"
+        )
+        symptom_rows = db.execute(sql_symptom, {"kw": kw}).fetchall()
+        matched_specialty_ids = {r[0] for r in symptom_rows if r[0] is not None}
 
-        for m in mappings:
-            if m.ma_bac_si:
-                matched_doc_ids.add(m.ma_bac_si)
-            if m.ma_chuyen_khoa:
-                matched_specialty_ids.add(m.ma_chuyen_khoa)
+        # 2. Khởi tạo truy vấn Bác sĩ
+        query = db.query(BacSi)
 
-        # Query bác sĩ theo ID trực tiếp hoặc theo chuyên khoa ánh xạ
-        query = db.query(BacSi).join(NguoiDung, BacSi.ma_bac_si == NguoiDung.user_id)\
-            .filter(BacSi.status == 1)
+        # 3. Lọc theo chuyên khoa tìm được nếu có
+        if matched_specialty_ids:
+            query = query.filter(BacSi.chuyen_khoa_id.in_(matched_specialty_ids))
 
-        if matched_doc_ids or matched_specialty_ids:
-            query = query.filter(
-                (BacSi.ma_bac_si.in_(matched_doc_ids)) |
-                (BacSi.ma_chuyen_khoa.in_(matched_specialty_ids))
-            )
+        # 4. Sắp xếp theo rating giảm dần (nếu có cột rating)
+        if hasattr(BacSi, "rating"):
+            query = query.order_by(BacSi.rating.desc())
+        elif hasattr(BacSi, "id"):
+            query = query.order_by(BacSi.id.desc())
 
-        doctors = query.order_by(BacSi.rating.desc()).limit(5).all()
+        doctors = query.limit(5).all()
 
         results: List[Dict[str, Any]] = []
         for d in doctors:
+            # Lấy họ tên an toàn qua quan hệ user hoặc bảng NguoiDung
+            full_name = ""
+            if hasattr(d, "user") and d.user:
+                full_name = getattr(d.user, "ho_ten", "")
+            elif hasattr(d, "nguoi_dung_id"):
+                user_obj = db.query(NguoiDung).filter(NguoiDung.id == d.nguoi_dung_id).first()
+                if user_obj:
+                    full_name = getattr(user_obj, "ho_ten", "")
+
+            # Lấy tên chuyên khoa an toàn
+            specialty_name = ""
+            if hasattr(d, "chuyen_khoa") and d.chuyen_khoa:
+                specialty_name = getattr(d.chuyen_khoa, "ten_chuyen_khoa", "")
+
             results.append({
-                "ma_bac_si": d.ma_bac_si,
-                "ho_ten": d.user.ho_ten if d.user else "",
-                "chuyen_khoa": d.chuyen_khoa.ten_chuyen_khoa if d.chuyen_khoa else "",
-                "hoc_vi": d.hoc_vi or "",
-                "rating": float(d.rating or 0.0),
-                "gia_kham": float(d.gia_kham or 0.0)
+                "ma_bac_si": d.id,
+                "ho_ten": full_name,
+                "chuyen_khoa": specialty_name,
+                "hoc_vi": getattr(d, "hoc_vi", "") or "",
+                "rating": float(getattr(d, "rating", 0.0) or 0.0),
+                "gia_kham": float(getattr(d, "gia_kham", 0.0) or 0.0),
             })
         return results

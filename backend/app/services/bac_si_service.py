@@ -86,7 +86,7 @@ class BacSiService:
 
     @staticmethod
     def get_doctor_by_id(db: Session, doctor_id: int, is_admin: bool = False) -> BacSi:
-        query = db.query(BacSi).filter(BacSi.ma_bac_si == doctor_id)
+        query = db.query(BacSi).filter(BacSi.id == doctor_id)
         if not is_admin:
             query = query.filter(BacSi.status == 1)
 
@@ -214,7 +214,7 @@ class BacSiService:
 
     @staticmethod
     def update_doctor(db: Session, doctor_id: int, data: BacSiUpdate, current_user: NguoiDung) -> BacSi:
-        doctor = db.query(BacSi).filter(BacSi.ma_bac_si == doctor_id).first()
+        doctor = db.query(BacSi).filter(BacSi.id == doctor_id).first()
         if not doctor:
             raise HTTPException(
                 status_code=status.HTTP_404_NOT_FOUND,

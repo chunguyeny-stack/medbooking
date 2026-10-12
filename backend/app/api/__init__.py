@@ -1,22 +1,20 @@
 from fastapi import APIRouter
 
-# Import các router phân hệ từ thư mục routers/
-from routers.auth_router import router as auth_router
-from routers.bac_si import router as bac_si_router
-from routers.lich_hen import router as lich_hen_router
-from routers.le_tan import router as le_tan_router
+# 1. Phân hệ Core (Đăng ký, Đăng nhập, /me, JWT, Phân quyền)
+from api.core_auth import router as core_auth_router
 
-# Import router admin từ thư mục api/
+# 2. Phân hệ Nghiệp vụ (Bác sĩ, Dịch vụ, Đặt lịch, Cập nhật trạng thái, Thanh toán, Audit log)
+from api.nghiep_vu import router as nghiep_vu_router
+
+# 3. Phân hệ Quản trị (Dashboard thống kê 4 kỳ, Quản lý tài khoản, Chuyên khoa)
 from api.admin import router as admin_router
 
 # Khởi tạo API Router tổng
 api_router = APIRouter()
 
-# Đăng ký từng phân hệ
-api_router.include_router(auth_router)
-api_router.include_router(bac_si_router)
-api_router.include_router(lich_hen_router)
-api_router.include_router(le_tan_router)
+# Đăng ký các router vào hub trung tâm
+api_router.include_router(core_auth_router)
+api_router.include_router(nghiep_vu_router)
 api_router.include_router(admin_router)
 
 __all__ = ["api_router"]

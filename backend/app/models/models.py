@@ -1,7 +1,7 @@
 from datetime import datetime, timezone
 from sqlalchemy import (
     Column, Integer, String, Numeric,
-    Date, DateTime, SmallInteger, ForeignKey
+    Date, DateTime, Boolean, ForeignKey, Text
 )
 from sqlalchemy.orm import relationship
 from datadase.database import Base
@@ -14,203 +14,120 @@ def utc_now():
 
 class NguoiDung(Base):
     __tablename__ = "nguoi_dung"
+    __table_args__ = {"extend_existing": True}
 
-    user_id = Column(Integer, primary_key=True, autoincrement=True, index=True)
+    id = Column(Integer, primary_key=True, autoincrement=True, index=True)
     email = Column(String(255), unique=True, nullable=False, index=True)
     mat_khau = Column(String(255), nullable=False)
     ho_ten = Column(String(100), nullable=False)
     so_dien_thoai = Column(String(20), nullable=True)
     vai_tro = Column(String(20), nullable=False, default="benh_nhan")
-    trang_thai = Column(SmallInteger, default=1)
+    trang_thai = Column(Boolean, nullable=False, default=True)
+    created_at = Column(DateTime, default=utc_now)
+    updated_at = Column(DateTime, default=utc_now, onupdate=utc_now)
 
-    # Relationships
-    benh_nhan_profile = relationship(
-        "BenhNhan",
-        back_populates="user",
-        uselist=False,
-        cascade="all, delete-orphan"
+    # Relationships nội bộ
+    benh_nhan_profile = relationship("BenhNhan", back_populates="user", uselist=False, cascade="all, delete-orphan")
+    admin_profile = relationship("Admin", back_populates="user", uselist=False, cascade="all, delete-orphan")
+
+
+class Admin(Base):
+    __tablename__ = "admin"
+    __table_args__ = {"extend_existing": True}
+
+    id = Column(Integer, primary_key=True, autoincrement=True, index=True)
+    nguoi_dung_id = Column(
+        Integer,
+        ForeignKey("nguoi_dung.id", ondelete="CASCADE"),
+        unique=True,
+        nullable=False
     )
-    bac_si_profile = relationship(
-        "BacSi",
-        back_populates="user",
-        uselist=False,
-        cascade="all, delete-orphan"
-    )
+    phong_ban = Column(String(100), nullable=True)
+    cap_do = Column(String(50), nullable=True)
+    ghi_chu = Column(String(255), nullable=True)
+
+    user = relationship("NguoiDung", back_populates="admin_profile")
 
 
 class BenhNhan(Base):
     __tablename__ = "benh_nhan"
+    __table_args__ = {"extend_existing": True}
 
-    ma_benh_nhan = Column(
+    id = Column(Integer, primary_key=True, autoincrement=True, index=True)
+    nguoi_dung_id = Column(
         Integer,
-        ForeignKey("nguoi_dung.user_id", ondelete="CASCADE"),
-        primary_key=True
+        ForeignKey("nguoi_dung.id", ondelete="CASCADE"),
+        unique=True,
+        nullable=False
     )
     ngay_sinh = Column(Date, nullable=True)
-    gioi_tinh = Column(String(10), nullable=True)
+    gioitinh = Column(String(10), nullable=True)
     dia_chi = Column(String(255), nullable=True)
-    tien_su_benh = Column(String(500), nullable=True)
+    tien_su_benh = Column(Text, nullable=True)
 
-    # Relationships
-    user = relationship(
-        "NguoiDung",
-        foreign_keys="[BenhNhan.ma_benh_nhan]",
-        back_populates="benh_nhan_profile"
-    )
-    lich_hen_list = relationship(
-        "LichHen",
-        back_populates="benh_nhan",
-        cascade="all, delete-orphan"
-    )
+    user = relationship("NguoiDung", back_populates="benh_nhan_profile")
 
 
 class ChuyenKhoa(Base):
     __tablename__ = "chuyen_khoa"
+    __table_args__ = {"extend_existing": True}
 
-    ma_chuyen_khoa = Column(Integer, primary_key=True, autoincrement=True, index=True)
-    ten_chuyen_khoa = Column(String(100), nullable=False)
+    id = Column(Integer, primary_key=True, autoincrement=True, index=True)
+    ten_chuyen_khoa = Column(String(100), nullable=False, unique=True)
     mo_ta = Column(String(255), nullable=True)
 
-    # Relationships
-    bac_si_list = relationship(
-        "BacSi",
-        back_populates="chuyen_khoa"
-    )
-    mappings = relationship(
-        "MappingTrieuChung",
-        back_populates="chuyen_khoa"
-    )
+    dich_vu_list = relationship("DichVu", back_populates="chuyen_khoa")
+    trieu_chung_list = relationship("TrieuChung", back_populates="chuyen_khoa")
 
 
 class DichVu(Base):
     __tablename__ = "dich_vu"
+    __table_args__ = {"extend_existing": True}
 
-    ma_dich_vu = Column(Integer, primary_key=True, autoincrement=True, index=True)
-    ten_dich_vu = Column(String(100), nullable=False)
-    gia_dich_vu = Column(Numeric(18, 2), nullable=False, default=0.0)
-    mo_ta = Column(String(255), nullable=True)
-
-    # Relationships
-    bac_si_dich_vu_list = relationship(
-        "BacSiDichVu",
-        back_populates="dich_vu",
-        cascade="all, delete-orphan"
-    )
-    lich_hen_dich_vu_list = relationship(
-        "LichHenDichVu",
-        back_populates="dich_vu",
-        cascade="all, delete-orphan"
-    )
-
-
-class BacSiDichVu(Base):
-    """Bảng trung gian N-N giữa Bác sĩ và Dịch vụ"""
-    __tablename__ = "bac_si_dich_vu"
-
-    ma_bac_si = Column(
+    id = Column(Integer, primary_key=True, autoincrement=True, index=True)
+    chuyen_khoa_id = Column(
         Integer,
-        ForeignKey("bac_si.ma_bac_si", ondelete="CASCADE"),
-        primary_key=True
-    )
-    ma_dich_vu = Column(
-        Integer,
-        ForeignKey("dich_vu.ma_dich_vu", ondelete="CASCADE"),
-        primary_key=True
-    )
-    ghi_chu = Column(String(255), nullable=True)
-
-    # Relationships
-    bac_si = relationship(
-        "BacSi",
-        foreign_keys="[BacSiDichVu.ma_bac_si]",
-        back_populates="bac_si_dich_vu_list"
-    )
-    dich_vu = relationship(
-        "DichVu",
-        foreign_keys="[BacSiDichVu.ma_dich_vu]",
-        back_populates="bac_si_dich_vu_list"
-    )
-
-
-class LichHenDichVu(Base):
-    """Bảng trung gian N-N lưu dịch vụ sử dụng trong từng ca khám"""
-    __tablename__ = "lich_hen_dich_vu"
-
-    ma_lich_hen = Column(
-        Integer,
-        ForeignKey("lich_hen.ma_lich_hen", ondelete="CASCADE"),
-        primary_key=True
-    )
-    ma_dich_vu = Column(
-        Integer,
-        ForeignKey("dich_vu.ma_dich_vu", ondelete="CASCADE"),
-        primary_key=True
-    )
-    so_luong = Column(Integer, default=1, nullable=False)
-    thanh_tien = Column(Numeric(18, 2), nullable=False, default=0.0)
-
-    # Relationships
-    lich_hen = relationship(
-        "LichHen",
-        foreign_keys="[LichHenDichVu.ma_lich_hen]",
-        back_populates="lich_hen_dich_vu_list"
-    )
-    dich_vu = relationship(
-        "DichVu",
-        foreign_keys="[LichHenDichVu.ma_dich_vu]",
-        back_populates="lich_hen_dich_vu_list"
-    )
-
-
-class HoaDon(Base):
-    """Bảng hóa đơn (quan hệ 1-1 với LichHen)"""
-    __tablename__ = "hoa_don"
-
-    ma_hoa_don = Column(Integer, primary_key=True, autoincrement=True, index=True)
-    ma_lich_hen = Column(
-        Integer,
-        ForeignKey("lich_hen.ma_lich_hen", ondelete="CASCADE"),
-        unique=True,
+        ForeignKey("chuyen_khoa.id"),
         nullable=False
     )
+    ten_dich_vu = Column(String(100), nullable=False)
+    gia_tien = Column(Numeric(18, 2), nullable=False, default=0.0)
+    mo_ta = Column(String(255), nullable=True)
+    dang_hoat_dong = Column(Boolean, nullable=False, default=True)
+
+    chuyen_khoa = relationship("ChuyenKhoa", back_populates="dich_vu_list")
+
+
+class ThanhToan(Base):
+    __tablename__ = "thanh_toan"
+    __table_args__ = {"extend_existing": True}
+
+    id = Column(Integer, primary_key=True, autoincrement=True, index=True)
+    lich_hen_id = Column(Integer, nullable=False)
     tong_tien = Column(Numeric(18, 2), nullable=False, default=0.0)
-    ngay_thanh_toan = Column(DateTime(timezone=True), nullable=True)
     phuong_thuc = Column(String(50), nullable=True)
-    trang_thai = Column(String(20), default="Chua Thanh Toan")
-
-    # Relationships
-    lich_hen = relationship(
-        "LichHen",
-        foreign_keys="[HoaDon.ma_lich_hen]",
-        back_populates="hoa_don"
-    )
+    trang_thai_thanh_toan = Column(String(50), nullable=False, default="Chưa thanh toán")
+    ngay_thanh_toan = Column(DateTime, nullable=True)
 
 
-class MappingTrieuChung(Base):
-    """Ánh xạ gợi ý Bác sĩ / Chuyên khoa từ triệu chứng"""
-    __tablename__ = "mapping_trieu_chung"
+class TrieuChung(Base):
+    __tablename__ = "trieu_chung"
+    __table_args__ = {"extend_existing": True}
 
-    ma_mapping = Column(Integer, primary_key=True, autoincrement=True, index=True)
-    trieu_chung = Column(String(255), nullable=False, index=True)
-    ma_bac_si = Column(
-        Integer,
-        ForeignKey("bac_si.ma_bac_si", ondelete="SET NULL"),
-        nullable=True
-    )
-    ma_chuyen_khoa = Column(
-        Integer,
-        ForeignKey("chuyen_khoa.ma_chuyen_khoa", ondelete="SET NULL"),
-        nullable=True
-    )
+    id = Column(Integer, primary_key=True, autoincrement=True, index=True)
+    ten_trieu_chung = Column(String(255), nullable=False)
+    chuyen_khoa_id = Column(Integer, ForeignKey("chuyen_khoa.id", ondelete="CASCADE"), nullable=False)
 
-    # Relationships
-    bac_si = relationship(
-        "BacSi",
-        foreign_keys="[MappingTrieuChung.ma_bac_si]",
-        back_populates="mapping_trieu_chung_list"
-    )
-    chuyen_khoa = relationship(
-        "ChuyenKhoa",
-        foreign_keys="[MappingTrieuChung.ma_chuyen_khoa]",
-        back_populates="mappings"
-    )
+    chuyen_khoa = relationship("ChuyenKhoa", back_populates="trieu_chung_list")
+
+
+class TrieuChungBacSi(Base):
+    __tablename__ = "trieu_chung_bac_si"
+    __table_args__ = {"extend_existing": True}
+
+    trieu_chung_id = Column(Integer, ForeignKey("trieu_chung.id", ondelete="CASCADE"), primary_key=True)
+    bac_si_id = Column(Integer, primary_key=True)
+
+
+# Alias tương thích ngược
+HoaDon = ThanhToan

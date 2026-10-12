@@ -2,17 +2,13 @@ from pathlib import Path
 from fastapi import FastAPI, Request, Response
 from fastapi.responses import FileResponse
 
-# Khởi tạo cơ sở dữ liệu và models
+# 1. Khởi tạo cơ sở dữ liệu và nạp models
 from datadase.database import engine, Base
 import models
 
-# Import router xác thực và các phân hệ nghiệp vụ
-from routers.auth_router import router as auth_router
-from routers.bac_si import router as bac_si_router
-from routers.lich_hen import router as lich_hen_router
-from routers.le_tan import router as le_tan_router
-
-# Import router admin
+# 2. Import trực tiếp các router từ thư mục api/ (tránh lỗi cache package của PyCharm)
+from api.core_auth import router as core_auth_router
+from api.nghiep_vu import router as nghiep_vu_router
 from api.admin import router as admin_router
 
 # Đảm bảo nạp models để tự động sinh bảng dữ liệu
@@ -22,14 +18,15 @@ Base.metadata.create_all(bind=engine)
 # Xác định đường dẫn thư mục gốc bằng Path chuẩn
 BASE_DIR = Path(__file__).resolve().parent
 
+# Khởi tạo ứng dụng FastAPI
 app = FastAPI(
     title="MedBooking API System",
-    description="Hệ thống quản lý phòng khám, bác sĩ, lịch hẹn và tiếp đón.",
+    description="Hệ thống quản lý phòng khám: Core Auth, Nghiệp vụ và Admin Dashboard.",
     version="1.0.0",
 )
 
 
-# Cấu hình CORS bằng HTTP Middleware native của FastAPI (không bị lỗi Type Checker PyCharm)
+# Cấu hình CORS bằng HTTP Middleware native của FastAPI (sạch hoàn toàn cảnh báo Type Checker)
 @app.middleware("http")
 async def custom_cors_middleware(request: Request, call_next):
     if request.method == "OPTIONS":
@@ -44,11 +41,9 @@ async def custom_cors_middleware(request: Request, call_next):
     return response
 
 
-# Đăng ký toàn bộ các router vào tiền tố /api
-app.include_router(auth_router, prefix="/api")
-app.include_router(bac_si_router, prefix="/api")
-app.include_router(lich_hen_router, prefix="/api")
-app.include_router(le_tan_router, prefix="/api")
+# Đăng ký toàn bộ các phân hệ API vào tiền tố /api
+app.include_router(core_auth_router, prefix="/api")
+app.include_router(nghiep_vu_router, prefix="/api")
 app.include_router(admin_router, prefix="/api")
 
 
@@ -59,6 +54,7 @@ def serve_dashboard():
     return FileResponse(str(file_path))
 
 
+# Route kiểm tra tình trạng hoạt động của hệ thống
 @app.get("/", tags=["HealthCheck"])
 def read_root():
     return {
