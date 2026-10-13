@@ -1,16 +1,14 @@
-from datetime import date, time, datetime
+from datetime import date, datetime
 from typing import Optional, List
 from pydantic import BaseModel, Field
 
 
 # --- Lịch làm việc / Ca khám ---
 class LichLamViecBase(BaseModel):
-    ma_bac_si: int
-    ngay_lam: date
-    gio_bat_dau: time
-    gio_ket_thuc: time
-    ca_kham: Optional[str] = None  # Sang / Chieu
-    da_dat: int = 0
+    bac_si_id: int  # Khớp với model LichLamViec
+    ngay_kham: date  # Khớp với model LichLamViec
+    khung_gio: str   # Khớp với model LichLamViec (chuỗi khung giờ)
+    con_trong: bool = True  # Khớp với quản lý slot con_trong
 
 
 class LichLamViecCreate(LichLamViecBase):
@@ -18,7 +16,7 @@ class LichLamViecCreate(LichLamViecBase):
 
 
 class LichLamViecResponse(LichLamViecBase):
-    ma_lich_lam: int
+    id: int  # Khớp với primary key id của LichLamViec
 
     class Config:
         from_attributes = True
@@ -26,13 +24,12 @@ class LichLamViecResponse(LichLamViecBase):
 
 # --- Log trạng thái lịch hẹn ---
 class LogTrangThaiResponse(BaseModel):
-    ma_log: int
-    ma_lich_hen: int
+    id: int
+    lich_hen_id: int  # Khớp với model LogTrangThai
     trang_thai_cu: Optional[str] = None
     trang_thai_moi: str
     thoi_gian: datetime
-    nguoi_thuc_hien_id: Optional[int] = None
-    ghi_chu: Optional[str] = None
+    nguoi_thuc_hien: str  # Khớp với kiểu String của nguoi_thuc_hien trong model LogTrangThai
 
     class Config:
         from_attributes = True
@@ -40,28 +37,28 @@ class LogTrangThaiResponse(BaseModel):
 
 # --- Đặt lịch & Cập nhật trạng thái ---
 class BookingRequest(BaseModel):
-    ma_bac_si: int
+    bac_si_id: int
+    dich_vu_id: int
     ngay_kham: date
-    gio_kham: time
+    khung_gio: str  # Khớp định dạng chuỗi khung giờ
     ghi_chu: Optional[str] = None
-    ma_bhyt: Optional[str] = None
 
 
 class UpdateAppointmentStatusRequest(BaseModel):
-    trang_thai_moi: str = Field(..., description="Pending, Confirmed, In Progress, Completed, Cancelled, DaDen")
+    trang_thai_moi: str = Field(..., description="Chờ xác nhận, Confirmed, In Progress, Completed, Cancelled, DaDen")
     ghi_chu: Optional[str] = None
 
 
 class LichHenResponse(BaseModel):
-    ma_lich_hen: int
-    ma_benh_nhan: int
-    ma_bac_si: int
+    id: int  # Khớp với id chính của LichHen
+    benh_nhan_id: int
+    bac_si_id: int
+    dich_vu_id: int
     ngay_kham: date
-    gio_kham: time
+    khung_gio: str
     trang_thai: str
-    ngay_tao: Optional[datetime] = None
+    created_at: Optional[datetime] = None
     ghi_chu: Optional[str] = None
-    ma_bhyt: Optional[str] = None
     logs: List[LogTrangThaiResponse] = []
 
     class Config:
