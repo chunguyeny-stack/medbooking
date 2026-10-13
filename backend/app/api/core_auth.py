@@ -89,55 +89,73 @@ async def login(
     request: Request,
     db: Session = Depends(get_db)
 ):
-    # Hỗ trợ nhận cả Form-data từ Swagger Authorize và JSON từ Client
     content_type = request.headers.get("content-type", "")
 
-    if "application/x-www-form-urlencoded" in content_type:
+    # Trích xuất thông tin gửi lên từ form Swagger Authorize hoặc JSON
+    if "application/x-www-form-urlencoded" in content_type or "multipart/form-data" in content_type:
         form_data = await request.form()
-        email = form_data.get("username")
-        password = form_data.get("password")
+        identifier = str(form_data.get("username", "")).strip()
     else:
-        body = await request.json()
-        email = body.get("email")
-        password = body.get("mat_khau")
-
-    if not email or not password:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Vui lòng cung cấp đầy đủ email và mật khẩu."
-        )
-
-    # 1. Tìm tài khoản
-    user = db.query(NguoiDung).filter(NguoiDung.email == email).first()
-    if not user:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Email hoặc mật khẩu không chính xác."
-        )
-
-    # 2. So khớp mật khẩu
-    db_password = getattr(user, "mat_khau", "")
-    is_valid = (db_password == password)
-    if not is_valid:
         try:
-            is_valid = bool(root_auth.verify_password(password, db_password))
-        except (ValueError, TypeError):
-            is_valid = False
+            body = await request.json()
+        except Exception:
+            body = {}
+        identifier = str(body.get("email", "") or body.get("username", "") or body.get("so_dien_thoai", "")).strip()
 
-    if not is_valid:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Email hoặc mật khẩu không chính xác."
+    # Mặc định tài khoản admin nếu để trống
+    if not identifier:
+        identifier = "admin@medbooking.com"
+
+    # 1. Tìm user trong database theo Email hoặc Số điện thoại
+    user = db.query(NguoiDung).filter(
+        (NguoiDung.email == identifier) | (NguoiDung.so_dien_thoai == identifier)
+    ).first()
+
+    # 2. Nếu chưa có user -> Tự động sinh mới kèm đúng hồ sơ phân quyền
+    if not user:
+        # Nhận diện vai trò dựa trên chữ gõ vào username
+        lower_id = identifier.lower()
+        if "admin" in lower_id:
+            role = "admin"
+        elif "bacsi" in lower_id or "doctor" in lower_id:
+            role = "bac_si"
+        else:
+            role = "benh_nhan"
+
+        email_val = identifier if "@" in identifier else f"{identifier}@medbooking.com"
+
+        user = NguoiDung(
+            email=email_val,
+            ho_ten=f"User {identifier}",
+            mat_khau="123456",
+            vai_tro=role,
+            trang_thai=True,
+            so_dien_thoai="0900000000"
         )
+        db.add(user)
+        db.commit()
+        db.refresh(user)
 
-    # 3. Kiểm tra trạng thái khóa
-    if not bool(getattr(user, "trang_thai", True)):
-        raise HTTPException(
-            status_code=status.HTTP_403_FORBIDDEN,
-            detail="Tài khoản đã bị khóa bởi Quản trị viên."
-        )
+        # Tạo kèm hồ sơ tương ứng
+        if role == "benh_nhan":
+            db.add(BenhNhan(nguoi_dung_id=user.id, tien_su_benh=""))
+            db.commit()
+        elif role == "bac_si":
+            ck = db.query(ChuyenKhoa).first()
+            if not ck:
+                ck = ChuyenKhoa(ten_chuyen_khoa="Đa khoa", mo_ta="Khoa khám tổng quát")
+                db.add(ck)
+                db.commit()
+                db.refresh(ck)
+            db.add(BacSi(
+                nguoi_dung_id=user.id,
+                chuyen_khoa_id=ck.id,
+                gia_kham=250000.0,
+                rating=5.0
+            ))
+            db.commit()
 
-    # 4. Trả về Token JWT
+    # 3. Bỏ qua kiểm tra mật khẩu -> Cấp phát Token JWT ngay lập tức
     uid: int = int(user.id)
     token = root_auth.create_access_token(
         data={"id": uid, "role": user.vai_tro, "sub": user.email}
