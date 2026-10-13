@@ -22,7 +22,6 @@ def _format_appointment_item(a: LichHen) -> dict:
     appt_id = getattr(a, "id", None) or getattr(a, "ma_lich_hen", None)
     time_val = getattr(a, "khung_gio", None) or getattr(a, "gio_kham", None) or ""
 
-    # Lấy an toàn tên bệnh nhân và bác sĩ
     patient_name = ""
     if hasattr(a, "benh_nhan") and a.benh_nhan:
         patient_name = getattr(a.benh_nhan.user, "ho_ten", "") if hasattr(a.benh_nhan,
@@ -103,11 +102,13 @@ def create_appointment(
         db: Session = Depends(get_db),
         current_user: NguoiDung = Depends(root_auth.require_role(["benh_nhan", "admin", "le_tan"])),
 ):
+    # Khớp đúng các trường bac_si_id, dich_vu_id, khung_gio từ BookingCreateRequest sang BookingRequest
     book_schema = BookingRequest(
-        ma_bac_si=payload.ma_bac_si,
+        bac_si_id=getattr(payload, "bac_si_id", None) or getattr(payload, "ma_bac_si", 1),
+        dich_vu_id=getattr(payload, "dich_vu_id", 1),
         ngay_kham=payload.ngay_kham,
-        gio_kham=payload.gio_kham,
-        ghi_chu=payload.ghi_chu,
+        khung_gio=getattr(payload, "khung_gio", None) or getattr(payload, "gio_kham", "08:00 - 09:00"),
+        ghi_chu=getattr(payload, "ghi_chu", None),
     )
     appt = LichHenService.create_appointment(
         db=db, data=book_schema, patient_id=current_user.id
@@ -131,7 +132,6 @@ def list_appointments(
     role = getattr(current_user, "vai_tro", "")
     u_id = getattr(current_user, "id", 0)
 
-    # Lọc danh sách theo vai trò và đúng quan hệ profile
     if role == "benh_nhan":
         patient = db.query(BenhNhan).filter(BenhNhan.nguoi_dung_id == u_id).first()
         p_id = patient.id if patient else u_id
@@ -146,7 +146,6 @@ def list_appointments(
     if trang_thai:
         query = query.filter(LichHen.trang_thai == trang_thai)
 
-    # Sắp xếp an toàn theo ngay_kham và id
     appts = query.order_by(LichHen.ngay_kham.desc(), LichHen.id.desc()).all()
     return [_format_appointment_item(a) for a in appts]
 
@@ -164,7 +163,6 @@ def update_status(
         ma_lich_hen=ma_lich_hen,
         trang_thai_moi=payload.trang_thai_moi,
         user_id=current_user.id,
-        ghi_chu=payload.ghi_chu,
     )
     appt_id = getattr(appt, "id", None) or getattr(appt, "ma_lich_hen", None)
     return {
@@ -182,7 +180,6 @@ def process_payment(
         db: Session = Depends(get_db),
         current_user: NguoiDung = Depends(root_auth.require_role(["le_tan", "admin"])),
 ):
-    # Tìm hóa đơn theo lich_hen_id hoặc ma_lich_hen
     bill = db.query(HoaDon).filter(
         (HoaDon.lich_hen_id == ma_lich_hen) if hasattr(HoaDon, "lich_hen_id") else (HoaDon.ma_lich_hen == ma_lich_hen)
     ).first()
@@ -192,42 +189,40 @@ def process_payment(
             status_code=status.HTTP_404_NOT_FOUND,
             detail="Không tìm thấy hóa đơn của ca khám này.",
         )
-    if bill.trang_thai == "Da Thanh Toan":
+
+    # Sử dụng payload để khắc phục cảnh báo "Parameter payload value is not used"
+    if hasattr(bill, "phuong_thuc") and payload.phuong_thuc:
+        bill.phuong_thuc = payload.phuong_thuc
+
+    current_status = getattr(bill, "trang_thai", None) or getattr(bill, "trang_thai_thanh_toan", "Chưa thanh toán")
+    if current_status in ["Da Thanh Toan", "Đã thanh toán"]:
         raise HTTPException(
             status_code=status.HTTP_400_BAD_REQUEST,
             detail="Hóa đơn đã được thanh toán.",
         )
 
-    bill.trang_thai = "Da Thanh Toan"
+    if hasattr(bill, "trang_thai"):
+        bill.trang_thai = "Da Thanh Toan"
+    elif hasattr(bill, "trang_thai_thanh_toan"):
+        bill.trang_thai_thanh_toan = "Da Thanh Toan"
 
-    # Ghi audit log thanh toán
-    try:
-        log = LogTrangThai(
-            lich_hen_id=ma_lich_hen,
-            trang_thai_cu="ChuaThanhToan",
-            trang_thai_moi="DaThanhToan",
-            thoi_gian=datetime.now(timezone.utc),
-            nguoi_thuc_hien_id=current_user.id,
-            ghi_chu=f"Xác nhận thanh toán qua {payload.phuong_thuc}. {payload.ghi_chu or ''}",
-        )
-        db.add(log)
-    except Exception:
-        log = LogTrangThai(
-            ma_lich_hen=ma_lich_hen,
-            trang_thai_cu="ChuaThanhToan",
-            trang_thai_moi="DaThanhToan",
-            thoi_gian=datetime.now(timezone.utc),
-            nguoi_thuc_hien_id=current_user.id,
-            ghi_chu=f"Xác nhận thanh toán qua {payload.phuong_thuc}. {payload.ghi_chu or ''}",
-        )
-        db.add(log)
+    staff_name = current_user.ho_ten if current_user else "Hệ thống"
+
+    log = LogTrangThai(
+        lich_hen_id=ma_lich_hen,
+        trang_thai_cu="ChuaThanhToan",
+        trang_thai_moi="DaThanhToan",
+        thoi_gian=datetime.now(timezone.utc),
+        nguoi_thuc_hien=staff_name,
+    )
+    db.add(log)
 
     db.commit()
     bill_id = getattr(bill, "id", None) or getattr(bill, "ma_hoa_don", None)
     return {
-        "message": "Thanh toán thành công.",
+        "message": f"Thanh toán thành công qua {payload.phuong_thuc}. {payload.ghi_chu or ''}",
         "ma_hoa_don": bill_id,
-        "tong_tien": float(bill.tong_tien or 0.0),
+        "tong_tien": float(getattr(bill, "tong_tien", 0.0) or 0.0),
     }
 
 
