@@ -5,6 +5,7 @@ from sqlalchemy.orm import Session
 
 from datadase.database import get_db
 from models.models import NguoiDung
+from models.bac_si import BacSi
 from models.lich_hen import LichHen
 from schemas.bac_si import (
     BacSiCreate,
@@ -61,13 +62,13 @@ def get_doctors(
 
     patient_specialties: List[int] = []
     if current_user and current_user.vai_tro == "benh_nhan":
-        history = db.query(LichHen.ma_bac_si).filter(
-            LichHen.ma_benh_nhan == current_user.user_id
+        # Sửa lại từ ma_bac_si/ma_benh_nhan thành bac_si_id/benh_nhan_id khớp với models.py & lich_hen.py
+        history = db.query(LichHen.bac_si_id).filter(
+            LichHen.benh_nhan_id == current_user.id
         ).all()
         doc_ids = [h[0] for h in history if h[0]]
         if doc_ids:
-            from models.bac_si import BacSi
-            ck_records = db.query(BacSi.ma_chuyen_khoa).filter(BacSi.ma_bac_si.in_(doc_ids)).all()
+            ck_records = db.query(BacSi.chuyen_khoa_id).filter(BacSi.id.in_(doc_ids)).all()
             patient_specialties = [c[0] for c in ck_records if c[0]]
 
     return BacSiService.get_paginated_doctors(
