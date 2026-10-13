@@ -1,90 +1,125 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bác sĩ - Trang chủ Tổng quan</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bác sĩ - Trang chủ</title>
+<link rel="stylesheet" href="../../static/css/BS.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
+<div class="app-layout">
+  <aside class="sidebar">
+    <div class="brand">
+      <svg class="brand-logo" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+        <defs><linearGradient id="gLogo" x1="0" y1="0" x2="48" y2="48" gradientUnits="userSpaceOnUse">
+          <stop offset="0" stop-color="#4ade80"/><stop offset=".5" stop-color="#22c55e"/><stop offset="1" stop-color="#14b8a6"/>
+        </linearGradient></defs>
+        <rect x="2" y="2" width="44" height="44" rx="14" fill="url(#gLogo)"/>
+        <path d="M24 13v22M13 24h22" stroke="#fff" stroke-width="4.5" stroke-linecap="round"/>
+        <circle cx="24" cy="24" r="4" fill="#fff" opacity=".9"/>
+      </svg>
+      <div class="brand-text"><span class="brand-name">MEDBOOKING</span><span class="brand-sub">Bác sĩ</span></div>
+    </div>
+    <div class="nav-section">
+      <div class="nav-title">Tổng quan</div>
+      <ul class="nav-list"><li><a href="home_bs.html" class="nav-link"><i class="fas fa-house-medical"></i><span>Trang chủ Bác sĩ</span></a></li></ul>
+    </div>
+    <div class="nav-section">
+      <div class="nav-title">Tác nghiệp khám bệnh</div>
+      <ul class="nav-list">
+        <li><a href="danh_sach_ca_kham.html" class="nav-link"><i class="fas fa-calendar-check"></i><span>Lịch hẹn & Ca khám</span></a></li>
+        <li><a href="ho_so_ca_nhan.html" class="nav-link"><i class="fas fa-user-doctor"></i><span>Hồ sơ & Lịch trực</span></a></li>
+      </ul>
+    </div>
+    <div class="sidebar-footer">
+      <div class="avatar-sm">NA</div>
+      <div class="info"><strong>BS. Nguyễn Văn A</strong><span>Nội Tổng Quát</span></div>
+    </div>
+  </aside>
 
-    <!-- Sidebar Menu Bác sĩ -->
-    <aside>
-        <div>MEDBOOKING - BÁC SĨ</div>
-        <nav>
-            <h3>TỔNG QUAN</h3>
-            <ul>
-                <li><a href="home_bs.html"><strong>Trang chủ Bác sĩ</strong></a></li>
-            </ul>
+  <div class="main-area">
+    <header class="topbar">
+      <div class="topbar-left">
+        <button class="icon-btn" id="sidebar-toggle"><i class="fas fa-bars"></i></button>
+        <h1 class="page-title">Tổng quan Bác sĩ</h1>
+      </div>
+      <div class="topbar-right">
+        <button class="icon-btn theme-toggle" id="theme-toggle"><i class="fas fa-moon"></i><i class="fas fa-sun"></i></button>
+        <button class="icon-btn" id="btn-notify"><i class="fas fa-bell"></i><span class="badge"></span></button>
+        <div class="user-chip"><div class="avatar">NA</div><span class="name">BS. Nguyễn Văn A</span></div>
+      </div>
+    </header>
 
-            <h3>TÁC NGHIỆP KHÁM BỆNH</h3>
-            <ul>
-                <li><a href="danh_sach_ca_kham.html">Lịch hẹn & Ca khám hôm nay</a></li>
-                <li><a href="ho_so_ca_nhan.html">Thông tin cá nhân & Lịch trực</a></li>
-            </ul>
-        </nav>
-    </aside>
+    <main class="content">
+      <div class="stats-grid" id="stats-grid"></div>
 
-    <!-- Main Content -->
-    <main>
-        <header>
-            <h1>Xin chào, BS. Nguyễn Văn A</h1>
-            <div>
-                <span>Khoa Nội Tổng Quát</span> | 
-                <a href="../dk_dn/dn.html">Đăng xuất</a>
-            </div>
-        </header>
-
-        <!-- 1. THỐNG KÊ NHANH TRONG NGÀY (QUICK STATS) -->
-        <section>
-            <h2>Tổng quan công việc hôm nay</h2>
-            <div style="display: flex; gap: 20px;">
-                <div style="border: 1px solid #ccc; padding: 15px; flex: 1;">
-                    <h3>Lịch hẹn chờ khám</h3>
-                    <p id="stat-waiting-count" style="font-size: 24px; font-weight: bold;">--</p>
-                </div>
-                <div style="border: 1px solid #ccc; padding: 15px; flex: 1;">
-                    <h3>Đã hoàn thành</h3>
-                    <p id="stat-completed-count" style="font-size: 24px; font-weight: bold;">--</p>
-                </div>
-                <div style="border: 1px solid #ccc; padding: 15px; flex: 1;">
-                    <h3>Tổng ca khám trong ngày</h3>
-                    <p id="stat-total-count" style="font-size: 24px; font-weight: bold;">--</p>
-                </div>
-            </div>
-        </section>
-
-        <!-- 2. LỐI TẮT NHANH ĐẾN TÁC NGHIỆP -->
-        <section>
-            <h2>Truy cập nhanh</h2>
-            <div>
-                <a href="danh_sach_ca_kham.html"><button type="button">Vào danh sách ca khám ngay</button></a>
-                <a href="ho_so_ca_nhan.html"><button type="button">Xem lịch trực cá nhân</button></a>
-            </div>
-        </section>
-
-        <!-- 3. THÔNG BÁO TỪ PHÒNG KHÁM / HỆ THỐNG -->
-        <section>
-            <h2>Thông báo hệ thống & Lịch trực</h2>
-            <table border="1" style="width: 100%;">
-                <thead>
-                    <tr>
-                        <th>Thời gian</th>
-                        <th>Nội dung thông báo</th>
-                        <th>Người gửi / Khoa</th>
-                    </tr>
-                </thead>
-                <tbody id="notification-table-body">
-                    <tr>
-                        <td>08:00 - 10/10/2026</td>
-                        <td>Lịch họp chuyên môn định kỳ khối nội tổng quát tại phòng họp lớn tầng 3.</td>
-                        <td>Ban Giám Đốc</td>
-                    </tr>
-                </tbody>
-            </table>
-        </section>
+      <section class="card">
+        <div class="card-header">
+          <h2 class="card-title"><i class="fas fa-clock"></i> Ca khám sắp tới</h2>
+          <a href="danh_sach_ca_kham.html" class="btn btn-outline btn-sm">Xem tất cả <i class="fas fa-arrow-right"></i></a>
+        </div>
+        <div class="table-wrap">
+          <table class="table">
+            <thead>
+              <tr><th>Giờ</th><th>Mã LH</th><th>Bệnh nhân</th><th>Triệu chứng</th><th>Trạng thái</th></tr>
+            </thead>
+            <tbody id="home-appointments-body"></tbody>
+          </table>
+        </div>
+      </section>
     </main>
+  </div>
+</div>
 
-    <!-- Liên kết tệp JavaScript xử lý logic phía bác sĩ -->
-    <script src="../../js/doctor.js"></script>
+<script src="../../static/js/bac_si.js"></script>
+<script>
+window.MB_PAGE_INIT = function () {
+  // 1. Render Stats
+  const s = MB_MOCK.stats;
+  document.getElementById('stats-grid').innerHTML = `
+    <div class="stat-card stat-green"><div class="icon-bg"><i class="fas fa-stethoscope"></i></div>
+      <div class="label">Ca khám hôm nay</div><div class="value">${s.today}</div>
+      <div class="trend"><i class="fas fa-arrow-up"></i> +2 so với hôm qua</div></div>
+    <div class="stat-card stat-teal"><div class="icon-bg"><i class="fas fa-circle-check"></i></div>
+      <div class="label">Đã hoàn thành</div><div class="value">${s.done}</div>
+      <div class="trend"><i class="fas fa-clock"></i> Còn ${s.waiting} ca chờ</div></div>
+    <div class="stat-card stat-amber"><div class="icon-bg"><i class="fas fa-hourglass-half"></i></div>
+      <div class="label">Đang chờ khám</div><div class="value">${s.waiting}</div>
+      <div class="trend"><i class="fas fa-user"></i> 3 bệnh nhân mới</div></div>
+    <div class="stat-card stat-sky"><div class="icon-bg"><i class="fas fa-calendar-week"></i></div>
+      <div class="label">Lịch trực tuần</div><div class="value">${s.weekShifts}</div>
+      <div class="trend"><i class="fas fa-sun"></i> Ca sáng & chiều</div></div>
+  `;
+
+  // 2. Render 3 ca sắp tới
+  const badgeMap = {
+    waiting:      ['badge-waiting',   'Chờ khám'],
+    'in-progress':['badge-progress',  'Đang khám'],
+    completed:    ['badge-completed', 'Đã hoàn thành'],
+    cancelled:    ['badge-cancelled', 'Đã hủy']
+  };
+  const tbody = document.getElementById('home-appointments-body');
+  tbody.innerHTML = ''; // Xóa nội dung cũ nếu có
+
+  MB_MOCK.appointments.slice(0, 3).forEach((a) => {
+    const [cls, txt] = badgeMap[a.status] || ['badge-waiting', a.status];
+    tbody.innerHTML += `
+      <tr>
+        <td><strong>${a.time.split(' - ')[0]}</strong></td>
+        <td>${a.id}</td>
+        <td>${a.name}</td>
+        <td>${a.symptom}</td>
+        <td><span class="badge-status ${cls}">${txt}</span></td>
+      </tr>`;
+  });
+
+  // 3. Nút thông báo
+  document.getElementById('btn-notify').addEventListener('click', () => {
+    showToast('Bạn có 5 thông báo mới từ bệnh nhân!', 'info', 2500);
+  });
+};
+</script>
 </body>
 </html>

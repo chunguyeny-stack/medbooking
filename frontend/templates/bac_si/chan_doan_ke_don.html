@@ -1,106 +1,495 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bác sĩ - Chẩn đoán & Kê đơn thuốc</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bác sĩ - Chẩn đoán & Kê đơn</title>
+<link rel="stylesheet" href="../../static/css/BS.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
+<div class="app-layout">
+  <aside class="sidebar">
+    <div class="brand">
+      <svg class="brand-logo" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+        <defs><linearGradient id="gLogo" x1="0" y1="0" x2="48" y2="48" gradientUnits="userSpaceOnUse">
+          <stop offset="0" stop-color="#4ade80"/><stop offset=".5" stop-color="#22c55e"/><stop offset="1" stop-color="#14b8a6"/>
+        </linearGradient></defs>
+        <rect x="2" y="2" width="44" height="44" rx="14" fill="url(#gLogo)"/>
+        <path d="M24 13v22M13 24h22" stroke="#fff" stroke-width="4.5" stroke-linecap="round"/>
+        <circle cx="24" cy="24" r="4" fill="#fff" opacity=".9"/>
+      </svg>
+      <div class="brand-text"><span class="brand-name">MEDBOOKING</span><span class="brand-sub">Bác sĩ</span></div>
+    </div>
+    <div class="nav-section">
+      <div class="nav-title">Tổng quan</div>
+      <ul class="nav-list"><li><a href="home_bs.html" class="nav-link"><i class="fas fa-house-medical"></i><span>Trang chủ Bác sĩ</span></a></li></ul>
+    </div>
+    <div class="nav-section">
+      <div class="nav-title">Tác nghiệp khám bệnh</div>
+      <ul class="nav-list">
+        <li><a href="danh_sach_ca_kham.html" class="nav-link"><i class="fas fa-calendar-check"></i><span>Lịch hẹn & Ca khám</span></a></li>
+        <li><a href="ho_so_ca_nhan.html" class="nav-link"><i class="fas fa-user-doctor"></i><span>Hồ sơ & Lịch trực</span></a></li>
+      </ul>
+    </div>
+    <div class="sidebar-footer">
+      <div class="avatar-sm">NA</div>
+      <div class="info"><strong>BS. Nguyễn Văn A</strong><span>Nội Tổng Quát</span></div>
+    </div>
+  </aside>
 
-    <!-- Sidebar Menu Bác sĩ -->
-    <aside>
-        <div>MEDBOOKING - BÁC SĨ</div>
-        <nav>
-            <h3>TỔNG QUAN</h3>
-            <ul>
-                <li><a href="home_bs.html">Trang chủ Bác sĩ</a></li>
-            </ul>
+  <div class="main-area">
+    <header class="topbar">
+      <div class="topbar-left">
+        <button class="icon-btn" id="sidebar-toggle"><i class="fas fa-bars"></i></button>
+        <h1 class="page-title">Khám bệnh & Kê đơn</h1>
+      </div>
+      <div class="topbar-right">
+        <a href="danh_sach_ca_kham.html" class="btn btn-outline btn-sm">
+          <i class="fas fa-arrow-left"></i> Quay lại
+        </a>
+        <button class="icon-btn theme-toggle" id="theme-toggle"><i class="fas fa-moon"></i><i class="fas fa-sun"></i></button>
+        <div class="user-chip"><div class="avatar">NA</div><span class="name">BS. Nguyễn Văn A</span></div>
+      </div>
+    </header>
 
-            <h3>TÁC NGHIỆP KHÁM BỆNH</h3>
-            <ul>
-                <li><a href="danh_sach_ca_kham.html">Lịch hẹn & Ca khám hôm nay</a></li>
-                <li><a href="ho_so_ca_nhan.html">Thông tin cá nhân & Lịch trực</a></li>
-            </ul>
-        </nav>
-    </aside>
+    <main class="content">
+      <section class="card">
+        <div class="card-header">
+          <h2 class="card-title"><i class="fas fa-user-injured"></i> Thông tin Bệnh nhân</h2>
+          <span class="badge-status badge-waiting" id="patient-status">Chờ khám</span>
+        </div>
+        <div class="patient-card">
+          <div class="info-item"><span class="k">Mã lịch hẹn</span><span class="v" id="p-id">—</span></div>
+          <div class="info-item"><span class="k">Họ và tên</span><span class="v" id="p-name">—</span></div>
+          <div class="info-item"><span class="k">Tuổi / Giới tính</span><span class="v" id="p-age">—</span></div>
+          <div class="info-item" style="grid-column:1/-1;">
+            <span class="k">Triệu chứng khai báo</span><span class="v" id="p-symptom">—</span>
+          </div>
+        </div>
+      </section>
 
-    <!-- Main Content -->
-    <main>
-        <header>
-            <h1>Màn hình Khám bệnh & Kê đơn</h1>
-            <div>
-                <span>BS. Nguyễn Văn A</span> | 
-                <a href="danh_sach_ca_kham.html"><button type="button">Quay lại danh sách</button></a>
-            </div>
-        </header>
-
-        <!-- 1. THÔNG TIN HÀNH CHÍNH & TRIỆU CHỨNG BỆNH NHÂN -->
-        <section>
-            <h2>Thông tin Bệnh nhân</h2>
-            <div style="border: 1px solid #ccc; padding: 15px; margin-bottom: 20px;">
-                <p><strong>Mã lịch hẹn:</strong> LH00123</p>
-                <p><strong>Họ và tên:</strong> Trần Thị B | <strong>Tuổi:</strong> 28 | <strong>Giới tính:</strong> Nữ</p>
-                <p><strong>Triệu chứng khai báo:</strong> Đau đầu, chóng mặt kéo dài 3 ngày, ngủ kém.</p>
-            </div>
+      <form id="form-diagnosis" novalidate>
+        <!-- ===== 1. KHÁM & CHẨN ĐOÁN ===== -->
+        <section class="card">
+          <div class="card-header">
+            <h2 class="card-title"><i class="fas fa-notes-medical"></i> 1. Kết quả Khám & Chẩn đoán</h2>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="clinical-notes">
+              Triệu chứng thực thể / Kết quả khám
+              <span class="required-badge">BẮT BUỘC</span>
+            </label>
+            <textarea id="clinical-notes" class="form-control" rows="3"
+              placeholder="Nhập kết quả thăm khám lâm sàng (tối thiểu 10 ký tự)..."
+              data-min="10" data-field="clinical"></textarea>
+            <span class="char-counter" data-for="clinical-notes">0 / 10 ký tự tối thiểu</span>
+            <span class="error-message" data-error="clinical"></span>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="diagnosis-result">
+              Chẩn đoán bệnh (ICD / Tên bệnh)
+              <span class="required-badge">BẮT BUỘC</span>
+            </label>
+            <input type="text" id="diagnosis-result" class="form-control"
+              placeholder="Ví dụ: Rối loạn tiền đình (tối thiểu 5 ký tự)..."
+              data-min="5" data-field="diagnosis">
+            <span class="error-message" data-error="diagnosis"></span>
+          </div>
         </section>
 
-        <!-- 2. FORM NHẬP KẾT QUẢ KHÁM & CHẨN ĐOÁN -->
-        <section>
-            <form id="form-diagnosis">
-                <h2>1. Kết quả Khám lâm sàng & Chẩn đoán</h2>
-                <div>
-                    <label for="clinical-notes">Triệu chứng thực thể / Kết quả khám:</label><br>
-                    <textarea id="clinical-notes" rows="3" style="width: 100%;" placeholder="Nhập kết quả thăm khám lâm sàng..."></textarea>
-                </div>
-                <br>
-                <div>
-                    <label for="diagnosis-result">Chẩn đoán bệnh (ICD / Tên bệnh):</label><br>
-                    <input type="text" id="diagnosis-result" style="width: 100%;" placeholder="Ví dụ: Rối loạn tiền đình / Thiếu máu não thoáng qua">
-                </div>
-                <br>
-
-                <!-- 3. KÊ ĐƠN THUỐC -->
-                <h2>2. Kê đơn thuốc</h2>
-                <table border="1" style="width: 100%; margin-bottom: 10px;">
-                    <thead>
-                        <tr>
-                            <th>STT</th>
-                            <th>Tên thuốc</th>
-                            <th>Liều lượng / Cách dùng</th>
-                            <th>Số lượng</th>
-                            <th>Thao tác</th>
-                        </tr>
-                    </thead>
-                    <tbody id="prescription-list-body">
-                        <tr>
-                            <td>1</td>
-                            <td><input type="text" value="Betaserc 16mg" placeholder="Tên thuốc..."></td>
-                            <td><input type="text" value="Ngày uống 2 lần, sáng/chiều sau ăn mỗi lần 1 viên"></td>
-                            <td><input type="number" value="30" style="width: 60px;"> viên</td>
-                            <td><button type="button">Xóa</button></td>
-                        </tr>
-                    </tbody>
-                </table>
-                <button type="button" id="btn-add-medicine">+ Thêm thuốc vào đơn</button>
-                <br><br>
-
-                <div>
-                    <label for="doctor-advice">Lời dặn của Bác sĩ / Lịch hẹn tái khám:</label><br>
-                    <textarea id="doctor-advice" rows="2" style="width: 100%;" placeholder="Ăn uống nghỉ ngơi điều độ, tái khám sau 1 tuần nếu không đỡ."></textarea>
-                </div>
-                <br>
-
-                <!-- 4. NÚT HOÀN TẤT CA KHÁM (HÀNH ĐỘNG CỐT LÕI) -->
-                <div style="border-top: 2px solid #333; padding-top: 15px; margin-top: 15px;">
-                    <button type="button" id="btn-save-draft" style="margin-right: 10px;">Lưu nháp bệnh án</button>
-                    <!-- Nút bấm quan trọng kích hoạt hoàn thành ca khám -->
-                    <button type="button" id="btn-complete-examination" style="background-color: green; color: white; font-weight: bold; padding: 10px 20px;">Hoàn thành ca khám & Gửi đơn thuốc</button>
-                </div>
-            </form>
+        <!-- ===== 2. KÊ ĐƠN THUỐC ===== -->
+        <section class="card">
+          <div class="card-header">
+            <h2 class="card-title"><i class="fas fa-pills"></i> 2. Kê đơn thuốc</h2>
+            <button type="button" class="btn btn-primary btn-sm" id="btn-add-medicine">
+              <i class="fas fa-plus"></i> Thêm thuốc
+            </button>
+          </div>
+          <div class="table-wrap">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th style="width:50px;">STT</th>
+                  <th>Tên thuốc <span class="required-badge">*</span></th>
+                  <th>Liều lượng / Cách dùng <span class="required-badge">*</span></th>
+                  <th style="width:110px;">Số lượng <span class="required-badge">*</span></th>
+                  <th style="width:80px;">Xóa</th>
+                </tr>
+              </thead>
+              <tbody id="prescription-list-body"></tbody>
+            </table>
+          </div>
+          <span class="error-message" data-error="medicines" style="margin-top:8px;"></span>
         </section>
+
+        <!-- ===== 3. LỜI DẶN & TÁI KHÁM ===== -->
+        <section class="card">
+          <div class="card-header">
+            <h2 class="card-title"><i class="fas fa-comment-medical"></i> 3. Lời dặn & Tái khám</h2>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label" for="doctor-advice">
+              Lời dặn của bác sĩ
+              <span class="required-badge">BẮT BUỘC</span>
+            </label>
+            <textarea id="doctor-advice" class="form-control" rows="3"
+              placeholder="Ăn uống nghỉ ngơi điều độ, uống đủ nước... (tối thiểu 10 ký tự)"
+              data-min="10" data-field="advice"></textarea>
+            <span class="char-counter" data-for="doctor-advice">0 / 10 ký tự tối thiểu</span>
+            <span class="error-message" data-error="advice"></span>
+          </div>
+
+          <!-- Toggle tái khám -->
+          <div class="recheck-toggle" id="recheck-toggle-wrap">
+            <input type="checkbox" id="recheck-required">
+            <label for="recheck-required">
+              <i class="fas fa-calendar-plus"></i>
+              Yêu cầu bệnh nhân tái khám
+            </label>
+          </div>
+
+          <!-- Panel tái khám -->
+          <div class="recheck-panel" id="recheck-panel">
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label" for="recheck-date">
+                  Ngày tái khám dự kiến <span class="required-badge">BẮT BUỘC</span>
+                </label>
+                <input type="date" id="recheck-date" class="form-control">
+                <span class="error-message" data-error="recheckDate"></span>
+              </div>
+              <div class="form-group">
+                <label class="form-label" for="recheck-session">
+                  Ca khám mong muốn <span class="required-badge">BẮT BUỘC</span>
+                </label>
+                <select id="recheck-session" class="form-control">
+                  <option value="morning">Sáng (08:00 - 12:00)</option>
+                  <option value="afternoon">Chiều (13:30 - 17:30)</option>
+                  <option value="any">Bất kỳ ca nào</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="recheck-note">Ghi chú cho bệnh nhân (tùy chọn)</label>
+              <textarea id="recheck-note" class="form-control" rows="2"
+                placeholder="Ví dụ: Mang theo đơn thuốc cũ, nhịn ăn trước khi khám..."></textarea>
+            </div>
+            <div class="recheck-info">
+              <i class="fas fa-circle-info"></i>
+              <div>
+                <strong>Bệnh nhân sẽ nhận được thông báo</strong> và có thể <strong>tự đặt lịch tái khám</strong>
+                theo ngày/ca bạn đề xuất. Lịch sẽ được xác nhận khi bệnh nhân chọn.
+              </div>
+            </div>
+          </div>
+
+          <div class="action-bar">
+            <button type="button" class="btn btn-outline" id="btn-save-draft">
+              <i class="fas fa-floppy-disk"></i> Lưu nháp
+            </button>
+            <button type="button" class="btn btn-success" id="btn-complete-examination">
+              <i class="fas fa-circle-check"></i> Hoàn thành ca khám & Gửi đơn
+            </button>
+          </div>
+        </section>
+      </form>
     </main>
+  </div>
+</div>
 
-    <!-- Liên kết tệp JavaScript xử lý logic tác nghiệp -->
-    <script src="../../js/doctor.js"></script>
+<script src="../../static/js/bac_si.js"></script>
+<script>
+window.MB_PAGE_INIT = function () {
+  // ===== Lấy id bệnh nhân từ URL =====
+  const params = new URLSearchParams(window.location.search);
+  const id = params.get('id') || 'LH00123';
+  const patient = MB_MOCK.appointments.find((a) => a.id === id) || MB_MOCK.appointments[0];
+
+  if (patient) {
+    document.getElementById('p-id').textContent = patient.id;
+    document.getElementById('p-name').textContent = patient.name;
+    document.getElementById('p-age').textContent = patient.age + ' / ' + patient.gender;
+    document.getElementById('p-symptom').textContent = patient.symptom;
+
+    const statusEl = document.getElementById('patient-status');
+    const statusMap = {
+      waiting: ['badge-waiting', 'Chờ khám'],
+      'in-progress': ['badge-progress', 'Đang khám'],
+      completed: ['badge-completed', 'Đã hoàn thành'],
+      cancelled: ['badge-cancelled', 'Đã hủy']
+    };
+    const [cls, txt] = statusMap[patient.status] || ['badge-waiting', 'Chờ khám'];
+    statusEl.className = 'badge-status ' + cls;
+    statusEl.textContent = txt;
+  }
+
+  // ===== Elements =====
+  const tbody = document.getElementById('prescription-list-body');
+  const DRAFT_KEY = 'medbooking_draft_' + id;
+
+  // ===== Validation helpers =====
+  function setError(field, message) {
+    const errEl = document.querySelector(`[data-error="${field}"]`);
+    if (errEl) errEl.textContent = message || '';
+    const input = document.querySelector(`[data-field="${field}"]`);
+    if (input) input.classList.toggle('error', !!message);
+  }
+
+  function clearAllErrors() {
+    document.querySelectorAll('.error-message').forEach(el => el.textContent = '');
+    document.querySelectorAll('.form-control.error').forEach(el => el.classList.remove('error'));
+    document.querySelectorAll('tr.row-error').forEach(el => el.classList.remove('row-error'));
+  }
+
+  // ===== Char counter =====
+  function bindCharCounter(textarea) {
+    const counter = document.querySelector(`.char-counter[data-for="${textarea.id}"]`);
+    if (!counter) return;
+    const min = parseInt(textarea.dataset.min) || 0;
+    function update() {
+      const len = textarea.value.trim().length;
+      counter.textContent = `${len} / ${min} ký tự tối thiểu`;
+      counter.classList.remove('warn', 'ok');
+      if (len === 0) counter.classList.remove('warn', 'ok');
+      else if (len < min) counter.classList.add('warn');
+      else counter.classList.add('ok');
+    }
+    textarea.addEventListener('input', update);
+    update();
+  }
+
+  document.querySelectorAll('textarea[data-min]').forEach(bindCharCounter);
+
+  // ===== Prescription row =====
+  function renumber() {
+    [...tbody.querySelectorAll('tr')].forEach((tr, i) => {
+      tr.querySelector('td:first-child').textContent = i + 1;
+    });
+  }
+
+  function bindRow(row) {
+    row.querySelector('.btn-danger').addEventListener('click', () => {
+      row.remove();
+      renumber();
+      validateMedicines();
+      showToast('Đã xóa thuốc', 'warning', 1500);
+    });
+    row.querySelectorAll('input').forEach(inp => {
+      inp.addEventListener('blur', () => validateMedicines());
+    });
+  }
+
+  function addRow(name = '', dose = '', qty = 1) {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td></td>
+      <td><input type="text" class="form-control med-name" value="${name}" placeholder="Tên thuốc..."></td>
+      <td><input type="text" class="form-control med-dose" value="${dose}" placeholder="Liều lượng, cách dùng..."></td>
+      <td><input type="number" class="form-control med-qty" value="${qty}" min="1" max="100"></td>
+      <td><button type="button" class="btn btn-danger btn-icon"><i class="fas fa-trash"></i></button></td>
+    `;
+    tbody.appendChild(tr);
+    bindRow(tr);
+    renumber();
+  }
+
+  // ===== Load draft =====
+  const draft = MB_STORAGE.get(DRAFT_KEY, null);
+  if (draft) {
+    document.getElementById('clinical-notes').value = draft.clinical || '';
+    document.getElementById('diagnosis-result').value = draft.diagnosis || '';
+    document.getElementById('doctor-advice').value = draft.advice || '';
+    (draft.medicines || []).forEach((m) => addRow(m.name, m.dose, m.qty));
+
+    if (draft.recheck && draft.recheck.required) {
+      document.getElementById('recheck-required').checked = true;
+      document.getElementById('recheck-panel').classList.add('show');
+      document.getElementById('recheck-date').value = draft.recheck.date || '';
+      document.getElementById('recheck-session').value = draft.recheck.session || 'morning';
+      document.getElementById('recheck-note').value = draft.recheck.note || '';
+    }
+    showToast('Đã khôi phục bản nháp', 'info', 2000);
+  } else {
+    addRow('Betaserc 16mg', 'Ngày uống 2 lần, sáng/chiều sau ăn mỗi lần 1 viên', 30);
+  }
+
+  document.querySelectorAll('textarea[data-min]').forEach(t => t.dispatchEvent(new Event('input')));
+
+  // ===== Thêm thuốc =====
+  document.getElementById('btn-add-medicine').addEventListener('click', () => {
+    addRow();
+    showToast('Đã thêm thuốc mới', 'success', 1200);
+  });
+
+  // ===== Toggle tái khám =====
+  const recheckCb = document.getElementById('recheck-required');
+  const recheckPanel = document.getElementById('recheck-panel');
+  const recheckDate = document.getElementById('recheck-date');
+
+  const today = new Date();
+  const minDate = new Date(today);
+  minDate.setDate(minDate.getDate() + 1);
+  recheckDate.min = minDate.toISOString().split('T')[0];
+
+  const defaultDate = new Date(today);
+  defaultDate.setDate(defaultDate.getDate() + 7);
+  recheckDate.value = defaultDate.toISOString().split('T')[0];
+
+  recheckCb.addEventListener('change', () => {
+    recheckPanel.classList.toggle('show', recheckCb.checked);
+    if (!recheckCb.checked) setError('recheckDate', '');
+  });
+
+  // ===== Validation =====
+  function validateClinical() {
+    const v = document.getElementById('clinical-notes').value.trim();
+    if (v.length < 10) { setError('clinical', 'Vui lòng nhập tối thiểu 10 ký tự mô tả kết quả khám.'); return false; }
+    setError('clinical', ''); return true;
+  }
+  function validateDiagnosis() {
+    const v = document.getElementById('diagnosis-result').value.trim();
+    if (v.length < 5) { setError('diagnosis', 'Vui lòng nhập chẩn đoán bệnh (tối thiểu 5 ký tự).'); return false; }
+    setError('diagnosis', ''); return true;
+  }
+  function validateAdvice() {
+    const v = document.getElementById('doctor-advice').value.trim();
+    if (v.length < 10) { setError('advice', 'Vui lòng nhập lời dặn cho bệnh nhân (tối thiểu 10 ký tự).'); return false; }
+    setError('advice', ''); return true;
+  }
+  function validateMedicines() {
+    const rows = [...tbody.querySelectorAll('tr')];
+    let hasError = false;
+    let firstErrorInput = null;
+    if (!rows.length) { setError('medicines', 'Đơn thuốc phải có ít nhất 1 loại thuốc.'); return false; }
+
+    rows.forEach((tr) => {
+      const name = tr.querySelector('.med-name').value.trim();
+      const dose = tr.querySelector('.med-dose').value.trim();
+      const qty = parseInt(tr.querySelector('.med-qty').value);
+      let rowErr = false;
+      tr.classList.remove('row-error');
+
+      if (!name) { rowErr = true; if (!firstErrorInput) firstErrorInput = tr.querySelector('.med-name'); }
+      if (dose.length < 10) { rowErr = true; if (!firstErrorInput) firstErrorInput = tr.querySelector('.med-dose'); }
+      if (isNaN(qty) || qty < 1 || qty > 100) { rowErr = true; if (!firstErrorInput) firstErrorInput = tr.querySelector('.med-qty'); }
+
+      if (rowErr) { tr.classList.add('row-error'); hasError = true; }
+    });
+
+    if (hasError) {
+      setError('medicines', 'Vui lòng kiểm tra lại các dòng thuốc bị lỗi (tên, liều lượng ≥ 10 ký tự, số lượng 1-100).');
+      if (firstErrorInput) firstErrorInput.focus();
+      return false;
+    }
+    setError('medicines', ''); return true;
+  }
+  function validateRecheck() {
+    if (!recheckCb.checked) { setError('recheckDate', ''); return true; }
+    const d = recheckDate.value;
+    if (!d) { setError('recheckDate', 'Vui lòng chọn ngày tái khám.'); return false; }
+    const selected = new Date(d);
+    const min = new Date(); min.setHours(0,0,0,0); min.setDate(min.getDate() + 1);
+    if (selected < min) { setError('recheckDate', 'Ngày tái khám phải từ ngày mai trở đi.'); return false; }
+    setError('recheckDate', ''); return true;
+  }
+
+  document.getElementById('clinical-notes').addEventListener('blur', validateClinical);
+  document.getElementById('diagnosis-result').addEventListener('blur', validateDiagnosis);
+  document.getElementById('doctor-advice').addEventListener('blur', validateAdvice);
+  recheckDate.addEventListener('blur', validateRecheck);
+
+  // ===== Lưu nháp =====
+  document.getElementById('btn-save-draft').addEventListener('click', () => {
+    const medicines = [...tbody.querySelectorAll('tr')].map((tr) => ({
+      name: tr.querySelector('.med-name').value,
+      dose: tr.querySelector('.med-dose').value,
+      qty: parseInt(tr.querySelector('.med-qty').value) || 1
+    }));
+
+    MB_STORAGE.set(DRAFT_KEY, {
+      clinical: document.getElementById('clinical-notes').value,
+      diagnosis: document.getElementById('diagnosis-result').value,
+      advice: document.getElementById('doctor-advice').value,
+      medicines,
+      recheck: {
+        required: recheckCb.checked,
+        date: recheckDate.value,
+        session: document.getElementById('recheck-session').value,
+        note: document.getElementById('recheck-note').value
+      },
+      savedAt: new Date().toISOString()
+    });
+    showToast('💾 Đã lưu nháp bệnh án', 'success', 2000);
+  });
+
+  // ===== Hoàn thành ca khám =====
+  document.getElementById('btn-complete-examination').addEventListener('click', () => {
+    clearAllErrors();
+
+    const okClinical = validateClinical();
+    const okDiagnosis = validateDiagnosis();
+    const okMedicines = validateMedicines();
+    const okAdvice = validateAdvice();
+    const okRecheck = validateRecheck();
+
+    if (!okClinical || !okDiagnosis || !okMedicines || !okAdvice || !okRecheck) {
+      showToast('⚠️ Vui lòng kiểm tra lại các trường được đánh dấu đỏ', 'error', 3000);
+      const firstErr = document.querySelector('.form-control.error, tr.row-error');
+      if (firstErr) firstErr.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      return;
+    }
+
+    const medicines = [...tbody.querySelectorAll('tr')].map((tr) => ({
+      name: tr.querySelector('.med-name').value.trim(),
+      dose: tr.querySelector('.med-dose').value.trim(),
+      qty: parseInt(tr.querySelector('.med-qty').value) || 1
+    }));
+
+    const diagnosis = document.getElementById('diagnosis-result').value.trim();
+
+    // Cập nhật trạng thái ca khám
+    const idx = MB_MOCK.appointments.findIndex((a) => a.id === id);
+    if (idx >= 0) MB_MOCK.appointments[idx].status = 'completed';
+
+    // ===== Lưu yêu cầu tái khám & gửi thông báo cho bệnh nhân =====
+    if (recheckCb.checked) {
+      const noti = sendRecheckNotification({
+        patientId: patient.id,
+        patientName: patient.name,
+        doctorId: 'bs01',
+        doctorName: 'BS. Nguyễn Văn A',
+        doctorSpecialty: 'Nội Tổng Quát',
+        diagnosis: diagnosis,
+        suggestedDate: recheckDate.value,
+        suggestedSession: document.getElementById('recheck-session').value,
+        note: document.getElementById('recheck-note').value.trim()
+      });
+      console.log('📩 Đã gửi thông báo tái khám:', noti);
+    }
+
+    MB_STORAGE.remove(DRAFT_KEY);
+
+    const statusEl = document.getElementById('patient-status');
+    statusEl.className = 'badge-status badge-completed';
+    statusEl.textContent = 'Đã hoàn thành';
+
+    if (recheckCb.checked) {
+      showToast('✅ Đã hoàn thành ca khám & gửi đơn thuốc', 'success', 3000);
+      setTimeout(() => {
+        showToast('📩 Đã gửi yêu cầu tái khám tới bệnh nhân', 'info', 3000);
+      }, 800);
+    } else {
+      showToast('✅ Đã hoàn thành ca khám & gửi đơn thuốc', 'success', 3000);
+    }
+
+    setTimeout(() => {
+      window.location.href = 'danh_sach_ca_kham.html';
+    }, 2000);
+  });
+};
+</script>
 </body>
 </html>

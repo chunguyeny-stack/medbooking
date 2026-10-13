@@ -1,113 +1,179 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bác sĩ - Danh sách Lịch hẹn & Ca khám</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bác sĩ - Danh sách Ca khám</title>
+<link rel="stylesheet" href="../../static/css/BS.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
+<div class="app-layout">
+  <aside class="sidebar">
+    <div class="brand">
+      <svg class="brand-logo" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+        <defs><linearGradient id="gLogo" x1="0" y1="0" x2="48" y2="48" gradientUnits="userSpaceOnUse">
+          <stop offset="0" stop-color="#4ade80"/><stop offset=".5" stop-color="#22c55e"/><stop offset="1" stop-color="#14b8a6"/>
+        </linearGradient></defs>
+        <rect x="2" y="2" width="44" height="44" rx="14" fill="url(#gLogo)"/>
+        <path d="M24 13v22M13 24h22" stroke="#fff" stroke-width="4.5" stroke-linecap="round"/>
+        <circle cx="24" cy="24" r="4" fill="#fff" opacity=".9"/>
+      </svg>
+      <div class="brand-text"><span class="brand-name">MEDBOOKING</span><span class="brand-sub">Bác sĩ</span></div>
+    </div>
+    <div class="nav-section">
+      <div class="nav-title">Tổng quan</div>
+      <ul class="nav-list"><li><a href="home_bs.html" class="nav-link"><i class="fas fa-house-medical"></i><span>Trang chủ Bác sĩ</span></a></li></ul>
+    </div>
+    <div class="nav-section">
+      <div class="nav-title">Tác nghiệp khám bệnh</div>
+      <ul class="nav-list">
+        <li><a href="danh_sach_ca_kham.html" class="nav-link active"><i class="fas fa-calendar-check"></i><span>Lịch hẹn & Ca khám</span></a></li>
+        <li><a href="ho_so_ca_nhan.html" class="nav-link"><i class="fas fa-user-doctor"></i><span>Hồ sơ & Lịch trực</span></a></li>
+      </ul>
+    </div>
+    <div class="sidebar-footer">
+      <div class="avatar-sm">NA</div>
+      <div class="info"><strong>BS. Nguyễn Văn A</strong><span>Nội Tổng Quát</span></div>
+    </div>
+  </aside>
 
-    <!-- Sidebar Menu Bác sĩ -->
-    <aside>
-        <div>MEDBOOKING - BÁC SĨ</div>
-        <nav>
-            <h3>TỔNG QUAN</h3>
-            <ul>
-                <li><a href="home_bs.html">Trang chủ Bác sĩ</a></li>
-            </ul>
+  <div class="main-area">
+    <header class="topbar">
+      <div class="topbar-left">
+        <button class="icon-btn" id="sidebar-toggle"><i class="fas fa-bars"></i></button>
+        <h1 class="page-title">Lịch hẹn & Ca khám</h1>
+      </div>
+      <div class="topbar-right">
+        <button class="icon-btn theme-toggle" id="theme-toggle"><i class="fas fa-moon"></i><i class="fas fa-sun"></i></button>
+        <button class="icon-btn" id="btn-notify"><i class="fas fa-bell"></i><span class="badge"></span></button>
+        <div class="user-chip"><div class="avatar">NA</div><span class="name">BS. Nguyễn Văn A</span></div>
+      </div>
+    </header>
 
-            <h3>TÁC NGHIỆP KHÁM BỆNH</h3>
-            <ul>
-                <li><a href="danh_sach_ca_kham.html"><strong>Lịch hẹn & Ca khám hôm nay</strong></a></li>
-                <li><a href="ho_so_ca_nhan.html">Thông tin cá nhân & Lịch trực</a></li>
-            </ul>
-        </nav>
-    </aside>
+    <main class="content">
+      <section class="card">
+        <div class="card-header"><h2 class="card-title"><i class="fas fa-filter"></i> Bộ lọc tìm kiếm</h2></div>
+        <div class="filter-bar">
+          <div class="form-group" style="margin:0;">
+            <label class="form-label" for="filter-date">Chọn ngày</label>
+            <input type="date" id="filter-date" class="form-control" value="2026-10-10">
+          </div>
+          <div class="form-group" style="margin:0;">
+            <label class="form-label" for="search-patient">Tìm bệnh nhân</label>
+            <input type="text" id="search-patient" class="form-control" placeholder="Tên hoặc mã LH...">
+          </div>
+          <div class="form-group" style="margin:0;">
+            <label class="form-label" for="filter-status">Trạng thái</label>
+            <select id="filter-status" class="form-control">
+              <option value="all">Tất cả trạng thái</option>
+              <option value="waiting">Chờ khám</option>
+              <option value="in-progress">Đang khám</option>
+              <option value="completed">Đã hoàn thành</option>
+              <option value="cancelled">Đã hủy</option>
+            </select>
+          </div>
+          <button type="button" class="btn btn-primary" id="btn-apply-filter">
+            <i class="fas fa-magnifying-glass"></i> Lọc dữ liệu
+          </button>
+        </div>
+      </section>
 
-    <!-- Main Content -->
-    <main>
-        <header>
-            <h1>Quản lý Danh sách Ca khám & Lịch hẹn</h1>
-            <div>
-                <span>BS. Nguyễn Văn A (Khoa Nội Tổng Quát)</span> | 
-                <a href="../dk_dn/dn.html">Đăng xuất</a>
-            </div>
-        </header>
-
-        <!-- 1. THANH CÔNG CỤ TÌM KIẾM & LỌC CA KHÁM -->
-        <section>
-            <div>
-                <div>
-                    <label for="filter-date">Chọn ngày:</label>
-                    <input type="date" id="filter-date" value="2026-10-10">
-                </div>
-                <div>
-                    <label for="search-patient">Tìm kiếm bệnh nhân:</label>
-                    <input type="text" id="search-patient" placeholder="Nhập tên hoặc số điện thoại bệnh nhân...">
-                </div>
-                <div>
-                    <label for="filter-status">Trạng thái:</label>
-                    <select id="filter-status">
-                        <option value="all">Tất cả trạng thái</option>
-                        <option value="waiting">Chờ khám</option>
-                        <option value="in-progress">Đang khám</option>
-                        <option value="completed">Đã hoàn thành</option>
-                        <option value="cancelled">Đã hủy</option>
-                    </select>
-                </div>
-                <button type="button" id="btn-apply-filter">Lọc dữ liệu</button>
-            </div>
-        </section>
-
-        <!-- 2. BẢNG DANH SÁCH CA KHÁM TRONG NGÀY -->
-        <section>
-            <h2>Danh sách Bệnh nhân chờ khám</h2>
-            <table border="1" style="width: 100%;">
-                <thead>
-                    <tr>
-                        <th>Giờ khám dự kiến</th>
-                        <th>Mã lịch hẹn</th>
-                        <th>Họ tên Bệnh nhân</th>
-                        <th>Độ tuổi / Giới tính</th>
-                        <th>Triệu chứng ban đầu</th>
-                        <th>Trạng thái</th>
-                        <th>Hành động tác nghiệp</th>
-                    </tr>
-                </thead>
-                <tbody id="appointment-table-body">
-                    <!-- Dữ liệu mẫu minh họa -->
-                    <tr>
-                        <td>08:30 - 09:00</td>
-                        <td>LH00123</td>
-                        <td>Trần Thị B</td>
-                        <td>28 / Nữ</td>
-                        <td>Đau đầu, chóng mặt kéo dài 3 ngày</td>
-                        <td><span style="color: orange; font-weight: bold;">Chờ khám</span></td>
-                        <td>
-                            <a href="chan_doan_ke_don.html?id=LH00123">
-                                <button type="button">Vào khám & Kê đơn</button>
-                            </a>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>09:00 - 09:30</td>
-                        <td>LH00124</td>
-                        <td>Nguyễn Văn C</td>
-                        <td>35 / Nam</td>
-                        <td>Ho khan, đau rát họng, sốt nhẹ</td>
-                        <td><span style="color: green; font-weight: bold;">Đã hoàn thành</span></td>
-                        <td>
-                            <a href="chan_doan_ke_don.html?id=LH00124">
-                                <button type="button">Xem lại bệnh án</button>
-                            </a>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </section>
+      <section class="card">
+        <div class="card-header">
+          <h2 class="card-title"><i class="fas fa-list-check"></i> Danh sách Bệnh nhân</h2>
+          <span style="font-size:12.5px;color:var(--text-muted);">Tổng: <strong id="count-total">0</strong> ca</span>
+        </div>
+        <div class="table-wrap">
+          <table class="table">
+            <thead>
+              <tr>
+                <th>Giờ khám</th><th>Mã LH</th><th>Họ tên</th><th>Tuổi / GT</th>
+                <th>Triệu chứng</th><th>Trạng thái</th><th>Hành động</th>
+              </tr>
+            </thead>
+            <tbody id="appointment-table-body"></tbody>
+          </table>
+        </div>
+      </section>
     </main>
+  </div>
+</div>
 
-    <!-- Liên kết tệp JavaScript xử lý logic phía bác sĩ -->
-    <script src="../../js/doctor.js"></script>
+<script src="../../static/js/bac_si.js"></script>
+<script>
+window.MB_PAGE_INIT = function () {
+  const badgeMap = {
+    waiting:       ['badge-waiting',   'Chờ khám'],
+    'in-progress': ['badge-progress',  'Đang khám'],
+    completed:     ['badge-completed', 'Đã hoàn thành'],
+    cancelled:     ['badge-cancelled', 'Đã hủy']
+  };
+
+  function render(list) {
+    const tbody = document.getElementById('appointment-table-body');
+    document.getElementById('count-total').textContent = list.length;
+
+    if (!list.length) {
+      tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;padding:30px;color:var(--text-muted);">
+        Không có ca khám nào phù hợp</td></tr>`;
+      return;
+    }
+
+    tbody.innerHTML = list.map((a) => {
+      const [cls, txt] = badgeMap[a.status] || ['badge-waiting', a.status];
+      const isWaiting = a.status === 'waiting' || a.status === 'in-progress';
+      const btnCls = isWaiting ? 'btn-primary' : 'btn-outline';
+      const btnTxt = isWaiting ? 'Vào khám' : 'Xem lại';
+      const btnIcon = isWaiting ? 'fa-stethoscope' : 'fa-eye';
+      return `
+        <tr>
+          <td><strong>${a.time}</strong></td>
+          <td>${a.id}</td>
+          <td>${a.name}</td>
+          <td>${a.age} / ${a.gender}</td>
+          <td>${a.symptom}</td>
+          <td><span class="badge-status ${cls}">${txt}</span></td>
+          <td>
+            <a href="chan_doan_ke_don.html?id=${a.id}" class="btn ${btnCls} btn-sm">
+              <i class="fas ${btnIcon}"></i> ${btnTxt}
+            </a>
+          </td>
+        </tr>`;
+    }).join('');
+  }
+
+  function applyFilter() {
+    const status = document.getElementById('filter-status').value;
+    const keyword = document.getElementById('search-patient').value.trim().toLowerCase();
+
+    let list = MB_MOCK.appointments.slice();
+    if (status !== 'all') list = list.filter((a) => a.status === status);
+    if (keyword) {
+      list = list.filter((a) =>
+        a.name.toLowerCase().includes(keyword) ||
+        a.id.toLowerCase().includes(keyword)
+      );
+    }
+    render(list);
+  }
+
+  document.getElementById('btn-apply-filter').addEventListener('click', () => {
+    applyFilter();
+    showToast('Đã áp dụng bộ lọc', 'success', 1500);
+  });
+
+  document.getElementById('search-patient').addEventListener('input', applyFilter);
+  document.getElementById('filter-status').addEventListener('change', applyFilter);
+
+  // Nút thông báo
+  document.getElementById('btn-notify').addEventListener('click', () => {
+    showToast('Bạn có 5 thông báo mới!', 'info', 2500);
+  });
+
+  render(MB_MOCK.appointments);
+};
+</script>
 </body>
 </html>

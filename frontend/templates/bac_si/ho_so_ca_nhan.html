@@ -1,122 +1,172 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bác sĩ - Hồ sơ cá nhân & Lịch trực</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bác sĩ - Hồ sơ & Lịch trực</title>
+<link rel="stylesheet" href="../../static/css/BS.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 <body>
+<div class="app-layout">
+  <aside class="sidebar">
+    <div class="brand">
+      <svg class="brand-logo" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+        <defs><linearGradient id="gLogo" x1="0" y1="0" x2="48" y2="48" gradientUnits="userSpaceOnUse">
+          <stop offset="0" stop-color="#4ade80"/><stop offset=".5" stop-color="#22c55e"/><stop offset="1" stop-color="#14b8a6"/>
+        </linearGradient></defs>
+        <rect x="2" y="2" width="44" height="44" rx="14" fill="url(#gLogo)"/>
+        <path d="M24 13v22M13 24h22" stroke="#fff" stroke-width="4.5" stroke-linecap="round"/>
+        <circle cx="24" cy="24" r="4" fill="#fff" opacity=".9"/>
+      </svg>
+      <div class="brand-text"><span class="brand-name">MEDBOOKING</span><span class="brand-sub">Bác sĩ</span></div>
+    </div>
+    <div class="nav-section">
+      <div class="nav-title">Tổng quan</div>
+      <ul class="nav-list"><li><a href="home_bs.html" class="nav-link"><i class="fas fa-house-medical"></i><span>Trang chủ Bác sĩ</span></a></li></ul>
+    </div>
+    <div class="nav-section">
+      <div class="nav-title">Tác nghiệp khám bệnh</div>
+      <ul class="nav-list">
+        <li><a href="danh_sach_ca_kham.html" class="nav-link"><i class="fas fa-calendar-check"></i><span>Lịch hẹn & Ca khám</span></a></li>
+        <li><a href="ho_so_ca_nhan.html" class="nav-link active"><i class="fas fa-user-doctor"></i><span>Hồ sơ & Lịch trực</span></a></li>
+      </ul>
+    </div>
+    <div class="sidebar-footer">
+      <div class="avatar-sm">NA</div>
+      <div class="info"><strong>BS. Nguyễn Văn A</strong><span>Nội Tổng Quát</span></div>
+    </div>
+  </aside>
 
-    <!-- Sidebar Menu Bác sĩ -->
-    <aside>
-        <div>MEDBOOKING - BÁC SĨ</div>
-        <nav>
-            <h3>TỔNG QUAN</h3>
-            <ul>
-                <li><a href="home_bs.html">Trang chủ Bác sĩ</a></li>
-            </ul>
+  <div class="main-area">
+    <header class="topbar">
+      <div class="topbar-left">
+        <button class="icon-btn" id="sidebar-toggle"><i class="fas fa-bars"></i></button>
+        <h1 class="page-title">Hồ sơ & Lịch trực</h1>
+      </div>
+      <div class="topbar-right">
+        <button class="icon-btn theme-toggle" id="theme-toggle"><i class="fas fa-moon"></i><i class="fas fa-sun"></i></button>
+        <div class="user-chip"><div class="avatar">NA</div><span class="name">BS. Nguyễn Văn A</span></div>
+      </div>
+    </header>
 
-            <h3>TÁC NGHIỆP KHÁM BỆNH</h3>
-            <ul>
-                <li><a href="danh_sach_ca_kham.html">Lịch hẹn & Ca khám hôm nay</a></li>
-                <li><a href="ho_so_ca_nhan.html"><strong>Thông tin cá nhân & Lịch trực</strong></a></li>
-            </ul>
-        </nav>
-    </aside>
-
-    <!-- Main Content -->
-    <main>
-        <header>
-            <h1>Hồ sơ Cá nhân & Lịch trực Bác sĩ</h1>
-            <div>
-                <span>BS. Nguyễn Văn A</span> | 
-                <a href="../dk_dn/dn.html">Đăng xuất</a>
+    <main class="content">
+      <section class="card">
+        <div class="card-header">
+          <h2 class="card-title"><i class="fas fa-id-card-clip"></i> Thông tin Chuyên môn & Liên hệ</h2>
+        </div>
+        <div class="profile-grid">
+          <div class="avatar-upload" id="avatar-upload">
+            <i class="fas fa-camera"></i>
+            <span>Ảnh đại diện</span>
+          </div>
+          <form id="form-doctor-profile">
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Họ và tên</label>
+                <input type="text" class="form-control" id="pf-name" value="Nguyễn Văn A" readonly>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Học hàm / Học vị</label>
+                <input type="text" class="form-control" id="pf-degree" value="Thạc sĩ - Bác sĩ" readonly>
+              </div>
             </div>
-        </header>
-
-        <!-- 1. THÔNG TIN CHI TIẾT HỒ SƠ BÁC SĨ -->
-        <section>
-            <h2>Thông tin Chuyên môn & Liên hệ</h2>
-            <div style="display: flex; gap: 30px; align-items: flex-start;">
-                <!-- Ảnh đại diện bác sĩ -->
-                <div>
-                    <div style="width: 150px; height: 180px; border: 1px dashed #ccc; display: flex; align-items: center; justify-content: center; text-align: center;">
-                        <span>Ảnh đại diện</span>
-                    </div>
-                </div>
-
-                <!-- Chi tiết thông tin -->
-                <div style="flex: 1;">
-                    <form id="form-doctor-profile">
-                        <div>
-                            <label>Họ và tên:</label>
-                            <input type="text" id="doc-fullname" value="Nguyễn Văn A" readonly>
-                        </div>
-                        <div>
-                            <label>Học hàm / Học vị:</label>
-                            <input type="text" id="doc-degree" value="Thạc sĩ - Bác sĩ" readonly>
-                        </div>
-                        <div>
-                            <label>Chuyên khoa:</label>
-                            <input type="text" id="doc-specialty" value="Nội Tổng Quát" readonly>
-                        </div>
-                        <div>
-                            <label>Số điện thoại liên hệ:</label>
-                            <input type="text" id="doc-phone" value="0912345678">
-                        </div>
-                        <div>
-                            <label>Email công vụ:</label>
-                            <input type="email" id="doc-email" value="bs.nguyenvana@medbooking.com">
-                        </div>
-                        <div>
-                            <label>Kinh nghiệm & Giới thiệu:</label>
-                            <textarea id="doc-bio" rows="3">Hơn 10 năm kinh nghiệm khám chữa bệnh các bệnh lý nội khoa tại các bệnh viện lớn.</textarea>
-                        </div>
-                        <div>
-                            <button type="button" id="btn-update-profile">Cập nhật thông tin</button>
-                        </div>
-                    </form>
-                </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label class="form-label">Chuyên khoa</label>
+                <input type="text" class="form-control" id="pf-specialty" value="Nội Tổng Quát" readonly>
+              </div>
+              <div class="form-group">
+                <label class="form-label">Số điện thoại</label>
+                <input type="tel" class="form-control" id="pf-phone" value="0912345678">
+              </div>
             </div>
-        </section>
+            <div class="form-group">
+              <label class="form-label">Email công vụ</label>
+              <input type="email" class="form-control" id="pf-email" value="bs.nguyenvana@medbooking.com">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Kinh nghiệm & Giới thiệu</label>
+              <textarea class="form-control" id="pf-bio" rows="3">Hơn 10 năm kinh nghiệm khám chữa bệnh các bệnh lý nội khoa tại các bệnh viện lớn.</textarea>
+            </div>
+            <button type="button" class="btn btn-primary" id="btn-update-profile">
+              <i class="fas fa-save"></i> Cập nhật thông tin
+            </button>
+          </form>
+        </div>
+      </section>
 
-        <!-- 2. LỊCH TRỰC TUẦN CỦA BÁC SĨ -->
-        <section>
-            <h2>Lịch trực trong tuần</h2>
-            <table border="1" style="width: 100%;">
-                <thead>
-                    <tr>
-                        <th>Thứ / Ngày</th>
-                        <th>Ca làm việc</th>
-                        <th>Phòng khám / Khu vực</th>
-                        <th>Trạng thái lịch trực</th>
-                    </tr>
-                </thead>
-                <tbody id="doctor-duty-schedule-body">
-                    <tr>
-                        <td>Thứ Hai (12/10/2026)</td>
-                        <td>Sáng (08:00 - 12:00)</td>
-                        <td>Phòng khám 201 - Tầng 2</td>
-                        <td><span style="color: green;">Đã xác nhận</span></td>
-                    </tr>
-                    <tr>
-                        <td>Thứ Ba (13/10/2026)</td>
-                        <td>Chiều (13:30 - 17:30)</td>
-                        <td>Phòng khám 201 - Tầng 2</td>
-                        <td><span style="color: green;">Đã xác nhận</span></td>
-                    </tr>
-                    <tr>
-                        <td>Thứ Tư (14/10/2026)</td>
-                        <td>Nghỉ ca</td>
-                        <td>--</td>
-                        <td>--</td>
-                    </tr>
-                </tbody>
-            </table>
-        </section>
+      <section class="card">
+        <div class="card-header">
+          <h2 class="card-title"><i class="fas fa-calendar-week"></i> Lịch trực trong tuần</h2>
+        </div>
+        <div class="table-wrap">
+          <table class="table">
+            <thead>
+              <tr><th>Thứ / Ngày</th><th>Ca làm việc</th><th>Phòng khám</th><th>Trạng thái</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Thứ Hai</strong><br><span style="font-size:11.5px;color:var(--text-muted);">12/10/2026</span></td>
+                <td>Sáng (08:00 - 12:00)</td><td>Phòng khám 201 - Tầng 2</td>
+                <td><span class="badge-status badge-completed">Đã xác nhận</span></td>
+              </tr>
+              <tr>
+                <td><strong>Thứ Ba</strong><br><span style="font-size:11.5px;color:var(--text-muted);">13/10/2026</span></td>
+                <td>Chiều (13:30 - 17:30)</td><td>Phòng khám 201 - Tầng 2</td>
+                <td><span class="badge-status badge-completed">Đã xác nhận</span></td>
+              </tr>
+              <tr>
+                <td><strong>Thứ Tư</strong><br><span style="font-size:11.5px;color:var(--text-muted);">14/10/2026</span></td>
+                <td>Nghỉ ca</td><td>--</td>
+                <td><span class="badge-status badge-cancelled">Nghỉ</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
     </main>
+  </div>
+</div>
 
-    <!-- Liên kết tệp JavaScript xử lý logic -->
-    <script src="../../js/doctor.js"></script>
+<script src="../../static/js/bac_si.js"></script>
+<script>
+window.MB_PAGE_INIT = function () {
+  const PROFILE_KEY = 'medbooking_doctor_profile';
+
+  // Load profile đã lưu
+  const saved = MB_STORAGE.get(PROFILE_KEY, null);
+  if (saved) {
+    document.getElementById('pf-phone').value = saved.phone || '';
+    document.getElementById('pf-email').value = saved.email || '';
+    document.getElementById('pf-bio').value = saved.bio || '';
+  }
+
+  // Avatar upload
+  document.getElementById('avatar-upload').addEventListener('click', () => {
+    showToast('Tính năng tải ảnh đang phát triển', 'info');
+  });
+
+  // Cập nhật thông tin
+  document.getElementById('btn-update-profile').addEventListener('click', () => {
+    const phone = document.getElementById('pf-phone').value.trim();
+    const email = document.getElementById('pf-email').value.trim();
+    const bio = document.getElementById('pf-bio').value.trim();
+
+    if (!phone || phone.length < 10) {
+      showToast('Số điện thoại không hợp lệ (>= 10 số)', 'error', 2500);
+      return;
+    }
+    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      showToast('Email không hợp lệ', 'error', 2500);
+      return;
+    }
+
+    MB_STORAGE.set(PROFILE_KEY, { phone, email, bio });
+    showToast('✅ Cập nhật thông tin thành công', 'success', 2500);
+  });
+};
+</script>
 </body>
 </html>
