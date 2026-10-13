@@ -25,7 +25,7 @@ class BenhNhanService:
         """
         kw = f"%{trieu_chung.strip().lower()}%"
 
-        # 1. Tra cứu các chuyên khoa liên quan từ bảng trieu_chung qua SQL Raw để tránh phụ thuộc Model
+        # 1. Tra cứu các chuyên khoa liên quan từ bảng trieu_chung
         sql_symptom = text(
             "SELECT chuyen_khoa_id FROM trieu_chung WHERE LOWER(ten_trieu_chung) LIKE :kw"
         )
@@ -39,26 +39,25 @@ class BenhNhanService:
         if matched_specialty_ids:
             query = query.filter(BacSi.chuyen_khoa_id.in_(matched_specialty_ids))
 
-        # 4. Sắp xếp theo rating giảm dần (nếu có cột rating)
+        # 4. Sắp xếp an toàn theo rating giảm dần
         if hasattr(BacSi, "rating"):
             query = query.order_by(BacSi.rating.desc())
-        elif hasattr(BacSi, "id"):
+        else:
             query = query.order_by(BacSi.id.desc())
 
         doctors = query.limit(5).all()
 
+        # 5. Định dạng kết quả trả về
         results: List[Dict[str, Any]] = []
         for d in doctors:
-            # Lấy họ tên an toàn qua quan hệ user hoặc bảng NguoiDung
             full_name = ""
             if hasattr(d, "user") and d.user:
                 full_name = getattr(d.user, "ho_ten", "")
-            elif hasattr(d, "nguoi_dung_id"):
+            elif hasattr(d, "nguoi_dung_id") and d.nguoi_dung_id:
                 user_obj = db.query(NguoiDung).filter(NguoiDung.id == d.nguoi_dung_id).first()
                 if user_obj:
                     full_name = getattr(user_obj, "ho_ten", "")
 
-            # Lấy tên chuyên khoa an toàn
             specialty_name = ""
             if hasattr(d, "chuyen_khoa") and d.chuyen_khoa:
                 specialty_name = getattr(d.chuyen_khoa, "ten_chuyen_khoa", "")
