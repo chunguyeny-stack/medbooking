@@ -2,7 +2,7 @@ import importlib
 from typing import Optional
 from decimal import Decimal
 from fastapi import APIRouter, Depends, Query
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from sqlalchemy.orm import Session
 
 from datadase.database import get_db
@@ -20,8 +20,9 @@ class ChuyenKhoaCreateRequest(BaseModel):
 
 
 class DichVuCreateRequest(BaseModel):
+    chuyen_khoa_id: int = Field(..., description="ID chuyên khoa trực thuộc dịch vụ")
     ten_dich_vu: str
-    gia_dich_vu: Decimal
+    gia_dich_vu: Decimal = Field(..., description="Giá tiền dịch vụ")
     mo_ta: Optional[str] = None
 
 
@@ -46,12 +47,12 @@ def list_users(
     users = AdminService.get_users(db=db, vai_tro=role)
     return [
         {
-            "user_id": u.user_id,
+            "user_id": u.id,  # Khớp với cột id chính của bảng nguoi_dung
             "email": u.email,
             "ho_ten": u.ho_ten,
             "so_dien_thoai": u.so_dien_thoai,
             "vai_tro": u.vai_tro,
-            "trang_thai": u.trang_thai
+            "trang_thai": 1 if u.trang_thai else 0  # Chuyển đổi boolean thành int/status tương thích
         }
         for u in users
     ]
@@ -75,7 +76,7 @@ def add_specialty(
 ):
     _ = current_user
     ck = AdminService.create_chuyen_khoa(db=db, ten=payload.ten_chuyen_khoa, mo_ta=payload.mo_ta)
-    return {"message": "Tạo chuyên khoa thành công.", "ma_chuyen_khoa": ck.ma_chuyen_khoa}
+    return {"message": "Tạo chuyên khoa thành công.", "ma_chuyen_khoa": ck.id}  # Khớp với id của chuyên khoa
 
 
 @router.post("/services", summary="Thêm dịch vụ & bảng giá")
@@ -87,8 +88,9 @@ def add_service(
     _ = current_user
     dv = AdminService.create_dich_vu(
         db=db,
+        chuyen_khoa_id=payload.chuyen_khoa_id,
         ten=payload.ten_dich_vu,
         gia=payload.gia_dich_vu,
         mo_ta=payload.mo_ta
     )
-    return {"message": "Tạo dịch vụ thành công.", "ma_dich_vu": dv.ma_dich_vu}
+    return {"message": "Tạo dịch vụ thành công.", "ma_dich_vu": dv.id}  # Khớp với id của dịch vụ
