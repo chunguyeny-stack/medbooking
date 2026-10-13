@@ -1,4 +1,3 @@
-from datetime import datetime
 from decimal import Decimal
 from typing import List, Optional
 from pydantic import BaseModel, EmailStr, Field
@@ -18,7 +17,7 @@ class BacSiVariantCreate(BacSiVariantBase):
 
 class BacSiVariantResponse(BacSiVariantBase):
     id: int
-    ma_bac_si: int
+    bac_si_id: int
 
     class Config:
         from_attributes = True
@@ -30,7 +29,7 @@ class BacSiCreate(BaseModel):
     email: EmailStr
     so_dien_thoai: Optional[str] = Field(None, max_length=20)
     mat_khau: str = Field(..., min_length=8)
-    ma_chuyen_khoa: int
+    chuyen_khoa_id: int
     hoc_vi: Optional[str] = Field(None, max_length=50)
     kinh_nghiem: int = Field(0, ge=0)
     gia_kham: Decimal = Field(..., ge=0)
@@ -40,36 +39,26 @@ class BacSiCreate(BaseModel):
 class BacSiUpdate(BaseModel):
     ho_ten: Optional[str] = Field(None, min_length=2, max_length=100)
     so_dien_thoai: Optional[str] = None
-    ma_chuyen_khoa: Optional[int] = None
+    chuyen_khoa_id: Optional[int] = None
     hoc_vi: Optional[str] = None
     kinh_nghiem: Optional[int] = Field(None, ge=0)
     gia_kham: Optional[Decimal] = Field(None, ge=0)
-    status: Optional[int] = Field(None, description="1: Active, 0: Soft-deleted/Ẩn")
     variants: Optional[List[BacSiVariantCreate]] = None
 
 
 # --- Output trả về client ---
 class BacSiResponse(BaseModel):
-    ma_bac_si: int
+    id: int
     ho_ten: str
     email: str
     so_dien_thoai: Optional[str] = None
-    ma_chuyen_khoa: int
+    chuyen_khoa_id: int
     ten_chuyen_khoa: Optional[str] = None
     hoc_vi: Optional[str] = None
     kinh_nghiem: int
     gia_kham: Decimal
     rating: float
-    status: int
-    created_at: datetime
-    updated_at: datetime
-    created_by: Optional[int] = None
-    updated_by: Optional[int] = None
-
-    # Badges nhận diện
-    is_hot: bool = False
-    is_new: bool = False
-    is_related: bool = False
+    so_luong_danh_gia: int = 0
 
     variants: List[BacSiVariantResponse] = []
 
