@@ -12,15 +12,15 @@
 <div class="app-layout">
   <aside class="sidebar">
     <div class="brand">
-      <svg class="brand-logo" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
-        <defs><linearGradient id="gLogo" x1="0" y1="0" x2="48" y2="48" gradientUnits="userSpaceOnUse">
-          <stop offset="0" stop-color="#4ade80"/><stop offset=".5" stop-color="#22c55e"/><stop offset="1" stop-color="#14b8a6"/>
-        </linearGradient></defs>
-        <rect x="2" y="2" width="44" height="44" rx="14" fill="url(#gLogo)"/>
-        <path d="M24 13v22M13 24h22" stroke="#fff" stroke-width="4.5" stroke-linecap="round"/>
-        <circle cx="24" cy="24" r="4" fill="#fff" opacity=".9"/>
-      </svg>
-      <div class="brand-text"><span class="brand-name">MEDBOOKING</span><span class="brand-sub">Bác sĩ</span></div>
+      <div class="logo-container">
+        <div class="logo-icon">
+          <i class="fas fa-headset"></i>
+        </div>
+        <div class="logo-text">
+          <h1>MEDBOOKING</h1>
+          <p>Bác sĩ</p>
+        </div>
+      </div>
     </div>
     <div class="nav-section">
       <div class="nav-title">Tổng quan</div>
@@ -135,7 +135,6 @@
 window.MB_PAGE_INIT = function () {
   const PROFILE_KEY = 'medbooking_doctor_profile';
 
-  // Load profile đã lưu
   const saved = MB_STORAGE.get(PROFILE_KEY, null);
   if (saved) {
     document.getElementById('pf-phone').value = saved.phone || '';
@@ -143,12 +142,10 @@ window.MB_PAGE_INIT = function () {
     document.getElementById('pf-bio').value = saved.bio || '';
   }
 
-  // Avatar upload
   document.getElementById('avatar-upload').addEventListener('click', () => {
     showToast('Tính năng tải ảnh đang phát triển', 'info');
   });
 
-  // Cập nhật thông tin
   document.getElementById('btn-update-profile').addEventListener('click', () => {
     const phone = document.getElementById('pf-phone').value.trim();
     const email = document.getElementById('pf-email').value.trim();

@@ -4,41 +4,112 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin - Thùng rác hệ thống</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../../static/css/A.css">
+    
 </head>
 <body>
-    <header>
-        <h1>Thùng rác Hệ thống (Xóa ẩn / Khôi phục)</h1>
-        <nav><a href="home_a.html">&larr; Quay lại Trang chủ Admin</a></nav>
-    </header>
-    <hr>
+
+    <aside>
+        <button class="sidebar-close" id="sidebar-close" aria-label="Đóng menu"><i class="fas fa-times"></i></button>
+        <div class="brand">
+            <span class="brand-name">MEDBOOKING</span>
+            <span class="brand-sub">ADMIN PANEL</span>
+        </div>
+        <nav>
+            <h3>QUẢN LÝ NHÂN SỰ & NGƯỜI DÙNG</h3>
+            <ul>
+                <li><a href="home_a.html">Trang chủ Admin</a></li>
+                <li><a href="quan_ly_tai_khoan.html">Quản lý tài khoản</a></li>
+                <li><a href="quan_ly_bac_si.html">Quản lý bác sĩ</a></li>
+            </ul>
+            <h3>DANH MỤC Y TẾ</h3>
+            <ul>
+                <li><a href="quan_ly_chuyen_khoa.html">Quản lý chuyên khoa</a></li>
+                <li><a href="quan_ly_dich_vu.html">Quản lý dịch vụ & giá</a></li>
+                <li><a href="quan_ly_mapping.html">Quản lý Mapping Triệu chứng</a></li>
+            </ul>
+            <h3>BÁO CÁO & THỐNG KÊ</h3>
+            <ul>
+                <li><a href="dashboard.html">Dashboard Thống kê & Báo cáo</a></li>
+                <li><a href="nhat_ky_giao_dich.html">Nhật ký Giao dịch Chi tiết</a></li>
+                <li><a href="thung_rac.html"><strong>Thùng rác hệ thống</strong></a></li>
+            </ul>
+        </nav>
+    </aside>
+
     <main>
-        <p>Danh sách các bản ghi (Tài khoản, Bác sĩ, Chuyên khoa, Lịch hẹn) đã bị xóa mềm . Bạn có thể chọn khôi phục hoặc xóa vĩnh viễn.</p>
-        
-        <table border="1" cellpadding="8" cellspacing="0">
-            <thead>
-                <tr>
-                    <th>Mã bản ghi</th>
-                    <th>Loại dữ liệu</th>
-                    <th>Tên hiển thị</th>
-                    <th>Thời gian xóa</th>
-                    <th>Thao tác</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>BS992</td>
-                    <td>Bác sĩ</td>
-                    <td>BS. Lê Văn Xóa</td>
-                    <td>08:00 - 05/10/2026</td>
-                    <td>
-                        <button type="button">Khôi phục</button>
-                        <button type="button" style="color: red;">Xóa vĩnh viễn</button>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+        <header>
+            <button class="menu-toggle" id="menu-toggle" aria-label="Mở menu"><i class="fas fa-bars"></i></button>
+            <h1>Thùng rác Hệ thống (Xóa ẩn / Khôi phục)</h1>
+            <div>
+                <span>AD Tên Admin</span>
+                <button class="theme-toggle" id="theme-toggle">🌙</button>
+                <a href="../dk_dn/dn.html">Đăng xuất</a>
+            </div>
+        </header>
+
+        <section>
+            <h2>Danh sách bản ghi đã xóa</h2>
+            <p style="color:var(--text-gray);font-size:13.5px;margin-bottom:16px;">
+                Danh sách các bản ghi đã bị xóa mềm. Bạn có thể chọn <strong>Khôi phục</strong> hoặc <strong>Xóa vĩnh viễn</strong>.
+            </p>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Mã bản ghi</th>
+                        <th>Loại dữ liệu</th>
+                        <th>Tên hiển thị</th>
+                        <th>Thời gian xóa</th>
+                        <th>Thao tác</th>
+                    </tr>
+                </thead>
+                <tbody id="recycle-bin-body">
+                    <tr><td colspan="5" style="text-align:center;padding:40px;color:#8B7FA8;">Đang tải...</td></tr>
+                </tbody>
+            </table>
+        </section>
     </main>
-    <hr>
-    <footer><p>&copy; 2026 MedBooking.</p></footer>
+
+    <div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+<script src="../../static/js/admin-data.js"></script>
+<script src="../../static/js/admin.js"></script>
+    <script>
+    (function () {
+        const html = document.documentElement;
+        const saved = localStorage.getItem('mb-admin-theme') ||
+                      (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        html.setAttribute('data-theme', saved);
+        document.addEventListener('DOMContentLoaded', () => {
+            const themeBtn = document.getElementById('theme-toggle');
+            if (themeBtn) {
+                themeBtn.textContent = html.getAttribute('data-theme') === 'dark' ? '☀️' : '🌙';
+                themeBtn.addEventListener('click', () => {
+                    const next = html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+                    html.setAttribute('data-theme', next);
+                    localStorage.setItem('mb-admin-theme', next);
+                    themeBtn.textContent = next === 'dark' ? '☀️' : '🌙';
+                });
+            }
+            const menuBtn = document.getElementById('menu-toggle');
+            const closeBtn = document.getElementById('sidebar-close');
+            const sidebar = document.querySelector('aside');
+            const overlay = document.getElementById('sidebar-overlay');
+            function openSidebar() { sidebar.classList.add('open'); if (overlay) overlay.classList.add('active'); document.body.style.overflow = 'hidden'; }
+            function closeSidebar() { sidebar.classList.remove('open'); if (overlay) overlay.classList.remove('active'); document.body.style.overflow = ''; }
+            if (menuBtn) menuBtn.addEventListener('click', openSidebar);
+            if (closeBtn) closeBtn.addEventListener('click', closeSidebar);
+            if (overlay) overlay.addEventListener('click', closeSidebar);
+            sidebar.querySelectorAll('nav a').forEach(link => {
+                link.addEventListener('click', () => { if (window.innerWidth <= 900) closeSidebar(); });
+            });
+            window.addEventListener('resize', () => { if (window.innerWidth > 900) closeSidebar(); });
+        });
+    })();
+    </script>
 </body>
 </html>

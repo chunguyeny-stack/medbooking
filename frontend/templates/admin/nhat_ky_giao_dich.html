@@ -4,57 +4,63 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin - Nhật ký Giao dịch & Kiểm toán</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../../static/css/A.css">
 </head>
 <body>
 
-    <!-- Sidebar Menu Điều hướng Quản trị -->
     <aside>
-        <div>MEDBOOKING ADMIN</div>
+        <button class="sidebar-close" id="sidebar-close" aria-label="Đóng menu"><i class="fas fa-times"></i></button>
+        <div class="brand">
+            <span class="brand-name">MEDBOOKING</span>
+            <span class="brand-sub">ADMIN PANEL</span>
+        </div>
         <nav>
             <h3>QUẢN LÝ NHÂN SỰ & NGƯỜI DÙNG</h3>
             <ul>
-                <li><a href="home.html">Trang chủ Admin</a></li>
+                <li><a href="home_a.html">Trang chủ Admin</a></li>
                 <li><a href="quan_ly_tai_khoan.html">Quản lý tài khoản</a></li>
                 <li><a href="quan_ly_bac_si.html">Quản lý bác sĩ</a></li>
             </ul>
-
             <h3>DANH MỤC Y TẾ</h3>
             <ul>
                 <li><a href="quan_ly_chuyen_khoa.html">Quản lý chuyên khoa</a></li>
                 <li><a href="quan_ly_dich_vu.html">Quản lý dịch vụ & giá</a></li>
-                <li><a href="quan_ly_mapping.html">Quản lý Mapping Triệu chứng - Bác sĩ</a></li>
+                <li><a href="quan_ly_mapping.html">Quản lý Mapping Triệu chứng</a></li>
             </ul>
-
             <h3>BÁO CÁO & THỐNG KÊ</h3>
             <ul>
                 <li><a href="dashboard.html">Dashboard Thống kê & Báo cáo</a></li>
                 <li><a href="nhat_ky_giao_dich.html"><strong>Nhật ký Giao dịch Chi tiết</strong></a></li>
-                <li><a href="thung_rac.html"><strong>Thùng rác hệ thống (Khôi phục / Xóa vĩnh viễn)</strong></a></li>
+                <li><a href="thung_rac.html">Thùng rác hệ thống</a></li>
             </ul>
         </nav>
     </aside>
 
-    <!-- Main Content -->
     <main>
         <header>
+            <button class="menu-toggle" id="menu-toggle" aria-label="Mở menu"><i class="fas fa-bars"></i></button>
             <h1>Nhật ký Giao dịch & Kiểm toán Lịch khám</h1>
             <div>
-                <span>AD Tên Admin</span> | 
+                <span>AD Tên Admin</span>
+                <button class="theme-toggle" id="theme-toggle">🌙</button>
                 <a href="../dk_dn/dn.html">Đăng xuất</a>
             </div>
         </header>
 
-        <!-- 1. THANH BỘ LỌC CHI TIẾT THEO NĂM VÀ 12 THÁNG -->
         <section>
             <div>
                 <label for="filter-year">Chọn Năm:</label>
-                <select id="filter-year" name="filter_year">
+                <select id="filter-year">
                     <option value="2026">2026</option>
                     <option value="2025">2025</option>
                 </select>
 
-                <label for="filter-month">Chọn Tháng (12 Tháng):</label>
-                <select id="filter-month" name="filter_month">
+                <label for="filter-month">Chọn Tháng:</label>
+                <select id="filter-month">
                     <option value="all">Tất cả các tháng</option>
                     <option value="1">Tháng 1</option>
                     <option value="2">Tháng 2</option>
@@ -71,7 +77,7 @@
                 </select>
 
                 <label for="filter-status">Trạng thái:</label>
-                <select id="filter-status" name="filter_status">
+                <select id="filter-status">
                     <option value="all">Tất cả trạng thái</option>
                     <option value="completed">Đã hoàn thành & xác nhận</option>
                     <option value="cancelled">Đã hủy</option>
@@ -83,37 +89,65 @@
             </div>
         </section>
 
-        <!-- 2. BẢNG THÔNG TIN CHI TIẾT NHẬT KÝ GIAO DỊCH -->
         <section>
             <h2>Danh sách Vết thao tác & Doanh thu chi tiết</h2>
-            <p>Ghi nhận thời gian thực khi Bác sĩ tích hoàn thành ca khám và Lễ tân xác nhận thanh toán.</p>
-            
-            <table border="1">
+            <table>
                 <thead>
                     <tr>
-                        <th>Mã GD / Lịch hẹn</th>
+                        <th>Mã GD</th>
                         <th>Ngày khám</th>
                         <th>Bệnh nhân</th>
                         <th>Doanh thu</th>
                         <th>Lợi nhuận</th>
-                        <th>Bác sĩ tích hoàn thành</th>
+                        <th>Bác sĩ xác nhận</th>
                         <th>Lễ tân xác nhận</th>
                         <th>Thời gian cập nhật</th>
                         <th>Trạng thái</th>
                     </tr>
                 </thead>
                 <tbody id="audit-log-table-body">
-                    <tr>
-                        <td colspan="9" style="text-align: center;">
-                            Chưa có dữ liệu nhật ký giao dịch nào trong tháng này.
-                        </td>
-                    </tr>
+                    <tr><td colspan="9" style="text-align:center;padding:40px;color:#8B7FA8;">Đang tải...</td></tr>
                 </tbody>
             </table>
         </section>
     </main>
 
-    <!-- Liên kết tệp JavaScript chuyên xử lý logic Nhật ký bên ngoài -->
-    <script src="../../js/admin.js"></script>
+    <div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+<script src="../../static/js/admin-data.js"></script>
+<script src="../../static/js/admin.js"></script>
+    <script>
+    (function () {
+        const html = document.documentElement;
+        const saved = localStorage.getItem('mb-admin-theme') ||
+                      (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        html.setAttribute('data-theme', saved);
+        document.addEventListener('DOMContentLoaded', () => {
+            const themeBtn = document.getElementById('theme-toggle');
+            if (themeBtn) {
+                themeBtn.textContent = html.getAttribute('data-theme') === 'dark' ? '☀️' : '🌙';
+                themeBtn.addEventListener('click', () => {
+                    const next = html.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+                    html.setAttribute('data-theme', next);
+                    localStorage.setItem('mb-admin-theme', next);
+                    themeBtn.textContent = next === 'dark' ? '☀️' : '🌙';
+                });
+            }
+            const menuBtn = document.getElementById('menu-toggle');
+            const closeBtn = document.getElementById('sidebar-close');
+            const sidebar = document.querySelector('aside');
+            const overlay = document.getElementById('sidebar-overlay');
+            function openSidebar() { sidebar.classList.add('open'); if (overlay) overlay.classList.add('active'); document.body.style.overflow = 'hidden'; }
+            function closeSidebar() { sidebar.classList.remove('open'); if (overlay) overlay.classList.remove('active'); document.body.style.overflow = ''; }
+            if (menuBtn) menuBtn.addEventListener('click', openSidebar);
+            if (closeBtn) closeBtn.addEventListener('click', closeSidebar);
+            if (overlay) overlay.addEventListener('click', closeSidebar);
+            sidebar.querySelectorAll('nav a').forEach(link => {
+                link.addEventListener('click', () => { if (window.innerWidth <= 900) closeSidebar(); });
+            });
+            window.addEventListener('resize', () => { if (window.innerWidth > 900) closeSidebar(); });
+        });
+    })();
+    </script>
 </body>
 </html>

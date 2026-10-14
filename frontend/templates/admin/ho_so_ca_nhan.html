@@ -4,40 +4,118 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin - Hồ sơ cá nhân</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="../../static/css/A.css">
+    
+    <style>
+        body { display: flex; flex-direction: column; min-height: 100vh; background: var(--bg-body); }
+        body > header {
+            background: var(--bg-glass);
+            backdrop-filter: blur(15px);
+            border-bottom: 1px solid var(--border-glass);
+            padding: 16px 32px;
+            display: flex; justify-content: space-between; align-items: center;
+        }
+        body > header h1 { font-size: 18px; color: var(--secondary-color); }
+        body > header nav a {
+            color: var(--primary-color); font-weight: 600; font-size: 14px;
+            padding: 8px 16px; background: var(--primary-light);
+            border-radius: 50px;
+        }
+        body > main {
+            flex: 1;
+            max-width: 720px;
+            margin: 40px auto;
+            padding: 0 24px;
+            width: 100%;
+        }
+        body > main section {
+            background: var(--bg-card);
+            border: 1px solid var(--border-glass);
+            border-radius: 24px;
+            padding: 28px;
+            margin-bottom: 24px;
+            box-shadow: var(--shadow-soft);
+        }
+        body > main section h3 {
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--secondary-color);
+            margin-bottom: 22px;
+            padding-bottom: 16px;
+            border-bottom: 1px solid var(--border-glass);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        body > main section h3::before {
+            content: '';
+            width: 4px; height: 16px; border-radius: 4px;
+            background: var(--primary-gradient);
+        }
+        body > footer {
+            text-align: center;
+            padding: 24px;
+            color: var(--text-gray);
+            font-size: 12.5px;
+            border-top: 1px solid var(--border-glass);
+        }
+    </style>
 </head>
 <body>
+
     <header>
         <h1>Hồ sơ Quản trị viên</h1>
-        <nav><a href="home_a.html">&larr; Quay lại Trang chủ Admin</a></nav>
+        <nav><a href="home_a.html"><i class="fas fa-arrow-left"></i> Quay lại Trang chủ Admin</a></nav>
     </header>
-    <hr>
+
     <main>
         <section>
             <h3>Thông tin tài khoản Admin</h3>
-            <form>
-                <p><strong>Mã quản trị viên:</strong> AD001</p>
-                <label>Họ và tên:</label><br>
-                <input type="text" value="Nguyễn Văn Quản Trị"><br><br>
-                <label>Email liên hệ:</label><br>
-                <input type="email" value="admin@medbooking.vn"><br><br>
-                <button type="submit">Cập nhật thông tin</button>
+            <form id="form-profile">
+                <p style="margin-bottom:16px;"><strong>Mã quản trị viên:</strong> AD001</p>
+                <div style="margin-bottom:16px;">
+                    <label for="profile-name">Họ và tên:</label>
+                    <input type="text" id="profile-name" style="width:100%;max-width:100%;">
+                </div>
+                <div style="margin-bottom:16px;">
+                    <label for="profile-email">Email liên hệ:</label>
+                    <input type="email" id="profile-email" style="width:100%;max-width:100%;">
+                </div>
+                <button type="submit" class="btn-primary" style="padding:11px 22px;border-radius:50px;background:var(--primary-color);color:#fff;border:none;font-weight:600;cursor:pointer;">
+                    <i class="fas fa-save"></i> Cập nhật thông tin
+                </button>
             </form>
         </section>
-        <hr>
+
         <section>
             <h3>Đổi mật khẩu bảo mật</h3>
-            <form>
-                <label>Mật khẩu hiện tại:</label><br>
-                <input type="password"><br><br>
-                <label>Mật khẩu mới:</label><br>
-                <input type="password"><br><br>
-                <label>Xác nhận mật khẩu mới:</label><br>
-                <input type="password"><br><br>
-                <button type="submit">Đổi mật khẩu</button>
+            <form id="form-password">
+                <div style="margin-bottom:16px;">
+                    <label>Mật khẩu hiện tại:</label>
+                    <input type="password" style="width:100%;max-width:100%;">
+                </div>
+                <div style="margin-bottom:16px;">
+                    <label>Mật khẩu mới:</label>
+                    <input type="password" style="width:100%;max-width:100%;">
+                </div>
+                <div style="margin-bottom:16px;">
+                    <label>Xác nhận mật khẩu mới:</label>
+                    <input type="password" style="width:100%;max-width:100%;">
+                </div>
+                <button type="submit" class="btn-primary" style="padding:11px 22px;border-radius:50px;background:var(--primary-color);color:#fff;border:none;font-weight:600;cursor:pointer;">
+                    <i class="fas fa-lock"></i> Đổi mật khẩu
+                </button>
             </form>
         </section>
     </main>
-    <hr>
-    <footer><p>&copy; 2026 MedBooking.</p></footer>
+
+    <footer>&copy; 2026 MedBooking.</footer>
+
+<script src="../../static/js/admin-data.js"></script>
+<script src="../../static/js/admin.js"></script>
 </body>
 </html>

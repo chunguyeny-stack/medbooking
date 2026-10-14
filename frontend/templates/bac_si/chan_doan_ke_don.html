@@ -12,15 +12,15 @@
 <div class="app-layout">
   <aside class="sidebar">
     <div class="brand">
-      <svg class="brand-logo" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
-        <defs><linearGradient id="gLogo" x1="0" y1="0" x2="48" y2="48" gradientUnits="userSpaceOnUse">
-          <stop offset="0" stop-color="#4ade80"/><stop offset=".5" stop-color="#22c55e"/><stop offset="1" stop-color="#14b8a6"/>
-        </linearGradient></defs>
-        <rect x="2" y="2" width="44" height="44" rx="14" fill="url(#gLogo)"/>
-        <path d="M24 13v22M13 24h22" stroke="#fff" stroke-width="4.5" stroke-linecap="round"/>
-        <circle cx="24" cy="24" r="4" fill="#fff" opacity=".9"/>
-      </svg>
-      <div class="brand-text"><span class="brand-name">MEDBOOKING</span><span class="brand-sub">Bác sĩ</span></div>
+      <div class="logo-container">
+        <div class="logo-icon">
+          <i class="fas fa-headset"></i>
+        </div>
+        <div class="logo-text">
+          <h1>MEDBOOKING</h1>
+          <p>Bác sĩ</p>
+        </div>
+      </div>
     </div>
     <div class="nav-section">
       <div class="nav-title">Tổng quan</div>
@@ -72,7 +72,6 @@
       </section>
 
       <form id="form-diagnosis" novalidate>
-        <!-- ===== 1. KHÁM & CHẨN ĐOÁN ===== -->
         <section class="card">
           <div class="card-header">
             <h2 class="card-title"><i class="fas fa-notes-medical"></i> 1. Kết quả Khám & Chẩn đoán</h2>
@@ -100,7 +99,6 @@
           </div>
         </section>
 
-        <!-- ===== 2. KÊ ĐƠN THUỐC ===== -->
         <section class="card">
           <div class="card-header">
             <h2 class="card-title"><i class="fas fa-pills"></i> 2. Kê đơn thuốc</h2>
@@ -125,7 +123,6 @@
           <span class="error-message" data-error="medicines" style="margin-top:8px;"></span>
         </section>
 
-        <!-- ===== 3. LỜI DẶN & TÁI KHÁM ===== -->
         <section class="card">
           <div class="card-header">
             <h2 class="card-title"><i class="fas fa-comment-medical"></i> 3. Lời dặn & Tái khám</h2>
@@ -143,7 +140,6 @@
             <span class="error-message" data-error="advice"></span>
           </div>
 
-          <!-- Toggle tái khám -->
           <div class="recheck-toggle" id="recheck-toggle-wrap">
             <input type="checkbox" id="recheck-required">
             <label for="recheck-required">
@@ -152,7 +148,6 @@
             </label>
           </div>
 
-          <!-- Panel tái khám -->
           <div class="recheck-panel" id="recheck-panel">
             <div class="form-row">
               <div class="form-group">
@@ -204,22 +199,18 @@
 <script src="../../static/js/bac_si.js"></script>
 <script>
 window.MB_PAGE_INIT = function () {
-  // ===== URL =====
   const params = new URLSearchParams(window.location.search);
   const id = params.get('id') || 'LH00123';
   const patient = MB_MOCK.appointments.find((a) => a.id === id) || MB_MOCK.appointments[0];
 
-  // ===== Hiển thị thông tin bệnh nhân =====
   if (patient) {
     document.getElementById('p-id').textContent = patient.id;
     document.getElementById('p-name').textContent = patient.name;
     document.getElementById('p-age').textContent = patient.age + ' / ' + patient.gender;
 
-    // Bổ sung phone + email nếu mock chưa có
     const phone = patient.phone || '0912345678';
     const email = patient.email || 'patient@example.com';
     document.getElementById('p-contact').textContent = phone + ' • ' + email;
-
     document.getElementById('p-symptom').textContent = patient.symptom;
 
     const statusEl = document.getElementById('patient-status');
@@ -234,11 +225,9 @@ window.MB_PAGE_INIT = function () {
     statusEl.textContent = txt;
   }
 
-  // ===== Elements =====
   const tbody = document.getElementById('prescription-list-body');
   const DRAFT_KEY = 'medbooking_draft_' + id;
 
-  // ===== Validation helpers =====
   function setError(field, message) {
     const errEl = document.querySelector(`[data-error="${field}"]`);
     if (errEl) errEl.textContent = message || '';
@@ -251,7 +240,6 @@ window.MB_PAGE_INIT = function () {
     document.querySelectorAll('tr.row-error').forEach(el => el.classList.remove('row-error'));
   }
 
-  // ===== Char counter =====
   function bindCharCounter(textarea) {
     const counter = document.querySelector(`.char-counter[data-for="${textarea.id}"]`);
     if (!counter) return;
@@ -269,7 +257,6 @@ window.MB_PAGE_INIT = function () {
   }
   document.querySelectorAll('textarea[data-min]').forEach(bindCharCounter);
 
-  // ===== Prescription =====
   function renumber() {
     [...tbody.querySelectorAll('tr')].forEach((tr, i) => {
       tr.querySelector('td:first-child').textContent = i + 1;
@@ -300,7 +287,6 @@ window.MB_PAGE_INIT = function () {
     renumber();
   }
 
-  // ===== Load draft =====
   const draft = MB_STORAGE.get(DRAFT_KEY, null);
   if (draft) {
     document.getElementById('clinical-notes').value = draft.clinical || '';
@@ -321,13 +307,11 @@ window.MB_PAGE_INIT = function () {
   }
   document.querySelectorAll('textarea[data-min]').forEach(t => t.dispatchEvent(new Event('input')));
 
-  // ===== Add medicine =====
   document.getElementById('btn-add-medicine').addEventListener('click', () => {
     addRow();
     showToast('Đã thêm thuốc mới', 'success', 1200);
   });
 
-  // ===== Toggle recheck =====
   const recheckCb = document.getElementById('recheck-required');
   const recheckPanel = document.getElementById('recheck-panel');
   const recheckDate = document.getElementById('recheck-date');
@@ -346,7 +330,6 @@ window.MB_PAGE_INIT = function () {
     if (!recheckCb.checked) setError('recheckDate', '');
   });
 
-  // ===== Validation =====
   function validateClinical() {
     const v = document.getElementById('clinical-notes').value.trim();
     if (v.length < 10) { setError('clinical', 'Vui lòng nhập tối thiểu 10 ký tự mô tả kết quả khám.'); return false; }
@@ -400,7 +383,6 @@ window.MB_PAGE_INIT = function () {
   document.getElementById('doctor-advice').addEventListener('blur', validateAdvice);
   recheckDate.addEventListener('blur', validateRecheck);
 
-  // ===== Lưu nháp =====
   document.getElementById('btn-save-draft').addEventListener('click', () => {
     const medicines = [...tbody.querySelectorAll('tr')].map((tr) => ({
       name: tr.querySelector('.med-name').value,
@@ -423,7 +405,6 @@ window.MB_PAGE_INIT = function () {
     showToast('💾 Đã lưu nháp bệnh án', 'success', 2000);
   });
 
-  // ===== Hoàn thành ca khám =====
   document.getElementById('btn-complete-examination').addEventListener('click', async () => {
     clearAllErrors();
 
@@ -450,11 +431,9 @@ window.MB_PAGE_INIT = function () {
     const clinical = document.getElementById('clinical-notes').value.trim();
     const advice = document.getElementById('doctor-advice').value.trim();
 
-    // Cập nhật trạng thái ca khám
     const idx = MB_MOCK.appointments.findIndex((a) => a.id === id);
     if (idx >= 0) MB_MOCK.appointments[idx].status = 'completed';
 
-    // ===== Gửi SMS + Email nếu có yêu cầu tái khám =====
     let smsEmailSent = false;
     if (recheckCb.checked) {
       const patientPhone = (patient && patient.phone) || '0912345678';
@@ -500,10 +479,8 @@ window.MB_PAGE_INIT = function () {
       }
     }
 
-    // Xóa draft
     MB_STORAGE.remove(DRAFT_KEY);
 
-    // Cập nhật UI
     const statusEl = document.getElementById('patient-status');
     statusEl.className = 'badge-status badge-completed';
     statusEl.textContent = 'Đã hoàn thành';
