@@ -2,24 +2,22 @@ version: "3.9"
 
 services:
   db:
-    image: postgres:15-alpine
+    image: mcr.microsoft.com/mssql/server:2022-latest
     container_name: medbooking_db
     restart: unless-stopped
     environment:
-      POSTGRES_USER: meduser
-      POSTGRES_PASSWORD: medpassword
-      POSTGRES_DB: medbooking
+      ACCEPT_EULA: "Y"
+      MSSQL_SA_PASSWORD: "MedPassword123!"
+      MSSQL_PID: "Express"
     ports:
-      - "5432:5432"
+      - "1433:1433"
     volumes:
-      - postgres_data:/var/lib/postgresql/data
-      - ./database/init.sql:/docker-entrypoint-initdb.d/01-init.sql
-      - ./database/seed.sql:/docker-entrypoint-initdb.d/02-seed.sql
+      - sqlserver_data:/var/opt/mssql
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U meduser -d medbooking"]
-      interval: 5s
+      test: ["CMD-SHELL", "/opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P MedPassword123! -C -Q 'SELECT 1' || exit 1"]
+      interval: 10s
       timeout: 5s
-      retries: 5
+      retries: 10
 
   backend:
     build: ./backend
@@ -28,8 +26,9 @@ services:
     ports:
       - "8000:8000"
     environment:
-      DATABASE_URL: postgresql://meduser:medpassword@db:5432/medbooking
+      DATABASE_URL: "mssql+pyodbc://sa:MedPassword123!@db:1433/PhongKhamDB?driver=ODBC+Driver+18+for+SQL+Server&TrustServerCertificate=yes"
       SECRET_KEY: change-me-in-production
+      ALGORITHM: HS256
       ACCESS_TOKEN_EXPIRE_MINUTES: 30
     depends_on:
       db:
@@ -38,6 +37,5 @@ services:
       - ./backend:/app
       - ./frontend:/app/frontend
     command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
-
 volumes:
-  postgres_data:
+  sqlserver_data:

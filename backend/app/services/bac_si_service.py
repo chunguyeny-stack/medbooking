@@ -6,12 +6,12 @@ from fastapi import HTTPException, status
 from sqlalchemy import or_, func
 from sqlalchemy.orm import Session
 
-from models.models import NguoiDung, ChuyenKhoa
-from models.lich_hen import LichHen
-from models.bac_si import BacSi, BacSiVariant
-from schemas.bac_si import BacSiCreate, BacSiUpdate
+from app.models.models import NguoiDung, ChuyenKhoa
+from app.models.lich_hen import LichHen
+from app.models.bac_si import BacSi, BacSiVariant
+from app.schemas.bac_si import BacSiCreate, BacSiUpdate
 
-root_auth = importlib.import_module("auth")
+from app import auth as root_auth
 
 
 class BacSiService:

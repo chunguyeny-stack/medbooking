@@ -3,7 +3,7 @@ from typing import List, Dict, Any, Optional
 from fastapi import HTTPException, status
 from sqlalchemy.orm import Session
 
-from models.lich_hen import LichHen, LogTrangThai
+from app.models.lich_hen import LichHen, LogTrangThai
 
 
 class LeTanService:

@@ -1,8 +1,8 @@
 from typing import List, Dict, Any, Optional
 from sqlalchemy import text
 from sqlalchemy.orm import Session
-from models.models import BenhNhan, NguoiDung
-from models.bac_si import BacSi
+from app.models.models import BenhNhan, NguoiDung
+from app.models.bac_si import BacSi
 
 
 class BenhNhanService:

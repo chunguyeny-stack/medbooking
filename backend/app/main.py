@@ -3,13 +3,13 @@ from fastapi import FastAPI, Request, Response
 from fastapi.responses import FileResponse
 
 # 1. Khởi tạo cơ sở dữ liệu và nạp models
-from datadase.database import engine, Base
-import models
+from app.database.database import engine, Base
+from app import models
 
 # 2. Import trực tiếp các router từ thư mục api/ (tránh lỗi cache package của PyCharm)
-from api.core_auth import router as core_auth_router
-from api.nghiep_vu import router as nghiep_vu_router
-from api.admin import router as admin_router
+from app.api.core_auth import router as core_auth_router
+from app.api.nghiep_vu import router as nghiep_vu_router
+from app.api.admin import router as admin_router
 
 # Đảm bảo nạp models để tự động sinh bảng dữ liệu
 _ = models

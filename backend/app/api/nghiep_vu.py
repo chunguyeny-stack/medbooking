@@ -4,16 +4,16 @@ from typing import Optional
 from fastapi import APIRouter, Depends, HTTPException, Query, status
 from sqlalchemy.orm import Session
 
-from datadase.database import get_db
-from models.models import NguoiDung, DichVu, HoaDon, BenhNhan
-from models.bac_si import BacSi
-from models.lich_hen import LichHen, LogTrangThai
-from schemas.core_nghiep_vu import BookingCreateRequest, UpdateTrangThaiRequest, ThanhToanRequest
-from services.bac_si import BacSiService
-from services.lich_hen import LichHenService
-from schemas.lich_hen import BookingRequest
+from app.database.database import get_db
+from app.models.models import NguoiDung, DichVu, HoaDon, BenhNhan
+from app.models.bac_si import BacSi
+from app.models.lich_hen import LichHen, LogTrangThai
+from app.schemas.core_nghiep_vu import BookingCreateRequest, UpdateTrangThaiRequest, ThanhToanRequest
+from app.services.bac_si_service import BacSiService
+from app.services.lich_hen_service import LichHenService
+from app.schemas.lich_hen import BookingRequest
 
-root_auth = importlib.import_module("auth")
+from app import auth as root_auth
 
 router = APIRouter(tags=["2. Backend Nghiệp vụ - Phòng khám"])
 

@@ -1,6 +1,6 @@
 from sqlalchemy import Column, Integer, String, ForeignKey, Numeric, Float
 from sqlalchemy.orm import relationship
-from datadase.database import Base
+from app.database.database import Base
 
 
 class BacSi(Base):

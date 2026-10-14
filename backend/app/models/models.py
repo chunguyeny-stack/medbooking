@@ -4,7 +4,7 @@ from sqlalchemy import (
     Date, DateTime, Boolean, ForeignKey, Text
 )
 from sqlalchemy.orm import relationship
-from datadase.database import Base
+from app.database.database import Base
 
 
 def utc_now():

@@ -3,20 +3,20 @@ from typing import Optional, List
 from fastapi import APIRouter, Depends, Query, status
 from sqlalchemy.orm import Session
 
-from datadase.database import get_db
-from models.models import NguoiDung
-from models.bac_si import BacSi
-from models.lich_hen import LichHen
-from schemas.bac_si import (
+from app.database.database import get_db
+from app.models.models import NguoiDung
+from app.models.bac_si import BacSi
+from app.models.lich_hen import LichHen
+from app.schemas.bac_si import (
     BacSiCreate,
     BacSiUpdate,
     BacSiResponse,
     BacSiPaginationResponse
 )
-from services.bac_si import BacSiService
+from app.services.bac_si_service import BacSiService
 
 # Nạp module auth từ thư mục gốc
-root_auth = importlib.import_module("auth")
+from app import auth as root_auth
 
 router = APIRouter(prefix="/doctors", tags=["Quản lý Bác sĩ"])
 

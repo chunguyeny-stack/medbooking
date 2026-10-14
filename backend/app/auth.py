@@ -6,8 +6,8 @@ from jose import JWTError, jwt
 from passlib.context import CryptContext
 from sqlalchemy.orm import Session
 
-from datadase.database import get_db
-from models.models import NguoiDung
+from app.database.database import get_db
+from app.models.models import NguoiDung
 
 SECRET_KEY: str = "MEDBOOKING_SECRET_KEY_SUPER_SECURE_2026"
 ALGORITHM: str = "HS256"

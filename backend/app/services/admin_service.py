@@ -4,9 +4,9 @@ from fastapi import HTTPException, status
 from sqlalchemy import extract
 from sqlalchemy.orm import Session
 
-from models.models import NguoiDung, ChuyenKhoa, DichVu, ThanhToan as HoaDon  #[cite: 4]
-from models.lich_hen import LichHen, LogTrangThai  #[cite: 3]
-from models.bac_si import BacSi  #[cite: 1]
+from app.models.models import NguoiDung, ChuyenKhoa, DichVu, ThanhToan as HoaDon  #[cite: 4]
+from app.models.lich_hen import LichHen, LogTrangThai  #[cite: 3]
+from app.models.bac_si import BacSi  #[cite: 1]
 
 
 class AdminService:

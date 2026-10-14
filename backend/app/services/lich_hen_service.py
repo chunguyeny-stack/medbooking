@@ -4,10 +4,10 @@ from typing import Optional
 from fastapi import HTTPException, status
 from sqlalchemy.orm import Session
 
-from models.lich_hen import LichHen, LogTrangThai
-from models.bac_si import BacSi
-from models.models import BenhNhan, NguoiDung, ThanhToan as HoaDon
-from schemas.lich_hen import BookingRequest
+from app.models.lich_hen import LichHen, LogTrangThai
+from app.models.bac_si import BacSi
+from app.models.models import BenhNhan, NguoiDung, ThanhToan as HoaDon
+from app.schemas.lich_hen import BookingRequest
 
 
 class LichHenService:

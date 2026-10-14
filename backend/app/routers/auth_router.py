@@ -5,11 +5,11 @@ from fastapi.security import OAuth2PasswordRequestForm
 from pydantic import BaseModel, EmailStr
 from sqlalchemy.orm import Session
 
-from datadase.database import get_db
-from models.models import NguoiDung, BenhNhan
+from app.database.database import get_db
+from app.models.models import NguoiDung, BenhNhan
 
 # Nạp trực tiếp module auth ở thư mục gốc (không bị trùng với routers/auth.py)
-root_auth = importlib.import_module("auth")
+from app import auth as root_auth
 
 router = APIRouter(prefix="/auth", tags=["Xác thực & Tài khoản"])
 
