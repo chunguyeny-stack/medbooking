@@ -64,6 +64,7 @@
           <div class="info-item"><span class="k">Mã lịch hẹn</span><span class="v" id="p-id">—</span></div>
           <div class="info-item"><span class="k">Họ và tên</span><span class="v" id="p-name">—</span></div>
           <div class="info-item"><span class="k">Tuổi / Giới tính</span><span class="v" id="p-age">—</span></div>
+          <div class="info-item"><span class="k">SĐT / Email</span><span class="v" id="p-contact">—</span></div>
           <div class="info-item" style="grid-column:1/-1;">
             <span class="k">Triệu chứng khai báo</span><span class="v" id="p-symptom">—</span>
           </div>
@@ -147,7 +148,7 @@
             <input type="checkbox" id="recheck-required">
             <label for="recheck-required">
               <i class="fas fa-calendar-plus"></i>
-              Yêu cầu bệnh nhân tái khám
+              Yêu cầu bệnh nhân tái khám (gửi SMS + Email)
             </label>
           </div>
 
@@ -180,8 +181,8 @@
             <div class="recheck-info">
               <i class="fas fa-circle-info"></i>
               <div>
-                <strong>Bệnh nhân sẽ nhận được thông báo</strong> và có thể <strong>tự đặt lịch tái khám</strong>
-                theo ngày/ca bạn đề xuất. Lịch sẽ được xác nhận khi bệnh nhân chọn.
+                <strong>Hệ thống sẽ gửi SMS + Email</strong> tới bệnh nhân với nội dung yêu cầu tái khám.
+                Bệnh nhân bấm link trong tin nhắn để tự đặt lịch.
               </div>
             </div>
           </div>
@@ -203,15 +204,22 @@
 <script src="../../static/js/bac_si.js"></script>
 <script>
 window.MB_PAGE_INIT = function () {
-  // ===== Lấy id bệnh nhân từ URL =====
+  // ===== URL =====
   const params = new URLSearchParams(window.location.search);
   const id = params.get('id') || 'LH00123';
   const patient = MB_MOCK.appointments.find((a) => a.id === id) || MB_MOCK.appointments[0];
 
+  // ===== Hiển thị thông tin bệnh nhân =====
   if (patient) {
     document.getElementById('p-id').textContent = patient.id;
     document.getElementById('p-name').textContent = patient.name;
     document.getElementById('p-age').textContent = patient.age + ' / ' + patient.gender;
+
+    // Bổ sung phone + email nếu mock chưa có
+    const phone = patient.phone || '0912345678';
+    const email = patient.email || 'patient@example.com';
+    document.getElementById('p-contact').textContent = phone + ' • ' + email;
+
     document.getElementById('p-symptom').textContent = patient.symptom;
 
     const statusEl = document.getElementById('patient-status');
@@ -237,7 +245,6 @@ window.MB_PAGE_INIT = function () {
     const input = document.querySelector(`[data-field="${field}"]`);
     if (input) input.classList.toggle('error', !!message);
   }
-
   function clearAllErrors() {
     document.querySelectorAll('.error-message').forEach(el => el.textContent = '');
     document.querySelectorAll('.form-control.error').forEach(el => el.classList.remove('error'));
@@ -260,16 +267,14 @@ window.MB_PAGE_INIT = function () {
     textarea.addEventListener('input', update);
     update();
   }
-
   document.querySelectorAll('textarea[data-min]').forEach(bindCharCounter);
 
-  // ===== Prescription row =====
+  // ===== Prescription =====
   function renumber() {
     [...tbody.querySelectorAll('tr')].forEach((tr, i) => {
       tr.querySelector('td:first-child').textContent = i + 1;
     });
   }
-
   function bindRow(row) {
     row.querySelector('.btn-danger').addEventListener('click', () => {
       row.remove();
@@ -281,7 +286,6 @@ window.MB_PAGE_INIT = function () {
       inp.addEventListener('blur', () => validateMedicines());
     });
   }
-
   function addRow(name = '', dose = '', qty = 1) {
     const tr = document.createElement('tr');
     tr.innerHTML = `
@@ -315,16 +319,15 @@ window.MB_PAGE_INIT = function () {
   } else {
     addRow('Betaserc 16mg', 'Ngày uống 2 lần, sáng/chiều sau ăn mỗi lần 1 viên', 30);
   }
-
   document.querySelectorAll('textarea[data-min]').forEach(t => t.dispatchEvent(new Event('input')));
 
-  // ===== Thêm thuốc =====
+  // ===== Add medicine =====
   document.getElementById('btn-add-medicine').addEventListener('click', () => {
     addRow();
     showToast('Đã thêm thuốc mới', 'success', 1200);
   });
 
-  // ===== Toggle tái khám =====
+  // ===== Toggle recheck =====
   const recheckCb = document.getElementById('recheck-required');
   const recheckPanel = document.getElementById('recheck-panel');
   const recheckDate = document.getElementById('recheck-date');
@@ -364,21 +367,17 @@ window.MB_PAGE_INIT = function () {
     let hasError = false;
     let firstErrorInput = null;
     if (!rows.length) { setError('medicines', 'Đơn thuốc phải có ít nhất 1 loại thuốc.'); return false; }
-
     rows.forEach((tr) => {
       const name = tr.querySelector('.med-name').value.trim();
       const dose = tr.querySelector('.med-dose').value.trim();
       const qty = parseInt(tr.querySelector('.med-qty').value);
       let rowErr = false;
       tr.classList.remove('row-error');
-
       if (!name) { rowErr = true; if (!firstErrorInput) firstErrorInput = tr.querySelector('.med-name'); }
       if (dose.length < 10) { rowErr = true; if (!firstErrorInput) firstErrorInput = tr.querySelector('.med-dose'); }
       if (isNaN(qty) || qty < 1 || qty > 100) { rowErr = true; if (!firstErrorInput) firstErrorInput = tr.querySelector('.med-qty'); }
-
       if (rowErr) { tr.classList.add('row-error'); hasError = true; }
     });
-
     if (hasError) {
       setError('medicines', 'Vui lòng kiểm tra lại các dòng thuốc bị lỗi (tên, liều lượng ≥ 10 ký tự, số lượng 1-100).');
       if (firstErrorInput) firstErrorInput.focus();
@@ -408,7 +407,6 @@ window.MB_PAGE_INIT = function () {
       dose: tr.querySelector('.med-dose').value,
       qty: parseInt(tr.querySelector('.med-qty').value) || 1
     }));
-
     MB_STORAGE.set(DRAFT_KEY, {
       clinical: document.getElementById('clinical-notes').value,
       diagnosis: document.getElementById('diagnosis-result').value,
@@ -426,7 +424,7 @@ window.MB_PAGE_INIT = function () {
   });
 
   // ===== Hoàn thành ca khám =====
-  document.getElementById('btn-complete-examination').addEventListener('click', () => {
+  document.getElementById('btn-complete-examination').addEventListener('click', async () => {
     clearAllErrors();
 
     const okClinical = validateClinical();
@@ -449,45 +447,74 @@ window.MB_PAGE_INIT = function () {
     }));
 
     const diagnosis = document.getElementById('diagnosis-result').value.trim();
+    const clinical = document.getElementById('clinical-notes').value.trim();
+    const advice = document.getElementById('doctor-advice').value.trim();
 
     // Cập nhật trạng thái ca khám
     const idx = MB_MOCK.appointments.findIndex((a) => a.id === id);
     if (idx >= 0) MB_MOCK.appointments[idx].status = 'completed';
 
-    // ===== Lưu yêu cầu tái khám & gửi thông báo cho bệnh nhân =====
+    // ===== Gửi SMS + Email nếu có yêu cầu tái khám =====
+    let smsEmailSent = false;
     if (recheckCb.checked) {
-      const noti = sendRecheckNotification({
-        patientId: patient.id,
-        patientName: patient.name,
-        doctorId: 'bs01',
-        doctorName: 'BS. Nguyễn Văn A',
-        doctorSpecialty: 'Nội Tổng Quát',
+      const patientPhone = (patient && patient.phone) || '0912345678';
+      const patientEmail = (patient && patient.email) || 'patient@example.com';
+
+      const recheckData = {
+        patient_name: patient ? patient.name : 'Bệnh nhân',
+        patient_phone: patientPhone,
+        patient_email: patientEmail,
+        doctor_name: 'BS. Nguyễn Văn A',
+        doctor_specialty: 'Nội Tổng Quát',
         diagnosis: diagnosis,
-        suggestedDate: recheckDate.value,
-        suggestedSession: document.getElementById('recheck-session').value,
+        clinical_notes: clinical,
+        advice: advice,
+        suggested_date: recheckDate.value,
+        suggested_session: document.getElementById('recheck-session').value,
         note: document.getElementById('recheck-note').value.trim()
-      });
-      console.log('📩 Đã gửi thông báo tái khám:', noti);
+      };
+
+      try {
+        showToast('📤 Đang gửi SMS + Email cho bệnh nhân...', 'info', 2000);
+
+        const response = await fetch('/api/send-recheck-notification', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(recheckData)
+        });
+
+        const result = await response.json();
+
+        if (result.success) {
+          smsEmailSent = true;
+          const channels = [];
+          if (result.results && result.results.sms) channels.push('SMS');
+          if (result.results && result.results.email) channels.push('Email');
+          showToast('📩 Đã gửi thông báo tái khám qua ' + channels.join(' + '), 'success', 3000);
+        } else {
+          showToast('⚠️ Không gửi được thông báo: ' + (result.message || 'Lỗi không xác định'), 'warning', 3000);
+        }
+      } catch (err) {
+        console.error('Send notification error:', err);
+        showToast('⚠️ Không kết nối được server gửi thông báo', 'error', 3000);
+      }
     }
 
+    // Xóa draft
     MB_STORAGE.remove(DRAFT_KEY);
 
+    // Cập nhật UI
     const statusEl = document.getElementById('patient-status');
     statusEl.className = 'badge-status badge-completed';
     statusEl.textContent = 'Đã hoàn thành';
 
-    if (recheckCb.checked) {
-      showToast('✅ Đã hoàn thành ca khám & gửi đơn thuốc', 'success', 3000);
-      setTimeout(() => {
-        showToast('📩 Đã gửi yêu cầu tái khám tới bệnh nhân', 'info', 3000);
-      }, 800);
-    } else {
+    if (!recheckCb.checked || smsEmailSent) {
       showToast('✅ Đã hoàn thành ca khám & gửi đơn thuốc', 'success', 3000);
     }
 
     setTimeout(() => {
       window.location.href = 'danh_sach_ca_kham.html';
-    }, 2000);
+    }, 2500);
   });
 };
 </script>

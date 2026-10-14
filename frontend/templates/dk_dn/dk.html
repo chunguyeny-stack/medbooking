@@ -266,7 +266,6 @@
     <div class="petal-overlay" id="petalOverlay"></div>
 
     <header class="site-header">
-        <!-- LOGO MỚI -->
         <div class="logo-container">
             <div class="logo-icon">
                 <i class="fa-solid fa-heart-pulse"></i>
@@ -291,7 +290,8 @@
                 <h1>Tạo tài khoản <i>MedBooking</i></h1>
                 <p class="register-desc">Điền thông tin bên dưới để tạo hồ sơ số hóa y tế và trải nghiệm dịch vụ đặt lịch khám nhanh chóng.</p>
 
-                <form action="#" method="POST">
+                <!-- FORM ĐĂNG KÝ -->
+                <form id="registerForm">
                     <div class="form-group">
                         <label for="hoten">Họ và tên</label>
                         <input type="text" id="hoten" name="hoten" placeholder="Nhập họ và tên" required>
@@ -302,7 +302,7 @@
                     </div>
                     <div class="form-group">
                         <label for="password">Mật khẩu</label>
-                        <input type="password" id="password" name="password" placeholder="Nhập mật khẩu" required>
+                        <input type="password" id="password" name="password" placeholder="VD: Abc123 (>=6 ký tự, 1 hoa, 1 số)" required>
                     </div>
                     <button type="submit" class="btn-submit">Chấp nhận</button>
                 </form>
@@ -314,6 +314,7 @@
         </div>
     </main>
 
+    <!-- SCRIPT HIỆU ỨNG HOA ANH ĐÀO -->
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const links = document.querySelectorAll('.transition-link');
@@ -348,6 +349,65 @@
                 });
             });
         });
+    </script>
+
+    <!-- ========================================== -->
+    <!-- SCRIPT XỬ LÝ ĐĂNG KÝ (NHÚNG TRỰC TIẾP) -->
+    <!-- ========================================== -->
+    <script>
+        document.getElementById('registerForm').addEventListener('submit', function(e) {
+            e.preventDefault(); // Chặn load lại trang
+            
+            const fullname = document.getElementById('hoten').value.trim();
+            const email = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value;
+
+            // 1. Kiểm tra ràng buộc mật khẩu
+            const passwordRegex = /^(?=.*[A-Z])(?=.*\d).{6,}$/;
+            if (!passwordRegex.test(password)) {
+                showToast('Mật khẩu phải có ít nhất 6 ký tự, bao gồm 1 chữ hoa và 1 số!', 'error');
+                return;
+            }
+
+            // 2. Lấy danh sách user từ localStorage
+            let users = JSON.parse(localStorage.getItem('medbooking_users')) || [];
+
+            // 3. Kiểm tra email tồn tại
+            const existingUser = users.find(u => u.email === email);
+            if (existingUser) {
+                showToast('Email này đã được đăng ký! Vui lòng đăng nhập.', 'error');
+                return;
+            }
+
+            // 4. Lưu user mới
+            users.push({ fullname, email, password });
+            localStorage.setItem('medbooking_users', JSON.stringify(users));
+
+            // 5. Thông báo thành công và chuyển trang
+            showToast('Đăng ký thành công! Đang chuyển sang trang đăng nhập...', 'success');
+            
+            setTimeout(() => {
+                window.location.href = 'dn.html';
+            }, 2000);
+        });
+
+        // Hàm hiển thị thông báo Toast
+        function showToast(message, type = 'info') {
+            const toast = document.createElement('div');
+            toast.innerHTML = `<i class="fa-solid ${type === 'success' ? 'fa-circle-check' : 'fa-circle-exclamation'}"></i> <span>${message}</span>`;
+            
+            Object.assign(toast.style, {
+                position: 'fixed', top: '20px', right: '20px',
+                background: type === 'success' ? '#4caf50' : '#f44336',
+                color: 'white', padding: '15px 25px', borderRadius: '10px',
+                boxShadow: '0 5px 15px rgba(0,0,0,0.2)', zIndex: '10000',
+                display: 'flex', alignItems: 'center', gap: '10px',
+                fontSize: '15px', fontWeight: '500', fontFamily: "'Plus Jakarta Sans', sans-serif"
+            });
+
+            document.body.appendChild(toast);
+            setTimeout(() => toast.remove(), 3000);
+        }
     </script>
 </body>
 </html>

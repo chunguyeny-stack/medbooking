@@ -270,7 +270,6 @@
     <div class="petal-overlay" id="petalOverlay"></div>
 
     <header class="site-header">
-        <!-- LOGO MỚI -->
         <div class="logo-container">
             <div class="logo-icon">
                 <i class="fa-solid fa-heart-pulse"></i>
@@ -295,7 +294,8 @@
                 <h1>Chào mừng trở lại <i>MedBooking</i></h1>
                 <p class="login-desc">Nhập thông tin tài khoản của bạn để tiếp tục tra cứu lịch sử bệnh án và đặt lịch khám bảo mật.</p>
 
-                <form action="#" method="POST">
+                <!-- FORM ĐĂNG NHẬP -->
+                <form id="loginForm">
                     <div class="form-group">
                         <label for="email">Gmail</label>
                         <input type="email" id="email" name="email" placeholder="example@gmail.com" required>
@@ -317,6 +317,7 @@
         </div>
     </main>
 
+    <!-- SCRIPT HIỆU ỨNG HOA ANH ĐÀO -->
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             const links = document.querySelectorAll('.transition-link');
@@ -351,6 +352,62 @@
                 });
             });
         });
+    </script>
+
+    <!-- ========================================== -->
+    <!-- SCRIPT XỬ LÝ ĐĂNG NHẬP (NHÚNG TRỰC TIẾP) -->
+    <!-- ========================================== -->
+    <script>
+        document.getElementById('loginForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const email = document.getElementById('email').value.trim();
+            const password = document.getElementById('password').value;
+
+            // Lấy danh sách user từ localStorage
+            let users = JSON.parse(localStorage.getItem('medbooking_users')) || [];
+
+            // Tìm user khớp email và password
+            const user = users.find(u => u.email === email && u.password === password);
+
+            if (user) {
+                // Đăng nhập thành công
+                showToast(`Chào mừng ${user.fullname} trở lại!`, 'success');
+                localStorage.setItem('medbooking_current_user', JSON.stringify(user));
+                
+                setTimeout(() => {
+                    window.location.href = 'home.html';
+                }, 1500);
+            } else {
+                // Đăng nhập thất bại - Kiểm tra lý do
+                const emailExists = users.some(u => u.email === email);
+                
+                if (emailExists) {
+                    showToast('Mật khẩu không chính xác!', 'error');
+                } else {
+                    // THÔNG BÁO KHI CHƯA CÓ TÀI KHOẢN
+                    showToast('Tài khoản chưa tồn tại. Vui lòng đăng ký!', 'error');
+                }
+            }
+        });
+
+        // Hàm hiển thị thông báo Toast
+        function showToast(message, type = 'info') {
+            const toast = document.createElement('div');
+            toast.innerHTML = `<i class="fa-solid ${type === 'success' ? 'fa-circle-check' : 'fa-circle-exclamation'}"></i> <span>${message}</span>`;
+            
+            Object.assign(toast.style, {
+                position: 'fixed', top: '20px', right: '20px',
+                background: type === 'success' ? '#4caf50' : '#f44336',
+                color: 'white', padding: '15px 25px', borderRadius: '10px',
+                boxShadow: '0 5px 15px rgba(0,0,0,0.2)', zIndex: '10000',
+                display: 'flex', alignItems: 'center', gap: '10px',
+                fontSize: '15px', fontWeight: '500', fontFamily: "'Plus Jakarta Sans', sans-serif"
+            });
+
+            document.body.appendChild(toast);
+            setTimeout(() => toast.remove(), 3000);
+        }
     </script>
 </body>
 </html>

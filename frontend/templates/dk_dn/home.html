@@ -115,13 +115,13 @@
         .logo-icon {
             width: 50px;
             height: 50px;
-            background: linear-gradient(135deg, var(--primary-pink), #ff8fab); /* Gradient hồng đẹp hơn */
+            background: linear-gradient(135deg, var(--primary-pink), #ff8fab);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
             color: #fff;
-            font-size: 24px; /* Icon to hơn */
+            font-size: 24px;
             box-shadow: 0 5px 20px rgba(255, 107, 157, 0.4);
             position: relative;
             overflow: hidden;
@@ -521,5 +521,33 @@
             });
         });
     </script>
+        <script>
+        // Kiểm tra trạng thái đăng nhập khi vào trang chủ
+        const currentUser = localStorage.getItem('medbooking_current_user');
+        const loginBtn = document.querySelector('.btn-login');
+        const registerBtn = document.querySelector('.btn-register');
+
+        if (currentUser && loginBtn) {
+            const user = JSON.parse(currentUser);
+            
+            // Đổi nút Đăng nhập thành tên User
+            loginBtn.innerHTML = `<i class="fa-solid fa-user"></i> Hi, ${user.fullname}`;
+            loginBtn.href = "#";
+            
+            // Xử lý sự kiện click để đăng xuất
+            loginBtn.addEventListener('click', (e) => {
+                e.preventDefault();
+                if(confirm('Bạn có chắc muốn đăng xuất?')) {
+                    localStorage.removeItem('medbooking_current_user');
+                    window.location.reload();
+                }
+            });
+
+            // Ẩn nút đăng ký nếu đã đăng nhập
+            if(registerBtn) registerBtn.style.display = 'none';
+        }
+    </script>
+    <!-- NHÚNG FILE XỬ LÝ LOGIC ĐỂ CHECK ĐĂNG NHẬP -->
+    <script src="/static/js/Auth.js"></script>
 </body>
 </html>
