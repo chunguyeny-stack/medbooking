@@ -8,7 +8,6 @@ from app.models.models import NguoiDung, ChuyenKhoa, DichVu, ThanhToan as HoaDon
 from app.models.lich_hen import LichHen, LogTrangThai  #[cite: 3]
 from app.models.bac_si import BacSi  #[cite: 1]
 
-
 class AdminService:
 
     # --- Quản trị người dùng & Phân quyền ---
