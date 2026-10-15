@@ -3,6 +3,7 @@ from sqlalchemy import (
     Column, Integer, String, Numeric,
     Date, DateTime, Boolean, ForeignKey, Text
 )
+
 from sqlalchemy.orm import relationship
 from app.database.database import Base
 
