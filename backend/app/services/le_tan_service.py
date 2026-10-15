@@ -5,7 +5,6 @@ from sqlalchemy.orm import Session
 
 from app.models.lich_hen import LichHen, LogTrangThai
 
-
 class LeTanService:
 
     @staticmethod
