@@ -13,13 +13,13 @@ from app.schemas.bac_si import (
     BacSiResponse,
     BacSiPaginationResponse
 )
+
 from app.services.bac_si_service import BacSiService
 
 # Nạp module auth từ thư mục gốc
 from app import auth as root_auth
 
 router = APIRouter(prefix="/doctors", tags=["Quản lý Bác sĩ"])
-
 
 @router.post(
     "",
