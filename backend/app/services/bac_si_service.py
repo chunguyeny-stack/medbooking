@@ -13,7 +13,6 @@ from app.schemas.bac_si import BacSiCreate, BacSiUpdate
 
 from app import auth as root_auth
 
-
 class BacSiService:
 
     @staticmethod
