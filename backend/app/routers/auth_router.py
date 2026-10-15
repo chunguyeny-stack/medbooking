@@ -87,7 +87,6 @@ def login(form_data: OAuth2PasswordRequestForm = Depends(), db: Session = Depend
         "ho_ten": user.ho_ten
     }
 
-
 @router.get("/me", summary="Lấy thông tin tài khoản hiện tại")
 def get_me(current_user: NguoiDung = Depends(root_auth.get_current_user)):
     return {
@@ -97,7 +96,6 @@ def get_me(current_user: NguoiDung = Depends(root_auth.get_current_user)):
         "so_dien_thoai": current_user.so_dien_thoai,
         "vai_tro": current_user.vai_tro
     }
-
 
 @router.post("/change-password", summary="Thay đổi mật khẩu tài khoản hiện tại")
 def change_password(
