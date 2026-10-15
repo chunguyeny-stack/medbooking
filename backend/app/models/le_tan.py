@@ -3,10 +3,8 @@ from sqlalchemy import Column, Integer, String, ForeignKey, DateTime
 from sqlalchemy.orm import relationship
 from app.database.database import Base
 
-
 def utc_now():
     return datetime.now(timezone.utc)
-
 
 class LeTan(Base):
     __tablename__ = "le_tan"
@@ -17,6 +15,7 @@ class LeTan(Base):
         ForeignKey("nguoi_dung.id", ondelete="CASCADE"),
         primary_key=True
     )
+    
     quay_lam_viec = Column(String(50), nullable=True)
     ca_truc = Column(String(50), nullable=True)
     ngay_vao_lam = Column(DateTime, default=utc_now)
