@@ -9,7 +9,6 @@ from app.models.bac_si import BacSi
 from app.models.models import BenhNhan, NguoiDung, ThanhToan as HoaDon
 from app.schemas.lich_hen import BookingRequest
 
-
 class LichHenService:
 
     @staticmethod
