@@ -15,6 +15,7 @@ from app import auth as root_auth
 router = APIRouter(prefix="/appointments", tags=["Quản lý Lịch hẹn"])
 
 
+
 class BookingRequest(BaseModel):
     ma_bac_si: int
     ngay_kham: date
