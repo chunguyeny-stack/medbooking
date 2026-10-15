@@ -3,13 +3,12 @@ from sqlalchemy import (
     Column, Integer, String, Date,
     DateTime, ForeignKey, Boolean
 )
+
 from sqlalchemy.orm import relationship
 from app.database.database import Base
 
-
 def utc_now():
     return datetime.now(timezone.utc)
-
 
 class LichLamViec(Base):
     """Khớp với CREATE TABLE dbo.lich_lam_viec"""
