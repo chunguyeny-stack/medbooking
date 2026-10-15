@@ -14,11 +14,13 @@ class BacSi(Base):
         unique=True,
         nullable=False
     )
+    
     chuyen_khoa_id = Column(
         Integer,
         ForeignKey("chuyen_khoa.id"),
         nullable=False
     )
+    
     hoc_vi = Column(String(50), nullable=True)
     kinh_nghiem = Column(Integer, default=0)
     gia_kham = Column(Numeric(18, 2), nullable=False, default=0.0)
