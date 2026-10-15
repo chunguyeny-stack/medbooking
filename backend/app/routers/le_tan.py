@@ -34,6 +34,7 @@ def create_appointment(
         db: Session = Depends(get_db),
         current_user: NguoiDung = Depends(root_auth.get_current_user)
 ):
+    
     benh_nhan = current_user.benh_nhan_profile
     if not benh_nhan:
         raise HTTPException(status_code=400, detail="Tài khoản hiện tại chưa có hồ sơ bệnh nhân.")
@@ -94,6 +95,7 @@ def create_appointment(
         trang_thai="Chờ xác nhận",
         ghi_chu=payload.ghi_chu or ""
     )
+    
     db.add(appt)
     db.flush()
 
