@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MedBooking - Danh sách Lịch hẹn & Lịch sử Khám</title>
+    <!-- Favicon chuẩn hình trái tim hồng sóng điện tim -->
+    <link rel="icon" type="image/jpeg" href="../../favicon.jpg">
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -494,14 +496,10 @@
             modalOverlay.addEventListener('click', function(e) { if (e.target === modalOverlay) closeModal(); });
             document.addEventListener('keydown', function(e) { if (e.key === 'Escape' && modalOverlay.classList.contains('active')) closeModal(); });
 
-            // ============================================================
-            // ⭐ LẤY DỮ LIỆU TỪ BN_Store
-            // ============================================================
             let appointments = [];
 
             function loadAppointments() {
                 appointments = BN_Store.getAppointments();
-                // Sắp xếp: pending lên đầu, sau đó theo ngày giảm dần
                 appointments.sort((a, b) => {
                     const order = { pending: 1, completed: 2, cancelled: 3, noshow: 4 };
                     const oa = order[a.status] || 99;
@@ -584,7 +582,6 @@
                 });
             });
 
-            // ⭐ HỦY LỊCH - GỌI BN_Store
             window.cancelAppointment = function(id) {
                 const appt = appointments.find(a => a.id === id);
                 if (!appt) return;
@@ -610,7 +607,6 @@
                 showAlert('Đơn thuốc', `Đang mở đơn thuốc cho lịch hẹn ${id}... (Demo)`, 'info');
             };
 
-            // ⭐ ĐẶT LẠI - CHUYỂN SANG dat_lich.html VỚI rebook_from
             window.rebook = function(id) {
                 const appt = appointments.find(a => a.id === id);
                 if (appt) {
@@ -620,12 +616,10 @@
                 }
             };
 
-            // INIT
             loadAppointments();
             updateStats();
             renderAppointments('all');
 
-            // Multi-tab sync
             window.addEventListener('storage', function(e) {
                 if (e.key && e.key.startsWith('medbooking_bn_')) {
                     loadAppointments();

@@ -5,12 +5,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin - Hồ sơ cá nhân</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="icon" type="image/jpeg" href="../../favicon.jpg">
+    
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Quicksand:wght@600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="../../static/css/A.css">
     
     <style>
+        /* Định dạng phông chữ thương hiệu MedBooking */
+        .brand-name {
+            font-family: 'Quicksand', sans-serif !important;
+            font-weight: 700 !important;
+            text-transform: none !important;
+            letter-spacing: -0.01em;
+        }
+
         body { display: flex; flex-direction: column; min-height: 100vh; background: var(--bg-body); }
         body > header {
             background: var(--bg-glass);
@@ -19,12 +29,31 @@
             padding: 16px 32px;
             display: flex; justify-content: space-between; align-items: center;
         }
-        body > header h1 { font-size: 18px; color: var(--secondary-color); }
-        body > header nav a {
-            color: var(--primary-color); font-weight: 600; font-size: 14px;
-            padding: 8px 16px; background: var(--primary-light);
-            border-radius: 50px;
+        body > header h1 { 
+            font-family: 'Quicksand', sans-serif;
+            font-size: 20px; 
+            font-weight: 700;
+            color: var(--secondary-color); 
         }
+        
+        /* Hiệu ứng hover sáng lên giống nút thông báo bên Dashboard */
+        body > header nav a {
+            color: var(--primary-color); 
+            font-weight: 600; 
+            font-size: 14px;
+            padding: 8px 16px; 
+            background: var(--primary-light);
+            border-radius: 50px;
+            text-decoration: none;
+            transition: all 0.25s ease;
+        }
+        body > header nav a:hover {
+            background: var(--primary-color);
+            color: #fff;
+            box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);
+            transform: translateY(-1px);
+        }
+
         body > main {
             flex: 1;
             max-width: 720px;
@@ -41,7 +70,8 @@
             box-shadow: var(--shadow-soft);
         }
         body > main section h3 {
-            font-size: 16px;
+            font-family: 'Quicksand', sans-serif;
+            font-size: 18px;
             font-weight: 700;
             color: var(--secondary-color);
             margin-bottom: 22px;
@@ -69,23 +99,23 @@
 
     <header>
         <h1>Hồ sơ Quản trị viên</h1>
-        <nav><a href="home_a.html"><i class="fas fa-arrow-left"></i> Quay lại Trang chủ Admin</a></nav>
+        <nav><a href="dashboard.html"><i class="fas fa-arrow-left"></i> Quay lại Dashboard</a></nav>
     </header>
 
     <main>
         <section>
             <h3>Thông tin tài khoản Admin</h3>
             <form id="form-profile">
-                <p style="margin-bottom:16px;"><strong>Mã quản trị viên:</strong> AD001</p>
+                <p style="margin-bottom:16px; color: var(--secondary-color);"><strong>Mã quản trị viên:</strong> AD001</p>
                 <div style="margin-bottom:16px;">
-                    <label for="profile-name">Họ và tên:</label>
-                    <input type="text" id="profile-name" style="width:100%;max-width:100%;">
+                    <label for="profile-name" style="display:block; margin-bottom:6px; font-weight:500; color: var(--secondary-color);">Họ và tên:</label>
+                    <input type="text" id="profile-name" style="width:100%; max-width:100%; padding:10px 14px; border:1px solid var(--border-glass); border-radius:12px; background:var(--bg-card); color:var(--secondary-color);">
                 </div>
                 <div style="margin-bottom:16px;">
-                    <label for="profile-email">Email liên hệ:</label>
-                    <input type="email" id="profile-email" style="width:100%;max-width:100%;">
+                    <label for="profile-email" style="display:block; margin-bottom:6px; font-weight:500; color: var(--secondary-color);">Email liên hệ:</label>
+                    <input type="email" id="profile-email" style="width:100%; max-width:100%; padding:10px 14px; border:1px solid var(--border-glass); border-radius:12px; background:var(--bg-card); color:var(--secondary-color);">
                 </div>
-                <button type="submit" class="btn-primary" style="padding:11px 22px;border-radius:50px;background:var(--primary-color);color:#fff;border:none;font-weight:600;cursor:pointer;">
+                <button type="submit" class="btn-primary" style="padding:11px 22px; border-radius:50px; background:var(--primary-color); color:#fff; border:none; font-weight:600; cursor:pointer;">
                     <i class="fas fa-save"></i> Cập nhật thông tin
                 </button>
             </form>
@@ -95,25 +125,25 @@
             <h3>Đổi mật khẩu bảo mật</h3>
             <form id="form-password">
                 <div style="margin-bottom:16px;">
-                    <label>Mật khẩu hiện tại:</label>
-                    <input type="password" style="width:100%;max-width:100%;">
+                    <label style="display:block; margin-bottom:6px; font-weight:500; color: var(--secondary-color);">Mật khẩu hiện tại:</label>
+                    <input type="password" style="width:100%; max-width:100%; padding:10px 14px; border:1px solid var(--border-glass); border-radius:12px; background:var(--bg-card); color:var(--secondary-color);">
                 </div>
                 <div style="margin-bottom:16px;">
-                    <label>Mật khẩu mới:</label>
-                    <input type="password" style="width:100%;max-width:100%;">
+                    <label style="display:block; margin-bottom:6px; font-weight:500; color: var(--secondary-color);">Mật khẩu mới:</label>
+                    <input type="password" style="width:100%; max-width:100%; padding:10px 14px; border:1px solid var(--border-glass); border-radius:12px; background:var(--bg-card); color:var(--secondary-color);">
                 </div>
                 <div style="margin-bottom:16px;">
-                    <label>Xác nhận mật khẩu mới:</label>
-                    <input type="password" style="width:100%;max-width:100%;">
+                    <label style="display:block; margin-bottom:6px; font-weight:500; color: var(--secondary-color);">Xác nhận mật khẩu mới:</label>
+                    <input type="password" style="width:100%; max-width:100%; padding:10px 14px; border:1px solid var(--border-glass); border-radius:12px; background:var(--bg-card); color:var(--secondary-color);">
                 </div>
-                <button type="submit" class="btn-primary" style="padding:11px 22px;border-radius:50px;background:var(--primary-color);color:#fff;border:none;font-weight:600;cursor:pointer;">
+                <button type="submit" class="btn-primary" style="padding:11px 22px; border-radius:50px; background:var(--primary-color); color:#fff; border:none; font-weight:600; cursor:pointer;">
                     <i class="fas fa-lock"></i> Đổi mật khẩu
                 </button>
             </form>
         </section>
     </main>
 
-    <footer>&copy; 2026 MedBooking.</footer>
+    <footer>&copy; 2026 <span class="brand-name">MedBooking</span>. All rights reserved.</footer>
 
 <script src="../../static/js/admin-data.js"></script>
 <script src="../../static/js/admin.js"></script>

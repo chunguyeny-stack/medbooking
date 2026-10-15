@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MedBooking - Dashboard Lễ Tân</title>
+    <!-- Favicon hình chú chim cánh cụt y tế -->
+    <link rel="icon" type="image/jpeg" href="../../favicon.jpg">
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -72,6 +74,16 @@
             margin-top: 5px;
             text-transform: uppercase;
             letter-spacing: 1px;
+        }
+
+        /* Thêm hiệu ứng bấm được cho các stat-card */
+        .stat-card {
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-hover);
         }
 
         /* Ca trực cards */
@@ -213,6 +225,26 @@
             border-radius: 6px;
         }
 
+        /* Nút đăng xuất đồng bộ */
+        .logout-btn {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.2);
+            width: 40px; height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #EF4444;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+        .logout-btn:hover {
+            background: #EF4444;
+            color: #fff;
+            transform: translateY(-2px);
+        }
+
         @media (max-width: 992px) {
             .dashboard-grid { grid-template-columns: 1fr; }
             .welcome-banner { flex-direction: column; text-align: center; }
@@ -248,8 +280,13 @@
                     <div class="user-role">Lễ tân</div>
                 </div>
             </div>
+            <!-- Nút chuyển đổi sáng/tối -->
             <button class="theme-toggle" id="theme-toggle" title="Chuyển đổi Sáng/Tối">
                 <i class="fas fa-moon"></i>
+            </button>
+            <!-- Nút Đăng xuất nằm cạnh nút giao diện -->
+            <button class="logout-btn" onclick="window.location.href='../dk_dn/dn.html'" title="Đăng xuất">
+                <i class="fas fa-sign-out-alt"></i>
             </button>
         </div>
     </header>
@@ -275,9 +312,9 @@
             </div>
         </div>
 
-        <!-- Stats tổng quan -->
+        <!-- Stats tổng quan (Đã thêm sự kiện nhấp chuyển trang) -->
         <div class="stats-grid">
-            <div class="stat-card">
+            <div class="stat-card" onclick="window.location.href='quan_ly_lich_hen.html'" title="Xem chi tiết Quản lý lịch hẹn">
                 <div class="stat-icon"><i class="fas fa-calendar-check"></i></div>
                 <div class="stat-info">
                     <h4>45</h4>
@@ -285,7 +322,7 @@
                     <div class="trend"><i class="fas fa-arrow-up"></i> +12% so với hôm qua</div>
                 </div>
             </div>
-            <div class="stat-card green">
+            <div class="stat-card green" onclick="window.location.href='check_in.html'" title="Chuyển đến trang Check-in">
                 <div class="stat-icon"><i class="fas fa-user-check"></i></div>
                 <div class="stat-info">
                     <h4>28</h4>
@@ -293,7 +330,7 @@
                     <div class="trend"><i class="fas fa-check"></i> 62% hoàn thành</div>
                 </div>
             </div>
-            <div class="stat-card orange">
+            <div class="stat-card orange" onclick="window.location.href='check_in.html'" title="Xem danh sách chờ khám">
                 <div class="stat-icon"><i class="fas fa-hourglass-half"></i></div>
                 <div class="stat-info">
                     <h4>14</h4>
@@ -301,7 +338,7 @@
                     <div class="trend down"><i class="fas fa-clock"></i> Trung bình 12 phút</div>
                 </div>
             </div>
-            <div class="stat-card purple">
+            <div class="stat-card purple" onclick="window.location.href='vien_phi.html'" title="Chuyển đến trang Viện phí">
                 <div class="stat-icon"><i class="fas fa-money-bill-wave"></i></div>
                 <div class="stat-info">
                     <h4>8.4M</h4>
@@ -445,7 +482,7 @@
                     <p>Cổng Lễ Tân</p>
                 </div>
             </div>
-            <p>Hệ thống quản lý y tế MedBooking - Giải pháp toàn diện cho bệnh viện và phòng khám.</p>
+            <p>Hệ thống quản lý y tế MedBooking - Giải pháp toàn diện cho bệnh viện và phòng khám[cite: 7].</p>
             <p><strong>"MedBooking chúc quý khách và gia đình luôn có một sức khỏe dồi dào!"</strong></p>
         </div>
         <div>
@@ -464,7 +501,7 @@
             <p>Email: support@medbooking.vn</p>
         </div>
         <div>
-            <p>&copy; 2026 MedBooking. Bản quyền thuộc về Đội ngũ phát triển dự án.</p>
+            <p>&copy; 2026 MedBooking. Bản quyền thuộc về Đội ngũ phát triển dự án[cite: 7].</p>
         </div>
     </footer>
 
@@ -481,8 +518,6 @@
             </div>
         </div>
     </div>
-
-    <script src="../../static/js/client.js"></script>
 
 <script src="../../static/js/client.js"></script>
 <script src="../../static/js/LT_Store.js"></script>

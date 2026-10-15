@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MedBooking - Đặt lịch Khám bệnh</title>
+    <!-- Favicon chuẩn hình trái tim hồng sóng điện tim -->
+    <link rel="icon" type="image/jpeg" href="../../favicon.jpg">
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -688,7 +690,6 @@
         function getDayOfWeekName(dateStr) { const days = ['Chủ Nhật', 'Thứ Hai', 'Thứ Ba', 'Thứ Tư', 'Thứ Năm', 'Thứ Sáu', 'Thứ Bảy']; return days[new Date(dateStr).getDay()]; }
         function isSlotBooked(doctorId, dateStr, timeSlot) { if (!doctorId || !dateStr || !timeSlot) return false; if (!bookedSlots[doctorId]) return false; if (!bookedSlots[doctorId][dateStr]) return false; return bookedSlots[doctorId][dateStr].includes(timeSlot); }
         
-        // ⭐ CHECK TRÙNG VỚI CHÍNH BỆNH NHÂN TỪ BN_Store
         function isPatientBusy(dateStr, timeSlot) {
             const myAppts = BN_Store.getAppointments();
             return myAppts.some(appt => 
@@ -996,7 +997,6 @@
             return true;
         }
 
-        // ⭐ PREFILL TỪ BN_Store
         function prefillFromRebook(appointmentId) {
             const appt = BN_Store.getAppointmentById(appointmentId);
             if (!appt) return false;
@@ -1054,7 +1054,6 @@
             }
         }
 
-        // ⭐ SUBMIT - LƯU VÀO BN_STORE
         document.getElementById('booking-form').addEventListener('submit', function(e) {
             e.preventDefault();
             
@@ -1086,7 +1085,6 @@
                 return;
             }
             
-            // ⭐ LƯU VÀO BN_Store
             const symptomText = document.getElementById('patient-symptoms').value.trim();
             const isNightShift = selectedTimeSlot.startsWith('18') || selectedTimeSlot.startsWith('19') || selectedTimeSlot.startsWith('20') || selectedTimeSlot.startsWith('21');
             

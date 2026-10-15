@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MedBooking - Thu Viện Phí</title>
+    <!-- Favicon chuẩn hình trái tim xanh dương -->
+    <link rel="icon" type="image/jpeg" href="../../favicon.jpg">
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -432,6 +434,26 @@
             padding: 30px !important;
         }
 
+        /* Nút đăng xuất đồng bộ với giao diện lễ tân */
+        .logout-btn {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.2);
+            width: 40px; height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #EF4444;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+        .logout-btn:hover {
+            background: #EF4444;
+            color: #fff;
+            transform: translateY(-2px);
+        }
+
         @media (max-width: 768px) {
             .search-row { flex-direction: column; }
             .invoice-card { padding: 22px; }
@@ -472,8 +494,13 @@
                     <div class="user-role">Lễ tân</div>
                 </div>
             </div>
-            <button class="theme-toggle" id="theme-toggle">
+            <!-- Nút chuyển đổi sáng/tối -->
+            <button class="theme-toggle" id="theme-toggle" title="Chuyển đổi giao diện">
                 <i class="fas fa-moon"></i>
+            </button>
+            <!-- Nút Đăng xuất nằm ngay bên cạnh -->
+            <button class="logout-btn" onclick="window.location.href='../dk_dn/dn.html'" title="Đăng xuất">
+                <i class="fas fa-sign-out-alt"></i>
             </button>
         </div>
     </header>
@@ -664,7 +691,7 @@
         </div>
     </div>
 
-        <script src="../../static/js/client.js"></script>
+    <script src="../../static/js/client.js"></script>
     <script src="../../static/js/LT_Store.js"></script>
 
     <script>
@@ -1015,7 +1042,6 @@
                     return;
                 }
 
-                // CHỈ cho phép khi checked
                 if (invoice.appointmentStatus !== 'checked') {
                     const messages = {
                         'pending': { title: '⚠️ Bệnh nhân chưa check-in', msg: `Bệnh nhân ${invoice.patient} chưa được check-in. Không thể thu viện phí.`, goCheckin: true },
@@ -1085,7 +1111,7 @@
             }
 
             // ============================================================
-            // ⭐ CONFIRM PAYMENT (ĐÃ SỬA)
+            // CONFIRM PAYMENT
             // ============================================================
             window.confirmPayment = function() {
                 if (!currentInvoice) {
@@ -1141,29 +1167,23 @@
                                 return;
                             }
 
-                            // ✅ THÀNH CÔNG - Cập nhật UI ngay lập tức
                             loadInvoicesFromStore();
                             loadPaymentsFromStore();
                             lastAddedTransactionId = result.payment.id;
 
-                            // Đổi badge sang "Đã thanh toán"
                             document.getElementById('inv-status').textContent = 'Đã thanh toán';
                             document.getElementById('inv-status').className = 'invoice-status-badge paid';
 
-                            // Ẩn box thanh toán tiền mặt
                             document.getElementById('payment-info-box').style.display = 'none';
 
-                            // Đổi nút hành động
                             document.getElementById('invoice-actions').innerHTML = `
                                 <button class="btn btn-outline" onclick="printInvoice()"><i class="fas fa-print"></i> In lại hóa đơn</button>
                                 <button class="btn btn-primary" onclick="resetInvoice()"><i class="fas fa-search"></i> Tra cứu khác</button>
                             `;
 
-                            // Cập nhật thống kê + danh sách giao dịch
                             updateCashierStats();
                             renderRecentTransactions();
 
-                            // Hiển thị modal thành công
                             showAlert('Thu tiền thành công! 🎉', `Đã thu ${totalAmount} từ bệnh nhân ${patientName}.`, 'success', function() {
                                 document.getElementById('search-input').value = '';
                                 document.getElementById('invoice-card').style.display = 'none';
@@ -1184,9 +1204,6 @@
                 );
             };
 
-            // ============================================================
-            // RESET INVOICE
-            // ============================================================
             window.resetInvoice = function() {
                 document.getElementById('invoice-card').style.display = 'none';
                 document.getElementById('search-input').value = '';
@@ -1194,9 +1211,6 @@
                 currentInvoice = null;
             };
 
-            // ============================================================
-            // VIEW TRANSACTION DETAIL
-            // ============================================================
             window.viewTransactionDetail = function(paymentId) {
                 const t = paidTransactions.find(x => x.id === paymentId);
                 if (!t) {
@@ -1302,7 +1316,6 @@
             updateCashierStats();
             renderRecentTransactions();
 
-            // Kiểm tra URL param ?appointment_id=LHxxx (từ chi_tiet_kham.html)
             const urlParams = new URLSearchParams(window.location.search);
             const appointmentId = urlParams.get('appointment_id');
             if (appointmentId) {
@@ -1310,7 +1323,6 @@
                 setTimeout(() => { searchInvoice(); }, 300);
             }
 
-            // Multi-tab sync
             window.addEventListener('storage', function(e) {
                 if (e.key && e.key.startsWith('medbooking_')) {
                     loadInvoicesFromStore();
