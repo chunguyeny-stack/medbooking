@@ -13,9 +13,7 @@
   <aside class="sidebar">
     <div class="brand">
       <div class="logo-container">
-        <div class="logo-icon">
-          <i class="fas fa-headset"></i>
-        </div>
+        <div class="logo-icon"><i class="fas fa-headset"></i></div>
         <div class="logo-text">
           <h1>MEDBOOKING</h1>
           <p>Bác sĩ</p>
@@ -123,10 +121,23 @@ window.MB_PAGE_INIT = function () {
 
     tbody.innerHTML = list.map((a) => {
       const [cls, txt] = badgeMap[a.status] || ['badge-waiting', a.status];
-      const isWaiting = a.status === 'waiting' || a.status === 'in-progress';
-      const btnCls = isWaiting ? 'btn-primary' : 'btn-outline';
-      const btnTxt = isWaiting ? 'Vào khám' : 'Xem lại';
-      const btnIcon = isWaiting ? 'fa-stethoscope' : 'fa-eye';
+      const isWaiting = a.status === 'waiting';
+      const isInProgress = a.status === 'in-progress';
+      
+      let btnCls = 'btn-outline';
+      let btnTxt = 'Xem lại';
+      let btnIcon = 'fa-eye';
+
+      if (isWaiting) {
+        btnCls = 'btn-primary';
+        btnTxt = 'Check-in & Khám';
+        btnIcon = 'fa-stethoscope';
+      } else if (isInProgress) {
+        btnCls = 'btn-primary';
+        btnTxt = 'Tiếp tục khám';
+        btnIcon = 'fa-notes-medical';
+      }
+
       return `
         <tr>
           <td><strong>${a.time}</strong></td>

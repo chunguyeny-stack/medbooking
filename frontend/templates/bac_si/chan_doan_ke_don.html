@@ -7,15 +7,41 @@
 <link rel="stylesheet" href="../../static/css/BS.css">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  .device-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 12px;
+    margin-top: 10px;
+  }
+  .device-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 14px;
+    border: 1px solid var(--border-color, #e2e8f0);
+    border-radius: 8px;
+    background: var(--bg-card, #fff);
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  .device-item:hover {
+    border-color: #3b82f6;
+    background: rgba(59, 130, 246, 0.05);
+  }
+  .device-item input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+  }
+</style>
 </head>
 <body>
 <div class="app-layout">
   <aside class="sidebar">
     <div class="brand">
       <div class="logo-container">
-        <div class="logo-icon">
-          <i class="fas fa-headset"></i>
-        </div>
+        <div class="logo-icon"><i class="fas fa-headset"></i></div>
         <div class="logo-text">
           <h1>MEDBOOKING</h1>
           <p>Bác sĩ</p>
@@ -87,6 +113,48 @@
             <span class="char-counter" data-for="clinical-notes">0 / 10 ký tự tối thiểu</span>
             <span class="error-message" data-error="clinical"></span>
           </div>
+
+          <!-- MỤC CHỌN THIẾT BỊ Y TẾ ĐÃ SỬ DỤNG -->
+          <div class="form-group">
+            <label class="form-label">
+              <i class="fas fa-stethoscope"></i> Thiết bị y tế đã sử dụng khi chẩn đoán
+            </label>
+            <div class="device-grid">
+              <label class="device-item">
+                <input type="checkbox" name="medical_device" value="Máy đo huyết áp">
+                <span><i class="fas fa-heart-pulse"></i> Máy đo huyết áp</span>
+              </label>
+              <label class="device-item">
+                <input type="checkbox" name="medical_device" value="Ống nghe y tế">
+                <span><i class="fas fa-stethoscope"></i> Ống nghe y tế</span>
+              </label>
+              <label class="device-item">
+                <input type="checkbox" name="medical_device" value="Máy đo SpO2">
+                <span><i class="fas fa-wave-square"></i> Máy đo SpO2</span>
+              </label>
+              <label class="device-item">
+                <input type="checkbox" name="medical_device" value="Nhiệt kế hồng ngoại">
+                <span><i class="fas fa-temperature-high"></i> Nhiệt kế hồng ngoại</span>
+              </label>
+              <label class="device-item">
+                <input type="checkbox" name="medical_device" value="Máy đo đường huyết">
+                <span><i class="fas fa-droplet"></i> Máy đo đường huyết</span>
+              </label>
+              <label class="device-item">
+                <input type="checkbox" name="medical_device" value="Máy điện tim (ECG)">
+                <span><i class="fas fa-chart-line"></i> Máy điện tim (ECG)</span>
+              </label>
+              <label class="device-item">
+                <input type="checkbox" name="medical_device" value="Máy siêu âm cầm tay">
+                <span><i class="fas fa-display"></i> Máy siêu âm cầm tay</span>
+              </label>
+              <label class="device-item">
+                <input type="checkbox" name="medical_device" value="Đèn soi tai mũi họng">
+                <span><i class="fas fa-lightbulb"></i> Đèn soi tai mũi họng</span>
+              </label>
+            </div>
+          </div>
+
           <div class="form-group">
             <label class="form-label" for="diagnosis-result">
               Chẩn đoán bệnh (ICD / Tên bệnh)
@@ -173,13 +241,6 @@
               <textarea id="recheck-note" class="form-control" rows="2"
                 placeholder="Ví dụ: Mang theo đơn thuốc cũ, nhịn ăn trước khi khám..."></textarea>
             </div>
-            <div class="recheck-info">
-              <i class="fas fa-circle-info"></i>
-              <div>
-                <strong>Hệ thống sẽ gửi SMS + Email</strong> tới bệnh nhân với nội dung yêu cầu tái khám.
-                Bệnh nhân bấm link trong tin nhắn để tự đặt lịch.
-              </div>
-            </div>
           </div>
 
           <div class="action-bar">
@@ -204,6 +265,12 @@ window.MB_PAGE_INIT = function () {
   const patient = MB_MOCK.appointments.find((a) => a.id === id) || MB_MOCK.appointments[0];
 
   if (patient) {
+    // TỰ ĐỘNG CHECK-IN: Khi bác sĩ vào trang chẩn đoán, chuyển trạng thái từ waiting thành in-progress
+    if (patient.status === 'waiting') {
+      patient.status = 'in-progress';
+      showToast('🩺 Đã check-in thành công. Trạng thái ca khám chuyển sang: Đang khám', 'info', 2500);
+    }
+
     document.getElementById('p-id').textContent = patient.id;
     document.getElementById('p-name').textContent = patient.name;
     document.getElementById('p-age').textContent = patient.age + ' / ' + patient.gender;
@@ -220,7 +287,7 @@ window.MB_PAGE_INIT = function () {
       completed: ['badge-completed', 'Đã hoàn thành'],
       cancelled: ['badge-cancelled', 'Đã hủy']
     };
-    const [cls, txt] = statusMap[patient.status] || ['badge-waiting', 'Chờ khám'];
+    const [cls, txt] = statusMap[patient.status] || ['badge-progress', 'Đang khám'];
     statusEl.className = 'badge-status ' + cls;
     statusEl.textContent = txt;
   }
@@ -287,12 +354,20 @@ window.MB_PAGE_INIT = function () {
     renumber();
   }
 
+  // Khôi phục bản nháp
   const draft = MB_STORAGE.get(DRAFT_KEY, null);
   if (draft) {
     document.getElementById('clinical-notes').value = draft.clinical || '';
     document.getElementById('diagnosis-result').value = draft.diagnosis || '';
     document.getElementById('doctor-advice').value = draft.advice || '';
     (draft.medicines || []).forEach((m) => addRow(m.name, m.dose, m.qty));
+
+    // Khôi phục thiết bị y tế đã chọn
+    if (draft.devices && Array.isArray(draft.devices)) {
+      document.querySelectorAll('input[name="medical_device"]').forEach(cb => {
+        cb.checked = draft.devices.includes(cb.value);
+      });
+    }
 
     if (draft.recheck && draft.recheck.required) {
       document.getElementById('recheck-required').checked = true;
@@ -378,11 +453,16 @@ window.MB_PAGE_INIT = function () {
     setError('recheckDate', ''); return true;
   }
 
+  function getSelectedDevices() {
+    return [...document.querySelectorAll('input[name="medical_device"]:checked')].map(el => el.value);
+  }
+
   document.getElementById('clinical-notes').addEventListener('blur', validateClinical);
   document.getElementById('diagnosis-result').addEventListener('blur', validateDiagnosis);
   document.getElementById('doctor-advice').addEventListener('blur', validateAdvice);
   recheckDate.addEventListener('blur', validateRecheck);
 
+  // Lưu nháp (bao gồm thiết bị y tế đã chọn)
   document.getElementById('btn-save-draft').addEventListener('click', () => {
     const medicines = [...tbody.querySelectorAll('tr')].map((tr) => ({
       name: tr.querySelector('.med-name').value,
@@ -391,6 +471,7 @@ window.MB_PAGE_INIT = function () {
     }));
     MB_STORAGE.set(DRAFT_KEY, {
       clinical: document.getElementById('clinical-notes').value,
+      devices: getSelectedDevices(),
       diagnosis: document.getElementById('diagnosis-result').value,
       advice: document.getElementById('doctor-advice').value,
       medicines,
@@ -405,6 +486,7 @@ window.MB_PAGE_INIT = function () {
     showToast('💾 Đã lưu nháp bệnh án', 'success', 2000);
   });
 
+  // Hoàn thành ca khám
   document.getElementById('btn-complete-examination').addEventListener('click', async () => {
     clearAllErrors();
 
@@ -430,9 +512,13 @@ window.MB_PAGE_INIT = function () {
     const diagnosis = document.getElementById('diagnosis-result').value.trim();
     const clinical = document.getElementById('clinical-notes').value.trim();
     const advice = document.getElementById('doctor-advice').value.trim();
+    const devices = getSelectedDevices();
 
     const idx = MB_MOCK.appointments.findIndex((a) => a.id === id);
-    if (idx >= 0) MB_MOCK.appointments[idx].status = 'completed';
+    if (idx >= 0) {
+      MB_MOCK.appointments[idx].status = 'completed';
+      MB_MOCK.appointments[idx].devices = devices;
+    }
 
     let smsEmailSent = false;
     if (recheckCb.checked) {
@@ -447,6 +533,7 @@ window.MB_PAGE_INIT = function () {
         doctor_specialty: 'Nội Tổng Quát',
         diagnosis: diagnosis,
         clinical_notes: clinical,
+        devices: devices,
         advice: advice,
         suggested_date: recheckDate.value,
         suggested_session: document.getElementById('recheck-session').value,

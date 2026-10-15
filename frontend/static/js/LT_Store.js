@@ -1,13 +1,15 @@
+
 /**
  * LT_Store.js - Lễ Tân Store
  * Quản lý dữ liệu localStorage cho module Lễ Tân
  * Prefix: medbooking_
  */
 
-(function() {
+(function () {
     'use strict';
 
     const PREFIX = 'medbooking_';
+
     const KEYS = {
         APPOINTMENTS: PREFIX + 'appointments',
         PAYMENTS: PREFIX + 'payments',
@@ -15,37 +17,53 @@
         INITIALIZED: PREFIX + 'initialized'
     };
 
+    // Lấy ngày theo múi giờ địa phương, tránh lệch ngày do UTC.
+    function formatDate(date) {
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+
+        return `${year}-${month}-${day}`;
+    }
+
     function todayStr() {
-        return new Date().toISOString().split('T')[0];
+        return formatDate(new Date());
     }
 
     function tomorrowStr() {
-        const d = new Date();
-        d.setDate(d.getDate() + 1);
-        return d.toISOString().split('T')[0];
+        const date = new Date();
+        date.setDate(date.getDate() + 1);
+        return formatDate(date);
     }
 
+    // Đọc dữ liệu từ localStorage.
     function readJSON(key, fallback) {
         try {
             const raw = localStorage.getItem(key);
-            if (!raw) return fallback;
+
+            if (!raw) {
+                return fallback;
+            }
+
             return JSON.parse(raw);
-        } catch (e) {
-            console.error('LT_Store read error:', key, e);
+        } catch (error) {
+            console.error('LT_Store read error:', key, error);
             return fallback;
         }
     }
 
+    // Ghi dữ liệu vào localStorage.
     function writeJSON(key, value) {
         try {
             localStorage.setItem(key, JSON.stringify(value));
             return true;
-        } catch (e) {
-            console.error('LT_Store write error:', key, e);
+        } catch (error) {
+            console.error('LT_Store write error:', key, error);
             return false;
         }
     }
 
+    // Dữ liệu mẫu ban đầu.
     function seedAppointments() {
         const today = todayStr();
         const tomorrow = tomorrowStr();
@@ -65,8 +83,16 @@
                 symptom: 'Đau ngực, khó thở khi vận động',
                 status: 'pending',
                 items: [
-                    { name: 'Phí khám Tim mạch', qty: 1, price: 200000 },
-                    { name: 'Điện tâm đồ (ECG)', qty: 1, price: 150000 }
+                    {
+                        name: 'Phí khám Tim mạch',
+                        qty: 1,
+                        price: 200000
+                    },
+                    {
+                        name: 'Điện tâm đồ (ECG)',
+                        qty: 1,
+                        price: 150000
+                    }
                 ]
             },
             {
@@ -83,9 +109,21 @@
                 symptom: 'Sốt cao 3 ngày, mệt mỏi',
                 status: 'confirmed',
                 items: [
-                    { name: 'Phí khám Nội tổng quát', qty: 1, price: 180000 },
-                    { name: 'Xét nghiệm máu', qty: 1, price: 250000 },
-                    { name: 'X-quang ngực', qty: 1, price: 200000 }
+                    {
+                        name: 'Phí khám Nội tổng quát',
+                        qty: 1,
+                        price: 180000
+                    },
+                    {
+                        name: 'Xét nghiệm máu',
+                        qty: 1,
+                        price: 250000
+                    },
+                    {
+                        name: 'X-quang ngực',
+                        qty: 1,
+                        price: 200000
+                    }
                 ]
             },
             {
@@ -102,8 +140,16 @@
                 symptom: 'Đau bụng, buồn nôn',
                 status: 'checked',
                 items: [
-                    { name: 'Phí khám Nội tổng quát', qty: 1, price: 180000 },
-                    { name: 'Siêu âm bụng', qty: 1, price: 300000 }
+                    {
+                        name: 'Phí khám Nội tổng quát',
+                        qty: 1,
+                        price: 180000
+                    },
+                    {
+                        name: 'Siêu âm bụng',
+                        qty: 1,
+                        price: 300000
+                    }
                 ]
             },
             {
@@ -120,8 +166,16 @@
                 symptom: 'Đau đầu kéo dài, mất ngủ',
                 status: 'checked',
                 items: [
-                    { name: 'Phí khám Thần kinh (ngoài giờ)', qty: 1, price: 330000 },
-                    { name: 'Chụp CT sọ não', qty: 1, price: 800000 }
+                    {
+                        name: 'Phí khám Thần kinh (ngoài giờ)',
+                        qty: 1,
+                        price: 330000
+                    },
+                    {
+                        name: 'Chụp CT sọ não',
+                        qty: 1,
+                        price: 800000
+                    }
                 ]
             },
             {
@@ -138,7 +192,11 @@
                 symptom: 'Tái khám định kỳ',
                 status: 'confirmed',
                 items: [
-                    { name: 'Phí khám Tim mạch', qty: 1, price: 200000 }
+                    {
+                        name: 'Phí khám Tim mạch',
+                        qty: 1,
+                        price: 200000
+                    }
                 ]
             },
             {
@@ -155,74 +213,239 @@
                 symptom: 'Ho khan, đau họng',
                 status: 'pending',
                 items: [
-                    { name: 'Phí khám Nội tổng quát', qty: 1, price: 180000 },
-                    { name: 'Test Covid', qty: 1, price: 100000 }
+                    {
+                        name: 'Phí khám Nội tổng quát',
+                        qty: 1,
+                        price: 180000
+                    },
+                    {
+                        name: 'Test Covid',
+                        qty: 1,
+                        price: 100000
+                    }
                 ]
             }
         ];
     }
 
+    // Dữ liệu bổ sung cho ngày 15/10/2026.
+    function getExtraAppointments() {
+        return [
+            {
+                id: 'LH107',
+                patientName: 'Đỗ Minh Anh',
+                patientId: 'BN007',
+                phone: '0912345684',
+                doctor: 'ThS.BS Nguyễn Văn A',
+                doctorId: 'bs01',
+                specialty: 'Tim mạch',
+                ca: 'sang',
+                time: '07:30-08:30',
+                date: '2026-10-15',
+                symptom: 'Khám sức khỏe định kỳ',
+                status: 'confirmed',
+                items: [
+                    {
+                        name: 'Phí khám Tim mạch',
+                        qty: 1,
+                        price: 200000
+                    }
+                ]
+            },
+            {
+                id: 'LH108',
+                patientName: 'Nguyễn Thu Hà',
+                patientId: 'BN008',
+                phone: '0912345685',
+                doctor: 'BS.CKI Trần Thị C',
+                doctorId: 'bs02',
+                specialty: 'Nội tổng quát',
+                ca: 'chieu',
+                time: '13:30-14:30',
+                date: '2026-10-15',
+                symptom: 'Đau họng, ho nhẹ',
+                status: 'pending',
+                items: [
+                    {
+                        name: 'Phí khám Nội tổng quát',
+                        qty: 1,
+                        price: 180000
+                    }
+                ]
+            },
+            {
+                id: 'LH109',
+                patientName: 'Trần Quốc Bảo',
+                patientId: 'BN009',
+                phone: '0912345686',
+                doctor: 'TS.BS Lê Hoàng D',
+                doctorId: 'bs03',
+                specialty: 'Thần kinh',
+                ca: 'toi',
+                time: '19:30-20:30',
+                date: '2026-10-15',
+                symptom: 'Đau đầu, chóng mặt',
+                status: 'confirmed',
+                items: [
+                    {
+                        name: 'Phí khám Thần kinh (ngoài giờ)',
+                        qty: 1,
+                        price: 330000
+                    }
+                ]
+            }
+        ];
+    }
+
+    // Khởi tạo và cập nhật dữ liệu mẫu.
     function initIfNeeded() {
         if (!localStorage.getItem(KEYS.INITIALIZED)) {
             writeJSON(KEYS.APPOINTMENTS, seedAppointments());
             writeJSON(KEYS.PAYMENTS, []);
             writeJSON(KEYS.CHECKINS, []);
+
             localStorage.setItem(KEYS.INITIALIZED, '1');
         }
+
+        const appointments = readJSON(KEYS.APPOINTMENTS, []);
+
+        // Chuyển lịch hẹn mẫu sang ngày 15/10/2026.
+        // LH105 được giữ ở ngày 16/10/2026.
+        const demoDates = {
+            LH101: '2026-10-15',
+            LH102: '2026-10-15',
+            LH103: '2026-10-15',
+            LH104: '2026-10-15',
+            LH105: '2026-10-16',
+            LH106: '2026-10-15'
+        };
+
+        appointments.forEach(appointment => {
+            if (demoDates[appointment.id]) {
+                appointment.date = demoDates[appointment.id];
+            }
+        });
+
+        // Chỉ thêm lịch hẹn nếu mã lịch chưa tồn tại.
+        const extraAppointments = getExtraAppointments();
+        const existingIds = new Set(
+            appointments.map(appointment => appointment.id)
+        );
+
+        extraAppointments.forEach(appointment => {
+            if (!existingIds.has(appointment.id)) {
+                appointments.push(appointment);
+                existingIds.add(appointment.id);
+            }
+        });
+
+        writeJSON(KEYS.APPOINTMENTS, appointments);
     }
 
     const LT_Store = {
+        // Lấy danh sách lịch hẹn.
         getAppointments() {
             initIfNeeded();
             return readJSON(KEYS.APPOINTMENTS, []);
         },
 
+        // Lấy lịch hẹn theo mã.
         getAppointmentById(id) {
-            const appts = this.getAppointments();
-            return appts.find(a => a.id === id) || null;
+            const appointments = this.getAppointments();
+
+            return appointments.find(
+                appointment => appointment.id === id
+            ) || null;
         },
 
+        // Cập nhật trạng thái lịch hẹn.
         updateAppointmentStatus(id, newStatus, reason) {
-            const appts = this.getAppointments();
-            const idx = appts.findIndex(a => a.id === id);
-            if (idx === -1) return { success: false, error: 'Không tìm thấy lịch hẹn' };
+            const appointments = this.getAppointments();
 
-            const oldStatus = appts[idx].status;
-            appts[idx].status = newStatus;
-            appts[idx].statusUpdatedAt = new Date().toISOString();
-            appts[idx].statusReason = reason || '';
-            writeJSON(KEYS.APPOINTMENTS, appts);
+            const index = appointments.findIndex(
+                appointment => appointment.id === id
+            );
 
-            return { success: true, oldStatus, newStatus };
+            if (index === -1) {
+                return {
+                    success: false,
+                    error: 'Không tìm thấy lịch hẹn'
+                };
+            }
+
+            const oldStatus = appointments[index].status;
+
+            appointments[index].status = newStatus;
+            appointments[index].statusUpdatedAt =
+                new Date().toISOString();
+            appointments[index].statusReason = reason || '';
+
+            const saved = writeJSON(KEYS.APPOINTMENTS, appointments);
+
+            if (!saved) {
+                return {
+                    success: false,
+                    error: 'Không thể lưu trạng thái lịch hẹn'
+                };
+            }
+
+            return {
+                success: true,
+                oldStatus,
+                newStatus
+            };
         },
 
+        // Đổi khung giờ khám.
         changeAppointmentTime(id, newTime, newCa) {
-            const appts = this.getAppointments();
-            const idx = appts.findIndex(a => a.id === id);
-            if (idx === -1) return { success: false, error: 'Không tìm thấy lịch hẹn' };
+            const appointments = this.getAppointments();
 
-            appts[idx].time = newTime;
-            appts[idx].ca = newCa;
-            appts[idx].timeUpdatedAt = new Date().toISOString();
-            writeJSON(KEYS.APPOINTMENTS, appts);
+            const index = appointments.findIndex(
+                appointment => appointment.id === id
+            );
+
+            if (index === -1) {
+                return {
+                    success: false,
+                    error: 'Không tìm thấy lịch hẹn'
+                };
+            }
+
+            appointments[index].time = newTime;
+            appointments[index].ca = newCa;
+            appointments[index].timeUpdatedAt =
+                new Date().toISOString();
+
+            const saved = writeJSON(KEYS.APPOINTMENTS, appointments);
+
+            if (!saved) {
+                return {
+                    success: false,
+                    error: 'Không thể lưu khung giờ mới'
+                };
+            }
 
             return { success: true };
         },
 
+        // Kiểm tra khung giờ của bác sĩ có còn trống không.
         isSlotAvailable(doctorId, date, timeSlot, excludeApptId) {
-            const appts = this.getAppointments();
-            return !appts.some(a =>
-                a.id !== excludeApptId &&
-                a.doctorId === doctorId &&
-                a.date === date &&
-                a.time === timeSlot &&
-                a.status !== 'cancelled' &&
-                a.status !== 'noshow'
+            const appointments = this.getAppointments();
+
+            return !appointments.some(appointment =>
+                appointment.id !== excludeApptId &&
+                appointment.doctorId === doctorId &&
+                appointment.date === date &&
+                appointment.time === timeSlot &&
+                appointment.status !== 'cancelled' &&
+                appointment.status !== 'noshow'
             );
         },
 
+        // Tạo dữ liệu check-in.
         createCheckin(data) {
             const checkins = readJSON(KEYS.CHECKINS, []);
+
             const checkin = {
                 id: 'CI' + Date.now(),
                 appointmentId: data.appointmentId,
@@ -232,36 +455,71 @@
                 vitals: data.vitals || {},
                 checkedAt: new Date().toISOString()
             };
+
             checkins.push(checkin);
-            writeJSON(KEYS.CHECKINS, checkins);
 
-            this.updateAppointmentStatus(data.appointmentId, 'checked', 'Check-in tại quầy');
+            const saved = writeJSON(KEYS.CHECKINS, checkins);
 
-            return { success: true, checkin };
+            if (!saved) {
+                return {
+                    success: false,
+                    error: 'Không thể lưu thông tin check-in'
+                };
+            }
+
+            const statusResult = this.updateAppointmentStatus(
+                data.appointmentId,
+                'checked',
+                'Check-in tại quầy'
+            );
+
+            if (!statusResult.success) {
+                return statusResult;
+            }
+
+            return {
+                success: true,
+                checkin
+            };
         },
 
+        // Lấy danh sách check-in.
         getCheckins() {
             return readJSON(KEYS.CHECKINS, []);
         },
 
+        // Lấy danh sách giao dịch thanh toán.
         getPayments() {
             return readJSON(KEYS.PAYMENTS, []);
         },
 
+        // Thêm giao dịch thanh toán.
         addPayment(transaction) {
             const payments = this.getPayments();
+
             payments.push(transaction);
-            writeJSON(KEYS.PAYMENTS, payments);
-            return { success: true };
+
+            const saved = writeJSON(KEYS.PAYMENTS, payments);
+
+            return {
+                success: saved
+            };
         },
 
-        // ⭐ HÀM MỚI: Tạo payment hoàn chỉnh (dùng cho vien_phi.html)
+        // Tạo hóa đơn thanh toán.
         createPayment(data) {
             if (!data || !data.appointmentId) {
-                return { success: false, message: 'Thiếu mã lịch hẹn' };
+                return {
+                    success: false,
+                    message: 'Thiếu mã lịch hẹn'
+                };
             }
+
             if (this.isAlreadyPaid(data.appointmentId)) {
-                return { success: false, message: 'Hóa đơn đã được thu rồi' };
+                return {
+                    success: false,
+                    message: 'Hóa đơn đã được thu rồi'
+                };
             }
 
             const payments = this.getPayments();
@@ -270,7 +528,9 @@
 
             const payment = {
                 id: 'PM' + Date.now(),
-                invoiceId: data.invoiceId || ('HD-' + year + '-' + data.appointmentId.replace('LH', '')),
+                invoiceId: data.invoiceId ||
+                    ('HD-' + year + '-' +
+                    data.appointmentId.replace('LH', '')),
                 appointmentId: data.appointmentId,
                 patientId: data.patientId || null,
                 patientName: data.patientName || '',
@@ -280,7 +540,7 @@
                 ca: data.ca || '',
                 date: data.date || todayStr(),
                 items: Array.isArray(data.items) ? data.items : [],
-                totalAmount: parseInt(data.totalAmount) || 0,
+                totalAmount: parseInt(data.totalAmount, 10) || 0,
                 paymentMethod: data.paymentMethod || 'cash',
                 cashierId: data.cashierId || null,
                 cashierName: data.cashierName || '',
@@ -289,84 +549,147 @@
             };
 
             payments.push(payment);
-            const ok = writeJSON(KEYS.PAYMENTS, payments);
 
-            if (!ok) {
-                return { success: false, message: 'Không thể lưu giao dịch vào hệ thống' };
+            const saved = writeJSON(KEYS.PAYMENTS, payments);
+
+            if (!saved) {
+                return {
+                    success: false,
+                    message: 'Không thể lưu giao dịch vào hệ thống'
+                };
             }
 
-            return { success: true, payment };
+            return {
+                success: true,
+                payment
+            };
         },
 
+        // Giữ tương thích với các trang đang sử dụng hàm này.
         markAsPaid(appointmentId) {
             return { success: true };
         },
 
+        // Kiểm tra lịch hẹn đã thanh toán chưa.
         isAlreadyPaid(appointmentId) {
             const payments = this.getPayments();
-            return payments.some(p => p.appointmentId === appointmentId);
+
+            return payments.some(
+                payment => payment.appointmentId === appointmentId
+            );
         },
 
+        // Thống kê lịch hẹn và doanh thu trong ngày hiện tại.
         getDashboardStats() {
-            const appts = this.getAppointments();
+            const appointments = this.getAppointments();
             const payments = this.getPayments();
             const today = todayStr();
 
-            const todayAppts = appts.filter(a => a.date === today);
+            const todayAppointments = appointments.filter(
+                appointment => appointment.date === today
+            );
 
             const byCa = {
-                sang: todayAppts.filter(a => a.ca === 'sang').length,
-                chieu: todayAppts.filter(a => a.ca === 'chieu').length,
-                toi: todayAppts.filter(a => a.ca === 'toi').length
+                sang: todayAppointments.filter(
+                    appointment => appointment.ca === 'sang'
+                ).length,
+
+                chieu: todayAppointments.filter(
+                    appointment => appointment.ca === 'chieu'
+                ).length,
+
+                toi: todayAppointments.filter(
+                    appointment => appointment.ca === 'toi'
+                ).length
             };
 
-            const todayPayments = payments.filter(p => {
-                if (!p.paidAt) return false;
-                return new Date(p.paidAt).toDateString() === new Date().toDateString();
+            const todayPayments = payments.filter(payment => {
+                if (!payment.paidAt) {
+                    return false;
+                }
+
+                return formatDate(new Date(payment.paidAt)) === today;
             });
 
-            const revenueToday = todayPayments.reduce((sum, p) => sum + (parseInt(p.totalAmount) || 0), 0);
+            const revenueToday = todayPayments.reduce(
+                (sum, payment) =>
+                    sum + (parseInt(payment.totalAmount, 10) || 0),
+                0
+            );
 
             return {
-                totalToday: todayAppts.length,
-                checkedIn: todayAppts.filter(a => a.status === 'checked').length,
-                pending: todayAppts.filter(a => a.status === 'pending').length,
-                confirmed: todayAppts.filter(a => a.status === 'confirmed').length,
-                cancelled: todayAppts.filter(a => a.status === 'cancelled').length,
-                noshow: todayAppts.filter(a => a.status === 'noshow').length,
+                totalToday: todayAppointments.length,
+
+                checkedIn: todayAppointments.filter(
+                    appointment => appointment.status === 'checked'
+                ).length,
+
+                pending: todayAppointments.filter(
+                    appointment => appointment.status === 'pending'
+                ).length,
+
+                confirmed: todayAppointments.filter(
+                    appointment => appointment.status === 'confirmed'
+                ).length,
+
+                cancelled: todayAppointments.filter(
+                    appointment => appointment.status === 'cancelled'
+                ).length,
+
+                noshow: todayAppointments.filter(
+                    appointment => appointment.status === 'noshow'
+                ).length,
+
                 revenueToday,
                 byCa
             };
         },
 
+        // Xử lý lịch hẹn chưa đến khám khi đã qua ngày.
         processOvernightAppointments() {
-            const appts = this.getAppointments();
+            const appointments = this.getAppointments();
             const today = todayStr();
             const changed = [];
 
-            appts.forEach(a => {
-                if (a.date < today && (a.status === 'pending' || a.status === 'confirmed')) {
-                    a.status = 'noshow';
-                    a.statusUpdatedAt = new Date().toISOString();
-                    a.statusReason = 'Tự động: Qua ngày';
-                    changed.push(a.id);
+            appointments.forEach(appointment => {
+                if (
+                    appointment.date < today &&
+                    (
+                        appointment.status === 'pending' ||
+                        appointment.status === 'confirmed'
+                    )
+                ) {
+                    appointment.status = 'noshow';
+                    appointment.statusUpdatedAt =
+                        new Date().toISOString();
+                    appointment.statusReason = 'Tự động: Qua ngày';
+
+                    changed.push(appointment.id);
                 }
             });
 
             if (changed.length > 0) {
-                writeJSON(KEYS.APPOINTMENTS, appts);
+                writeJSON(KEYS.APPOINTMENTS, appointments);
             }
 
             return changed;
         },
 
+        // Xóa dữ liệu localStorage của module và tạo lại dữ liệu mẫu.
         reset() {
-            Object.values(KEYS).forEach(k => localStorage.removeItem(k));
+            Object.values(KEYS).forEach(key => {
+                localStorage.removeItem(key);
+            });
+
             initIfNeeded();
         }
     };
 
+    // Cho phép các trang HTML khác sử dụng LT_Store.
     window.LT_Store = LT_Store;
+
+    // Khởi tạo dữ liệu khi tải file.
     initIfNeeded();
-    console.log('✅ LT_Store.js loaded');
+
+    console.log('LT_Store.js loaded');
 })();

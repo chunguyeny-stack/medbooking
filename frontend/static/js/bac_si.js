@@ -174,7 +174,6 @@ function initTheme() {
 
   const toggleBtn = document.getElementById('theme-toggle');
   if (toggleBtn) {
-    // Xóa event cũ nếu có để tránh trùng lặp
     const newBtn = toggleBtn.cloneNode(true);
     toggleBtn.parentNode.replaceChild(newBtn, toggleBtn);
 
@@ -193,7 +192,6 @@ function initSidebar() {
   const toggleBtn = document.getElementById('sidebar-toggle');
   const sidebar = document.querySelector('.sidebar');
   if (toggleBtn && sidebar) {
-    // Xóa event cũ
     const newBtn = toggleBtn.cloneNode(true);
     toggleBtn.parentNode.replaceChild(newBtn, toggleBtn);
 
@@ -222,11 +220,11 @@ document.addEventListener('DOMContentLoaded', () => {
   initSidebar();
   highlightActiveNav();
 
-  // Gọi hàm init riêng của từng trang nếu có
   if (typeof window.MB_PAGE_INIT === 'function') {
     window.MB_PAGE_INIT();
   }
 });
+
 // ================== 8. GỬI THÔNG BÁO TÁI KHÁM CHO BỆNH NHÂN ==================
 function sendRecheckNotification(recheckData) {
   const KEY = 'medbooking_bn_notifications';
