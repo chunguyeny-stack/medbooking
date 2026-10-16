@@ -2,24 +2,23 @@ FROM python:3.11-slim
 
 WORKDIR /app
 
+# Cài dependencies hệ thống cần thiết cho pymssql
+# - gcc: Trình biên dịch C
+# - freetds-dev: Thư viện kết nối SQL Server (thay thế cho unixodbc-dev)
 RUN apt-get update && apt-get install -y \
     gcc \
-    unixodbc-dev \
-    curl \
-    gnupg \
-    apt-transport-https \
-    && curl https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor -o /usr/share/keyrings/microsoft-prod.gpg \
-    && curl https://packages.microsoft.com/config/debian/12/prod.list > /etc/apt/sources.list.d/mssql-release.list \
-    && sed -i 's|deb \[|deb [signed-by=/usr/share/keyrings/microsoft-prod.gpg |' /etc/apt/sources.list.d/mssql-release.list \
-    && apt-get update \
-    && ACCEPT_EULA=Y apt-get install -y msodbcsql18 \
+    freetds-dev \
     && rm -rf /var/lib/apt/lists/*
 
+# Copy requirements.txt và cài đặt thư viện Python
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
+# Copy toàn bộ code backend vào container
 COPY . .
 
+# Mở port 8000
 EXPOSE 8000
 
+# Chạy FastAPI với uvicorn
 CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
