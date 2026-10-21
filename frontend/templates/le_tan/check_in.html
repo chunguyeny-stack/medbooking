@@ -4,6 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MedBooking - Check-in Bệnh nhân</title>
+    <!-- Favicon chuẩn hình trái tim xanh dương -->
+    <link rel="icon" type="image/jpeg" href="../../favicon.jpg">
     
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -172,6 +174,26 @@
         .qr-scan-area h4 { font-size: 18px; margin-bottom: 8px; font-family: 'Poppins', sans-serif; }
         .qr-scan-area p { color: var(--text-gray); font-size: 14px; }
 
+        /* Nút đăng xuất đồng bộ */
+        .logout-btn {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px solid rgba(239, 68, 68, 0.2);
+            width: 40px; height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #EF4444;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+        .logout-btn:hover {
+            background: #EF4444;
+            color: #fff;
+            transform: translateY(-2px);
+        }
+
         @media (max-width: 768px) {
             .checkin-card { padding: 22px; }
             .search-box { flex-direction: column; }
@@ -207,8 +229,13 @@
                     <div class="user-role">Lễ tân</div>
                 </div>
             </div>
-            <button class="theme-toggle" id="theme-toggle">
+            <!-- Nút chuyển đổi sáng/tối -->
+            <button class="theme-toggle" id="theme-toggle" title="Chuyển đổi giao diện">
                 <i class="fas fa-moon"></i>
+            </button>
+            <!-- Nút Đăng xuất nằm cạnh nút giao diện -->
+            <button class="logout-btn" onclick="window.location.href='../dk_dn/dn.html'" title="Đăng xuất">
+                <i class="fas fa-sign-out-alt"></i>
             </button>
         </div>
     </header>

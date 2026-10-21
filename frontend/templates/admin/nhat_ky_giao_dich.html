@@ -5,17 +5,47 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin - Nhật ký Giao dịch & Kiểm toán</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="icon" type="image/jpeg" href="../../favicon.jpg">
+    
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Quicksand:wght@600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="../../static/css/A.css">
+    
+    <style>
+        /* Định dạng phông chữ thương hiệu MedBooking */
+        .brand-name {
+            font-family: 'Quicksand', sans-serif !important;
+            font-weight: 700 !important;
+            text-transform: none !important;
+            letter-spacing: -0.01em;
+            font-size: 22px;
+        }
+
+        /* Hiệu ứng hover sáng lên giống nút thông báo */
+        .admin-profile-btn {
+            text-decoration: none; 
+            color: var(--primary-color); 
+            font-weight: 600; 
+            padding: 8px 16px; 
+            background: var(--primary-light); 
+            border-radius: 50px;
+            transition: all 0.25s ease;
+        }
+        .admin-profile-btn:hover {
+            background: var(--primary-color);
+            color: #fff;
+            box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);
+            transform: translateY(-1px);
+        }
+    </style>
 </head>
 <body>
 
     <aside>
         <button class="sidebar-close" id="sidebar-close" aria-label="Đóng menu"><i class="fas fa-times"></i></button>
         <div class="brand">
-            <span class="brand-name">MEDBOOKING</span>
+            <span class="brand-name">MedBooking</span>
             <span class="brand-sub">ADMIN PANEL</span>
         </div>
         <nav>
@@ -44,8 +74,9 @@
         <header>
             <button class="menu-toggle" id="menu-toggle" aria-label="Mở menu"><i class="fas fa-bars"></i></button>
             <h1>Nhật ký Giao dịch & Kiểm toán Lịch khám</h1>
-            <div>
-                <span>AD Tên Admin</span>
+            <div style="display: flex; align-items: center; gap: 12px;">
+                <!-- Nút AD Tên Admin màu tím nguyên bản, có hiệu ứng hover và chuyển sang trang hồ sơ cá nhân -->
+                <a href="ho_so_ca_nhan.html" class="admin-profile-btn">AD Tên Admin</a>
                 <button class="theme-toggle" id="theme-toggle">🌙</button>
                 <a href="../dk_dn/dn.html">Đăng xuất</a>
             </div>
@@ -114,8 +145,8 @@
 
     <div class="sidebar-overlay" id="sidebar-overlay"></div>
 
-<script src="../../static/js/admin-data.js"></script>
-<script src="../../static/js/admin.js"></script>
+    <script src="../../static/js/admin-data.js"></script>
+    <script src="../../static/js/admin.js"></script>
     <script>
     (function () {
         const html = document.documentElement;
