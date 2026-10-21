@@ -6,6 +6,7 @@
     <orderEntry type="sourceFolder" forTests="false" />
   </component>
   <component name="PackageRequirementsSettings" />
+  <component name="PyDocumentationSettings" />
   <component name="ReSTService" />
   <component name="TemplatesService">
     <option name="TEMPLATE_CONFIGURATION" value="Chameleon" />
@@ -15,4 +16,5 @@
       </list>
     </option>
   </component>
+  <component name="TestRunnerService" />
 </module>
