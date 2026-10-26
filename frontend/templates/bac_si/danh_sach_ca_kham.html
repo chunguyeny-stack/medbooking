@@ -4,7 +4,6 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Bác sĩ - Danh sách Ca khám</title>
-<!-- Favicon SVG hình trái tim đơn giản, ý nghĩa -->
 <link rel="icon" type="image/jpeg" href="../../favicon.jpg">
 
 <link rel="stylesheet" href="../../static/css/BS.css">
@@ -13,7 +12,6 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Quicksand:wght@700&display=swap" rel="stylesheet">
 <style>
-    /* In đậm và hiển thị rõ ràng logo MedBooking */
     .brand .logo-text h1 {
         font-family: 'Quicksand', sans-serif !important;
         font-weight: 800 !important;
@@ -28,7 +26,6 @@
         color: #1E293B !important;
     }
 
-    /* Hiệu ứng hover cho user-chip của bác sĩ */
     .user-chip-container {
         position: relative;
         cursor: pointer;
@@ -44,7 +41,6 @@
         transform: translateY(-1px);
     }
 
-    /* Khung dropdown thông báo và menu user: Nền đặc hoàn toàn, tách lớp rõ ràng */
     .notification-dropdown, 
     .user-dropdown {
         position: absolute !important;
@@ -61,7 +57,6 @@
         overflow: hidden;
     }
 
-    /* Khi ở chế độ tối (Dark mode) */
     [data-theme="dark"] .notification-dropdown,
     [data-theme="dark"] .user-dropdown,
     html.dark .notification-dropdown,
@@ -79,14 +74,14 @@
         padding: 12px 16px;
         font-weight: 700;
         font-size: 13px;
-        background: linear-gradient(135deg, rgba(139, 92, 246, 0.12), rgba(236, 72, 153, 0.08)) !important;
-        border-bottom: 2px solid rgba(139, 92, 246, 0.2);
+        background: linear-gradient(135deg, rgba(16, 185, 129, 0.12), rgba(52, 211, 153, 0.08)) !important;
+        border-bottom: 2px solid rgba(16, 185, 129, 0.2);
         display: flex;
         justify-content: space-between;
         align-items: center;
     }
     .notification-header span:first-child {
-        background: linear-gradient(135deg, #8B5CF6, #EC4899);
+        background: linear-gradient(135deg, #10B981, #34D399);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
         font-weight: 800;
@@ -101,14 +96,14 @@
 
     .notification-item {
         padding: 10px 16px;
-        border-bottom: 1px solid rgba(139, 92, 246, 0.15);
+        border-bottom: 1px solid rgba(16, 185, 129, 0.15);
         font-size: 12px;
         background-color: transparent !important;
         cursor: pointer;
         transition: background 0.2s;
     }
     .notification-item:hover {
-        background-color: rgba(139, 92, 246, 0.12) !important;
+        background-color: rgba(16, 185, 129, 0.12) !important;
     }
     
     .notification-item strong {
@@ -116,12 +111,11 @@
         margin-bottom: 2px;
         font-size: 12.5px;
         font-weight: 800;
-        background: linear-gradient(135deg, #3B82F6, #8B5CF6);
+        background: linear-gradient(135deg, #10B981, #34D399);
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
     }
 
-    /* Định dạng riêng cho menu Đăng xuất */
     .user-dropdown {
         right: 0 !important;
         width: 170px !important;
@@ -153,7 +147,7 @@
   <aside class="sidebar">
     <div class="brand">
       <div class="logo-container">
-        <div class="logo-icon"><i class="fas fa-headset"></i></div>
+        <div class="logo-icon"><i class="fas fa-notes-medical"></i></div>
         <div class="logo-text">
           <h1>MedBooking</h1>
           <p>Bác sĩ</p>
@@ -187,11 +181,10 @@
         <button class="icon-btn theme-toggle" id="theme-toggle"><i class="fas fa-moon"></i><i class="fas fa-sun"></i></button>
         <button class="icon-btn" id="btn-notify"><i class="fas fa-bell"></i><span class="badge" style="display:inline-block; width:8px; height:8px; background:#F472B6; border-radius:50%; position:absolute; top:8px; right:60px;"></span></button>
         
-        <!-- Khung dropdown thông báo -->
         <div class="notification-dropdown" id="notification-dropdown">
             <div class="notification-header">
                 <span>Thông báo mới</span>
-                <span style="font-size:11px; font-weight:700; color:#38BDF8; cursor:pointer;" id="mark-all-read">Đánh dấu đã đọc</span>
+                <span style="font-size:11px; font-weight:700; color:#10B981; cursor:pointer;" id="mark-all-read">Đánh dấu đã đọc</span>
             </div>
             <div class="notification-list">
                 <div class="notification-item">
@@ -209,7 +202,6 @@
             </div>
         </div>
 
-        <!-- Nút thông tin bác sĩ bấm vào hiện menu Đăng xuất -->
         <div class="user-chip-container" id="user-menu-btn">
           <div class="user-chip"><div class="avatar">NA</div><span class="name">BS. Nguyễn Văn A</span></div>
           
@@ -227,7 +219,7 @@
         <div class="filter-bar">
           <div class="form-group" style="margin:0;">
             <label class="form-label" for="filter-date">Chọn ngày</label>
-            <input type="date" id="filter-date" class="form-control" value="2026-10-10">
+            <input type="date" id="filter-date" class="form-control">
           </div>
           <div class="form-group" style="margin:0;">
             <label class="form-label" for="search-patient">Tìm bệnh nhân</label>
@@ -275,12 +267,35 @@
 <script src="../../static/js/bac_si.js"></script>
 <script>
 window.MB_PAGE_INIT = function () {
+  const STORAGE_KEY = 'medbooking_doctor_appointments';
+
+  // --- HÀM LẤY DANH SÁCH LỊCH HẸN TỪ LOCALSTORAGE ---
+  function getAppointments() {
+    let list = MB_STORAGE.get(STORAGE_KEY, null);
+    if (!list) {
+      // Khởi tạo lần đầu từ MB_MOCK
+      list = JSON.parse(JSON.stringify(MB_MOCK.appointments));
+      MB_STORAGE.set(STORAGE_KEY, list);
+    }
+    return list;
+  }
+
   const badgeMap = {
     waiting:       ['badge-waiting',   'Chờ khám'],
     'in-progress': ['badge-progress',  'Đang khám'],
     completed:     ['badge-completed', 'Đã hoàn thành'],
     cancelled:     ['badge-cancelled', 'Đã hủy']
   };
+
+  // --- TỰ ĐỘNG ĐIỀN NGÀY HÔM NAY VÀO BỘ LỌC ---
+  const dateInput = document.getElementById('filter-date');
+  if (dateInput) {
+      const today = new Date();
+      const yyyy = today.getFullYear();
+      const mm = String(today.getMonth() + 1).padStart(2, '0');
+      const dd = String(today.getDate()).padStart(2, '0');
+      dateInput.value = `${yyyy}-${mm}-${dd}`;
+  }
 
   function render(list) {
     const tbody = document.getElementById('appointment-table-body');
@@ -296,6 +311,8 @@ window.MB_PAGE_INIT = function () {
       const [cls, txt] = badgeMap[a.status] || ['badge-waiting', a.status];
       const isWaiting = a.status === 'waiting';
       const isInProgress = a.status === 'in-progress';
+      const isCompleted = a.status === 'completed';
+      const isCancelled = a.status === 'cancelled';
       
       let btnCls = 'btn-outline';
       let btnTxt = 'Xem lại';
@@ -309,6 +326,14 @@ window.MB_PAGE_INIT = function () {
         btnCls = 'btn-primary';
         btnTxt = 'Tiếp tục khám';
         btnIcon = 'fa-notes-medical';
+      } else if (isCompleted) {
+        btnCls = 'btn-outline';
+        btnTxt = 'Xem lại';
+        btnIcon = 'fa-eye';
+      } else if (isCancelled) {
+        btnCls = 'btn-outline';
+        btnTxt = 'Xem lại';
+        btnIcon = 'fa-eye';
       }
 
       return `
@@ -332,7 +357,7 @@ window.MB_PAGE_INIT = function () {
     const status = document.getElementById('filter-status').value;
     const keyword = document.getElementById('search-patient').value.trim().toLowerCase();
 
-    let list = MB_MOCK.appointments.slice();
+    let list = getAppointments();
     if (status !== 'all') list = list.filter((a) => a.status === status);
     if (keyword) {
       list = list.filter((a) =>
@@ -384,7 +409,8 @@ window.MB_PAGE_INIT = function () {
     }
   });
 
-  render(MB_MOCK.appointments);
+  // Render lần đầu
+  render(getAppointments());
 };
 </script>
 </body>

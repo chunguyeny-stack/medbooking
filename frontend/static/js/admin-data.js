@@ -1,24 +1,39 @@
 /* ============================================================
-   MEDBOOKING — Mock Data Layer (v4)
-   Thêm: pushNotification()
+   MEDBOOKING — Mock Data Layer (v5 - Realtime)
    ============================================================ */
 (function (global) {
     'use strict';
 
-    console.log('[admin-data.js] Bắt đầu load...');
-
     const STORAGE_KEY = 'medbooking_admin_db';
+    
+    // --- HÀM HỖ TRỢ NGÀY THÁNG ---
+    function getTodayStr() {
+        const d = new Date();
+        return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+    }
+    
+    function getOffsetDateStr(offset) {
+        const d = new Date();
+        d.setDate(d.getDate() + offset);
+        return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+    }
+
+    function getOffsetDateTimeStr(offset, timeStr = '10:00') {
+        const d = new Date();
+        d.setDate(d.getDate() + offset);
+        return `${getOffsetDateStr(offset)} ${timeStr}`;
+    }
 
     const seedData = {
         accounts: [
-            { id: 'TK001', name: 'Nguyễn Văn A', email: 'admin@medbooking.com', phone: '0901234567', role: 'admin', status: 'active', createdAt: '2026-01-15' },
-            { id: 'TK002', name: 'Trần Thị B', email: 'bacsi.b@medbooking.com', phone: '0912345678', role: 'doctor', status: 'active', createdAt: '2026-02-20' },
-            { id: 'TK003', name: 'Lê Văn C', email: 'letan.c@medbooking.com', phone: '0923456789', role: 'receptionist', status: 'active', createdAt: '2026-03-10' },
-            { id: 'TK004', name: 'Phạm Thị D', email: 'benhnhan.d@gmail.com', phone: '0934567890', role: 'patient', status: 'active', createdAt: '2026-04-05' },
-            { id: 'TK005', name: 'Hoàng Văn E', email: 'bacsi.e@medbooking.com', phone: '0945678901', role: 'doctor', status: 'locked', createdAt: '2026-04-12' },
-            { id: 'TK006', name: 'Vũ Thị F', email: 'benhnhan.f@gmail.com', phone: '0956789012', role: 'patient', status: 'active', createdAt: '2026-05-18' },
-            { id: 'TK007', name: 'Đặng Văn G', email: 'letan.g@medbooking.com', phone: '0967890123', role: 'receptionist', status: 'active', createdAt: '2026-06-22' },
-            { id: 'TK008', name: 'Bùi Thị H', email: 'bacsi.h@medbooking.com', phone: '0978901234', role: 'doctor', status: 'active', createdAt: '2026-07-01' }
+            { id: 'TK001', name: 'Nguyễn Văn A', email: 'admin@medbooking.com', phone: '0901234567', role: 'admin', status: 'active', createdAt: getOffsetDateStr(-100) },
+            { id: 'TK002', name: 'Trần Thị B', email: 'bacsi.b@medbooking.com', phone: '0912345678', role: 'doctor', status: 'active', createdAt: getOffsetDateStr(-80) },
+            { id: 'TK003', name: 'Lê Văn C', email: 'letan.c@medbooking.com', phone: '0923456789', role: 'receptionist', status: 'active', createdAt: getOffsetDateStr(-60) },
+            { id: 'TK004', name: 'Phạm Thị D', email: 'benhnhan.d@gmail.com', phone: '0934567890', role: 'patient', status: 'active', createdAt: getOffsetDateStr(-40) },
+            { id: 'TK005', name: 'Hoàng Văn E', email: 'bacsi.e@medbooking.com', phone: '0945678901', role: 'doctor', status: 'locked', createdAt: getOffsetDateStr(-30) },
+            { id: 'TK006', name: 'Vũ Thị F', email: 'benhnhan.f@gmail.com', phone: '0956789012', role: 'patient', status: 'active', createdAt: getOffsetDateStr(-20) },
+            { id: 'TK007', name: 'Đặng Văn G', email: 'letan.g@medbooking.com', phone: '0967890123', role: 'receptionist', status: 'active', createdAt: getOffsetDateStr(-10) },
+            { id: 'TK008', name: 'Bùi Thị H', email: 'bacsi.h@medbooking.com', phone: '0978901234', role: 'doctor', status: 'active', createdAt: getOffsetDateStr(-5) }
         ],
         specialties: [
             { id: 'CK001', name: 'Tim mạch', desc: 'Khám và điều trị các bệnh về tim mạch, huyết áp', doctorCount: 3 },
@@ -57,20 +72,20 @@
             { id: 'MP005', keywords: 'mụn, ngứa da, nổi mẩn', specialtyId: 'CK005', specialtyName: 'Da liễu', doctorId: 'BS006', doctorName: 'BS. Vũ Thị F', priority: 2 }
         ],
         recycleBin: [
-            { id: 'BS992', type: 'Bác sĩ', name: 'BS. Lê Văn Xóa', deletedAt: '2026-10-05 08:00' },
-            { id: 'TK899', type: 'Tài khoản', name: 'Nguyễn Thị Xóa', deletedAt: '2026-10-06 14:30' },
-            { id: 'CK880', type: 'Chuyên khoa', name: 'Chuyên khoa cũ', deletedAt: '2026-10-07 09:15' },
-            { id: 'DV770', type: 'Dịch vụ', name: 'Dịch vụ khai trương', deletedAt: '2026-10-08 11:00' }
+            { id: 'BS992', type: 'Bác sĩ', name: 'BS. Lê Văn Xóa', deletedAt: getOffsetDateTimeStr(-1, '08:00') },
+            { id: 'TK899', type: 'Tài khoản', name: 'Nguyễn Thị Xóa', deletedAt: getOffsetDateTimeStr(-1, '14:30') },
+            { id: 'CK880', type: 'Chuyên khoa', name: 'Chuyên khoa cũ', deletedAt: getOffsetDateTimeStr(0, '09:15') },
+            { id: 'DV770', type: 'Dịch vụ', name: 'Dịch vụ khai trương', deletedAt: getOffsetDateTimeStr(0, '11:00') }
         ],
         transactions: [
-            { id: 'GD001', date: '2026-10-14', patient: 'Nguyễn Văn A', revenue: 450000, profit: 180000, doctorConfirm: 'BS. Nguyễn Văn A', receptionConfirm: 'Lễ tân C', updatedAt: '2026-10-14 10:42', status: 'completed' },
-            { id: 'GD002', date: '2026-10-14', patient: 'Trần Thị B', revenue: 1200000, profit: 500000, doctorConfirm: 'BS. Trần Thị B', receptionConfirm: 'Lễ tân G', updatedAt: '2026-10-14 09:21', status: 'completed' },
-            { id: 'GD003', date: '2026-10-14', patient: 'Lê Văn C', revenue: 650000, profit: 250000, doctorConfirm: 'BS. Lê Văn C', receptionConfirm: 'Lễ tân C', updatedAt: '2026-10-14 08:15', status: 'completed' },
-            { id: 'GD004', date: '2026-10-13', patient: 'Phạm Thị D', revenue: 320000, profit: 120000, doctorConfirm: 'BS. Phạm Thị D', receptionConfirm: 'Lễ tân G', updatedAt: '2026-10-13 16:20', status: 'completed' },
-            { id: 'GD005', date: '2026-10-13', patient: 'Hoàng Văn E', revenue: 500000, profit: 0, doctorConfirm: '', receptionConfirm: '', updatedAt: '2026-10-13 15:00', status: 'cancelled' },
-            { id: 'GD006', date: '2026-10-12', patient: 'Vũ Thị F', revenue: 800000, profit: 320000, doctorConfirm: 'BS. Vũ Thị F', receptionConfirm: 'Lễ tân C', updatedAt: '2026-10-12 14:30', status: 'completed' },
-            { id: 'GD007', date: '2026-10-12', patient: 'Đặng Văn G', revenue: 380000, profit: 140000, doctorConfirm: 'BS. Đặng Văn G', receptionConfirm: 'Lễ tân G', updatedAt: '2026-10-12 11:15', status: 'completed' },
-            { id: 'GD008', date: '2026-10-11', patient: 'Bùi Thị H', revenue: 280000, profit: 100000, doctorConfirm: 'BS. Bùi Thị H', receptionConfirm: 'Lễ tân C', updatedAt: '2026-10-11 10:00', status: 'completed' }
+            { id: 'GD001', date: getOffsetDateStr(0), patient: 'Nguyễn Văn A', revenue: 450000, profit: 180000, doctorConfirm: 'BS. Nguyễn Văn A', receptionConfirm: 'Lễ tân C', updatedAt: getOffsetDateTimeStr(0, '10:42'), status: 'completed' },
+            { id: 'GD002', date: getOffsetDateStr(0), patient: 'Trần Thị B', revenue: 1200000, profit: 500000, doctorConfirm: 'BS. Trần Thị B', receptionConfirm: 'Lễ tân G', updatedAt: getOffsetDateTimeStr(0, '09:21'), status: 'completed' },
+            { id: 'GD003', date: getOffsetDateStr(0), patient: 'Lê Văn C', revenue: 650000, profit: 250000, doctorConfirm: 'BS. Lê Văn C', receptionConfirm: 'Lễ tân C', updatedAt: getOffsetDateTimeStr(0, '08:15'), status: 'completed' },
+            { id: 'GD004', date: getOffsetDateStr(-1), patient: 'Phạm Thị D', revenue: 320000, profit: 120000, doctorConfirm: 'BS. Phạm Thị D', receptionConfirm: 'Lễ tân G', updatedAt: getOffsetDateTimeStr(-1, '16:20'), status: 'completed' },
+            { id: 'GD005', date: getOffsetDateStr(-1), patient: 'Hoàng Văn E', revenue: 500000, profit: 0, doctorConfirm: '', receptionConfirm: '', updatedAt: getOffsetDateTimeStr(-1, '15:00'), status: 'cancelled' },
+            { id: 'GD006', date: getOffsetDateStr(-2), patient: 'Vũ Thị F', revenue: 800000, profit: 320000, doctorConfirm: 'BS. Vũ Thị F', receptionConfirm: 'Lễ tân C', updatedAt: getOffsetDateTimeStr(-2, '14:30'), status: 'completed' },
+            { id: 'GD007', date: getOffsetDateStr(-2), patient: 'Đặng Văn G', revenue: 380000, profit: 140000, doctorConfirm: 'BS. Đặng Văn G', receptionConfirm: 'Lễ tân G', updatedAt: getOffsetDateTimeStr(-2, '11:15'), status: 'completed' },
+            { id: 'GD008', date: getOffsetDateStr(-3), patient: 'Bùi Thị H', revenue: 280000, profit: 100000, doctorConfirm: 'BS. Bùi Thị H', receptionConfirm: 'Lễ tân C', updatedAt: getOffsetDateTimeStr(-3, '10:00'), status: 'completed' }
         ],
         notifications: [
             { id: 'N001', title: 'Lịch hẹn mới', message: 'Bệnh nhân Nguyễn Văn A vừa đặt lịch khám Tim mạch', time: '5 phút trước', read: false },
@@ -90,7 +105,6 @@
         try {
             const raw = localStorage.getItem(STORAGE_KEY);
             if (!raw) {
-                console.log('[admin-data.js] Chưa có DB → seed mới');
                 localStorage.setItem(STORAGE_KEY, JSON.stringify(seedData));
                 return JSON.parse(JSON.stringify(seedData));
             }
@@ -102,10 +116,8 @@
             if (changed) {
                 localStorage.setItem(STORAGE_KEY, JSON.stringify(db));
             }
-            console.log('[admin-data.js] Đã load DB:', Object.keys(db).map(k => k + '=' + (Array.isArray(db[k]) ? db[k].length : 'obj')).join(', '));
             return db;
         } catch (e) {
-            console.error('[admin-data.js] Lỗi load, reset seed:', e);
             localStorage.setItem(STORAGE_KEY, JSON.stringify(seedData));
             return JSON.parse(JSON.stringify(seedData));
         }
@@ -149,7 +161,7 @@
             return Promise.resolve({ data: list, total: list.length });
         },
         createAccount(data) {
-            const acc = { id: nextId('TK', DB.accounts), ...data, status: 'active', createdAt: new Date().toISOString().slice(0, 10) };
+            const acc = { id: nextId('TK', DB.accounts), ...data, status: 'active', createdAt: getOffsetDateStr(0) };
             DB.accounts.unshift(acc);
             DB.notifications.unshift({
                 id: 'N' + String(Date.now()).slice(-6),
@@ -397,16 +409,20 @@
             const cancelled = list.filter(t => t.status === 'cancelled').length;
             const cancelRate = totalAppointments ? ((cancelled / totalAppointments) * 100).toFixed(1) : 0;
             const topDoctor = [...DB.doctors].sort((a, b) => b.rating - a.rating)[0];
+            
+            // Tạo dữ liệu biểu đồ 7 ngày gần nhất
+            const daysOfWeek = ['T2', 'T3', 'T4', 'T5', 'T6', 'T7', 'CN'];
+            const revenueByMonth = daysOfWeek.map((label) => ({
+                label, 
+                value: Math.floor(Math.random() * 30) + 10, // Mock data ngẫu nhiên
+                prev: Math.floor(Math.random() * 20) + 5
+            }));
+
             return Promise.resolve({
                 data: {
                     totalAppointments, totalRevenue, totalProfit, cancelRate,
                     topDoctor: topDoctor ? { name: topDoctor.name, rating: topDoctor.rating } : null,
-                    revenueByMonth: [
-                        { label: 'T2', value: 12, prev: 8 }, { label: 'T3', value: 19, prev: 14 },
-                        { label: 'T4', value: 15, prev: 10 }, { label: 'T5', value: 27, prev: 18 },
-                        { label: 'T6', value: 24, prev: 15 }, { label: 'T7', value: 32, prev: 22 },
-                        { label: 'CN', value: 22, prev: 16 }
-                    ]
+                    revenueByMonth
                 }
             });
         },
@@ -450,6 +466,6 @@
 
     global.MedBookingAPI = mockAPI;
     global.MedBookingUtils = { formatMoney, formatDate };
-    console.log('[admin-data.js] ✅ Đã export MedBookingAPI');
+    console.log('[admin-data.js] ✅ Đã export MedBookingAPI (Realtime)');
 
 })(window);

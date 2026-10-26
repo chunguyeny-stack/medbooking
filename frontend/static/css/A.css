@@ -342,7 +342,27 @@ header > div a:not(.theme-toggle):hover {
     flex-shrink: 0;
 }
 .menu-toggle:hover { background: var(--primary-color); color: #FFFFFF; }
+/* Style cho menu đang Active */
+aside nav ul li a.active {
+    background: var(--primary-gradient);
+    color: #FFFFFF !important;
+    font-weight: 600;
+    box-shadow: 0 6px 16px rgba(139, 92, 246, 0.3);
+    transform: translateX(0); /* Giữ nguyên vị trí */
+}
 
+/* Đổi màu chấm tròn (dot) bên trái khi active */
+aside nav ul li a.active::before {
+    background: #FFFFFF;
+    opacity: 1;
+}
+
+/* Khi hover vào menu active thì vẫn giữ màu trắng */
+aside nav ul li a.active:hover {
+    color: #FFFFFF !important;
+    background: var(--primary-gradient);
+    transform: translateX(3px);
+}
 .sidebar-close {
     display: none;
     position: absolute;

@@ -827,6 +827,41 @@
             console.log('[admin.js] ✅ Init xong');
         });
     });
+    /* ============================================================
+   TỰ ĐỘNG HIGHLIGHT MENU ĐANG ACTIVE DỰA VÀO URL
+   ============================================================ */
+(function highlightAdminMenu() {
+    // Đợi DOM load xong
+    document.addEventListener('DOMContentLoaded', () => {
+        // Lấy tên file hiện tại (ví dụ: home_a.html, quan_ly_tai_khoan.html)
+        const currentPath = window.location.pathname.split('/').pop();
+        
+        // Nếu không có tên file (trang chủ), mặc định là home_a.html
+        const page = currentPath || 'home_a.html';
 
+        // Tìm tất cả các thẻ <a> trong thẻ <nav> của sidebar
+        const navLinks = document.querySelectorAll('aside nav ul li a');
+
+        navLinks.forEach(link => {
+            const href = link.getAttribute('href');
+            if (!href) return;
+
+            // Reset trạng thái active cũ (nếu có)
+            link.classList.remove('active');
+            // Xóa thẻ <strong> cũ nếu có (do code cũ fix cứng)
+            const strongTag = link.querySelector('strong');
+            if (strongTag) {
+                const text = strongTag.textContent;
+                link.innerHTML = text; // Bỏ thẻ strong, giữ lại text
+            }
+
+            // Kiểm tra nếu href trùng với trang hiện tại
+            if (href === page || (page === '' && href === 'home_a.html')) {
+                link.classList.add('active');
+            }
+        });
+    });
+})();
     window.MedBookingToast = toast;
+    
 })();

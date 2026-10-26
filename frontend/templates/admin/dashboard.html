@@ -206,7 +206,6 @@
             <button class="menu-toggle" id="menu-toggle" aria-label="Mở menu"><i class="fas fa-bars"></i></button>
             <h1>Dashboard Thống kê & Báo cáo</h1>
             <div style="display: flex; align-items: center; gap: 12px;">
-                <!-- Nút AD Tên Admin có màu tím nguyên bản và thêm hiệu ứng hover sáng lên -->
                 <a href="ho_so_ca_nhan.html" class="admin-profile-btn">AD Tên Admin</a>
                 <button class="theme-toggle" id="theme-toggle">🌙</button>
                 <a href="../dk_dn/dn.html">Đăng xuất</a>
@@ -307,7 +306,7 @@
                     </div>
 
                     <div class="calendar-card">
-                        <h3>Lịch tháng 10, 2026</h3>
+                        <h3>Lịch tháng</h3>
                         <div class="cal-grid" id="cal-grid"></div>
                     </div>
                 </div>
@@ -356,16 +355,35 @@
             if (overlay) overlay.addEventListener('click', closeSidebar);
             window.addEventListener('resize', () => { if (window.innerWidth > 900) closeSidebar(); });
 
-            // Calendar
+            // Calendar - Tự động render theo tháng hiện tại
             const calGrid = document.getElementById('cal-grid');
             if (calGrid) {
+                const now = new Date();
+                const currentMonth = now.getMonth();
+                const currentYear = now.getFullYear();
+                const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+                const firstDay = new Date(currentYear, currentMonth, 1).getDay(); // 0: CN, 1: T2
+                
+                // Cập nhật tiêu đề tháng
+                const calTitle = document.querySelector('.calendar-card h3');
+                if (calTitle) {
+                    calTitle.textContent = `Lịch tháng ${currentMonth + 1}, ${currentYear}`;
+                }
+
                 const dayNames = ['T2','T3','T4','T5','T6','T7','CN'];
                 let htmlCal = dayNames.map(d => `<div class="cal-day-name">${d}</div>`).join('');
-                for (let i = 1; i <= 30; i++) {
-                    const cls = i === 13 ? 'today' : (i === 10 ? 'active' : '');
+                
+                // Khoảng trống đầu tháng
+                let startDay = firstDay === 0 ? 6 : firstDay - 1; 
+                for (let i = 0; i < startDay; i++) {
+                     htmlCal += `<div class="cal-day muted"></div>`;
+                }
+
+                for (let i = 1; i <= daysInMonth; i++) {
+                    const isToday = i === now.getDate();
+                    const cls = isToday ? 'today' : '';
                     htmlCal += `<div class="cal-day ${cls}">${i}</div>`;
                 }
-                for (let i = 1; i <= 4; i++) htmlCal += `<div class="cal-day muted">${i}</div>`;
                 calGrid.innerHTML = htmlCal;
             }
 
@@ -375,7 +393,7 @@
                 const waitAct = setInterval(() => {
                     if (window.MedBookingAPI && window.MedBookingUtils) {
                         clearInterval(waitAct);
-                        window.MedBookingAPI.getTransactions({ year: 2026 }).then(res => {
+                        window.MedBookingAPI.getTransactions({ year: new Date().getFullYear() }).then(res => {
                             actBox.innerHTML = res.data.slice(0, 4).map(t => `
                                 <div class="activity-item">
                                     <div class="act-icon"><i class="fas fa-user-check"></i></div>
@@ -398,7 +416,7 @@
                     Promise.all([
                         window.MedBookingAPI.getAccounts(),
                         window.MedBookingAPI.getDoctors(),
-                        window.MedBookingAPI.getTransactions({ year: 2026 })
+                        window.MedBookingAPI.getTransactions({ year: new Date().getFullYear() })
                     ]).then(([accRes, docRes, txRes]) => {
                         const done = document.getElementById('stat-done');
                         const docs = document.getElementById('stat-doctors');
