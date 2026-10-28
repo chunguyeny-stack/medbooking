@@ -39,6 +39,39 @@
             box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);
             transform: translateY(-1px);
         }
+
+        /* Form bác sĩ: cho phép cuộn khi dài */
+        #doctor-form-modal {
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        #doctor-form-modal::-webkit-scrollbar { width: 6px; }
+        #doctor-form-modal::-webkit-scrollbar-thumb {
+            background: var(--primary-color);
+            border-radius: 3px;
+        }
+
+        /* Nhóm thông tin chi tiết */
+        .detail-section-title {
+            margin: 18px 0 12px;
+            font-size: 13px;
+            color: var(--primary-color);
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            border-top: 1px dashed var(--border-glass);
+            padding-top: 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* Textarea mặc định */
+        #form-doctor-info textarea {
+            resize: vertical;
+            min-height: 60px;
+            font-family: inherit;
+        }
     </style>
 </head>
 <body>
@@ -76,7 +109,6 @@
             <button class="menu-toggle" id="menu-toggle" aria-label="Mở menu"><i class="fas fa-bars"></i></button>
             <h1>Quản lý Thông tin Bác sĩ</h1>
             <div style="display: flex; align-items: center; gap: 12px;">
-                <!-- Nút AD Tên Admin màu tím nguyên bản, có hiệu ứng hover và chuyển sang trang hồ sơ cá nhân -->
                 <a href="ho_so_ca_nhan.html" class="admin-profile-btn">AD Tên Admin</a>
                 <button class="theme-toggle" id="theme-toggle">🌙</button>
                 <a href="../dk_dn/dn.html">Đăng xuất</a>
@@ -113,25 +145,66 @@
             </table>
         </section>
 
+        <!-- ✅ FORM BÁC SĨ MỞ RỘNG -->
         <section id="doctor-form-modal" style="display: none;">
             <h3 id="form-title">Thêm Bác sĩ Mới</h3>
             <form id="form-doctor-info">
                 <div>
-                    <label for="doc-name">Họ và tên:</label>
+                    <label for="doc-name">Họ và tên: *</label>
                     <input type="text" id="doc-name" required>
                 </div>
                 <div>
-                    <label for="doc-specialty">Chuyên khoa:</label>
+                    <label for="doc-specialty">Chuyên khoa: *</label>
                     <select id="doc-specialty" required></select>
                 </div>
                 <div>
-                    <label for="doc-email">Email đăng nhập:</label>
+                    <label for="doc-email">Email đăng nhập: *</label>
                     <input type="email" id="doc-email" required>
                 </div>
                 <div>
-                    <label for="doc-phone">Số điện thoại:</label>
+                    <label for="doc-phone">Số điện thoại: *</label>
                     <input type="text" id="doc-phone" required>
                 </div>
+
+                <!-- ====== THÔNG TIN CHI TIẾT HIỂN THỊ CHO BỆNH NHÂN ====== -->
+                <div class="detail-section-title">
+                    <i class="fas fa-info-circle"></i>
+                    Thông tin hiển thị cho Bệnh nhân
+                </div>
+
+                <div>
+                    <label for="doc-degree">Học vị / Chức danh:</label>
+                    <input type="text" id="doc-degree" placeholder="VD: Thạc sĩ - Bác sĩ nội trú">
+                </div>
+                <div>
+                    <label for="doc-exp">Số năm kinh nghiệm:</label>
+                    <input type="number" id="doc-exp" min="0" placeholder="VD: 12">
+                </div>
+                <div>
+                    <label for="doc-avatar">Link ảnh đại diện (URL):</label>
+                    <input type="url" id="doc-avatar" placeholder="https://...">
+                </div>
+                <div>
+                    <label for="doc-bio">Giới thiệu chuyên môn:</label>
+                    <textarea id="doc-bio" rows="3" placeholder="Mô tả ngắn về bác sĩ..."></textarea>
+                </div>
+                <div>
+                    <label for="doc-training">Quá trình đào tạo:</label>
+                    <textarea id="doc-training" rows="2" placeholder="Tốt nghiệp..."></textarea>
+                </div>
+                <div>
+                    <label for="doc-work-history">Kinh nghiệm làm việc:</label>
+                    <textarea id="doc-work-history" rows="2" placeholder="Từng công tác tại..."></textarea>
+                </div>
+                <div>
+                    <label for="doc-strengths">Lĩnh vực thế mạnh:</label>
+                    <textarea id="doc-strengths" rows="2" placeholder="Chẩn đoán và điều trị..."></textarea>
+                </div>
+                <div>
+                    <label for="doc-fee">Phí khám (VNĐ):</label>
+                    <input type="number" id="doc-fee" min="0" step="1000" value="300000">
+                </div>
+
                 <div>
                     <button type="submit" id="btn-save-doctor">Lưu thông tin</button>
                     <button type="button" id="btn-cancel-doctor">Hủy bỏ</button>

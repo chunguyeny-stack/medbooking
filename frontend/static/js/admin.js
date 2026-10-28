@@ -1,6 +1,6 @@
 /* ============================================================
-   MEDBOOKING ADMIN — UI Controller (v4)
-   Thêm: Notification realtime
+   MEDBOOKING ADMIN — UI Controller (v7)
+   Fix: Lock Reason bắt buộc + hiển thị tooltip
    ============================================================ */
 (function () {
     'use strict';
@@ -8,9 +8,7 @@
     console.log('[admin.js] Bắt đầu load...');
 
     function waitForAPI(cb) {
-        if (window.MedBookingAPI) {
-            return cb(window.MedBookingAPI);
-        }
+        if (window.MedBookingAPI) return cb(window.MedBookingAPI);
         let tries = 0;
         const t = setInterval(() => {
             tries++;
@@ -59,7 +57,7 @@
     const roleText = { admin: 'Quản trị viên', doctor: 'Bác sĩ', receptionist: 'Lễ tân', patient: 'Bệnh nhân' };
 
     /* ============================================================
-       NOTIFICATION - Hiển thị thông báo realtime
+       NOTIFICATION
        ============================================================ */
     function initNotifications(API) {
         const header = document.querySelector('header');
@@ -107,9 +105,7 @@
         });
 
         document.addEventListener('click', (e) => {
-            if (!wrapper.contains(e.target)) {
-                panel.classList.remove('open');
-            }
+            if (!wrapper.contains(e.target)) panel.classList.remove('open');
         });
 
         function render(notifications) {
@@ -136,7 +132,10 @@
                 'Lịch hẹn mới': { icon: 'fa-calendar-plus', cls: '' },
                 'Thanh toán thành công': { icon: 'fa-check-circle', cls: 'success' },
                 'Cảnh báo hệ thống': { icon: 'fa-exclamation-triangle', cls: 'warning' },
-                'Đánh giá mới': { icon: 'fa-star', cls: '' }
+                'Đánh giá mới': { icon: 'fa-star', cls: '' },
+                'Bác sĩ mới': { icon: 'fa-user-md', cls: '' },
+                'Tài khoản mới': { icon: 'fa-user-plus', cls: '' },
+                'Khôi phục thành công': { icon: 'fa-undo', cls: 'success' }
             };
 
             list.innerHTML = notifications.map(n => {
@@ -178,9 +177,7 @@
             if (!API || typeof API.getNotifications !== 'function') {
                 render([
                     { id: 'N001', title: 'Lịch hẹn mới', message: 'Bệnh nhân Nguyễn Văn A vừa đặt lịch khám Tim mạch', time: '5 phút trước', read: false },
-                    { id: 'N002', title: 'Thanh toán thành công', message: 'Giao dịch GD002 đã hoàn tất 1.200.000₫', time: '1 giờ trước', read: false },
-                    { id: 'N003', title: 'Cảnh báo hệ thống', message: 'Có 3 bản ghi trong thùng rác cần xử lý', time: '2 giờ trước', read: false },
-                    { id: 'N004', title: 'Đánh giá mới', message: 'BS. Phạm Thị D vừa nhận đánh giá 5 sao', time: '1 ngày trước', read: true }
+                    { id: 'N002', title: 'Thanh toán thành công', message: 'Giao dịch GD002 đã hoàn tất 1.200.000₫', time: '1 giờ trước', read: false }
                 ]);
                 return;
             }
@@ -195,9 +192,7 @@
         const markAllBtn = document.getElementById('mark-all-read');
         markAllBtn.addEventListener('click', async (e) => {
             e.stopPropagation();
-            if (API && typeof API.markAllRead === 'function') {
-                await API.markAllRead();
-            }
+            if (API && typeof API.markAllRead === 'function') await API.markAllRead();
             badge.style.display = 'none';
             list.querySelectorAll('.notif-item').forEach(it => it.classList.remove('unread'));
             toast('Đã đánh dấu tất cả đã đọc', 'success');
@@ -273,26 +268,41 @@
         const lockModalId = 'lock-modal';
         let editingId = null;
 
+        function escapeHtml(str) {
+            return String(str)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#39;');
+        }
+
         async function refresh() {
             const res = await API.getAccounts({
                 search: searchEl?.value || '',
                 role: roleEl?.value || 'all',
                 status: statusEl?.value || 'all'
             });
-            console.log('[admin.js] getAccounts →', res.data.length, 'dòng');
             if (!res.data.length) {
                 tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;padding:40px;color:#8B7FA8;">Không có tài khoản nào.</td></tr>`;
                 return;
             }
             tbody.innerHTML = res.data.map(a => {
                 const isActive = a.status === 'active';
+                const lockTitle = (!isActive && a.lockReason)
+                    ? `title="Lý do khóa: ${escapeHtml(a.lockReason)}"`
+                    : '';
                 return `<tr>
                     <td><strong>${a.id}</strong></td>
                     <td>${a.name}</td>
                     <td>${a.email}</td>
                     <td>${a.phone}</td>
                     <td>${roleText[a.role] || a.role}</td>
-                    <td><span class="badge ${isActive ? 'success' : 'danger'}">${isActive ? 'Đang hoạt động' : 'Đã khóa'}</span></td>
+                    <td>
+                        <span class="badge ${isActive ? 'success' : 'danger'}" ${lockTitle} style="cursor:${isActive ? 'default' : 'help'};">
+                            ${isActive ? 'Đang hoạt động' : 'Đã khóa'}
+                        </span>
+                    </td>
                     <td>
                         <button type="button" class="btn-edit-account" data-id="${a.id}">Sửa</button>
                         <button type="button" class="btn-toggle-lock" data-id="${a.id}" data-action="${isActive ? 'lock' : 'unlock'}">${isActive ? 'Khóa' : 'Mở khóa'}</button>
@@ -312,10 +322,15 @@
                     $('#acc-email').value = acc.email;
                     $('#acc-phone').value = acc.phone;
                     $('#acc-role').value = acc.role;
-                    $('#acc-password').value = '';
+                    const pwdInput = $('#acc-password');
+                    pwdInput.value = '';
+                    pwdInput.type = 'password';
+                    const toggleBtn = pwdInput.parentNode.querySelector('.password-toggle-btn');
+                    if (toggleBtn) toggleBtn.innerHTML = '<i class="fas fa-eye"></i>';
                     openModal(modalId);
                 };
             });
+
             $$('.btn-toggle-lock', tbody).forEach(btn => {
                 btn.onclick = () => {
                     const id = btn.dataset.id;
@@ -324,11 +339,15 @@
                         $('#lock-reason-text').value = '';
                         $('#lock-modal-title').textContent = 'Lý do khóa tài khoản';
                         openModal(lockModalId);
+                        setTimeout(() => $('#lock-reason-text').focus(), 200);
                     } else {
-                        API.toggleAccountStatus(id).then(() => { toast('Đã mở khóa', 'success'); refresh(); });
+                        API.toggleAccountStatus(id)
+                            .then(() => { toast('Đã mở khóa tài khoản', 'success'); refresh(); })
+                            .catch(err => toast(err.message || 'Lỗi mở khóa', 'error'));
                     }
                 };
             });
+
             $$('.btn-delete-account', tbody).forEach(btn => {
                 btn.onclick = async () => {
                     if (!confirm('Bạn có chắc chắn muốn xóa tài khoản này vào thùng rác?')) return;
@@ -339,6 +358,38 @@
             });
         }
 
+        // Toggle xem mật khẩu
+        function attachPasswordToggle() {
+            const pwdInput = $('#acc-password');
+            if (!pwdInput) return;
+            if (pwdInput.parentNode.classList.contains('password-wrapper')) return;
+
+            const wrapper = document.createElement('div');
+            wrapper.className = 'password-wrapper';
+            wrapper.style.cssText = 'position:relative;display:flex;align-items:center;';
+
+            pwdInput.parentNode.insertBefore(wrapper, pwdInput);
+            wrapper.appendChild(pwdInput);
+            pwdInput.style.paddingRight = '44px';
+
+            const btn = document.createElement('button');
+            btn.type = 'button';
+            btn.className = 'password-toggle-btn';
+            btn.innerHTML = '<i class="fas fa-eye"></i>';
+            btn.title = 'Xem mật khẩu';
+            btn.style.cssText = 'position:absolute;right:8px;top:50%;transform:translateY(-50%);background:transparent;border:none;cursor:pointer;color:var(--primary-color);padding:6px 8px;font-size:14px;border-radius:6px;transition:background .2s;';
+            btn.addEventListener('mouseenter', () => btn.style.background = 'rgba(139,92,246,0.1)');
+            btn.addEventListener('mouseleave', () => btn.style.background = 'transparent');
+            btn.addEventListener('click', () => {
+                const isPwd = pwdInput.type === 'password';
+                pwdInput.type = isPwd ? 'text' : 'password';
+                btn.innerHTML = isPwd ? '<i class="fas fa-eye-slash"></i>' : '<i class="fas fa-eye"></i>';
+                btn.title = isPwd ? 'Ẩn mật khẩu' : 'Xem mật khẩu';
+            });
+            wrapper.appendChild(btn);
+        }
+        attachPasswordToggle();
+
         if (searchEl) searchEl.addEventListener('input', refresh);
         if (roleEl) roleEl.addEventListener('change', refresh);
         if (statusEl) statusEl.addEventListener('change', refresh);
@@ -347,6 +398,10 @@
             editingId = null;
             $('#form-account-title').textContent = 'Thêm Tài khoản Mới';
             form.reset();
+            const pwdInput = $('#acc-password');
+            pwdInput.type = 'password';
+            const toggleBtn = pwdInput.parentNode.querySelector('.password-toggle-btn');
+            if (toggleBtn) toggleBtn.innerHTML = '<i class="fas fa-eye"></i>';
             openModal(modalId);
         };
 
@@ -371,15 +426,36 @@
         const btnCancel = $('#btn-cancel-account');
         if (btnCancel) btnCancel.onclick = () => closeModal(modalId);
 
+        // ✅ FORM KHÓA TÀI KHOẢN (có validation chặt chẽ)
         const lockForm = $('#form-lock-reason');
         if (lockForm) lockForm.onsubmit = async (e) => {
             e.preventDefault();
             const id = $('#lock-target-id').value;
             const reason = $('#lock-reason-text').value.trim();
-            if (!reason) { toast('Nhập lý do khóa', 'error'); return; }
-            await API.toggleAccountStatus(id, reason);
-            toast('Đã khóa tài khoản', 'success');
-            closeModal(lockModalId); refresh();
+
+            if (!reason) {
+                toast('Vui lòng nhập lý do khóa tài khoản', 'error');
+                $('#lock-reason-text').focus();
+                return;
+            }
+            if (reason.length < 5) {
+                toast('Lý do khóa phải có ít nhất 5 ký tự', 'error');
+                $('#lock-reason-text').focus();
+                return;
+            }
+            if (reason.length > 300) {
+                toast('Lý do khóa không quá 300 ký tự', 'error');
+                return;
+            }
+
+            try {
+                await API.toggleAccountStatus(id, reason);
+                toast('🔒 Đã khóa tài khoản', 'success');
+                closeModal(lockModalId);
+                refresh();
+            } catch (err) {
+                toast(err.message || 'Không thể khóa tài khoản', 'error');
+            }
         };
         const btnCancelLock = $('#btn-cancel-lock');
         if (btnCancelLock) btnCancelLock.onclick = () => closeModal(lockModalId);
@@ -400,10 +476,41 @@
         const docSpecSel = $('#doc-specialty');
         let editingId = null;
 
+        const docDegree   = $('#doc-degree');
+        const docExp      = $('#doc-exp');
+        const docAvatar   = $('#doc-avatar');
+        const docBio      = $('#doc-bio');
+        const docTraining = $('#doc-training');
+        const docWork     = $('#doc-work-history');
+        const docStrength = $('#doc-strengths');
+        const docFee      = $('#doc-fee');
+
         API.getSpecialties().then(specRes => {
             if (filterSpec) filterSpec.innerHTML = '<option value="all">Tất cả chuyên khoa</option>' + specRes.data.map(s => `<option value="${s.id}">${s.name}</option>`).join('');
             if (docSpecSel) docSpecSel.innerHTML = specRes.data.map(s => `<option value="${s.id}">${s.name}</option>`).join('');
         });
+
+        function resetDetailFields() {
+            if (docDegree) docDegree.value = '';
+            if (docExp) docExp.value = '';
+            if (docAvatar) docAvatar.value = '';
+            if (docBio) docBio.value = '';
+            if (docTraining) docTraining.value = '';
+            if (docWork) docWork.value = '';
+            if (docStrength) docStrength.value = '';
+            if (docFee) docFee.value = 300000;
+        }
+
+        function fillDetailFields(d) {
+            if (docDegree) docDegree.value = d.degree || '';
+            if (docExp) docExp.value = d.experience || '';
+            if (docAvatar) docAvatar.value = d.avatar || '';
+            if (docBio) docBio.value = d.bio || '';
+            if (docTraining) docTraining.value = d.training || '';
+            if (docWork) docWork.value = d.workHistory || '';
+            if (docStrength) docStrength.value = d.strengths || '';
+            if (docFee) docFee.value = d.fee || 300000;
+        }
 
         async function refresh() {
             const res = await API.getDoctors({ search: searchEl?.value || '', specialtyId: filterSpec?.value || 'all' });
@@ -413,13 +520,17 @@
             }
             tbody.innerHTML = res.data.map(d => {
                 const stars = '★'.repeat(Math.round(d.rating)) + '☆'.repeat(5 - Math.round(d.rating));
+                const avatarHtml = d.avatar
+                    ? `<img src="${d.avatar}" alt="" style="width:32px;height:32px;border-radius:50%;object-fit:cover;margin-right:8px;vertical-align:middle;" onerror="this.style.display='none'">`
+                    : '';
                 return `<tr>
                     <td><strong>${d.id}</strong></td>
-                    <td>${d.name}</td>
+                    <td><div style="display:flex;align-items:center;">${avatarHtml}<span>${d.name}</span></div></td>
                     <td>${d.specialtyName}</td>
                     <td>${d.email}<br><small style="color:#8B7FA8;">${d.phone}</small></td>
                     <td><span class="badge ${d.status === 'available' ? 'success' : 'danger'}">${d.status === 'available' ? 'Đang trực' : 'Nghỉ'}</span></td>
-                    <td><span style="color:#F59E0B;">${stars}</span> ${d.rating.toFixed(1)}</td>
+                    <td><span style="color:#F59E0B;">${stars}</span> ${d.rating.toFixed(1)}
+                        <small style="color:#8B7FA8;">(${d.reviewCount || 0} đánh giá)</small></td>
                     <td>
                         <button type="button" class="btn-edit-doctor" data-id="${d.id}">Sửa</button>
                         <button type="button" class="btn-delete-doctor" data-id="${d.id}" style="background:#FEF2F2;color:#DC2626;border-color:#FECACA;">Xóa</button>
@@ -437,6 +548,7 @@
                 $('#doc-specialty').value = d.specialtyId;
                 $('#doc-email').value = d.email;
                 $('#doc-phone').value = d.phone;
+                fillDetailFields(d);
                 openModal(modalId);
             });
             $$('.btn-delete-doctor', tbody).forEach(btn => btn.onclick = async () => {
@@ -453,6 +565,7 @@
             editingId = null;
             $('#form-title').textContent = 'Thêm Bác sĩ Mới';
             form.reset();
+            resetDetailFields();
             openModal(modalId);
         };
         if (form) form.onsubmit = async (e) => {
@@ -461,9 +574,19 @@
                 name: $('#doc-name').value.trim(),
                 specialtyId: $('#doc-specialty').value,
                 email: $('#doc-email').value.trim(),
-                phone: $('#doc-phone').value.trim()
+                phone: $('#doc-phone').value.trim(),
+                degree: docDegree ? docDegree.value.trim() : '',
+                experience: docExp ? (parseInt(docExp.value, 10) || 0) : 0,
+                avatar: docAvatar ? docAvatar.value.trim() : '',
+                bio: docBio ? docBio.value.trim() : '',
+                training: docTraining ? docTraining.value.trim() : '',
+                workHistory: docWork ? docWork.value.trim() : '',
+                strengths: docStrength ? docStrength.value.trim() : '',
+                fee: docFee ? (parseInt(docFee.value, 10) || 0) : 300000
             };
-            if (!data.name || !data.specialtyId || !data.email || !data.phone) { toast('Nhập đầy đủ', 'error'); return; }
+            if (!data.name || !data.specialtyId || !data.email || !data.phone) {
+                toast('Nhập đầy đủ thông tin bắt buộc', 'error'); return;
+            }
             try {
                 if (editingId) { await API.updateDoctor(editingId, data); toast('Đã cập nhật', 'success'); }
                 else { await API.createDoctor(data); toast('Đã thêm', 'success'); }
@@ -827,41 +950,31 @@
             console.log('[admin.js] ✅ Init xong');
         });
     });
+
     /* ============================================================
-   TỰ ĐỘNG HIGHLIGHT MENU ĐANG ACTIVE DỰA VÀO URL
-   ============================================================ */
-(function highlightAdminMenu() {
-    // Đợi DOM load xong
-    document.addEventListener('DOMContentLoaded', () => {
-        // Lấy tên file hiện tại (ví dụ: home_a.html, quan_ly_tai_khoan.html)
-        const currentPath = window.location.pathname.split('/').pop();
-        
-        // Nếu không có tên file (trang chủ), mặc định là home_a.html
-        const page = currentPath || 'home_a.html';
-
-        // Tìm tất cả các thẻ <a> trong thẻ <nav> của sidebar
-        const navLinks = document.querySelectorAll('aside nav ul li a');
-
-        navLinks.forEach(link => {
-            const href = link.getAttribute('href');
-            if (!href) return;
-
-            // Reset trạng thái active cũ (nếu có)
-            link.classList.remove('active');
-            // Xóa thẻ <strong> cũ nếu có (do code cũ fix cứng)
-            const strongTag = link.querySelector('strong');
-            if (strongTag) {
-                const text = strongTag.textContent;
-                link.innerHTML = text; // Bỏ thẻ strong, giữ lại text
-            }
-
-            // Kiểm tra nếu href trùng với trang hiện tại
-            if (href === page || (page === '' && href === 'home_a.html')) {
-                link.classList.add('active');
-            }
+       TỰ ĐỘNG HIGHLIGHT MENU ĐANG ACTIVE
+       ============================================================ */
+    (function highlightAdminMenu() {
+        document.addEventListener('DOMContentLoaded', () => {
+            const currentPath = window.location.pathname.split('/').pop();
+            const page = currentPath || 'home_a.html';
+            const navLinks = document.querySelectorAll('aside nav ul li a');
+            navLinks.forEach(link => {
+                const href = link.getAttribute('href');
+                if (!href) return;
+                link.classList.remove('active');
+                const strongTag = link.querySelector('strong');
+                if (strongTag) {
+                    const text = strongTag.textContent;
+                    link.innerHTML = text;
+                }
+                if (href === page || (page === '' && href === 'home_a.html')) {
+                    link.classList.add('active');
+                }
+            });
         });
-    });
-})();
+    })();
+
     window.MedBookingToast = toast;
-    
+
 })();

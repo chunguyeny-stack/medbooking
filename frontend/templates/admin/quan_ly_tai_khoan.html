@@ -38,6 +38,56 @@
             box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);
             transform: translateY(-1px);
         }
+
+        /* Textarea khóa tài khoản */
+        #lock-reason-text {
+            font-family: inherit;
+            resize: vertical;
+            min-height: 90px;
+            line-height: 1.5;
+        }
+
+        .lock-reason-hint {
+            display: block;
+            margin-top: 8px;
+            font-size: 12px;
+            color: var(--text-gray);
+            line-height: 1.4;
+        }
+
+        /* Tooltip cảnh báo tài khoản khóa */
+        .badge.danger[title] {
+            position: relative;
+        }
+
+        .badge.danger[title]:hover::after {
+            content: attr(title);
+            position: absolute;
+            bottom: calc(100% + 6px);
+            left: 50%;
+            transform: translateX(-50%);
+            background: #1A1428;
+            color: #fff;
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-size: 11.5px;
+            font-weight: 500;
+            white-space: normal;
+            min-width: 220px;
+            max-width: 320px;
+            line-height: 1.5;
+            text-transform: none;
+            letter-spacing: 0;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+            z-index: 100;
+            pointer-events: none;
+            animation: fadeInTooltip 0.2s ease-out;
+        }
+
+        @keyframes fadeInTooltip {
+            from { opacity: 0; transform: translateX(-50%) translateY(4px); }
+            to   { opacity: 1; transform: translateX(-50%) translateY(0); }
+        }
     </style>
 </head>
 <body>
@@ -75,7 +125,6 @@
             <button class="menu-toggle" id="menu-toggle" aria-label="Mở menu"><i class="fas fa-bars"></i></button>
             <h1>Quản lý Tài khoản & Phân quyền Hệ thống</h1>
             <div style="display: flex; align-items: center; gap: 12px;">
-                <!-- Nút AD Tên Admin màu tím nguyên bản, có hiệu ứng hover và chuyển sang trang hồ sơ cá nhân -->
                 <a href="ho_so_ca_nhan.html" class="admin-profile-btn">AD Tên Admin</a>
                 <button class="theme-toggle" id="theme-toggle">🌙</button>
                 <a href="../dk_dn/dn.html">Đăng xuất</a>
@@ -121,6 +170,7 @@
             </table>
         </section>
 
+        <!-- FORM THÊM/SỬA TÀI KHOẢN -->
         <section id="account-form-modal" style="display: none;">
             <h3 id="form-account-title">Thêm Tài khoản Mới</h3>
             <form id="form-account-info">
@@ -147,7 +197,7 @@
                 </div>
                 <div>
                     <label for="acc-password">Mật khẩu ban đầu:</label>
-                    <input type="password" id="acc-password">
+                    <input type="password" id="acc-password" placeholder="Nhập mật khẩu (chỉ khi tạo mới)">
                 </div>
                 <div>
                     <button type="submit" id="btn-save-account">Lưu tài khoản</button>
@@ -156,13 +206,21 @@
             </form>
         </section>
 
+        <!-- FORM KHÓA TÀI KHOẢN (BẮT BUỘC LÝ DO) -->
         <section id="lock-modal" style="display: none;">
             <h3 id="lock-modal-title">Lý do khóa tài khoản</h3>
             <form id="form-lock-reason">
                 <input type="hidden" id="lock-target-id">
                 <div>
                     <label for="lock-reason-text">Vui lòng nhập lý do khóa tài khoản này:</label>
-                    <textarea id="lock-reason-text" rows="3" placeholder="Nhập lý do vi phạm..." required></textarea>
+                    <textarea id="lock-reason-text" rows="3"
+                        placeholder="VD: Tài khoản vi phạm điều khoản sử dụng, đăng thông tin sai sự thật..."
+                        maxlength="300" required></textarea>
+                    <small class="lock-reason-hint">
+                        <i class="fas fa-info-circle"></i>
+                        Tối thiểu <strong>5 ký tự</strong>, tối đa <strong>300 ký tự</strong>.
+                        Lý do này sẽ <strong>hiển thị cho người dùng</strong> khi họ đăng nhập.
+                    </small>
                 </div>
                 <div>
                     <button type="submit" id="btn-confirm-lock">Xác nhận Khóa</button>

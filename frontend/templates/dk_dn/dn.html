@@ -4,9 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MEDBOOKING - Đăng nhập</title>
-    <!-- Favicon hình chú chim cánh cụt y tế -->
     <link rel="icon" type="image/jpeg" href="../../favicon.jpg">
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
@@ -210,6 +209,63 @@
             font-weight: 300; line-height: 1.6; text-align: center;
         }
 
+        /* =========================================
+            BANNER CẢNH BÁO TÀI KHOẢN BỊ KHÓA
+            ========================================= */
+        .lock-alert {
+            display: none;
+            background: linear-gradient(135deg, #FEF2F2, #FEE2E2);
+            color: #991B1B;
+            padding: 16px 20px;
+            border-radius: 14px;
+            margin-bottom: 20px;
+            border-left: 5px solid #EF4444;
+            font-size: 13.5px;
+            line-height: 1.55;
+            box-shadow: 0 4px 14px rgba(239, 68, 68, 0.15);
+            animation: shakeAlert 0.5s ease-out;
+        }
+
+        .lock-alert.show { display: block; }
+
+        @keyframes shakeAlert {
+            0%   { transform: translateX(0); }
+            20%  { transform: translateX(-6px); }
+            40%  { transform: translateX(6px); }
+            60%  { transform: translateX(-4px); }
+            80%  { transform: translateX(4px); }
+            100% { transform: translateX(0); }
+        }
+
+        .lock-alert .lock-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-weight: 700;
+            font-size: 14.5px;
+            margin-bottom: 8px;
+        }
+
+        .lock-alert .lock-header i {
+            font-size: 18px;
+            color: #EF4444;
+        }
+
+        .lock-alert .lock-reason {
+            background: rgba(255, 255, 255, 0.7);
+            padding: 10px 14px;
+            border-radius: 10px;
+            font-size: 13px;
+            color: #7F1D1D;
+            border: 1px dashed rgba(239, 68, 68, 0.3);
+            margin-top: 6px;
+            word-break: break-word;
+        }
+
+        .lock-alert .lock-reason strong {
+            color: #991B1B;
+        }
+
         .form-group { margin-bottom: 20px; }
 
         .form-group label {
@@ -296,6 +352,16 @@
                 <h1>Chào mừng trở lại <i>MedBooking</i></h1>
                 <p class="login-desc">Nhập thông tin tài khoản của bạn để tiếp tục tra cứu lịch sử bệnh án và đặt lịch khám bảo mật.</p>
 
+                <!-- 🚫 BANNER TÀI KHOẢN BỊ KHÓA -->
+                <div class="lock-alert" id="lock-alert">
+                    <div class="lock-header">
+                        <i class="fas fa-lock"></i>
+                        <span>Tài khoản của bạn đã bị khóa</span>
+                    </div>
+                    <div>Vui lòng liên hệ Hotline <strong>1999 0081</strong> để được hỗ trợ mở khóa.</div>
+                    <div class="lock-reason" id="lock-alert-reason"></div>
+                </div>
+
                 <!-- FORM ĐĂNG NHẬP -->
                 <form id="loginForm">
                     <div class="form-group">
@@ -357,7 +423,7 @@
     </script>
 
     <!-- ========================================== -->
-    <!-- SCRIPT XỬ LÝ ĐĂNG NHẬP (NHÚNG TRỰC TIẾP) -->
+    <!-- SCRIPT XỬ LÝ ĐĂNG NHẬP (CÓ CHECK KHÓA)      -->
     <!-- ========================================== -->
     <script>
         document.getElementById('loginForm').addEventListener('submit', function(e) {
@@ -365,50 +431,150 @@
 
             const email = document.getElementById('email').value.trim();
             const password = document.getElementById('password').value;
+            const lockAlert = document.getElementById('lock-alert');
+            const lockReasonEl = document.getElementById('lock-alert-reason');
 
-            // Lấy danh sách user từ localStorage
-            let users = JSON.parse(localStorage.getItem('medbooking_users')) || [];
+            // Ẩn banner khóa cũ mỗi lần submit
+            lockAlert.classList.remove('show');
+            lockReasonEl.innerHTML = '';
 
-            // Tìm user khớp email và password
+            // ============ LẤY DỮ LIỆU TỪ 2 KHO ============
+            // Kho 1: Bệnh nhân tự đăng ký (dk.html)
+            let users = [];
+            try {
+                users = JSON.parse(localStorage.getItem('medbooking_users')) || [];
+            } catch (err) {
+                users = [];
+            }
+
+            // Kho 2: Admin quản lý tài khoản (quan_ly_tai_khoan.html)
+            let adminDb = {};
+            try {
+                adminDb = JSON.parse(localStorage.getItem('medbooking_admin_db')) || {};
+            } catch (err) {
+                adminDb = {};
+            }
+            const adminAccounts = Array.isArray(adminDb.accounts) ? adminDb.accounts : [];
+
+            // ============ 1. ƯU TIÊN KIỂM TRA TÀI KHOẢN BỊ KHÓA ============
+            // 1a. Trong kho admin_db
+            const lockedAdminAcc = adminAccounts.find(
+                a => a.email === email && a.status === 'locked'
+            );
+
+            // 1b. Trong kho users (được đồng bộ từ admin)
+            const lockedUser = users.find(
+                u => u.email === email && u.status === 'locked'
+            );
+
+            const lockedAcc = lockedAdminAcc || lockedUser;
+
+            if (lockedAcc) {
+                const reason = (lockedAcc.lockReason || '').trim() || 'Không có lý do cụ thể';
+                lockReasonEl.innerHTML = `<strong>Lý do:</strong> ${escapeHtml(reason)}`;
+                lockAlert.classList.add('show');
+
+                showToast(
+                    `Tài khoản đã bị khóa. Lý do: ${reason}`,
+                    'error',
+                    6000
+                );
+
+                // Cuộn banner vào tầm nhìn
+                setTimeout(() => {
+                    lockAlert.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                }, 100);
+                return;
+            }
+
+            // ============ 2. TÌM USER HỢP LỆ ============
             const user = users.find(u => u.email === email && u.password === password);
+            const adminAcc = adminAccounts.find(a => a.email === email && a.status === 'active');
 
             if (user) {
-                // Đăng nhập thành công
-                showToast(`Chào mừng ${user.fullname} trở lại!`, 'success');
+                showToast(`Chào mừng ${user.fullname} trở lại!`, 'success', 1500);
                 localStorage.setItem('medbooking_current_user', JSON.stringify(user));
-                
                 setTimeout(() => {
                     window.location.href = 'home.html';
                 }, 1500);
+                return;
+            }
+
+            if (adminAcc) {
+                // Admin đăng nhập (demo — không check password riêng vì admin chưa có field password)
+                showToast(`Chào mừng ${adminAcc.name} trở lại!`, 'success', 1500);
+                localStorage.setItem('medbooking_current_user', JSON.stringify({
+                    id: adminAcc.id,
+                    name: adminAcc.name,
+                    fullname: adminAcc.name,
+                    email: adminAcc.email,
+                    role: adminAcc.role
+                }));
+                setTimeout(() => {
+                    window.location.href = 'home.html';
+                }, 1500);
+                return;
+            }
+
+            // ============ 3. XỬ LÝ LỖI ============
+            const emailExists = users.some(u => u.email === email)
+                || adminAccounts.some(a => a.email === email);
+
+            if (emailExists) {
+                showToast('Mật khẩu không chính xác!', 'error', 3000);
             } else {
-                // Đăng nhập thất bại - Kiểm tra lý do
-                const emailExists = users.some(u => u.email === email);
-                
-                if (emailExists) {
-                    showToast('Mật khẩu không chính xác!', 'error');
-                } else {
-                    // THÔNG BÁO KHI CHƯA CÓ TÀI KHOẢN
-                    showToast('Tài khoản chưa tồn tại. Vui lòng đăng ký!', 'error');
-                }
+                showToast('Tài khoản chưa tồn tại. Vui lòng đăng ký!', 'error', 3000);
             }
         });
 
-        // Hàm hiển thị thông báo Toast
-        function showToast(message, type = 'info') {
+        // ============ HÀM TOAST (CÓ HỖ TRỢ DURATION) ============
+        function showToast(message, type = 'info', duration = null) {
             const toast = document.createElement('div');
             toast.innerHTML = `<i class="fa-solid ${type === 'success' ? 'fa-circle-check' : 'fa-circle-exclamation'}"></i> <span>${message}</span>`;
-            
+
             Object.assign(toast.style, {
                 position: 'fixed', top: '20px', right: '20px',
                 background: type === 'success' ? '#4caf50' : '#f44336',
-                color: 'white', padding: '15px 25px', borderRadius: '10px',
+                color: 'white', padding: '15px 22px', borderRadius: '10px',
                 boxShadow: '0 5px 15px rgba(0,0,0,0.2)', zIndex: '10000',
                 display: 'flex', alignItems: 'center', gap: '10px',
-                fontSize: '15px', fontWeight: '500', fontFamily: "'Plus Jakarta Sans', sans-serif"
+                fontSize: '14.5px', fontWeight: '500',
+                fontFamily: "'Plus Jakarta Sans', sans-serif",
+                maxWidth: '420px', lineHeight: '1.5',
+                animation: 'slideInRight 0.3s ease-out'
             });
 
+            if (!document.getElementById('toast-style')) {
+                const style = document.createElement('style');
+                style.id = 'toast-style';
+                style.textContent = `
+                    @keyframes slideInRight {
+                        from { transform: translateX(120%); opacity: 0; }
+                        to   { transform: translateX(0);    opacity: 1; }
+                    }
+                `;
+                document.head.appendChild(style);
+            }
+
             document.body.appendChild(toast);
-            setTimeout(() => toast.remove(), 3000);
+
+            const finalDuration = duration || (type === 'error' ? 5000 : 3000);
+            setTimeout(() => {
+                toast.style.transition = 'opacity 0.4s ease, transform 0.4s ease';
+                toast.style.opacity = '0';
+                toast.style.transform = 'translateX(120%)';
+                setTimeout(() => toast.remove(), 400);
+            }, finalDuration);
+        }
+
+        // ============ CHỐNG XSS CƠ BẢN CHO LÝ DO KHÓA ============
+        function escapeHtml(str) {
+            return String(str)
+                .replace(/&/g, '&amp;')
+                .replace(/</g, '&lt;')
+                .replace(/>/g, '&gt;')
+                .replace(/"/g, '&quot;')
+                .replace(/'/g, '&#39;');
         }
     </script>
 </body>

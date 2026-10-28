@@ -35,11 +35,11 @@
     }
 
     // Trả về ngày lệch N ngày so với hôm nay
-    function offsetDateStr(offset) {
-        const date = new Date();
-        date.setDate(date.getDate() + offset);
-        return formatDate(date);
-    }
+   function offsetDateStr(offset) {
+    const date = new Date(2026, 9, 28); // Tháng 9 = tháng 10
+    date.setDate(date.getDate() + offset);
+    return formatDate(date);
+}
 
     function readJSON(key, fallback) {
         try {
