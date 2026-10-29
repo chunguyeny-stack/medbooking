@@ -1,19 +1,12 @@
-USE PhongKhamDB;
-GO
+-- Đánh dấu bác sĩ nổi bật / mới
+ALTER TABLE bac_si
+ADD COLUMN IF NOT EXISTS is_hot BOOLEAN DEFAULT FALSE,
+ADD COLUMN IF NOT EXISTS is_new BOOLEAN DEFAULT FALSE,
+ADD COLUMN IF NOT EXISTS display_order INT DEFAULT 0;
 
-IF OBJECT_ID('dbo.bac_si', 'U') IS NOT NULL DROP TABLE dbo.bac_si;
-GO
-
-CREATE TABLE dbo.bac_si (
-    id INT IDENTITY(1,1) PRIMARY KEY,
-    nguoi_dung_id INT NOT NULL UNIQUE,
-    chuyen_khoa_id INT NOT NULL,
-    hoc_vi NVARCHAR(50) NULL,
-    kinh_nghiem INT DEFAULT 0,
-    gia_kham DECIMAL(18,2) NOT NULL DEFAULT 0.00,
-    rating FLOAT NOT NULL DEFAULT 0.0,
-    so_luong_danh_gia INT NOT NULL DEFAULT 0,
-    CONSTRAINT FK_bac_si_nguoi_dung FOREIGN KEY (nguoi_dung_id) REFERENCES dbo.nguoi_dung(id) ON DELETE CASCADE
-    -- Khóa ngoại chuyen_khoa_id được add sau khi tạo bảng chuyen_khoa
-);
-GO
+-- Thông tin mở rộng hồ sơ
+ALTER TABLE bac_si
+ADD COLUMN IF NOT EXISTS avatar_url TEXT,
+ADD COLUMN IF NOT EXISTS bio TEXT,
+ADD COLUMN IF NOT EXISTS training TEXT,
+ADD COLUMN IF NOT EXISTS strengths TEXT;
