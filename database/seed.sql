@@ -37,7 +37,15 @@ SET IDENTITY_INSERT nguoi_dung ON;
 -- Admin (ID 1 - 2)
 INSERT INTO nguoi_dung (id, email, mat_khau, ho_ten, so_dien_thoai, vai_tro) VALUES
 (1, 'admin@medbooking.com',    'Admin01011990',   N'Hệ Thống Admin',      '0901000000', 'admin'),
-(2, 'it.admin@medbooking.com', 'ITAdmin01011990', N'Kỹ Thuật Viên Admin', '0901000099', 'admin');
+(2, 'it.admin@medbooking.com', 'ITAdmin01011990', N'Kỹ Thuật Viên Admin', '0901000099', 'admin');\
+
+-- Vai trò: 'le_tan' (hoặc 'le_tân' tùy theo phân quyền bảng của bạn)
+INSERT INTO nguoi_dung (id, email, mat_khau, ho_ten, so_dien_thoai, vai_tro) VALUES
+(101, 'lt.thuha@medbooking.com',  'Ha2026@123',  N'Nguyễn Thị Thu Hà',  '0903100001', 'le_tan'),
+(102, 'lt.minhtuan@medbooking.com', 'Tuan2026@123', N'Trần Minh Tuấn',     '0903100002', 'le_tan'),
+(103, 'lt.ngocmai@medbooking.com', 'Mai2026@123',  N'Lê Thị Ngọc Mai',    '0903100003', 'le_tan'),
+(104, 'lt.vanhoang@medbooking.com', 'Hoang2026@123', N'Phạm Văn Hoàng',    '0903100004', 'le_tan'),
+(105, 'lt.thanhhuong@medbooking.com', 'Huong2026@123', N'Hoàng Thị Thanh Hương', '0903100005', 'le_tan');
 
 -- Bác sĩ đại diện (2 BS / Chuyên khoa -> ID từ 3 đến 22)
 INSERT INTO nguoi_dung (id, email, mat_khau, ho_ten, so_dien_thoai, vai_tro) VALUES
