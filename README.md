@@ -8,7 +8,7 @@ Hệ thống đặt lịch khám trực tuyến có gợi ý bác sĩ theo tri�
 - **Frontend:** HTML/CSS/JS + Jinja2 + Bootstrap
 - **Database:** SQL Server 2022 (12 bảng)
 - **Auth:** JWT + Bcrypt
-- **Gợi ý bác sĩ:** Rule-based (Python)
+- **Gợi ý logic:** Rule-based (Python)
 - **Test:** pytest
 - **CI/CD:** GitHub Actions
 - **Đóng gói:** Docker + Docker Compose
@@ -16,7 +16,7 @@ Hệ thống đặt lịch khám trực tuyến có gợi ý bác sĩ theo tri�
 
 ##  Chạy dự án
 
-### Cách 1: Docker (khuyến nghị)
+### Cách 1: Docker 
 
 ```bash
 docker compose up --build
