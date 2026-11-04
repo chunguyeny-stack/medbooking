@@ -48,7 +48,6 @@ class UpdateAppointmentStatusRequest(BaseModel):
     trang_thai_moi: str = Field(..., description="Chờ xác nhận, Confirmed, In Progress, Completed, Cancelled, DaDen")
     ghi_chu: Optional[str] = None
 
-
 class LichHenResponse(BaseModel):
     id: int  # Khớp với id chính của LichHen
     benh_nhan_id: int
@@ -63,3 +62,12 @@ class LichHenResponse(BaseModel):
 
     class Config:
         from_attributes = True
+
+class LichHenCreate(BaseModel):
+    benh_nhan_id: int
+    ngay_kham: datetime
+    trieu_chung: str
+
+class AdminPhanCongSchema(BaseModel):
+    bac_si_id: int
+    le_tan_id: int
