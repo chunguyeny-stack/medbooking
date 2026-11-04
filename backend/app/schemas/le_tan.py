@@ -2,7 +2,6 @@ from datetime import date, datetime
 from typing import Optional
 from pydantic import BaseModel, Field
 
-
 class LeTanBase(BaseModel):
     quay_lam_viec: Optional[str] = Field(None, max_length=50)
     ca_truc: Optional[str] = Field(None, max_length=50)
