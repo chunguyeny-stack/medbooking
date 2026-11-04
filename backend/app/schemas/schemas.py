@@ -138,7 +138,6 @@ class HoaDonBase(BaseModel):
 class HoaDonCreate(HoaDonBase):
     pass
 
-
 class HoaDonResponse(HoaDonBase):
     id: int  # Khớp với id của bảng thanh_toan
     ngay_thanh_toan: Optional[datetime] = None
