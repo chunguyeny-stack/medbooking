@@ -52,7 +52,6 @@ class UpdateTrangThaiRequest(BaseModel):
     trang_thai_moi: str = Field(description="Pending, Confirmed, DaDen, In Progress, Completed, Cancelled")
     ghi_chu: Optional[str] = None
 
-
 class ThanhToanRequest(BaseModel):
     phuong_thuc: str = Field(default="TienMat", description="TienMat, ChuyenKhoan, The")
     ghi_chu: Optional[str] = None
