@@ -2,12 +2,12 @@ import importlib
 from fastapi import APIRouter, Depends, HTTPException, status, Request
 from sqlalchemy.orm import Session
 
-from app.database.database import get_db
-from app.models.models import NguoiDung, BenhNhan, Admin, ChuyenKhoa
-from app.models.bac_si import BacSi
-from app.schemas.core_nghiep_vu import UserRegisterRequest, TokenResponse
+from database.database import get_db
+from models.models import NguoiDung, BenhNhan, Admin, ChuyenKhoa
+from models.bac_si import BacSi
+from schemas.core_nghiep_vu import UserRegisterRequest, TokenResponse
 
-from app import auth as root_auth
+import auth as root_auth
 
 router = APIRouter(prefix="/auth", tags=["1. Backend Core - Auth"])
 
@@ -86,76 +86,64 @@ def register(payload: UserRegisterRequest, db: Session = Depends(get_db)):
 
 @router.post("/login", response_model=TokenResponse, summary="Đăng nhập & cấp phát Token JWT")
 async def login(
-    request: Request,
-    db: Session = Depends(get_db)
+        request: Request,
+        db: Session = Depends(get_db)
 ):
     content_type = request.headers.get("content-type", "")
 
-    # Trích xuất thông tin gửi lên từ form Swagger Authorize hoặc JSON
+    # Trích xuất thông tin gửi lên từ form (JSON hoặc Form Data)
     if "application/x-www-form-urlencoded" in content_type or "multipart/form-data" in content_type:
         form_data = await request.form()
         identifier = str(form_data.get("username", "")).strip()
+        password = str(form_data.get("password", "")).strip()
     else:
         try:
             body = await request.json()
         except Exception:
             body = {}
         identifier = str(body.get("email", "") or body.get("username", "") or body.get("so_dien_thoai", "")).strip()
+        password = str(body.get("password", "")).strip()
 
-    # Mặc định tài khoản admin nếu để trống
     if not identifier:
-        identifier = "admin@medbooking.com"
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Vui lòng nhập email hoặc số điện thoại tài khoản!"
+        )
 
     # 1. Tìm user trong database theo Email hoặc Số điện thoại
     user = db.query(NguoiDung).filter(
         (NguoiDung.email == identifier) | (NguoiDung.so_dien_thoai == identifier)
     ).first()
 
-    # 2. Nếu chưa có user -> Tự động sinh mới kèm đúng hồ sơ phân quyền
     if not user:
-        # Nhận diện vai trò dựa trên chữ gõ vào username
-        lower_id = identifier.lower()
-        if "admin" in lower_id:
-            role = "admin"
-        elif "bacsi" in lower_id or "doctor" in lower_id:
-            role = "bac_si"
-        else:
-            role = "benh_nhan"
-
-        email_val = identifier if "@" in identifier else f"{identifier}@medbooking.com"
-
-        user = NguoiDung(
-            email=email_val,
-            ho_ten=f"User {identifier}",
-            mat_khau="123456",
-            vai_tro=role,
-            trang_thai=True,
-            so_dien_thoai="0900000000"
+        raise HTTPException(
+            status_code=status.HTTP_404_NOT_FOUND,
+            detail="Tài khoản không tồn tại trong hệ thống!"
         )
-        db.add(user)
-        db.commit()
-        db.refresh(user)
 
-        # Tạo kèm hồ sơ tương ứng
-        if role == "benh_nhan":
-            db.add(BenhNhan(nguoi_dung_id=user.id, tien_su_benh=""))
-            db.commit()
-        elif role == "bac_si":
-            ck = db.query(ChuyenKhoa).first()
-            if not ck:
-                ck = ChuyenKhoa(ten_chuyen_khoa="Đa khoa", mo_ta="Khoa khám tổng quát")
-                db.add(ck)
-                db.commit()
-                db.refresh(ck)
-            db.add(BacSi(
-                nguoi_dung_id=user.id,
-                chuyen_khoa_id=ck.id,
-                gia_kham=250000.0,
-                rating=5.0
-            ))
-            db.commit()
+    # 2. Kiểm tra mật khẩu
+    # Vì bạn nạp dữ liệu trực tiếp bằng script SQL (mật khẩu text thuần như 'Hung15051980', 'Admin01011990'),
+    # ta so sánh trực tiếp với cột user.mat_khau, hoặc dùng hàm verify nếu là mật khẩu đã băm.
+    is_password_valid = False
 
-    # 3. Bỏ qua kiểm tra mật khẩu -> Cấp phát Token JWT ngay lập tức
+    # Thử kiểm tra so sánh chuỗi trực tiếp (cho các tài khoản nạp sẵn từ file SQL)
+    if user.mat_khau == password:
+        is_password_valid = True
+    else:
+        # Nếu không khớp, thử kiểm tra bằng hàm băm (cho tài khoản đăng ký qua web)
+        try:
+            if hasattr(root_auth, "verify_password") and root_auth.verify_password(password, user.mat_khau):
+                is_password_valid = True
+        except Exception:
+            pass
+
+    if not is_password_valid:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Mật khẩu không chính xác!"
+        )
+
+    # 3. Cấp phát Token JWT khi đăng nhập thành công
     uid: int = int(user.id)
     token = root_auth.create_access_token(
         data={"id": uid, "role": user.vai_tro, "sub": user.email}
