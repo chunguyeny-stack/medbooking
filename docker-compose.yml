@@ -5,14 +5,14 @@ services:
     restart: unless-stopped
     environment:
       ACCEPT_EULA: "Y"
-      MSSQL_SA_PASSWORD: "MedPassword123!"
+      MSSQL_SA_PASSWORD: "MedBooking@2026!"
       MSSQL_PID: "Express"
     ports:
       - "1433:1433"
     volumes:
       - sqlserver_data:/var/opt/mssql
     healthcheck:
-      test: ["CMD-SHELL", "/opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P MedPassword123! -C -Q 'SELECT 1' || exit 1"]
+      test: ["CMD-SHELL", "/opt/mssql-tools18/bin/sqlcmd -S localhost -U sa -P 'MedBooking@2026!' -C -Q 'SELECT 1' || exit 1"]
       interval: 10s
       timeout: 5s
       retries: 10
@@ -24,7 +24,7 @@ services:
     ports:
       - "8000:8000"
     environment:
-      DATABASE_URL: "mssql+pymssql://sa:MedPassword123!@db:1433/PhongKhamDB"
+      DATABASE_URL: "mssql+pymssql://sa:MedBooking2026!@db:1433/PhongKhamDB"
       SECRET_KEY: change-me-in-production
       ALGORITHM: HS256
       ACCESS_TOKEN_EXPIRE_MINUTES: 30
