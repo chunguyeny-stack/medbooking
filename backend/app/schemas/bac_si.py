@@ -2,7 +2,6 @@ from decimal import Decimal
 from typing import List, Optional
 from pydantic import BaseModel, EmailStr, Field
 
-
 # --- Dị bản (Variants / Chi nhánh / Chuyên khoa phụ) ---
 class BacSiVariantBase(BaseModel):
     ten_co_so: Optional[str] = None
