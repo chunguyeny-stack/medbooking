@@ -3,8 +3,9 @@ from typing import Optional, List
 from fastapi import APIRouter, Depends, Query, status
 from sqlalchemy.orm import Session
 
-from app.datadase.database import get_db
+from app.database.database import get_db
 from app.models.models import NguoiDung
+from app.models.bac_si import BacSi
 from app.models.lich_hen import LichHen
 from app.schemas.bac_si import (
     BacSiCreate,
@@ -12,13 +13,13 @@ from app.schemas.bac_si import (
     BacSiResponse,
     BacSiPaginationResponse
 )
-from services.bac_si import BacSiService
+
+from app.services.bac_si_service import BacSiService
 
 # Nạp module auth từ thư mục gốc
-root_auth = importlib.import_module("auth")
+from app import auth as root_auth
 
 router = APIRouter(prefix="/doctors", tags=["Quản lý Bác sĩ"])
-
 
 @router.post(
     "",
@@ -61,13 +62,13 @@ def get_doctors(
 
     patient_specialties: List[int] = []
     if current_user and current_user.vai_tro == "benh_nhan":
-        history = db.query(LichHen.ma_bac_si).filter(
-            LichHen.ma_benh_nhan == current_user.user_id
+        # Sửa lại từ ma_bac_si/ma_benh_nhan thành bac_si_id/benh_nhan_id khớp với models.py & lich_hen.py
+        history = db.query(LichHen.bac_si_id).filter(
+            LichHen.benh_nhan_id == current_user.id
         ).all()
         doc_ids = [h[0] for h in history if h[0]]
         if doc_ids:
-            from models.bac_si import BacSi
-            ck_records = db.query(BacSi.ma_chuyen_khoa).filter(BacSi.ma_bac_si.in_(doc_ids)).all()
+            ck_records = db.query(BacSi.chuyen_khoa_id).filter(BacSi.id.in_(doc_ids)).all()
             patient_specialties = [c[0] for c in ck_records if c[0]]
 
     return BacSiService.get_paginated_doctors(

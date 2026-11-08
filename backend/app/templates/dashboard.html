@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>Admin Dashboard - MedBooking</title>
+  <!-- suppress HtmlUnknownTarget -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <style>
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: #f4f6f8; margin: 0; padding: 24px; color: #333; }
+    .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
+    .filters { display: flex; align-items: center; gap: 12px; }
+    label { font-size: 14px; font-weight: 500; }
+    select, button { padding: 8px 16px; border-radius: 6px; border: 1px solid #ccc; font-size: 14px; }
+    button { background: #007bff; color: white; border: none; cursor: pointer; }
+    button:hover { background: #0056b3; }
+
+    .cards-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-bottom: 24px; }
+    .card { background: white; border-radius: 8px; padding: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+    .card h3 { margin: 0 0 8px 0; font-size: 14px; color: #666; }
+    .card .value { font-size: 24px; font-weight: bold; color: #111; }
+
+    .chart-container { background: white; border-radius: 8px; padding: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); margin-bottom: 24px; }
+    .table-container { background: white; border-radius: 8px; padding: 20px; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+    table { width: 100%; border-collapse: collapse; text-align: left; font-size: 14px; margin-top: 12px; }
+    th, td { padding: 12px; border-bottom: 1px solid #eee; }
+    th { background: #fafafa; font-weight: 600; }
+    .empty-state { text-align: center; padding: 32px; color: #888; font-style: italic; }
+  </style>
+</head>
+<body>
+
+  <div class="header">
+    <h2>Báo Cáo Doanh Thu & Lợi Nhuận MedBooking</h2>
+    <div class="filters">
+      <label for="filterYear">Năm:</label>
+      <select id="filterYear">
+        <option value="2026" selected>2026</option>
+        <option value="2025">2025</option>
+      </select>
+
+      <label for="filterQuarter">Kỳ:</label>
+      <select id="filterQuarter">
+        <option value="">Cả Năm</option>
+        <option value="Q1">Kỳ 1 (Tháng 1 - 3)</option>
+        <option value="Q2">Kỳ 2 (Tháng 4 - 6)</option>
+        <option value="Q3">Kỳ 3 (Tháng 7 - 9)</option>
+        <option value="Q4">Kỳ 4 (Tháng 10 - 12)</option>
+      </select>
+      <button type="button" id="btn-reload">Xem Thống Kê</button>
+    </div>
+  </div>
+
+  <!-- THẺ CARD CHỈ SỐ -->
+  <div class="cards-grid">
+    <div class="card">
+      <h3>Tổng Ca Khám Hoàn Thành</h3>
+      <div class="value" id="card-total-completed">0</div>
+    </div>
+    <div class="card">
+      <h3>Tổng Doanh Thu</h3>
+      <div class="value" id="card-total-revenue">0 ₫</div>
+    </div>
+    <div class="card">
+      <h3>Lợi Nhuận Tạm Tính (35%)</h3>
+      <div class="value" id="card-total-profit">0 ₫</div>
+    </div>
+  </div>
+
+  <!-- BIỂU ĐỒ -->
+  <div class="chart-container">
+    <h3>Biểu Đồ Doanh Thu Theo Tháng</h3>
+    <div id="chart-empty" class="empty-state">Chưa có dữ liệu giao dịch trong kỳ này</div>
+    <canvas id="revenueChart" style="max-height: 320px; display: none;"></canvas>
+  </div>
+
+  <!-- BẢNG GIAO DỊCH CHI TIẾT -->
+  <div class="table-container">
+    <h3>Nhật Ký Giao Dịch Chi Tiết (Bác Sĩ & Lễ Tân)</h3>
+    <table>
+      <thead>
+        <tr>
+          <th>Mã LH</th>
+          <th>Ngày Khám</th>
+          <th>Bệnh Nhân</th>
+          <th>Bác Sĩ Thực Hiện</th>
+          <th>Lễ Tân Tiếp Đón</th>
+          <th>Doanh Thu</th>
+          <th>Lợi Nhuận</th>
+          <th>Trạng Thái</th>
+        </tr>
+      </thead>
+      <tbody id="transaction-tbody">
+        <tr><td colspan="8" class="empty-state">Chưa có dữ liệu giao dịch</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <script>
+    let myChart = null;
+
+    function formatVND(value) {
+      return new Intl.NumberFormat('vi-VN').format(Number(value || 0)) + ' ₫';
+    }
+
+    async function loadDashboard() {
+      const yearEl = /** @type {HTMLSelectElement} */ (document.getElementById('filterYear'));
+      const quarterEl = /** @type {HTMLSelectElement} */ (document.getElementById('filterQuarter'));
+      const token = localStorage.getItem('access_token');
+
+      let url = 'http://127.0.0.1:8000/api/admin/dashboard-stats?year=' + encodeURIComponent(yearEl.value);
+      if (quarterEl.value) {
+        url += '&quarter=' + encodeURIComponent(quarterEl.value);
+      }
+
+      try {
+        const headers = {};
+        if (token) {
+          headers['Authorization'] = 'Bearer ' + token;
+        }
+        const res = await fetch(url, { headers: headers });
+        const data = await res.json();
+        renderDashboard(data);
+      } catch (err) {
+        console.error("Lỗi nạp dashboard:", err);
+      }
+    }
+
+    function renderDashboard(data) {
+      const totalCompleted = data['total_completed'] || 0;
+      const totalRevenue = data['total_revenue'] || 0;
+      const totalProfit = data['total_profit'] || 0;
+      const hasData = Boolean(data['has_data']) && totalCompleted > 0;
+
+      const cardCompleted = document.getElementById('card-total-completed');
+      const cardRevenue = document.getElementById('card-total-revenue');
+      const cardProfit = document.getElementById('card-total-profit');
+
+      if (cardCompleted) cardCompleted.innerText = String(totalCompleted);
+      if (cardRevenue) cardRevenue.innerText = formatVND(totalRevenue);
+      if (cardProfit) cardProfit.innerText = formatVND(totalProfit);
+
+      const chartCanvas = /** @type {HTMLCanvasElement} */ (document.getElementById('revenueChart'));
+      const chartEmpty = document.getElementById('chart-empty');
+      const tbody = document.getElementById('transaction-tbody');
+
+      if (!hasData) {
+        if (chartEmpty) chartEmpty.style.display = 'block';
+        if (chartCanvas) chartCanvas.style.display = 'none';
+        if (tbody) tbody.innerHTML = '<tr><td colspan="8" class="empty-state">Chưa có dữ liệu giao dịch trong kỳ này</td></tr>';
+        return;
+      }
+
+      if (chartEmpty) chartEmpty.style.display = 'none';
+      if (chartCanvas) chartCanvas.style.display = 'block';
+
+      if (myChart) {
+        myChart.destroy();
+      }
+
+      const chartObj = data['chart'] || {};
+      const ChartConstructor = window['Chart'];
+      if (ChartConstructor && chartCanvas) {
+        const ctx = chartCanvas.getContext('2d');
+        myChart = new ChartConstructor(ctx, {
+          type: 'bar',
+          data: {
+            labels: chartObj['labels'] || [],
+            datasets: [{
+              label: 'Doanh Thu (VNĐ)',
+              data: chartObj['values'] || [],
+              backgroundColor: 'rgba(54, 162, 235, 0.7)',
+              borderColor: 'rgba(54, 162, 235, 1)',
+              borderWidth: 1,
+              borderRadius: 4
+            }]
+          },
+          options: {
+            responsive: true,
+            scales: {
+              y: { beginAtZero: true }
+            }
+          }
+        });
+      }
+
+      if (tbody) {
+        tbody.innerHTML = '';
+        const list = data['transactions'] || [];
+        list.forEach(function(item) {
+          const tr = document.createElement('tr');
+          tr.innerHTML =
+            '<td>#' + item['ma_lich_hen'] + '</td>' +
+            '<td>' + item['ngay_kham'] + ' ' + item['gio_kham'] + '</td>' +
+            '<td>' + item['benh_nhan'] + '</td>' +
+            '<td><strong>' + item['bac_si'] + '</strong></td>' +
+            '<td>' + item['le_tan_xac_nhan'] + '</td>' +
+            '<td>' + formatVND(item['so_tien']) + '</td>' +
+            '<td style="color: #28a745; font-weight: 600;">+' + formatVND(item['loi_nhuan']) + '</td>' +
+            '<td><span style="background: #e6f4ea; color: #137333; padding: 4px 8px; border-radius: 4px;">' + item['trang_thai'] + '</span></td>';
+          tbody.appendChild(tr);
+        });
+      }
+    }
+
+    const btnReload = document.getElementById('btn-reload');
+    if (btnReload) {
+      btnReload.addEventListener('click', loadDashboard);
+    }
+    window.onload = loadDashboard;
+  </script>
+</body>
+</html>

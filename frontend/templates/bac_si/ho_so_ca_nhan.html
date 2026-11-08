@@ -1,122 +1,612 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Bác sĩ - Hồ sơ cá nhân & Lịch trực</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Bác sĩ - Hồ sơ & Lịch trực</title>
+<link rel="icon" type="image/jpeg" href="../../favicon.jpg">
+
+<link rel="stylesheet" href="../../static/css/BS.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Quicksand:wght@700&display=swap" rel="stylesheet">
+<style>
+    /* --- CSS TÙY CHỈNH CHO TRANG HỒ SƠ --- */
+    
+    /* Ẩn nút đóng sidebar mặc định nếu có */
+    .sidebar-close, #sidebar-close {
+        display: none !important;
+    }
+
+    /* Logo text: màu xanh lá cho cả 2 chế độ */
+    .brand .logo-text h1 {
+        font-family: 'Quicksand', sans-serif !important;
+        font-weight: 800 !important;
+        font-size: 22px !important;
+        text-transform: none !important;
+        letter-spacing: -0.01em;
+        color: #10B981 !important;
+        opacity: 1 !important;
+        visibility: visible !important;
+    }
+    [data-theme="dark"] .brand .logo-text h1 {
+        color: #34D399 !important;
+    }
+
+    /* Hiệu ứng hover cho user-chip */
+    .user-chip-container {
+        position: relative;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+    }
+    .topbar-right .user-chip {
+        transition: all 0.25s ease;
+    }
+    .user-chip-container:hover .user-chip {
+        background: var(--primary-light);
+        box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);
+        transform: translateY(-1px);
+    }
+
+    /* Dropdown Thông báo & User - Đồng bộ theme */
+    .notification-dropdown, 
+    .user-dropdown {
+        position: absolute !important;
+        top: 60px !important;
+        background-color: var(--bg-card) !important;
+        opacity: 1 !important;
+        border: 1px solid var(--border-glass) !important;
+        border-radius: 18px !important;
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25) !important;
+        display: none;
+        z-index: 9999 !important;
+        overflow: hidden;
+        min-width: 300px;
+    }
+
+    .notification-dropdown.active, 
+    .user-dropdown.active {
+        display: block !important;
+    }
+
+    .notification-header {
+        padding: 14px 18px;
+        font-weight: 700;
+        font-size: 13px;
+        background: var(--primary-soft);
+        border-bottom: 1px solid var(--border-glass);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        color: var(--primary-color);
+    }
+    
+    .notification-list {
+        max-height: 280px;
+        overflow-y: auto;
+    }
+
+    .notification-item {
+        padding: 12px 18px;
+        border-bottom: 1px solid var(--border-glass);
+        font-size: 13px;
+        color: var(--text-main);
+        cursor: pointer;
+        transition: background 0.2s;
+    }
+    .notification-item:hover {
+        background: var(--primary-soft);
+    }
+    
+    .notification-item strong {
+        display: block;
+        margin-bottom: 3px;
+        font-size: 13.5px;
+        font-weight: 700;
+        color: var(--secondary-color);
+    }
+
+    .user-dropdown {
+        right: 0 !important;
+        width: 180px !important;
+        min-width: 180px !important;
+    }
+    .user-dropdown a {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 14px 18px;
+        font-size: 13.5px;
+        font-weight: 600;
+        color: var(--danger) !important;
+        text-decoration: none;
+        transition: all 0.2s;
+    }
+    .user-dropdown a:hover {
+        background: rgba(239, 68, 68, 0.1) !important;
+    }
+
+    /* Custom cho trang hồ sơ */
+    .profile-card {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+    
+    .profile-header {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        padding-bottom: 20px;
+        border-bottom: 1px solid var(--border-glass);
+    }
+    
+    .avatar-wrapper {
+        position: relative;
+        flex-shrink: 0;
+    }
+    
+    .avatar-lg {
+        width: 100px; height: 100px;
+        border-radius: 50%;
+        background: var(--primary-gradient);
+        color: #fff;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 36px; font-weight: 700;
+        box-shadow: 0 8px 24px rgba(16, 185, 129, 0.3);
+        border: 3px solid var(--bg-card);
+    }
+    
+    .avatar-edit-btn {
+        position: absolute;
+        bottom: 0; right: 0;
+        width: 32px; height: 32px;
+        border-radius: 50%;
+        background: var(--primary-color);
+        color: #fff;
+        border: 2px solid var(--bg-card);
+        display: flex; align-items: center; justify-content: center;
+        font-size: 12px; cursor: pointer;
+        transition: all 0.2s;
+    }
+    .avatar-edit-btn:hover {
+        background: var(--primary-dark);
+        transform: scale(1.1);
+    }
+    
+    .profile-info-summary h2 {
+        font-size: 22px; font-weight: 800;
+        color: var(--secondary-color);
+        margin-bottom: 4px;
+    }
+    .profile-info-summary p {
+        font-size: 13.5px; color: var(--text-muted);
+        margin-bottom: 8px;
+    }
+    .profile-info-summary .specialty-tag {
+        display: inline-block;
+        padding: 4px 12px;
+        background: var(--primary-light);
+        color: var(--primary-dark);
+        border-radius: 20px;
+        font-size: 12px;
+        font-weight: 600;
+    }
+
+    /* Form styling */
+    .form-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+    }
+    @media (max-width: 640px) {
+        .form-row { grid-template-columns: 1fr; }
+    }
+    
+    .form-group label {
+        display: block;
+        font-size: 13px;
+        font-weight: 600;
+        color: var(--text-main);
+        margin-bottom: 6px;
+    }
+    
+    .form-control {
+        width: 100%;
+        padding: 11px 14px;
+        border: 1px solid var(--border-glass);
+        border-radius: 10px;
+        background: var(--bg-body);
+        color: var(--text-main);
+        font-size: 14px;
+        font-family: inherit;
+        transition: all 0.2s;
+    }
+    .form-control:focus {
+        outline: none;
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 3px var(--primary-soft);
+        background: var(--bg-card);
+    }
+    .form-control[readonly] {
+        background: var(--bg-body);
+        color: var(--text-muted);
+        cursor: not-allowed;
+    }
+
+    /* Nút primary override cho trang này */
+    .btn-save {
+        padding: 12px 28px;
+        border-radius: 50px;
+        background: var(--primary-gradient);
+        color: #fff;
+        border: none;
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        box-shadow: 0 5px 15px rgba(16, 185, 129, 0.3);
+        transition: all 0.2s;
+    }
+    .btn-save:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 10px 25px rgba(16, 185, 129, 0.4);
+    }
+
+    /* Lịch trực */
+    .schedule-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 13.5px;
+    }
+    .schedule-table thead th {
+        text-align: left;
+        padding: 12px 16px;
+        font-size: 11.5px;
+        font-weight: 700;
+        text-transform: uppercase;
+        color: var(--primary-color);
+        background: var(--primary-light);
+        letter-spacing: 0.05em;
+        border-bottom: 1px solid var(--border-glass);
+    }
+    .schedule-table tbody td {
+        padding: 14px 16px;
+        border-bottom: 1px solid var(--border-glass);
+        color: var(--text-main);
+        vertical-align: middle;
+    }
+    .schedule-table tbody tr:last-child td {
+        border-bottom: none;
+    }
+    .schedule-table tbody tr:hover {
+        background: var(--primary-soft);
+    }
+    .day-name {
+        font-weight: 700;
+        color: var(--secondary-color);
+    }
+    .day-date {
+        font-size: 11.5px;
+        color: var(--text-muted);
+    }
+</style>
 </head>
 <body>
+<div class="app-layout">
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="logo-container">
+        <div class="logo-icon"><i class="fas fa-notes-medical"></i></div>
+        <div class="logo-text">
+          <h1>MedBooking</h1>
+          <p>Bác sĩ</p>
+        </div>
+      </div>
+    </div>
+    <div class="nav-section">
+      <div class="nav-title">Tổng quan</div>
+      <ul class="nav-list"><li><a href="home_bs.html" class="nav-link"><i class="fas fa-house-medical"></i><span>Trang chủ Bác sĩ</span></a></li></ul>
+    </div>
+    <div class="nav-section">
+      <div class="nav-title">Tác nghiệp khám bệnh</div>
+      <ul class="nav-list">
+        <li><a href="danh_sach_ca_kham.html" class="nav-link"><i class="fas fa-calendar-check"></i><span>Lịch hẹn & Ca khám</span></a></li>
+        <li><a href="ho_so_ca_nhan.html" class="nav-link active"><i class="fas fa-user-doctor"></i><span>Hồ sơ & Lịch trực</span></a></li>
+      </ul>
+    </div>
+    <div class="sidebar-footer">
+      <div class="avatar-sm">NA</div>
+      <div class="info"><strong>BS. Nguyễn Văn A</strong><span>Nội Tổng Quát</span></div>
+    </div>
+  </aside>
 
-    <!-- Sidebar Menu Bác sĩ -->
-    <aside>
-        <div>MEDBOOKING - BÁC SĨ</div>
-        <nav>
-            <h3>TỔNG QUAN</h3>
-            <ul>
-                <li><a href="home_bs.html">Trang chủ Bác sĩ</a></li>
-            </ul>
-
-            <h3>TÁC NGHIỆP KHÁM BỆNH</h3>
-            <ul>
-                <li><a href="danh_sach_ca_kham.html">Lịch hẹn & Ca khám hôm nay</a></li>
-                <li><a href="ho_so_ca_nhan.html"><strong>Thông tin cá nhân & Lịch trực</strong></a></li>
-            </ul>
-        </nav>
-    </aside>
-
-    <!-- Main Content -->
-    <main>
-        <header>
-            <h1>Hồ sơ Cá nhân & Lịch trực Bác sĩ</h1>
-            <div>
-                <span>BS. Nguyễn Văn A</span> | 
-                <a href="../dk_dn/dn.html">Đăng xuất</a>
+  <div class="main-area">
+    <header class="topbar">
+      <div class="topbar-left">
+        <button class="icon-btn" id="sidebar-toggle"><i class="fas fa-bars"></i></button>
+        <h1 class="page-title">Hồ sơ & Lịch trực</h1>
+      </div>
+      <div class="topbar-right" style="position: relative; display: flex; align-items: center; gap: 12px;">
+        <button class="icon-btn theme-toggle" id="theme-toggle"><i class="fas fa-moon"></i><i class="fas fa-sun"></i></button>
+        <button class="icon-btn" id="btn-notify"><i class="fas fa-bell"></i><span class="badge" style="display:inline-block; width:8px; height:8px; background:#10B981; border-radius:50%; position:absolute; top:8px; right:60px;"></span></button>
+        
+        <div class="notification-dropdown" id="notification-dropdown">
+            <div class="notification-header">
+                <span>Thông báo mới</span>
+                <span style="font-size:11px; font-weight:700; color:var(--primary-color); cursor:pointer;" id="mark-all-read">Đánh dấu đã đọc</span>
             </div>
-        </header>
-
-        <!-- 1. THÔNG TIN CHI TIẾT HỒ SƠ BÁC SĨ -->
-        <section>
-            <h2>Thông tin Chuyên môn & Liên hệ</h2>
-            <div style="display: flex; gap: 30px; align-items: flex-start;">
-                <!-- Ảnh đại diện bác sĩ -->
-                <div>
-                    <div style="width: 150px; height: 180px; border: 1px dashed #ccc; display: flex; align-items: center; justify-content: center; text-align: center;">
-                        <span>Ảnh đại diện</span>
-                    </div>
+            <div class="notification-list">
+                <div class="notification-item">
+                    <strong>Lịch hẹn mới</strong>
+                    Bệnh nhân Nguyễn Văn A vừa đặt lịch khám vào lúc 09:00 sáng mai.
                 </div>
-
-                <!-- Chi tiết thông tin -->
-                <div style="flex: 1;">
-                    <form id="form-doctor-profile">
-                        <div>
-                            <label>Họ và tên:</label>
-                            <input type="text" id="doc-fullname" value="Nguyễn Văn A" readonly>
-                        </div>
-                        <div>
-                            <label>Học hàm / Học vị:</label>
-                            <input type="text" id="doc-degree" value="Thạc sĩ - Bác sĩ" readonly>
-                        </div>
-                        <div>
-                            <label>Chuyên khoa:</label>
-                            <input type="text" id="doc-specialty" value="Nội Tổng Quát" readonly>
-                        </div>
-                        <div>
-                            <label>Số điện thoại liên hệ:</label>
-                            <input type="text" id="doc-phone" value="0912345678">
-                        </div>
-                        <div>
-                            <label>Email công vụ:</label>
-                            <input type="email" id="doc-email" value="bs.nguyenvana@medbooking.com">
-                        </div>
-                        <div>
-                            <label>Kinh nghiệm & Giới thiệu:</label>
-                            <textarea id="doc-bio" rows="3">Hơn 10 năm kinh nghiệm khám chữa bệnh các bệnh lý nội khoa tại các bệnh viện lớn.</textarea>
-                        </div>
-                        <div>
-                            <button type="button" id="btn-update-profile">Cập nhật thông tin</button>
-                        </div>
-                    </form>
+                <div class="notification-item">
+                    <strong>Cập nhật lịch trực</strong>
+                    Admin đã duyệt lịch trực tuần tới của bạn.
+                </div>
+                <div class="notification-item">
+                    <strong>Kết quả xét nghiệm</strong>
+                    Bệnh nhân Trần Thị B đã có kết quả cận lâm sàng.
                 </div>
             </div>
-        </section>
+        </div>
 
-        <!-- 2. LỊCH TRỰC TUẦN CỦA BÁC SĨ -->
-        <section>
-            <h2>Lịch trực trong tuần</h2>
-            <table border="1" style="width: 100%;">
-                <thead>
-                    <tr>
-                        <th>Thứ / Ngày</th>
-                        <th>Ca làm việc</th>
-                        <th>Phòng khám / Khu vực</th>
-                        <th>Trạng thái lịch trực</th>
-                    </tr>
-                </thead>
-                <tbody id="doctor-duty-schedule-body">
-                    <tr>
-                        <td>Thứ Hai (12/10/2026)</td>
-                        <td>Sáng (08:00 - 12:00)</td>
-                        <td>Phòng khám 201 - Tầng 2</td>
-                        <td><span style="color: green;">Đã xác nhận</span></td>
-                    </tr>
-                    <tr>
-                        <td>Thứ Ba (13/10/2026)</td>
-                        <td>Chiều (13:30 - 17:30)</td>
-                        <td>Phòng khám 201 - Tầng 2</td>
-                        <td><span style="color: green;">Đã xác nhận</span></td>
-                    </tr>
-                    <tr>
-                        <td>Thứ Tư (14/10/2026)</td>
-                        <td>Nghỉ ca</td>
-                        <td>--</td>
-                        <td>--</td>
-                    </tr>
-                </tbody>
-            </table>
-        </section>
+        <div class="user-chip-container" id="user-menu-btn">
+          <div class="user-chip"><div class="avatar">NA</div><span class="name">BS. Nguyễn Văn A</span></div>
+          
+          <div class="user-dropdown" id="user-dropdown">
+              <a href="../dk_dn/dn.html"><i class="fas fa-sign-out-alt"></i> Đăng xuất</a>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main class="content">
+      <!-- SECTION 1: THÔNG TIN CÁ NHÂN -->
+      <section class="card">
+        <div class="card-header">
+          <h2 class="card-title"><i class="fas fa-id-card-clip"></i> Thông tin Chuyên môn & Liên hệ</h2>
+        </div>
+        <div class="profile-card">
+          <div class="profile-header">
+            <div class="avatar-wrapper">
+              <div class="avatar-lg">NA</div>
+              <div class="avatar-edit-btn" id="avatar-upload" title="Đổi ảnh đại diện">
+                <i class="fas fa-camera"></i>
+              </div>
+            </div>
+            <div class="profile-info-summary">
+              <h2>BS. Nguyễn Văn A</h2>
+              <p>Thạc sĩ - Bác sĩ • 10+ năm kinh nghiệm</p>
+              <span class="specialty-tag"><i class="fas fa-stethoscope"></i> Nội Tổng Quát</span>
+            </div>
+          </div>
+
+          <form id="form-doctor-profile">
+            <div class="form-row">
+              <div class="form-group">
+                <label for="pf-name">Họ và tên</label>
+                <input type="text" class="form-control" id="pf-name" value="Nguyễn Văn A" readonly>
+              </div>
+              <div class="form-group">
+                <label for="pf-degree">Học hàm / Học vị</label>
+                <input type="text" class="form-control" id="pf-degree" value="Thạc sĩ - Bác sĩ" readonly>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label for="pf-specialty">Chuyên khoa</label>
+                <input type="text" class="form-control" id="pf-specialty" value="Nội Tổng Quát" readonly>
+              </div>
+              <div class="form-group">
+                <label for="pf-phone">Số điện thoại</label>
+                <input type="tel" class="form-control" id="pf-phone" value="0912345678" placeholder="Nhập số điện thoại...">
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="pf-email">Email công vụ</label>
+              <input type="email" class="form-control" id="pf-email" value="bs.nguyenvana@medbooking.com" placeholder="Nhập email...">
+            </div>
+            <div class="form-group">
+              <label for="pf-bio">Kinh nghiệm & Giới thiệu</label>
+              <textarea class="form-control" id="pf-bio" rows="3" placeholder="Giới thiệu về bản thân...">Hơn 10 năm kinh nghiệm khám chữa bệnh các bệnh lý nội khoa tại các bệnh viện lớn.</textarea>
+            </div>
+            <div style="display: flex; justify-content: flex-end; gap: 10px;">
+              <button type="button" class="btn-save" id="btn-update-profile">
+                <i class="fas fa-save"></i> Cập nhật thông tin
+              </button>
+            </div>
+          </form>
+        </div>
+      </section>
+
+      <!-- SECTION 2: LỊCH TRỰC -->
+      <section class="card">
+        <div class="card-header">
+          <h2 class="card-title"><i class="fas fa-calendar-week"></i> Lịch trực trong tuần</h2>
+        </div>
+        <div class="table-wrap">
+          <table class="schedule-table">
+            <thead>
+              <tr>
+                <th>Thứ / Ngày</th>
+                <th>Ca làm việc</th>
+                <th>Phòng khám</th>
+                <th>Trạng thái</th>
+              </tr>
+            </thead>
+            <tbody id="weekly-schedule-body">
+              <!-- Sẽ được render tự động bởi JS -->
+            </tbody>
+          </table>
+        </div>
+      </section>
     </main>
+  </div>
+</div>
 
-    <!-- Liên kết tệp JavaScript xử lý logic -->
-    <script src="../../js/doctor.js"></script>
+<div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+<script src="../../static/js/bac_si.js"></script>
+<script>
+window.MB_PAGE_INIT = function () {
+  const PROFILE_KEY = 'medbooking_doctor_profile';
+
+  // --- LOAD PROFILE ĐÃ LƯU ---
+  const saved = MB_STORAGE.get(PROFILE_KEY, null);
+  if (saved) {
+    if (saved.phone) document.getElementById('pf-phone').value = saved.phone;
+    if (saved.email) document.getElementById('pf-email').value = saved.email;
+    if (saved.bio) document.getElementById('pf-bio').value = saved.bio;
+  }
+
+  // --- XỬ LÝ ĐỔI ẢNH ĐẠI DIỆN (DEMO) ---
+  document.getElementById('avatar-upload').addEventListener('click', () => {
+    showToast('Tính năng tải ảnh đang phát triển', 'info', 2000);
+  });
+
+  // --- LƯU THÔNG TIN CÁ NHÂN ---
+  document.getElementById('btn-update-profile').addEventListener('click', () => {
+    const phone = document.getElementById('pf-phone').value.trim();
+    const email = document.getElementById('pf-email').value.trim();
+    const bio = document.getElementById('pf-bio').value.trim();
+
+    // Validation
+    if (!phone || phone.length < 10) {
+      showToast('Số điện thoại không hợp lệ (>= 10 số)', 'error', 2500);
+      return;
+    }
+    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      showToast('Email không hợp lệ', 'error', 2500);
+      return;
+    }
+
+    MB_STORAGE.set(PROFILE_KEY, { phone, email, bio });
+    showToast('✅ Cập nhật thông tin thành công', 'success', 2500);
+  });
+
+  // ============================================================
+  // RENDER LỊCH TRỰC THEO TUẦN HIỆN TẠI
+  // ============================================================
+  function getDayOfWeekStr(date) {
+    const days = ['Chủ Nhật', 'Thứ Hai', 'Thứ Ba', 'Thứ Tư', 'Thứ Năm', 'Thứ Sáu', 'Thứ Bảy'];
+    return days[date.getDay()];
+  }
+  
+  function formatDateStr(date) {
+    return `${String(date.getDate()).padStart(2, '0')}/${String(date.getMonth() + 1).padStart(2, '0')}/${date.getFullYear()}`;
+  }
+
+  // Lấy ngày Thứ 2 của tuần hiện tại
+  const today = new Date();
+  const day = today.getDay();
+  const diff = today.getDate() - day + (day === 0 ? -6 : 1); // Adjust when day is Sunday
+  const monday = new Date(today.setDate(diff));
+  
+  const tuesday = new Date(monday);
+  tuesday.setDate(monday.getDate() + 1);
+  
+  const wednesday = new Date(monday);
+  wednesday.setDate(monday.getDate() + 2);
+
+  const thursday = new Date(monday);
+  thursday.setDate(monday.getDate() + 3);
+
+  const friday = new Date(monday);
+  friday.setDate(monday.getDate() + 4);
+
+  const scheduleBody = document.getElementById('weekly-schedule-body');
+  if (scheduleBody) {
+    scheduleBody.innerHTML = `
+      <tr>
+        <td>
+          <div class="day-name">${getDayOfWeekStr(monday)}</div>
+          <div class="day-date">${formatDateStr(monday)}</div>
+        </td>
+        <td>Sáng (08:00 - 12:00)</td>
+        <td>Phòng khám 201 - Tầng 2</td>
+        <td><span class="badge-status badge-completed">Đã xác nhận</span></td>
+      </tr>
+      <tr>
+        <td>
+          <div class="day-name">${getDayOfWeekStr(tuesday)}</div>
+          <div class="day-date">${formatDateStr(tuesday)}</div>
+        </td>
+        <td>Chiều (13:30 - 17:30)</td>
+        <td>Phòng khám 201 - Tầng 2</td>
+        <td><span class="badge-status badge-completed">Đã xác nhận</span></td>
+      </tr>
+      <tr>
+        <td>
+          <div class="day-name">${getDayOfWeekStr(wednesday)}</div>
+          <div class="day-date">${formatDateStr(wednesday)}</div>
+        </td>
+        <td>Nghỉ ca</td>
+        <td>--</td>
+        <td><span class="badge-status badge-cancelled">Nghỉ</span></td>
+      </tr>
+      <tr>
+        <td>
+          <div class="day-name">${getDayOfWeekStr(thursday)}</div>
+          <div class="day-date">${formatDateStr(thursday)}</div>
+        </td>
+        <td>Sáng (08:00 - 12:00)</td>
+        <td>Phòng khám 201 - Tầng 2</td>
+        <td><span class="badge-status badge-completed">Đã xác nhận</span></td>
+      </tr>
+      <tr>
+        <td>
+          <div class="day-name">${getDayOfWeekStr(friday)}</div>
+          <div class="day-date">${formatDateStr(friday)}</div>
+        </td>
+        <td>Chiều (13:30 - 17:30)</td>
+        <td>Phòng khám 205 - Tầng 2</td>
+        <td><span class="badge-status badge-completed">Đã xác nhận</span></td>
+      </tr>
+    `;
+  }
+
+  // ============================================================
+  // XỬ LÝ DROPDOWN THÔNG BÁO & USER
+  // ============================================================
+  const btnNotify = document.getElementById('btn-notify');
+  const notifyDropdown = document.getElementById('notification-dropdown');
+  const badgeDot = btnNotify.querySelector('.badge');
+
+  const userMenuBtn = document.getElementById('user-menu-btn');
+  const userDropdown = document.getElementById('user-dropdown');
+
+  btnNotify.addEventListener('click', (e) => {
+    e.stopPropagation();
+    userDropdown.classList.remove('active');
+    notifyDropdown.classList.toggle('active');
+  });
+
+  userMenuBtn.addEventListener('click', (e) => {
+    e.stopPropagation();
+    notifyDropdown.classList.remove('active');
+    userDropdown.classList.toggle('active');
+  });
+
+  document.addEventListener('click', () => {
+    notifyDropdown.classList.remove('active');
+    userDropdown.classList.remove('active');
+  });
+
+  document.getElementById('mark-all-read').addEventListener('click', (e) => {
+    e.stopPropagation();
+    if (badgeDot) badgeDot.style.display = 'none';
+    notifyDropdown.classList.remove('active');
+    if (typeof showToast === 'function') {
+      showToast('Đã đánh dấu tất cả thông báo là đã đọc', 'success', 2000);
+    }
+  });
+};
+</script>
 </body>
 </html>
