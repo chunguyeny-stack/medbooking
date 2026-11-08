@@ -2,12 +2,12 @@ import importlib
 from fastapi import APIRouter, Depends, HTTPException, status, Request
 from sqlalchemy.orm import Session
 
-from database.database import get_db
-from models.models import NguoiDung, BenhNhan, Admin, ChuyenKhoa
-from models.bac_si import BacSi
-from schemas.core_nghiep_vu import UserRegisterRequest, TokenResponse
+from app.database.database import get_db
+from app.models.models import NguoiDung, BenhNhan, Admin, ChuyenKhoa
+from app.models.bac_si import BacSi
+from app.schemas.core_nghiep_vu import UserRegisterRequest, TokenResponse
 
-import auth as root_auth
+import app.auth as root_auth
 
 router = APIRouter(prefix="/auth", tags=["1. Backend Core - Auth"])
 
@@ -122,15 +122,11 @@ async def login(
         )
 
     # 2. Kiểm tra mật khẩu
-    # Vì bạn nạp dữ liệu trực tiếp bằng script SQL (mật khẩu text thuần như 'Hung15051980', 'Admin01011990'),
-    # ta so sánh trực tiếp với cột user.mat_khau, hoặc dùng hàm verify nếu là mật khẩu đã băm.
     is_password_valid = False
 
-    # Thử kiểm tra so sánh chuỗi trực tiếp (cho các tài khoản nạp sẵn từ file SQL)
     if user.mat_khau == password:
         is_password_valid = True
     else:
-        # Nếu không khớp, thử kiểm tra bằng hàm băm (cho tài khoản đăng ký qua web)
         try:
             if hasattr(root_auth, "verify_password") and root_auth.verify_password(password, user.mat_khau):
                 is_password_valid = True

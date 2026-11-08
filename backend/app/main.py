@@ -15,7 +15,7 @@ from app.api.goi_y_router import router as goi_y_router
 
 # Đảm bảo nạp models để tự động sinh bảng dữ liệu
 _ = models
-Base.metadata.create_all(bind=engine)
+#Base.metadata.create_all(bind=engine)
 
 # Xác định đường dẫn thư mục gốc
 BASE_DIR = Path(__file__).resolve().parent

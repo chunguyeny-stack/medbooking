@@ -1,3 +1,11 @@
+import os
+# Tự động xóa database cũ trước khi chạy test
+for file in ["test_auth.db", "test_integration.db"]:
+    if os.path.exists(file):
+        try:
+            os.remove(file)
+        except:
+            pass
 import pytest
 from fastapi.testclient import TestClient
 from sqlalchemy import create_engine
@@ -5,12 +13,18 @@ from sqlalchemy.orm import sessionmaker
 
 from app.database.database import Base, get_db
 from app.main import app
-from app.models.models import NguoiDung, BacSi, ChuyenKhoa, DichVu
+from app.models.models import NguoiDung, ChuyenKhoa, DichVu, BenhNhan
+from app.models.bac_si import BacSi
 from app.auth import get_password_hash
 
 # ============ CẤU HÌNH DB TEST ============
 
 SQLALCHEMY_DATABASE_URL = "sqlite:///./test_integration.db"
+
+# XÓA FILE DB CŨ TRƯỚC KHI TẠO MỚI (Nếu file tồn tại thì xóa đi)
+if os.path.exists("./test_integration.db"):
+    os.remove("./test_integration.db")
+
 engine = create_engine(
     SQLALCHEMY_DATABASE_URL,
     connect_args={"check_same_thread": False}
@@ -18,7 +32,6 @@ engine = create_engine(
 TestingSessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
 Base.metadata.create_all(bind=engine)
-
 
 def override_get_db():
     try:
@@ -40,6 +53,7 @@ def setup_data():
     db = TestingSessionLocal()
     
     # Xóa dữ liệu cũ
+    db.query(BenhNhan).delete()
     db.query(NguoiDung).delete()
     db.query(BacSi).delete()
     db.query(ChuyenKhoa).delete()
@@ -91,16 +105,18 @@ def setup_data():
     db.commit()
     db.refresh(bac_si)
     
-    db.close()
-    
-    yield {
+    ids = {
         "chuyen_khoa_id": chuyen_khoa.id,
         "dich_vu_id": dich_vu.id,
         "bac_si_id": bac_si.id
     }
     
+    db.close()
+    yield ids 
+    
     # Dọn dẹp
     db = TestingSessionLocal()
+    db.query(BenhNhan).delete()
     db.query(NguoiDung).delete()
     db.query(BacSi).delete()
     db.query(ChuyenKhoa).delete()
@@ -126,7 +142,8 @@ def test_full_booking_flow(setup_data):
             "ho_ten": "Bệnh Nhân Test",
             "email": "benhnhan@test.com",
             "so_dien_thoai": "0987654321",
-            "mat_khau": "Patient123"
+            "mat_khau": "Patient123",
+            "vai_tro": "benh_nhan"
         }
     )
     assert register_response.status_code == 201
