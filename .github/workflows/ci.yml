@@ -33,8 +33,7 @@ jobs:
           # Không cần biến DATABASE_URL kết nối SQL Server nữa vì test đã dùng SQLite
           SECRET_KEY: test-secret-key
         run: |
-          # Bỏ || echo đi để CI báo đỏ nếu test sai
-          pytest -v --cov=app --cov-report=term-missing
+          python -m pytest -v --cov=app --cov-report=term-missing
 
   docker-build:
     runs-on: ubuntu-latest
