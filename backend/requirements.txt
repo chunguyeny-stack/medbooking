@@ -11,3 +11,4 @@ pytest==8.1.1
 httpx==0.27.0
 pymssql==2.3.0
 pytest-cov
+bcrypt==4.0.1
