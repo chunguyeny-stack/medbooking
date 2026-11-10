@@ -250,5 +250,25 @@
         });
     })();
     </script>
+    <script>
+    // Tự động highlight menu đang chọn dựa vào tên file URL
+    document.addEventListener('DOMContentLoaded', () => {
+        const currentPath = window.location.pathname.split('/').pop() || 'home_a.html';
+        const navLinks = document.querySelectorAll('aside nav a');
+        
+        navLinks.forEach(link => {
+            const href = link.getAttribute('href');
+            // Nếu href trùng với tên file hiện tại thì thêm class active
+            if (href === currentPath) {
+                link.classList.add('active');
+                // Xóa thẻ <strong> cũ nếu có (để không bị in đậm 2 lần)
+                const strong = link.querySelector('strong');
+                if (strong) {
+                    link.innerHTML = strong.innerHTML;
+                }
+            }
+        });
+    });
+</script>
 </body>
 </html>
