@@ -41,6 +41,18 @@
         transform: translateY(-1px);
     }
 
+    .notify-dot {
+        display: inline-block;
+        width: 8px;
+        height: 8px;
+        background: #F472B6;
+        border-radius: 50%;
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        border: 2px solid var(--bg-card);
+    }
+
     .notification-dropdown, 
     .user-dropdown {
         position: absolute !important;
@@ -63,6 +75,9 @@
     html.dark .user-dropdown {
         background-color: #0F172A !important;
         border-color: #334155 !important;
+    }
+    [data-theme="dark"] .notify-dot {
+        border-color: #0F172A;
     }
 
     .notification-dropdown.active, 
@@ -168,7 +183,6 @@
         cursor: pointer;
     }
     
-    /* CSS Khóa form khi đã hoàn thành/hủy */
     .form-locked .card {
         opacity: 0.85;
         position: relative;
@@ -225,7 +239,7 @@
       <div class="nav-title">Tác nghiệp khám bệnh</div>
       <ul class="nav-list">
         <li><a href="danh_sach_ca_kham.html" class="nav-link"><i class="fas fa-calendar-check"></i><span>Lịch hẹn & Ca khám</span></a></li>
-        <li><a href="ho_so_ca_nhan.html" class="nav-link"><i class="fas fa-user-doctor"></i><span>Hồ sơ & Lịch trực</span></a></li>
+        <li><a href="ho_so_ca_nhan.html" class="nav-link"><i class="fas fa-user-doctor"></i><span>Hồ sơ & Xin nghỉ</span></a></li>
       </ul>
     </div>
     <div class="sidebar-footer">
@@ -245,7 +259,10 @@
           <i class="fas fa-arrow-left"></i> Quay lại
         </a>
         <button class="icon-btn theme-toggle" id="theme-toggle"><i class="fas fa-moon"></i><i class="fas fa-sun"></i></button>
-        <button class="icon-btn" id="btn-notify"><i class="fas fa-bell"></i><span class="badge" style="display:inline-block; width:8px; height:8px; background:#F472B6; border-radius:50%; position:absolute; top:8px; right:110px;"></span></button>
+        <button class="icon-btn" id="btn-notify" style="position: relative;">
+            <i class="fas fa-bell"></i>
+            <i class="notify-dot badge"></i>
+        </button>
         
         <div class="notification-dropdown" id="notification-dropdown">
             <div class="notification-header">
@@ -465,7 +482,6 @@ window.MB_PAGE_INIT = function () {
   const id = params.get('id') || 'LH00123';
   const STORAGE_KEY = 'medbooking_doctor_appointments';
 
-  // --- HÀM LẤY / CẬP NHẬT LỊCH HẸN ---
   function getAppointments() {
     let list = MB_STORAGE.get(STORAGE_KEY, null);
     if (!list) {
@@ -493,17 +509,14 @@ window.MB_PAGE_INIT = function () {
     return;
   }
 
-  // --- XỬ LÝ TRẠNG THÁI KHI VÀO TRANG ---
   const isLocked = (patient.status === 'completed' || patient.status === 'cancelled');
 
   if (patient.status === 'waiting') {
-    // Chuyển sang "Đang khám" ngay khi bác sĩ bấm vào
     updateAppointmentStatus(id, 'in-progress');
     patient.status = 'in-progress';
     showToast('🩺 Đã check-in thành công. Trạng thái ca khám chuyển sang: Đang khám', 'info', 2500);
   }
 
-  // --- RENDER THÔNG TIN BỆNH NHÂN ---
   document.getElementById('p-id').textContent = patient.id;
   document.getElementById('p-name').textContent = patient.name;
   document.getElementById('p-age').textContent = patient.age + ' / ' + patient.gender;
@@ -524,7 +537,6 @@ window.MB_PAGE_INIT = function () {
   statusEl.className = 'badge-status ' + cls;
   statusEl.textContent = txt;
 
-  // --- KHÓA FORM NẾU ĐÃ HOÀN THÀNH / HỦY ---
   const form = document.getElementById('form-diagnosis');
   const lockContainer = document.getElementById('lock-notice-container');
 
@@ -532,20 +544,16 @@ window.MB_PAGE_INIT = function () {
     document.body.classList.add('form-locked');
     form.classList.add('form-locked');
 
-    // Disable toàn bộ input/textarea/select/button
     form.querySelectorAll('input, textarea, select, button').forEach(el => {
       el.disabled = true;
     });
 
-    // Ẩn nút thêm/xóa thuốc
     const btnAddMed = document.getElementById('btn-add-medicine');
     if (btnAddMed) btnAddMed.style.display = 'none';
 
-    // Ẩn action bar
     const actionBar = form.querySelector('.action-bar');
     if (actionBar) actionBar.style.display = 'none';
 
-    // Hiển thị thông báo
     const msg = patient.status === 'completed'
       ? 'Ca khám này đã <strong>hoàn thành</strong>. Bạn không thể chỉnh sửa hồ sơ bệnh án nữa.'
       : 'Ca khám này đã bị <strong>hủy</strong>. Bạn không thể chỉnh sửa hồ sơ bệnh án.';
@@ -626,7 +634,6 @@ window.MB_PAGE_INIT = function () {
     }
   }
 
-  // Load draft
   const draft = MB_STORAGE.get(DRAFT_KEY, null);
   if (draft) {
     document.getElementById('clinical-notes').value = draft.clinical || '';
@@ -654,7 +661,6 @@ window.MB_PAGE_INIT = function () {
   document.querySelectorAll('textarea[data-min]').forEach(t => t.dispatchEvent(new Event('input')));
 
   if (isLocked) {
-    // Disable các input vừa add
     tbody.querySelectorAll('input, button').forEach(el => el.disabled = true);
   }
 
@@ -796,7 +802,6 @@ window.MB_PAGE_INIT = function () {
       const advice = document.getElementById('doctor-advice').value.trim();
       const devices = getSelectedDevices();
 
-      // Cập nhật trạng thái vào localStorage
       updateAppointmentStatus(id, 'completed');
 
       let smsEmailSent = false;
@@ -847,7 +852,6 @@ window.MB_PAGE_INIT = function () {
 
       MB_STORAGE.remove(DRAFT_KEY);
 
-      // Cập nhật UI
       statusEl.className = 'badge-status badge-completed';
       statusEl.textContent = 'Đã hoàn thành';
 
