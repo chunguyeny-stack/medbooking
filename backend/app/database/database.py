@@ -5,24 +5,14 @@ from sqlalchemy.orm import declarative_base, sessionmaker
 # ============================================================
 # 1. Cấu hình chuỗi kết nối cơ sở dữ liệu (Database URL)
 # ============================================================
-# Dự án MedBooking sử dụng SQL Server (qua pymssql).
-# Biến DATABASE_URL được cấu hình trong docker-compose.yml hoặc file .env.
-#
-# Ví dụ:
-#   - Docker:     mssql+pymssql://sa:MedPassword123!@db:1433/PhongKhamDB
-#   - Local:      mssql+pymssql://sa:MedPassword123!@localhost:1433/PhongKhamDB
-#   - Railway:    mssql+pymssql://sa:<password>@<host>:<port>/PhongKhamDB
-
 SQLALCHEMY_DATABASE_URL = os.getenv(
     "DATABASE_URL",
-    "mssql+pymssql://sa:MedPassword123!@localhost:1433/PhongKhamDB"
+    "mssql+pyodbc://@KHANHLINH/PhongKhamDB?driver=ODBC+Driver+17+for+SQL+Server&trusted_connection=yes"
 )
 
 # ============================================================
 # 2. Khởi tạo Engine
 # ============================================================
-# connect_args={"check_same_thread": False} chỉ cần thiết khi sử dụng SQLite.
-# Với SQL Server (pymssql), không cần connect_args.
 connect_args = {}
 if SQLALCHEMY_DATABASE_URL.startswith("sqlite"):
     connect_args = {"check_same_thread": False}
@@ -30,8 +20,8 @@ if SQLALCHEMY_DATABASE_URL.startswith("sqlite"):
 engine = create_engine(
     SQLALCHEMY_DATABASE_URL,
     connect_args=connect_args,
-    echo=False,  # Đặt True nếu muốn in chi tiết các câu lệnh SQL ra terminal
-    pool_pre_ping=True,  # Kiểm tra kết nối trước khi dùng (tránh lỗi "connection closed")
+    echo=False,
+    pool_pre_ping=True,
 )
 
 # ============================================================
