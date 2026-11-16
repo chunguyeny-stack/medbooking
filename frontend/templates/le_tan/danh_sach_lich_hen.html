@@ -3,136 +3,411 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MedBooking - Danh sách Lịch hẹn theo Ca</title>
-    <!-- Favicon chuẩn hình trái tim xanh dương -->
+    <title>MedBooking - Lên lịch làm việc Bác sĩ</title>
     <link rel="icon" type="image/jpeg" href="../../favicon.jpg">
-    
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="../../static/css/LT_BS.css">
-    
+
     <style>
         main { max-width: 1400px; margin: 30px auto 80px; padding: 0 20px; }
 
-        .ca-sections { display: flex; flex-direction: column; gap: 30px; }
-
-        .ca-section {
+        /* ========== CONTROL BAR ========== */
+        .control-bar {
             background: var(--bg-card);
             border-radius: var(--border-radius);
-            padding: 25px;
+            padding: 22px 26px;
             box-shadow: var(--shadow-soft);
             border: 1px solid var(--border-glass);
-            border-top: 4px solid;
+            margin-bottom: 25px;
+            display: grid;
+            grid-template-columns: 1.5fr 1fr 1fr auto;
+            gap: 18px;
+            align-items: end;
         }
-        .ca-section.sang { border-top-color: #F39C12; }
-        .ca-section.chieu { border-top-color: var(--primary-blue); }
-        .ca-section.toi { border-top-color: var(--accent-purple); }
+        .control-bar .form-group { margin: 0; }
+        .control-bar label {
+            display: block; font-size: 12px; font-weight: 700;
+            color: var(--text-gray); text-transform: uppercase;
+            letter-spacing: 0.5px; margin-bottom: 8px;
+        }
+        .control-bar select, .control-bar input {
+            width: 100%; padding: 12px 16px;
+            border: 1px solid var(--input-border); border-radius: 10px;
+            background: var(--input-bg); color: var(--secondary-color);
+            font-family: 'Poppins', sans-serif; font-size: 14px; outline: none;
+        }
+        .control-bar select:focus, .control-bar input:focus {
+            border-color: var(--primary-blue);
+            box-shadow: 0 0 0 4px rgba(74,144,226,0.12);
+        }
+        .range-info {
+            background: var(--primary-blue-light); color: var(--primary-blue);
+            padding: 10px 14px; border-radius: 8px;
+            font-size: 12px; font-weight: 600;
+            text-align: center; white-space: nowrap;
+        }
+        .range-info.warn { background: #FEF3C7; color: #92400E; }
 
-        .ca-section-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-            padding-bottom: 15px;
-            border-bottom: 1px dashed var(--border-color);
-            flex-wrap: wrap;
-            gap: 15px;
+        /* ========== QUICK STATS ========== */
+        .quick-stats {
+            display: grid; grid-template-columns: repeat(3, 1fr);
+            gap: 15px; margin-bottom: 25px;
         }
-        .ca-section-title { display: flex; align-items: center; gap: 15px; }
-        .ca-section-icon {
-            width: 50px; height: 50px;
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #fff;
-            font-size: 22px;
+        .quick-stat {
+            background: var(--bg-card); border-radius: 14px;
+            padding: 16px 18px; box-shadow: var(--shadow-soft);
+            border: 1px solid var(--border-glass);
+            border-left: 4px solid var(--primary-blue);
+            display: flex; align-items: center; gap: 12px;
         }
-        .ca-section.sang .ca-section-icon { background: linear-gradient(135deg, #F39C12, #F8C471); }
-        .ca-section.chieu .ca-section-icon { background: linear-gradient(135deg, var(--primary-blue), #6FB1F5); }
-        .ca-section.toi .ca-section-icon { background: linear-gradient(135deg, var(--accent-purple), #BB8FCE); }
-
-        .ca-section-title h3 {
-            font-size: 20px;
+        .quick-stat.off { border-left-color: #dc2626; }
+        .quick-stat.conflict { border-left-color: var(--accent-orange); }
+        .quick-stat .num {
+            font-size: 26px; font-weight: 700;
             font-family: 'Poppins', sans-serif;
+            line-height: 1; color: var(--secondary-color);
+        }
+        .quick-stat .lbl {
+            font-size: 11px; color: var(--text-gray);
+            text-transform: uppercase; letter-spacing: 0.4px;
             font-weight: 600;
-            margin-bottom: 3px;
         }
-        .ca-section-title p { font-size: 13px; color: var(--text-gray); }
 
-        .ca-section-stats { display: flex; gap: 25px; }
-        .ca-stat { text-align: center; }
-        .ca-stat .num {
-            font-size: 22px;
-            font-weight: 700;
-            font-family: 'Poppins', sans-serif;
-            color: var(--primary-blue);
-            line-height: 1;
+        /* ========== BANNER ========== */
+        .alert-banner {
+            background: linear-gradient(135deg, #FEF3C7, #FFE9A8);
+            border-left: 4px solid var(--accent-orange);
+            border-radius: 12px; padding: 14px 20px;
+            margin-bottom: 20px; display: flex;
+            align-items: center; gap: 15px;
+            color: #856404; font-size: 14px;
+            animation: slideDown 0.4s ease-out;
         }
-        .ca-section.sang .ca-stat .num { color: #F39C12; }
-        .ca-section.toi .ca-stat .num { color: var(--accent-purple); }
-        .ca-stat .lbl {
-            font-size: 11px;
+        .alert-banner i { font-size: 20px; flex-shrink: 0; }
+        .alert-banner strong { display: block; margin-bottom: 3px; }
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        [data-theme="dark"] .alert-banner {
+            background: linear-gradient(135deg, #4A3F1A, #3D3416);
+            color: #FFD966;
+        }
+
+        /* ========== WEEK GRID ========== */
+        .week-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 14px; margin-bottom: 25px;
+        }
+        @media (max-width: 1200px) { .week-grid { grid-template-columns: repeat(4, 1fr); } }
+        @media (max-width: 800px)  { .week-grid { grid-template-columns: repeat(2, 1fr); } }
+        @media (max-width: 500px)  { .week-grid { grid-template-columns: 1fr; } }
+
+        .day-card {
+            background: var(--bg-card);
+            border-radius: 16px; padding: 14px;
+            box-shadow: var(--shadow-soft);
+            border: 1px solid var(--border-glass);
+            display: flex; flex-direction: column; gap: 10px;
+            transition: all 0.25s;
+            position: relative; overflow: hidden;
+        }
+        .day-card:hover { box-shadow: var(--shadow-hover); }
+        .day-card.today {
+            border: 2px solid var(--primary-blue);
+            box-shadow: 0 0 0 4px rgba(74,144,226,0.12);
+        }
+        .day-card.weekend { background: var(--primary-blue-soft); }
+        .day-card.full-off {
+            background: linear-gradient(135deg, #FEE2E2, #FECACA);
+            border-color: #FCA5A5;
+        }
+        [data-theme="dark"] .day-card.full-off {
+            background: linear-gradient(135deg, #4A1A1E, #3D1518);
+            border-color: #EF4444;
+        }
+
+        .day-header {
+            display: flex; justify-content: space-between;
+            align-items: flex-start; padding-bottom: 10px;
+            border-bottom: 1px dashed var(--border-color);
+        }
+        .day-header .dow { font-size: 14px; font-weight: 700; color: var(--secondary-color); }
+        .day-header .date { font-size: 11.5px; color: var(--text-gray); margin-top: 2px; }
+        .day-header .day-badge {
+            font-size: 9px; font-weight: 700; padding: 3px 8px;
+            border-radius: 6px; text-transform: uppercase; letter-spacing: 0.4px;
+        }
+        .day-badge.today-badge { background: var(--primary-blue); color: #fff; }
+        .day-badge.off-badge { background: #dc2626; color: #fff; }
+
+        /* ========== CA BLOCK — ĐƠN GIẢN ========== */
+        .ca-block {
+            background: var(--bg-body);
+            border-radius: 12px; padding: 12px;
+            border: 1px solid var(--border-glass);
+            transition: all 0.2s;
+        }
+        .ca-block.is-off {
+            background: linear-gradient(135deg, #FEE2E2, #FECACA);
+            border-color: #FCA5A5;
+        }
+        [data-theme="dark"] .ca-block.is-off {
+            background: linear-gradient(135deg, #4A1A1E, #3D1518);
+            border-color: #EF4444;
+        }
+
+        .ca-header {
+            display: flex; justify-content: space-between;
+            align-items: center; margin-bottom: 8px;
+            padding-bottom: 8px;
+            border-bottom: 1px dashed var(--border-color);
+        }
+        .ca-header .ca-name {
+            font-size: 12px; font-weight: 700;
+            color: var(--secondary-color);
+            display: flex; align-items: center; gap: 6px;
+        }
+        .ca-header .ca-name i { font-size: 11px; color: var(--primary-blue); }
+        .ca-block.is-off .ca-header .ca-name i { color: #dc2626; }
+
+        /* Toggle nghỉ */
+        .off-toggle {
+            display: flex; align-items: center; gap: 5px;
+            cursor: pointer; padding: 3px 8px;
+            border-radius: 6px; background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            font-size: 10.5px; font-weight: 600;
+            color: var(--text-gray); transition: all 0.2s;
+        }
+        .off-toggle:hover { border-color: #dc2626; color: #dc2626; }
+        .off-toggle input {
+            width: 13px; height: 13px;
+            accent-color: #dc2626; cursor: pointer; margin: 0;
+        }
+        .off-toggle.is-off {
+            background: #dc2626; color: #fff; border-color: #dc2626;
+        }
+        .off-toggle.is-off input { accent-color: #fff; }
+
+        /* ========== KHUNG GIỜ LỚN + CHỌN THỜI LƯỢNG ========== */
+        .ca-range {
+            display: flex; align-items: center; gap: 6px;
+            font-family: 'Courier New', monospace;
+            font-size: 13px; font-weight: 700;
+            color: var(--primary-blue);
+            background: var(--primary-blue-light);
+            padding: 8px 12px;
+            border-radius: 8px;
+            margin-bottom: 8px;
+        }
+        .ca-range i { font-size: 11px; }
+        .ca-range .plus {
+            background: #FEF3C7; color: #92400E;
+            font-size: 9px; padding: 2px 5px;
+            border-radius: 4px; margin-left: auto;
+            font-family: 'Poppins', sans-serif;
+            font-weight: 700;
+        }
+
+        /* Chọn thời lượng phiên */
+        .duration-picker {
+            display: flex; align-items: center; gap: 6px;
+            padding: 6px 8px;
+            background: var(--bg-card);
+            border-radius: 8px;
+            border: 1px dashed var(--border-color);
+            margin-bottom: 8px;
+        }
+        .duration-picker label {
+            font-size: 10px; font-weight: 600;
             color: var(--text-gray);
             text-transform: uppercase;
-            letter-spacing: 0.5px;
-            margin-top: 3px;
+            letter-spacing: 0.3px;
+            white-space: nowrap;
         }
-
-        .appt-row {
-            display: grid;
-            grid-template-columns: 100px 1fr auto;
-            gap: 20px;
-            align-items: center;
-            padding: 15px;
-            background: var(--bg-body);
-            border-radius: 12px;
-            margin-bottom: 10px;
-            transition: all 0.2s;
-            border-left: 3px solid transparent;
-        }
-        .appt-row:hover { background: var(--primary-blue-soft); border-left-color: var(--primary-blue); }
-        .appt-row .time {
-            font-weight: 700;
+        .duration-picker select {
+            flex: 1; padding: 5px 8px;
+            border: 1px solid var(--input-border);
+            border-radius: 6px;
+            background: var(--input-bg);
+            color: var(--secondary-color);
             font-family: 'Poppins', sans-serif;
-            color: var(--primary-blue);
-            font-size: 15px;
-        }
-        .appt-row .info h5 {
-            font-size: 15px;
+            font-size: 11px;
             font-weight: 600;
-            font-family: 'Poppins', sans-serif;
-            margin-bottom: 3px;
+            cursor: pointer;
+            outline: none;
         }
-        .appt-row .info p { font-size: 12px; color: var(--text-gray); margin: 0; }
-        .appt-row .actions { display: flex; gap: 8px; }
+        .duration-picker select:focus { border-color: var(--primary-blue); }
 
-        /* Nút đăng xuất đồng bộ */
+        /* ========== SESSION LIST — HIỂN THỊ CÁC PHIÊN ========== */
+        .session-list {
+            display: flex; flex-direction: column; gap: 4px;
+            max-height: 160px; overflow-y: auto;
+            padding-right: 2px;
+        }
+        .session-list::-webkit-scrollbar { width: 4px; }
+        .session-list::-webkit-scrollbar-thumb {
+            background: var(--border-color); border-radius: 4px;
+        }
+        .session-item {
+            display: flex; align-items: center; gap: 5px;
+            padding: 4px 6px;
+            background: var(--bg-card);
+            border-radius: 6px;
+            font-size: 10.5px;
+            border-left: 2px solid var(--primary-blue);
+        }
+        .session-item .idx {
+            font-size: 9px; color: var(--text-gray);
+            font-weight: 700; min-width: 16px;
+        }
+        .session-item .time {
+            font-family: 'Courier New', monospace;
+            font-weight: 700;
+            color: var(--secondary-color);
+            font-size: 10px;
+            flex: 1;
+        }
+        .session-item .status {
+            font-size: 8.5px; padding: 2px 6px;
+            border-radius: 4px; font-weight: 700;
+        }
+        .status.empty   { background: var(--accent-green-light); color: #155724; }
+        .status.booked  { background: #FEE2E2; color: #991B1B; }
+
+        .ca-block.is-off .session-list,
+        .ca-block.is-off .duration-picker { display: none; }
+        .ca-block.is-off .off-reason { display: block; }
+
+        .off-reason {
+            display: none;
+            font-size: 10.5px; color: #991B1B;
+            font-style: italic;
+            padding: 6px 8px;
+            background: rgba(255,255,255,0.6);
+            border-radius: 6px;
+            margin-top: 6px;
+            word-break: break-word;
+        }
+        [data-theme="dark"] .off-reason {
+            color: #FCA5A5; background: rgba(0,0,0,0.2);
+        }
+        .off-reason .affected {
+            display: block;
+            margin-top: 5px;
+            color: #dc2626;
+            font-weight: 700;
+            font-style: normal;
+        }
+
+        /* ========== SAVE BAR ========== */
+        .save-bar {
+            position: sticky; bottom: 20px;
+            background: var(--bg-card);
+            border-radius: 50px; padding: 14px 24px;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+            border: 2px solid var(--primary-blue);
+            display: flex; align-items: center; gap: 18px;
+            max-width: 600px; margin: 20px auto 0;
+            z-index: 100;
+        }
+        .save-bar .info {
+            flex: 1; font-size: 13px; color: var(--text-gray);
+        }
+        .save-bar .info strong { color: var(--primary-blue); font-weight: 700; }
+        .save-bar .btn-save {
+            background: linear-gradient(135deg, var(--primary-blue), #6FB1F5);
+            color: #fff; border: none;
+            padding: 12px 28px; border-radius: 30px;
+            font-size: 14px; font-weight: 700;
+            cursor: pointer; display: flex;
+            align-items: center; gap: 8px;
+            box-shadow: 0 5px 15px rgba(74,144,226,0.4);
+            transition: all 0.2s;
+            font-family: 'Poppins', sans-serif;
+        }
+        .save-bar .btn-save:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(74,144,226,0.5);
+        }
+
+        /* ========== MODAL ========== */
+        .adjust-modal {
+            max-width: 460px !important;
+            text-align: left !important;
+            padding: 28px !important;
+        }
+        .adjust-header {
+            display: flex; align-items: center; gap: 15px;
+            margin-bottom: 18px; padding-bottom: 15px;
+            border-bottom: 2px dashed var(--border-color);
+        }
+        .adjust-header .icon {
+            width: 50px; height: 50px; border-radius: 12px;
+            background: linear-gradient(135deg, var(--primary-blue), #6FB1F5);
+            display: flex; align-items: center; justify-content: center;
+            color: #fff; font-size: 22px; flex-shrink: 0;
+        }
+        .adjust-header h3 {
+            font-size: 18px; margin: 0;
+            font-family: 'Poppins', sans-serif; font-weight: 700;
+        }
+        .adjust-header p {
+            font-size: 12px; color: var(--text-gray);
+            margin: 2px 0 0;
+        }
+
+        /* Preview các phiên */
+        .session-preview {
+            background: var(--bg-body);
+            border-radius: 10px; padding: 12px;
+            margin-bottom: 18px;
+            max-height: 220px; overflow-y: auto;
+        }
+        .session-preview .title {
+            font-size: 11px; text-transform: uppercase;
+            color: var(--text-gray); font-weight: 700;
+            letter-spacing: 0.5px; margin-bottom: 8px;
+        }
+        .preview-list {
+            display: grid; grid-template-columns: 1fr 1fr;
+            gap: 5px;
+        }
+        .preview-item {
+            padding: 6px 8px;
+            background: var(--bg-card);
+            border-radius: 6px;
+            font-family: 'Courier New', monospace;
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--primary-blue);
+            border-left: 2px solid var(--primary-blue);
+            text-align: center;
+        }
+
+        /* Logout */
         .logout-btn {
             background: rgba(239, 68, 68, 0.1);
             border: 1px solid rgba(239, 68, 68, 0.2);
-            width: 40px; height: 40px;
-            border-radius: 50%;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #EF4444;
-            font-size: 16px;
+            width: 40px; height: 40px; border-radius: 50%;
+            cursor: pointer; display: flex;
+            align-items: center; justify-content: center;
+            color: #EF4444; font-size: 16px;
             transition: all 0.3s;
         }
-        .logout-btn:hover {
-            background: #EF4444;
-            color: #fff;
-            transform: translateY(-2px);
-        }
+        .logout-btn:hover { background: #EF4444; color: #fff; transform: translateY(-2px); }
 
-        @media (max-width: 768px) {
-            .appt-row { grid-template-columns: 1fr; text-align: center; }
-            .appt-row .actions { justify-content: center; }
-            .ca-section-header { flex-direction: column; align-items: flex-start; }
+        @media (max-width: 900px) {
+            .control-bar { grid-template-columns: 1fr; }
+            .quick-stats { grid-template-columns: 1fr; }
+            .save-bar { flex-direction: column; padding: 16px; }
+            .save-bar .btn-save { width: 100%; justify-content: center; }
         }
     </style>
 </head>
@@ -163,11 +438,9 @@
                     <div class="user-role">Lễ tân</div>
                 </div>
             </div>
-            <!-- Nút chuyển đổi sáng/tối -->
             <button class="theme-toggle" id="theme-toggle" title="Chuyển đổi giao diện">
                 <i class="fas fa-moon"></i>
             </button>
-            <!-- Nút Đăng xuất nằm cạnh nút giao diện -->
             <button class="logout-btn" onclick="window.location.href='../dk_dn/dn.html'" title="Đăng xuất">
                 <i class="fas fa-sign-out-alt"></i>
             </button>
@@ -178,32 +451,84 @@
         <div class="breadcrumb">
             <a href="dashboard.html"><i class="fas fa-home"></i> Tổng quan</a>
             <i class="fas fa-chevron-right"></i>
-            <span>Danh sách ca trực</span>
+            <span>Lịch trực Bác sĩ</span>
         </div>
 
         <div class="page-title">
             <div class="page-title-left">
-                <h2><i class="fas fa-list-ul"></i> Danh sách Lịch hẹn theo Ca</h2>
-                <p>Xem chi tiết các lịch hẹn được phân theo từng ca làm việc trong ngày</p>
+                <h2><i class="fas fa-user-clock"></i> Lên lịch làm việc Bác sĩ</h2>
+                <p>Chọn BS + 7–15 ngày → Chọn thời lượng phiên cho từng ca → Hệ thống tự chia & cập nhật</p>
             </div>
             <div>
-                <input type="date" id="date-filter" style="padding: 12px 16px; border: 1px solid var(--input-border); border-radius: 10px; font-family: 'Poppins'; background: var(--input-bg); color: var(--secondary-color);">
+                <a href="quan_ly_lich_hen.html" class="btn btn-outline">
+                    <i class="fas fa-calendar-check"></i> Quản lý lịch hẹn
+                </a>
             </div>
         </div>
 
-        <div class="ca-sections" id="ca-sections-container"></div>
+        <!-- CONTROL BAR -->
+        <div class="control-bar">
+            <div class="form-group">
+                <label for="select-doctor"><i class="fas fa-user-md"></i> Chọn bác sĩ</label>
+                <select id="select-doctor" onchange="reload()">
+                    <option value="bs01">ThS.BS Nguyễn Văn A — Nội Tổng Quát</option>
+                    <option value="bs02">BS.CKI Trần Thị C — Tim Mạch</option>
+                    <option value="bs03">TS.BS Lê Hoàng D — Thần Kinh</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="from-date"><i class="fas fa-calendar-day"></i> Từ ngày</label>
+                <input type="date" id="from-date" onchange="onDateChange()">
+            </div>
+            <div class="form-group">
+                <label for="to-date"><i class="fas fa-calendar-check"></i> Đến ngày</label>
+                <input type="date" id="to-date" onchange="onDateChange()">
+            </div>
+            <div class="range-info" id="range-info">
+                <i class="fas fa-info-circle"></i> 7 ngày
+            </div>
+        </div>
+
+        <!-- QUICK STATS -->
+        <div class="quick-stats">
+            <div class="quick-stat">
+                <div class="num" id="stat-total-days">0</div>
+                <div><div class="lbl">Ngày hiển thị</div></div>
+            </div>
+            <div class="quick-stat off">
+                <div class="num" id="stat-off-ca">0</div>
+                <div><div class="lbl">Ca bác sĩ nghỉ</div></div>
+            </div>
+            <div class="quick-stat conflict">
+                <div class="num" id="stat-affected">0</div>
+                <div><div class="lbl">Lịch hẹn bị ảnh hưởng</div></div>
+            </div>
+        </div>
+
+        <div id="alert-container"></div>
+
+        <!-- WEEK GRID -->
+        <div class="week-grid" id="week-grid"></div>
+
+        <!-- SAVE BAR -->
+        <div class="save-bar">
+            <div class="info">
+                <i class="fas fa-info-circle" style="color:var(--primary-blue);"></i>
+                Hệ thống sẽ <strong>tự chia phiên</strong> & cập nhật cho BS + gửi thông báo cho BN bị ảnh hưởng.
+            </div>
+            <button class="btn-save" onclick="saveSchedule()">
+                <i class="fas fa-floppy-disk"></i> Lưu lịch làm việc
+            </button>
+        </div>
     </main>
 
     <footer>
         <div>
             <div class="footer-logo">
                 <div class="logo-icon"><i class="fa-solid fa-hospital-user"></i></div>
-                <div class="logo-text">
-                    <h1>MedBooking</h1>
-                    <p>Cổng Lễ Tân</p>
-                </div>
+                <div class="logo-text"><h1>MedBooking</h1><p>Cổng Lễ Tân</p></div>
             </div>
-            <p>Hệ thống quản lý y tế MedBooking - Giải pháp toàn diện cho bệnh viện và phòng khám.</p>
+            <p>Hệ thống quản lý y tế MedBooking.</p>
             <p><strong>"MedBooking chúc quý khách và gia đình luôn có một sức khỏe dồi dào!"</strong></p>
         </div>
         <div>
@@ -211,6 +536,7 @@
             <ul>
                 <li><a href="dashboard.html">Tổng quan</a></li>
                 <li><a href="quan_ly_lich_hen.html">Quản lý lịch hẹn</a></li>
+                <li><a href="danh_sach_lich_hen.html">Lịch trực Bác sĩ</a></li>
                 <li><a href="check_in.html">Check-in</a></li>
                 <li><a href="vien_phi.html">Viện phí</a></li>
             </ul>
@@ -221,162 +547,701 @@
             <p>Hotline: 1900 6868</p>
             <p>Email: support@medbooking.vn</p>
         </div>
-        <div>
-            <p>&copy; 2026 MedBooking. Bản quyền thuộc về Đội ngũ phát triển dự án.</p>
-        </div>
+        <div><p>&copy; 2026 MedBooking. Bản quyền thuộc về Đội ngũ phát triển dự án.</p></div>
     </footer>
+
+    <!-- ========== MODAL: NHẬP LÝ DO NGHỈ ========== -->
+    <div class="modal-overlay" id="off-reason-modal">
+        <div class="modal-box" style="max-width:500px; text-align:left;">
+            <div class="modal-icon warning"><i class="fas fa-user-slash"></i></div>
+            <h3>Xác nhận Bác sĩ nghỉ</h3>
+            <p id="off-modal-desc" style="margin-bottom:15px;"></p>
+            <div id="off-modal-affected" style="background:#FEF3C7; padding:12px 14px; border-radius:10px; margin-bottom:15px; font-size:13px; color:#856404;"></div>
+            <div class="form-group">
+                <label style="font-weight:700; font-size:13px; margin-bottom:8px; display:block;">
+                    <i class="fas fa-comment-dots" style="color:#dc2626;"></i> Lý do nghỉ (gửi kèm thông báo cho BN) <span style="color:#dc2626;">*</span>
+                </label>
+                <textarea id="off-reason-input" rows="3" placeholder="VD: Bác sĩ có việc đột xuất, nghỉ ốm, hội thảo..." style="width:100%; padding:12px; border:1px solid var(--input-border); border-radius:10px; font-family:'Poppins'; font-size:13.5px; resize:vertical;"></textarea>
+                <div id="off-reason-error" style="color:#dc2626; font-size:12px; margin-top:6px; display:none;">
+                    <i class="fas fa-exclamation-circle"></i> Vui lòng nhập lý do nghỉ
+                </div>
+            </div>
+            <div class="modal-actions" style="margin-top:20px;">
+                <button class="modal-btn modal-btn-secondary" onclick="closeOffModal()">Hủy bỏ</button>
+                <button class="modal-btn" onclick="confirmOff()" style="background:#dc2626; color:#fff; border:none; padding:11px 26px; border-radius:10px; font-weight:600; cursor:pointer;">
+                    <i class="fas fa-check"></i> Xác nhận nghỉ
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========== MODAL: CHỌN THỜI LƯỢNG PHIÊN (CHO CẢ CA) ========== -->
+    <div class="modal-overlay" id="duration-modal">
+        <div class="modal-box adjust-modal">
+            <div class="adjust-header">
+                <div class="icon"><i class="fas fa-clock"></i></div>
+                <div>
+                    <h3>Chọn thời lượng phiên</h3>
+                    <p id="duration-subtitle">—</p>
+                </div>
+            </div>
+
+            <div class="session-preview">
+                <div class="title">Khung giờ ca hiện tại</div>
+                <div id="ca-range-display" style="font-family:'Courier New',monospace; font-size:16px; font-weight:700; color:var(--primary-blue); text-align:center; padding:8px; margin-bottom:12px;"></div>
+                <div class="title">Các phiên sau khi chia</div>
+                <div class="preview-list" id="preview-list"></div>
+            </div>
+
+            <label style="font-size:13px; font-weight:600; color:var(--secondary-color); margin-bottom:10px; display:block;">
+                <i class="fas fa-sliders-h" style="color:var(--primary-blue);"></i> Thời lượng mỗi phiên
+            </label>
+            <div style="display:grid; grid-template-columns:repeat(4, 1fr); gap:8px; margin-bottom:18px;" id="duration-options">
+                <!-- JS render -->
+            </div>
+
+            <div style="font-size:11.5px; color:var(--text-gray); background:var(--bg-body); padding:10px; border-radius:8px; margin-bottom:15px;">
+                <i class="fas fa-info-circle" style="color:var(--primary-blue);"></i>
+                Khi lưu, các lịch hẹn hiện có sẽ được <strong>gán vào phiên phù hợp</strong>.
+            </div>
+
+            <div class="modal-actions">
+                <button class="modal-btn modal-btn-secondary" onclick="closeDurationModal()">Hủy</button>
+                <button class="modal-btn modal-btn-primary" onclick="confirmDuration()">
+                    <i class="fas fa-check"></i> Áp dụng
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- ========== MODAL ALERT ========== -->
+    <div class="modal-overlay" id="modal-overlay">
+        <div class="modal-box">
+            <div class="modal-icon" id="modal-icon"><i class="fas fa-info"></i></div>
+            <h3 id="modal-title">Thông báo</h3>
+            <div class="modal-details" id="modal-details" style="display:none;"></div>
+            <p id="modal-message">Nội dung</p>
+            <div class="modal-actions">
+                <button class="modal-btn modal-btn-primary" id="modal-confirm-btn"><i class="fas fa-check"></i> Đã hiểu</button>
+            </div>
+        </div>
+    </div>
 
     <script src="../../static/js/client.js"></script>
     <script src="../../static/js/LT_Store.js"></script>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            
-            // THEME
-            const themeToggle = document.getElementById('theme-toggle');
-            const icon = themeToggle.querySelector('i');
-            const currentTheme = localStorage.getItem('theme') || 'light';
-            
-            if (currentTheme === 'dark') {
+    document.addEventListener('DOMContentLoaded', function() {
+
+        // ============================================================
+        // THEME
+        // ============================================================
+        const themeToggle = document.getElementById('theme-toggle');
+        const themeIcon = themeToggle.querySelector('i');
+        if ((localStorage.getItem('theme') || 'light') === 'dark') {
+            document.documentElement.setAttribute('data-theme', 'dark');
+            themeIcon.classList.replace('fa-moon', 'fa-sun');
+        }
+        themeToggle.addEventListener('click', () => {
+            const cur = document.documentElement.getAttribute('data-theme');
+            if (cur === 'dark') {
+                document.documentElement.removeAttribute('data-theme');
+                localStorage.setItem('theme', 'light');
+                themeIcon.classList.replace('fa-sun', 'fa-moon');
+            } else {
                 document.documentElement.setAttribute('data-theme', 'dark');
-                icon.classList.remove('fa-moon');
-                icon.classList.add('fa-sun');
+                localStorage.setItem('theme', 'dark');
+                themeIcon.classList.replace('fa-moon', 'fa-sun');
             }
+        });
 
-            themeToggle.addEventListener('click', function() {
-                let theme = document.documentElement.getAttribute('data-theme');
-                if (theme === 'dark') {
-                    document.documentElement.removeAttribute('data-theme');
-                    localStorage.setItem('theme', 'light');
-                    icon.classList.remove('fa-sun');
-                    icon.classList.add('fa-moon');
-                } else {
-                    document.documentElement.setAttribute('data-theme', 'dark');
-                    localStorage.setItem('theme', 'dark');
-                    icon.classList.remove('fa-moon');
-                    icon.classList.add('fa-sun');
-                }
-            });
+        // ============================================================
+        // MODAL SYSTEM
+        // ============================================================
+        const modalOverlay = document.getElementById('modal-overlay');
+        const modalIcon = document.getElementById('modal-icon');
+        const modalTitle = document.getElementById('modal-title');
+        const modalMessage = document.getElementById('modal-message');
+        const modalDetails = document.getElementById('modal-details');
 
-            // STATE
-            let selectedDate = new Date().toISOString().split('T')[0];
-            let appointments = [];
-
-            document.getElementById('date-filter').value = selectedDate;
-
-            // LOAD
-            function loadData() {
-                appointments = LT_Store.getAppointments();
-                render();
+        window.showAlert = function(title, msg, type = 'info', cb = null, details = null) {
+            modalIcon.className = 'modal-icon ' + type;
+            const icons = { success:'fa-check-circle', warning:'fa-exclamation-triangle', error:'fa-times-circle', info:'fa-info-circle' };
+            modalIcon.querySelector('i').className = 'fas ' + (icons[type] || icons.info);
+            modalTitle.textContent = title;
+            modalMessage.textContent = msg;
+            if (details && Object.keys(details).length) {
+                modalDetails.innerHTML = Object.entries(details).map(([k,v]) =>
+                    `<div class="detail-row"><span class="label">${k}</span><span class="value">${v}</span></div>`
+                ).join('');
+                modalDetails.style.display = 'block';
+            } else {
+                modalDetails.style.display = 'none';
             }
+            modalOverlay.classList.add('active');
+            document.getElementById('modal-confirm-btn').onclick = () => {
+                modalOverlay.classList.remove('active');
+                if (cb) cb();
+            };
+        };
+        modalOverlay.addEventListener('click', e => { if (e.target === modalOverlay) modalOverlay.classList.remove('active'); });
 
-            // RENDER
-            function render() {
-                const container = document.getElementById('ca-sections-container');
-                const dayAppts = appointments.filter(a => a.date === selectedDate);
+        // ============================================================
+        // CONSTANTS — 3 CA CỐ ĐỊNH
+        // ============================================================
+        const DOCTOR_NAMES = {
+            bs01: 'ThS.BS Nguyễn Văn A',
+            bs02: 'BS.CKI Trần Thị C',
+            bs03: 'TS.BS Lê Hoàng D'
+        };
 
-                const caConfig = [
-                    { key: 'sang', label: 'Ca Sáng', time: '07:30 - 11:30', icon: 'fa-sun' },
-                    { key: 'chieu', label: 'Ca Chiều', time: '13:30 - 18:30', icon: 'fa-cloud-sun' },
-                    { key: 'toi', label: 'Ca Tối (Ngoài giờ)', time: '18:30 - 22:30', icon: 'fa-moon', extra: 'Phụ thu +10% phí' }
-                ];
+        // ⭐ 3 CA CỐ ĐỊNH VỚI KHUNG GIỜ LỚN
+        const CA_CONFIG = {
+            sang:  { label: 'Ca sáng',  icon: 'fa-sun',       start: '07:00', end: '12:00', surcharge: '' },
+            chieu: { label: 'Ca chiều', icon: 'fa-cloud-sun', start: '13:00', end: '18:00', surcharge: '' },
+            toi:   { label: 'Ca tối',   icon: 'fa-moon',      start: '19:00', end: '22:00', surcharge: '+10%' }
+        };
+        const CA_LIST = ['sang', 'chieu', 'toi'];
 
-                let html = '';
-                caConfig.forEach(ca => {
-                    const caAppts = dayAppts
-                        .filter(a => a.ca === ca.key)
-                        .sort((a, b) => a.time.localeCompare(b.time));
+        // ⭐ Các lựa chọn thời lượng phiên (phút)
+        const DURATION_OPTIONS = [15, 30, 45, 60];
 
-                    const total = caAppts.length;
-                    const checked = caAppts.filter(a => a.status === 'checked').length;
-                    const waiting = caAppts.filter(a => a.status === 'pending' || a.status === 'confirmed').length;
+        // ============================================================
+        // STATE
+        // ============================================================
+        let pendingChanges = {}; // { "bs01|2026-11-11|sang": { isOff, reason, duration, sessions } }
+        let currentDoctor = 'bs01';
+        let currentFrom = '';
+        let currentTo = '';
+        let pendingOff = null;
+        let pendingDuration = null;
 
-                    html += `
-                        <div class="ca-section ${ca.key}">
-                            <div class="ca-section-header">
-                                <div class="ca-section-title">
-                                    <div class="ca-section-icon"><i class="fas ${ca.icon}"></i></div>
-                                    <div>
-                                        <h3>${ca.label}</h3>
-                                        <p><i class="far fa-clock"></i> ${ca.time} 
-                                            ${ca.extra ? `<span style="color: var(--accent-red); font-weight: 600;">(${ca.extra})</span>` : ''}
-                                        </p>
-                                    </div>
-                                </div>
-                                <div class="ca-section-stats">
-                                    <div class="ca-stat">
-                                        <div class="num">${total}</div>
-                                        <div class="lbl">Tổng lịch</div>
-                                    </div>
-                                    <div class="ca-stat">
-                                        <div class="num">${checked}</div>
-                                        <div class="lbl">Đã check-in</div>
-                                    </div>
-                                    <div class="ca-stat">
-                                        <div class="num">${waiting}</div>
-                                        <div class="lbl">Chờ khám</div>
-                                    </div>
-                                </div>
-                            </div>
-                            ${caAppts.length === 0 
-                                ? `<div style="text-align:center; padding: 30px; color: var(--text-gray); font-size: 13px;">
-                                   <i class="fas fa-calendar-times" style="font-size: 30px; opacity: 0.3; margin-bottom: 8px;"></i>
-                                   <p>Không có lịch hẹn nào trong ca này</p>
-                                  </div>`
-                                : caAppts.map(appt => renderApptRow(appt)).join('')
-                            }
-                        </div>
-                    `;
+        // ============================================================
+        // HELPERS
+        // ============================================================
+        function fmtDate(d) {
+            return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+        }
+        function parseDate(s) {
+            const [y,m,d] = s.split('-').map(Number);
+            return new Date(y, m-1, d);
+        }
+        function toMinutes(t) {
+            const [h, m] = t.split(':').map(Number);
+            return h*60 + m;
+        }
+        function fromMinutes(total) {
+            return `${String(Math.floor(total/60)).padStart(2,'0')}:${String(total%60).padStart(2,'0')}`;
+        }
+        function dateLabel(dateStr) {
+            const d = parseDate(dateStr);
+            return `${String(d.getDate()).padStart(2,'0')}/${String(d.getMonth()+1).padStart(2,'0')}/${d.getFullYear()}`;
+        }
+        function dowLabel(dateStr) {
+            const d = parseDate(dateStr);
+            return ['CN','Thứ 2','Thứ 3','Thứ 4','Thứ 5','Thứ 6','Thứ 7'][d.getDay()];
+        }
+        function isToday(dateStr) { return dateStr === fmtDate(new Date()); }
+        function isWeekend(dateStr) {
+            const d = parseDate(dateStr).getDay();
+            return d === 0 || d === 6;
+        }
+
+        // ⭐ TỰ ĐỘNG CHIA PHIÊN từ khung giờ lớn + duration
+        function generateSessions(ca, duration) {
+            const cfg = CA_CONFIG[ca];
+            const startMin = toMinutes(cfg.start);
+            const endMin = toMinutes(cfg.end);
+            const sessions = [];
+            let cur = startMin;
+            let idx = 1;
+            while (cur + duration <= endMin) {
+                sessions.push({
+                    index: idx++,
+                    start: fromMinutes(cur),
+                    end: fromMinutes(cur + duration)
                 });
-
-                container.innerHTML = html;
+                cur += duration;
             }
+            return sessions;
+        }
 
-            function renderApptRow(appt) {
-                let actionHTML = '';
+        // ⭐ Lấy state hiện tại (pending > store > default)
+        function getCaState(doctorId, date, ca) {
+            const key = `${doctorId}|${date}|${ca}`;
+            if (pendingChanges[key]) return pendingChanges[key];
 
-                if (appt.status === 'pending' || appt.status === 'confirmed') {
-                    actionHTML = `
-                        <button class="btn btn-primary btn-sm" onclick="window.location.href='check_in.html?id=${appt.id}'">
-                            <i class="fas fa-sign-in-alt"></i> Check-in
-                        </button>
-                    `;
-                } else if (appt.status === 'checked') {
-                    actionHTML = `<span class="status-badge checked"><i class="fas fa-check"></i> Đã check-in</span>`;
-                } else if (appt.status === 'cancelled') {
-                    actionHTML = `<span class="status-badge cancelled"><i class="fas fa-times"></i> Đã hủy</span>`;
-                } else if (appt.status === 'noshow') {
-                    actionHTML = `<span class="status-badge noshow"><i class="fas fa-user-slash"></i> Không đến</span>`;
+            // Lấy từ LT_Store
+            try {
+                if (typeof LT_Store.getSessionsForDate === 'function') {
+                    const s = LT_Store.getSessionsForDate(doctorId, date, ca);
+                    if (s) {
+                        // Nếu đã có sessions → suy ra duration
+                        let duration = 60;
+                        if (s.sessions && s.sessions.length >= 2) {
+                            const d = toMinutes(s.sessions[0].end) - toMinutes(s.sessions[0].start);
+                            if (DURATION_OPTIONS.includes(d)) duration = d;
+                        } else if (s.duration) {
+                            duration = s.duration;
+                        }
+                        return {
+                            isOff: s.isOff === true,
+                            reason: s.reason || '',
+                            duration: duration,
+                            sessions: generateSessions(ca, duration)
+                        };
+                    }
                 }
+            } catch (e) { console.warn('getSessionsForDate:', e); }
 
-                return `
-                    <div class="appt-row">
-                        <div class="time">${appt.time}</div>
-                        <div class="info">
-                            <h5>${appt.patientName} • ${appt.id}</h5>
-                            <p><i class="fas fa-user-md"></i> ${appt.doctor} • ${appt.symptom}</p>
+            // Default: 60 phút
+            return {
+                isOff: false, reason: '',
+                duration: 60,
+                sessions: generateSessions(ca, 60)
+            };
+        }
+
+        // Đếm lịch hẹn bị ảnh hưởng
+        function countAffected(doctorId, date, ca) {
+            try {
+                if (typeof LT_Store.getAffectedAppointments === 'function') {
+                    return LT_Store.getAffectedAppointments(doctorId, date, ca).length;
+                }
+                const all = LT_Store.getAppointments();
+                return all.filter(a =>
+                    a.doctorId === doctorId && a.date === date && a.ca === ca &&
+                    ['pending','confirmed','waiting'].includes(a.status)
+                ).length;
+            } catch (e) { return 0; }
+        }
+
+        // Đếm số session đã bị đặt trong ca
+        function countBookedInCa(doctorId, date, ca) {
+            try {
+                const all = LT_Store.getAppointments();
+                return all.filter(a =>
+                    a.doctorId === doctorId && a.date === date && a.ca === ca &&
+                    !['cancelled','noshow'].includes(a.status)
+                ).length;
+            } catch (e) { return 0; }
+        }
+
+        // ============================================================
+        // INIT DATE
+        // ============================================================
+        const today = new Date();
+        const toDefault = new Date(today); toDefault.setDate(toDefault.getDate() + 6);
+        document.getElementById('from-date').value = fmtDate(today);
+        document.getElementById('to-date').value = fmtDate(toDefault);
+        currentFrom = fmtDate(today);
+        currentTo = fmtDate(toDefault);
+
+        window.onDateChange = function() {
+            const from = document.getElementById('from-date').value;
+            const to = document.getElementById('to-date').value;
+            if (!from || !to) return;
+            const diff = (parseDate(to) - parseDate(from)) / 86400000;
+            const info = document.getElementById('range-info');
+            if (diff < 0) {
+                info.className = 'range-info warn';
+                info.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Đến phải sau Từ';
+                return;
+            }
+            if (diff > 14) {
+                info.className = 'range-info warn';
+                info.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Tối đa 15 ngày';
+                return;
+            }
+            info.className = 'range-info';
+            info.innerHTML = `<i class="fas fa-info-circle"></i> ${diff + 1} ngày`;
+            currentFrom = from;
+            currentTo = to;
+            renderGrid();
+        };
+
+        window.reload = function() {
+            currentDoctor = document.getElementById('select-doctor').value;
+            pendingChanges = {};
+            renderGrid();
+        };
+
+        // ============================================================
+        // RENDER GRID
+        // ============================================================
+        function renderGrid() {
+            const grid = document.getElementById('week-grid');
+            const from = parseDate(currentFrom);
+            const to = parseDate(currentTo);
+            let totalDays = 0, offCa = 0, affected = 0;
+
+            let html = '';
+            for (let d = new Date(from); d <= to; d.setDate(d.getDate() + 1)) {
+                totalDays++;
+                const dateStr = fmtDate(d);
+                const allOff = CA_LIST.every(ca => getCaState(currentDoctor, dateStr, ca).isOff);
+
+                html += `
+                    <div class="day-card ${isToday(dateStr) ? 'today' : ''} ${isWeekend(dateStr) ? 'weekend' : ''} ${allOff ? 'full-off' : ''}">
+                        <div class="day-header">
+                            <div>
+                                <div class="dow">${dowLabel(dateStr)}</div>
+                                <div class="date">${dateLabel(dateStr)}</div>
+                            </div>
+                            ${isToday(dateStr) ? '<span class="day-badge today-badge">HÔM NAY</span>' : ''}
+                            ${allOff ? '<span class="day-badge off-badge">NGHỈ</span>' : ''}
                         </div>
-                        <div class="actions">${actionHTML}</div>
+                        ${CA_LIST.map(ca => renderCaBlock(dateStr, ca)).join('')}
                     </div>
                 `;
+
+                CA_LIST.forEach(ca => {
+                    const st = getCaState(currentDoctor, dateStr, ca);
+                    if (st.isOff) {
+                        offCa++;
+                        affected += countAffected(currentDoctor, dateStr, ca);
+                    }
+                });
             }
 
-            // CHANGE DATE
-            document.getElementById('date-filter').addEventListener('change', function() {
-                selectedDate = this.value;
-                render();
+            grid.innerHTML = html;
+            document.getElementById('stat-total-days').textContent = totalDays;
+            document.getElementById('stat-off-ca').textContent = offCa;
+            document.getElementById('stat-affected').textContent = affected;
+
+            const banner = document.getElementById('alert-container');
+            banner.innerHTML = affected > 0 ? `
+                <div class="alert-banner">
+                    <i class="fas fa-triangle-exclamation"></i>
+                    <div>
+                        <strong>⚠️ Có ${affected} lịch hẹn bị ảnh hưởng do Bác sĩ nghỉ!</strong>
+                        Khi bấm "Lưu", hệ thống sẽ gửi thông báo đổi lịch cho bệnh nhân.
+                    </div>
+                </div>
+            ` : '';
+        }
+
+        function renderCaBlock(dateStr, ca) {
+            const cfg = CA_CONFIG[ca];
+            const st = getCaState(currentDoctor, dateStr, ca);
+            const affectedCount = st.isOff ? countAffected(currentDoctor, dateStr, ca) : 0;
+            const bookedCount = !st.isOff ? countBookedInCa(currentDoctor, dateStr, ca) : 0;
+
+            // Render danh sách phiên
+            const sessionHTML = st.sessions.map(s => {
+                const isBooked = checkSessionBooked(currentDoctor, dateStr, ca, s.start, s.end);
+                return `
+                    <div class="session-item">
+                        <span class="idx">#${s.index}</span>
+                        <span class="time">${s.start} - ${s.end}</span>
+                        <span class="status ${isBooked ? 'booked' : 'empty'}">
+                            ${isBooked ? 'Đã đặt' : 'Trống'}
+                        </span>
+                    </div>
+                `;
+            }).join('');
+
+            return `
+                <div class="ca-block ${st.isOff ? 'is-off' : ''}">
+                    <div class="ca-header">
+                        <div class="ca-name">
+                            <i class="fas ${cfg.icon}"></i> ${cfg.label}
+                        </div>
+                        <label class="off-toggle ${st.isOff ? 'is-off' : ''}">
+                            <input type="checkbox" ${st.isOff ? 'checked' : ''}
+                                   onchange="toggleCaOff('${dateStr}','${ca}',this.checked)">
+                            Nghỉ
+                        </label>
+                    </div>
+
+                    ${!st.isOff ? `
+                        <!-- KHUNG GIỜ LỚN -->
+                        <div class="ca-range">
+                            <i class="fas fa-clock"></i>
+                            ${cfg.start} - ${cfg.end}
+                            ${cfg.surcharge ? `<span class="plus">${cfg.surcharge}</span>` : ''}
+                        </div>
+
+                        <!-- CHỌN THỜI LƯỢNG PHIÊN -->
+                        <div class="duration-picker">
+                            <label><i class="fas fa-sliders-h"></i> Phiên</label>
+                            <select onchange="onDurationChange('${dateStr}','${ca}',this.value)">
+                                ${DURATION_OPTIONS.map(d => `
+                                    <option value="${d}" ${st.duration === d ? 'selected' : ''}>
+                                        ${d} phút / phiên
+                                    </option>
+                                `).join('')}
+                            </select>
+                        </div>
+
+                        <!-- DANH SÁCH PHIÊN -->
+                        <div class="session-list">${sessionHTML}</div>
+
+                        <div style="margin-top:6px; font-size:10px; color:var(--text-gray); text-align:center;">
+                            <i class="fas fa-info-circle"></i>
+                            ${st.sessions.length} phiên • ${bookedCount} đã đặt
+                        </div>
+                    ` : `
+                        <div class="off-reason">
+                            <i class="fas fa-comment-dots"></i> ${st.reason || '(chưa có lý do)'}
+                            ${affectedCount > 0 ? `
+                                <span class="affected">
+                                    <i class="fas fa-bell"></i> ${affectedCount} lịch hẹn sẽ được thông báo
+                                </span>
+                            ` : ''}
+                        </div>
+                    `}
+                </div>
+            `;
+        }
+
+        // Kiểm tra 1 session có bị đặt không
+        function checkSessionBooked(doctorId, date, ca, start, end) {
+            try {
+                const all = LT_Store.getAppointments();
+                return all.some(a =>
+                    a.doctorId === doctorId && a.date === date && a.ca === ca &&
+                    a.time === `${start}-${end}` &&
+                    !['cancelled','noshow'].includes(a.status)
+                );
+            } catch (e) { return false; }
+        }
+
+        // ============================================================
+        // TOGGLE CA OFF
+        // ============================================================
+        window.toggleCaOff = function(dateStr, ca, checked) {
+            if (checked) {
+                pendingOff = { doctorId: currentDoctor, date: dateStr, ca };
+                const affected = countAffected(currentDoctor, dateStr, ca);
+                const cfg = CA_CONFIG[ca];
+                document.getElementById('off-modal-desc').innerHTML =
+                    `Đánh dấu <strong>NGHỈ</strong> cho <strong>${cfg.label}</strong> ngày <strong>${dateLabel(dateStr)}</strong> của <strong>${DOCTOR_NAMES[currentDoctor]}</strong>.`;
+                document.getElementById('off-modal-affected').innerHTML = affected > 0
+                    ? `<i class="fas fa-exclamation-triangle"></i> <strong>Có ${affected} lịch hẹn bị ảnh hưởng!</strong><br>Hệ thống sẽ gửi thông báo đổi lịch cho các BN này khi lưu.`
+                    : `<i class="fas fa-check-circle"></i> Không có lịch hẹn nào bị ảnh hưởng.`;
+                document.getElementById('off-reason-input').value = '';
+                document.getElementById('off-reason-error').style.display = 'none';
+                document.getElementById('off-reason-modal').classList.add('active');
+                setTimeout(() => document.getElementById('off-reason-input').focus(), 100);
+            } else {
+                const key = `${currentDoctor}|${dateStr}|${ca}`;
+                const st = getCaState(currentDoctor, dateStr, ca);
+                pendingChanges[key] = { ...st, isOff: false, reason: '' };
+                renderGrid();
+            }
+        };
+
+        window.closeOffModal = function() {
+            document.getElementById('off-reason-modal').classList.remove('active');
+            pendingOff = null;
+            renderGrid();
+        };
+
+        window.confirmOff = function() {
+            const reason = document.getElementById('off-reason-input').value.trim();
+            if (!reason) {
+                document.getElementById('off-reason-error').style.display = 'block';
+                document.getElementById('off-reason-input').focus();
+                return;
+            }
+            const { doctorId, date, ca } = pendingOff;
+            const key = `${doctorId}|${date}|${ca}`;
+            const st = getCaState(doctorId, date, ca);
+            pendingChanges[key] = { ...st, isOff: true, reason };
+
+            document.getElementById('off-reason-modal').classList.remove('active');
+            pendingOff = null;
+            renderGrid();
+        };
+
+        // ============================================================
+        // ⭐ CHỌN THỜI LƯỢNG PHIÊN CHO CẢ CA
+        // ============================================================
+        window.onDurationChange = function(dateStr, ca, newDuration) {
+            newDuration = parseInt(newDuration);
+            if (!DURATION_OPTIONS.includes(newDuration)) return;
+
+            // Nếu ca đã có lịch hẹn → mở modal xác nhận
+            const bookedCount = countBookedInCa(currentDoctor, dateStr, ca);
+            if (bookedCount > 0) {
+                pendingDuration = { doctorId: currentDoctor, date: dateStr, ca, newDuration };
+                openDurationModal();
+            } else {
+                // Áp dụng trực tiếp
+                applyDuration(dateStr, ca, newDuration);
+            }
+        };
+
+        function applyDuration(dateStr, ca, newDuration) {
+            const key = `${currentDoctor}|${dateStr}|${ca}`;
+            const st = getCaState(currentDoctor, dateStr, ca);
+            pendingChanges[key] = {
+                isOff: false,
+                reason: st.reason,
+                duration: newDuration,
+                sessions: generateSessions(ca, newDuration)
+            };
+            renderGrid();
+        }
+
+        // ============================================================
+        // ⭐ MODAL CHỌN THỜI LƯỢNG (khi ca đã có lịch hẹn)
+        // ============================================================
+        function openDurationModal() {
+            if (!pendingDuration) return;
+            const { doctorId, date, ca, newDuration } = pendingDuration;
+            const cfg = CA_CONFIG[ca];
+
+            document.getElementById('duration-subtitle').textContent =
+                `${cfg.label} • ${dateLabel(date)}`;
+            document.getElementById('ca-range-display').textContent =
+                `${cfg.start} → ${cfg.end}${cfg.surcharge ? ' ' + cfg.surcharge : ''}`;
+
+            // Preview các phiên
+            const newSessions = generateSessions(ca, newDuration);
+            document.getElementById('preview-list').innerHTML = newSessions.map(s => `
+                <div class="preview-item">${s.start} - ${s.end}</div>
+            `).join('');
+
+            // Hiện lựa chọn
+            document.getElementById('duration-options').innerHTML = DURATION_OPTIONS.map(d => {
+                const sessionCount = generateSessions(ca, d).length;
+                return `
+                    <button type="button"
+                        class="duration-opt ${d === newDuration ? 'selected' : ''}"
+                        data-duration="${d}"
+                        onclick="selectDurationOpt(${d}, this)"
+                        style="
+                            padding:12px 8px;
+                            border:2px solid ${d === newDuration ? 'var(--primary-blue)' : 'var(--border-color)'};
+                            border-radius:10px;
+                            background:${d === newDuration ? 'var(--primary-blue)' : 'var(--bg-card)'};
+                            color:${d === newDuration ? '#fff' : 'var(--secondary-color)'};
+                            cursor:pointer;
+                            font-family:'Poppins',sans-serif;
+                            font-weight:700;
+                            font-size:14px;
+                            transition:all 0.2s;
+                            text-align:center;
+                        ">
+                        ${d}p<br>
+                        <span style="font-size:10px; opacity:0.8;">${sessionCount} phiên</span>
+                    </button>
+                `;
+            }).join('');
+
+            document.getElementById('duration-modal').classList.add('active');
+        }
+
+        window.selectDurationOpt = function(duration, el) {
+            pendingDuration.newDuration = duration;
+            // Reset style các option
+            document.querySelectorAll('.duration-opt').forEach(btn => {
+                btn.style.borderColor = 'var(--border-color)';
+                btn.style.background = 'var(--bg-card)';
+                btn.style.color = 'var(--secondary-color)';
             });
+            // Highlight cái được chọn
+            el.style.borderColor = 'var(--primary-blue)';
+            el.style.background = 'var(--primary-blue)';
+            el.style.color = '#fff';
 
-            // INIT
-            loadData();
+            // Cập nhật preview
+            const { ca } = pendingDuration;
+            const sessions = generateSessions(ca, duration);
+            document.getElementById('preview-list').innerHTML = sessions.map(s => `
+                <div class="preview-item">${s.start} - ${s.end}</div>
+            `).join('');
+        };
 
-            // Multi-tab sync
-            window.addEventListener('storage', function(e) {
-                if (e.key && e.key.startsWith('medbooking_')) {
-                    loadData();
+        window.closeDurationModal = function() {
+            document.getElementById('duration-modal').classList.remove('active');
+            pendingDuration = null;
+            renderGrid(); // reset dropdown về giá trị cũ
+        };
+
+        window.confirmDuration = function() {
+            if (!pendingDuration) return;
+            const { date, ca, newDuration } = pendingDuration;
+            applyDuration(date, ca, newDuration);
+            document.getElementById('duration-modal').classList.remove('active');
+            pendingDuration = null;
+        };
+
+        // ============================================================
+        // SAVE
+        // ============================================================
+        window.saveSchedule = function() {
+            const keys = Object.keys(pendingChanges);
+            if (keys.length === 0) {
+                showAlert('Không có thay đổi', 'Bạn chưa thay đổi gì.', 'info');
+                return;
+            }
+
+            let totalAffected = 0, offCount = 0, durationChanges = 0;
+            keys.forEach(key => {
+                const [docId, date, ca] = key.split('|');
+                const ch = pendingChanges[key];
+                if (ch.isOff) {
+                    offCount++;
+                    totalAffected += countAffected(docId, date, ca);
+                } else {
+                    durationChanges++;
                 }
             });
-        });
+
+            const confirmMsg = totalAffected > 0
+                ? `Lưu ${keys.length} thay đổi? Trong đó có ${offCount} ca nghỉ → gửi thông báo cho ${totalAffected} bệnh nhân.`
+                : `Lưu ${keys.length} thay đổi lịch làm việc?`;
+            if (!confirm(confirmMsg)) return;
+
+            let successCount = 0, notiCount = 0;
+            keys.forEach(key => {
+                const [docId, date, ca] = key.split('|');
+                const ch = pendingChanges[key];
+                try {
+                    // Lưu lịch trực vào LT_Store
+                    if (typeof LT_Store.setDoctorSchedule === 'function') {
+                        LT_Store.setDoctorSchedule(docId, date, ca, {
+                            isOff: ch.isOff,
+                            reason: ch.reason || '',
+                            duration: ch.duration,
+                            sessions: ch.sessions
+                        });
+                    }
+                    // Nếu nghỉ → tạo thông báo cho BN
+                    if (ch.isOff && typeof LT_Store.confirmDoctorLeave === 'function') {
+                        const r = LT_Store.confirmDoctorLeave(docId, date, ca, ch.reason);
+                        if (r && r.notifications) notiCount += r.notifications.length;
+                    }
+                    successCount++;
+                } catch (e) {
+                    console.error('Save error:', key, e);
+                }
+            });
+
+            pendingChanges = {};
+            renderGrid();
+
+            showAlert(
+                'Lưu thành công! 🎉',
+                `Đã lưu ${successCount}/${keys.length} thay đổi.`,
+                'success',
+                null,
+                {
+                    'Ca nghỉ': offCount,
+                    'Ca đổi thời lượng phiên': durationChanges,
+                    'Thông báo đã gửi': notiCount > 0 ? `${notiCount} bệnh nhân` : 'Không có'
+                }
+            );
+        };
+
+        // ============================================================
+        // INIT
+        // ============================================================
+        renderGrid();
+    });
     </script>
 </body>
 </html>

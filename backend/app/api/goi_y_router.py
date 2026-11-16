@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Query, HTTPException
 from typing import List, Optional
-from ..models.bac_si_goi_y import BacSiGoiY, BacSiGoiYChiTiet
-from ..services.goi_y_service import GoiYService
+from models.bac_si_goi_y import BacSiGoiY, BacSiGoiYChiTiet
+from services.goi_y_service import GoiYService
 
 router = APIRouter(prefix="/api/goi-y", tags=["Gợi ý bác sĩ"])
 

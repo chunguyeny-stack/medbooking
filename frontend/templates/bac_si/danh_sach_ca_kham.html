@@ -41,6 +41,18 @@
         transform: translateY(-1px);
     }
 
+    .notify-dot {
+        display: inline-block;
+        width: 8px;
+        height: 8px;
+        background: #F472B6;
+        border-radius: 50%;
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        border: 2px solid var(--bg-card);
+    }
+
     .notification-dropdown, 
     .user-dropdown {
         position: absolute !important;
@@ -63,6 +75,9 @@
     html.dark .user-dropdown {
         background-color: #0F172A !important;
         border-color: #334155 !important;
+    }
+    [data-theme="dark"] .notify-dot {
+        border-color: #0F172A;
     }
 
     .notification-dropdown.active, 
@@ -162,7 +177,7 @@
       <div class="nav-title">Tác nghiệp khám bệnh</div>
       <ul class="nav-list">
         <li><a href="danh_sach_ca_kham.html" class="nav-link active"><i class="fas fa-calendar-check"></i><span>Lịch hẹn & Ca khám</span></a></li>
-        <li><a href="ho_so_ca_nhan.html" class="nav-link"><i class="fas fa-user-doctor"></i><span>Hồ sơ & Lịch trực</span></a></li>
+        <li><a href="ho_so_ca_nhan.html" class="nav-link"><i class="fas fa-user-doctor"></i><span>Hồ sơ & Xin nghỉ</span></a></li>
       </ul>
     </div>
     <div class="sidebar-footer">
@@ -179,7 +194,10 @@
       </div>
       <div class="topbar-right" style="position: relative; display: flex; align-items: center; gap: 12px;">
         <button class="icon-btn theme-toggle" id="theme-toggle"><i class="fas fa-moon"></i><i class="fas fa-sun"></i></button>
-        <button class="icon-btn" id="btn-notify"><i class="fas fa-bell"></i><span class="badge" style="display:inline-block; width:8px; height:8px; background:#F472B6; border-radius:50%; position:absolute; top:8px; right:60px;"></span></button>
+        <button class="icon-btn" id="btn-notify" style="position: relative;">
+            <i class="fas fa-bell"></i>
+            <i class="notify-dot badge"></i>
+        </button>
         
         <div class="notification-dropdown" id="notification-dropdown">
             <div class="notification-header">
@@ -269,11 +287,9 @@
 window.MB_PAGE_INIT = function () {
   const STORAGE_KEY = 'medbooking_doctor_appointments';
 
-  // --- HÀM LẤY DANH SÁCH LỊCH HẸN TỪ LOCALSTORAGE ---
   function getAppointments() {
     let list = MB_STORAGE.get(STORAGE_KEY, null);
     if (!list) {
-      // Khởi tạo lần đầu từ MB_MOCK
       list = JSON.parse(JSON.stringify(MB_MOCK.appointments));
       MB_STORAGE.set(STORAGE_KEY, list);
     }
@@ -287,7 +303,6 @@ window.MB_PAGE_INIT = function () {
     cancelled:     ['badge-cancelled', 'Đã hủy']
   };
 
-  // --- TỰ ĐỘNG ĐIỀN NGÀY HÔM NAY VÀO BỘ LỌC ---
   const dateInput = document.getElementById('filter-date');
   if (dateInput) {
       const today = new Date();
@@ -409,7 +424,6 @@ window.MB_PAGE_INIT = function () {
     }
   });
 
-  // Render lần đầu
   render(getAppointments());
 };
 </script>

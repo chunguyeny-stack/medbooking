@@ -7,9 +7,12 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="icon" type="image/jpeg" href="../../favicon.jpg">
     
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <!-- 1. Fonts & Icons -->
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Quicksand:wght@600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- 2. Common CSS - BẮT BUỘC ĐẦU TIÊN -->
+    <link rel="stylesheet" href="../../static/css/common.css">
     <link rel="stylesheet" href="../../static/css/A.css">
     
     <style>
@@ -52,13 +55,26 @@
         [data-theme="dark"] .home-banner {
             background: linear-gradient(135deg, #1A1130 0%, #221640 100%);
         }
+        
+        /* ĐÃ FIX LỖI FONT TẠI ĐÂY */
         .home-banner h2 {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif !important;
             font-size: 24px; font-weight: 800;
             color: var(--secondary-color); margin-bottom: 8px;
+            letter-spacing: -0.02em;
         }
-        .home-banner p { font-size: 14px; color: var(--text-gray); max-width: 520px; }
-        .home-banner p strong { color: var(--primary-color); }
+        .home-banner p { 
+            font-family: 'Inter', sans-serif !important; 
+            font-size: 14px; color: var(--text-gray); max-width: 520px; 
+        }
+        .home-banner p strong { 
+            font-family: 'Inter', sans-serif !important;
+            font-weight: 700;
+            color: var(--primary-color); 
+        }
+        
         .home-banner .btn-go {
+            font-family: 'Inter', sans-serif;
             margin-top: 16px;
             padding: 11px 24px;
             background: var(--primary-color); color: #fff;
@@ -66,6 +82,7 @@
             font-weight: 600; cursor: pointer;
             display: inline-flex; align-items: center; gap: 8px;
             box-shadow: 0 6px 18px rgba(139, 92, 246, 0.3);
+            transition: all 0.25s ease;
         }
         .home-banner .btn-go:hover {
             background: var(--primary-dark);
@@ -127,16 +144,18 @@
             box-shadow: 0 6px 16px rgba(139, 92, 246, 0.3);
         }
         .home-card h3 {
+            font-family: 'Inter', sans-serif;
             font-size: 14px; font-weight: 700;
             color: var(--secondary-color); margin-bottom: 6px;
         }
         .home-card .hc-value {
-            font-family: 'Plus Jakarta Sans'; font-size: 26px;
+            font-family: 'Plus Jakarta Sans', sans-serif; font-size: 26px;
             font-weight: 800; color: var(--primary-color);
             letter-spacing: -0.02em; line-height: 1;
             margin-bottom: 6px;
         }
         .home-card .hc-desc {
+            font-family: 'Inter', sans-serif;
             font-size: 12px; color: var(--text-gray);
         }
         .home-recent {
@@ -147,6 +166,7 @@
             box-shadow: var(--shadow-soft);
         }
         .home-recent h3 {
+            font-family: 'Inter', sans-serif;
             font-size: 14px; font-weight: 700;
             color: var(--secondary-color); margin-bottom: 16px;
             display: flex; align-items: center; justify-content: space-between;
@@ -159,6 +179,7 @@
         .home-recent thead { background: transparent; }
         .home-recent th { background: transparent; border-bottom: 1px solid var(--border-glass); }
         .home-recent td { border-bottom: 1px solid var(--border-glass); }
+        
         @media (max-width: 900px) {
             .home-banner { flex-direction: column; text-align: center; padding: 22px; }
             .home-banner-illustration { display: none; }
@@ -354,5 +375,25 @@
         });
     })();
     </script>
+    <script>
+    // Tự động highlight menu đang chọn dựa vào tên file URL
+    document.addEventListener('DOMContentLoaded', () => {
+        const currentPath = window.location.pathname.split('/').pop() || 'home_a.html';
+        const navLinks = document.querySelectorAll('aside nav a');
+        
+        navLinks.forEach(link => {
+            const href = link.getAttribute('href');
+            // Nếu href trùng với tên file hiện tại thì thêm class active
+            if (href === currentPath) {
+                link.classList.add('active');
+                // Xóa thẻ <strong> cũ nếu có (để không bị in đậm 2 lần)
+                const strong = link.querySelector('strong');
+                if (strong) {
+                    link.innerHTML = strong.innerHTML;
+                }
+            }
+        });
+    });
+</script>
 </body>
 </html>

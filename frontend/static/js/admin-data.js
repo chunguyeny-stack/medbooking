@@ -1,5 +1,5 @@
 /* ============================================================
-   MEDBOOKING — Mock Data Layer (v7 - Lock Reason Sync)
+   MEDBOOKING — Mock Data Layer (v8 - Soft Delete + Recycle Bin + Notifications)
    ============================================================ */
 (function (global) {
     'use strict';
@@ -23,7 +23,6 @@
         return `${getOffsetDateStr(offset)} ${timeStr}`;
     }
 
-    // --- SCHEDULE MẪU DÙNG CHUNG ---
     function defaultSchedule() {
         return [
             { day: 'Thứ Hai',  morning: true,  afternoon: true  },
@@ -206,12 +205,6 @@
             { id: 'MP004', keywords: 'mệt mỏi, chóng mặt, đau đầu', specialtyId: 'CK004', specialtyName: 'Nội tổng quát', doctorId: '', doctorName: '', priority: 3 },
             { id: 'MP005', keywords: 'mụn, ngứa da, nổi mẩn', specialtyId: 'CK005', specialtyName: 'Da liễu', doctorId: 'BS006', doctorName: 'BS. Vũ Thị F', priority: 2 }
         ],
-        recycleBin: [
-            { id: 'BS992', type: 'Bác sĩ', name: 'BS. Lê Văn Xóa', deletedAt: getOffsetDateTimeStr(-1, '08:00') },
-            { id: 'TK899', type: 'Tài khoản', name: 'Nguyễn Thị Xóa', deletedAt: getOffsetDateTimeStr(-1, '14:30') },
-            { id: 'CK880', type: 'Chuyên khoa', name: 'Chuyên khoa cũ', deletedAt: getOffsetDateTimeStr(0, '09:15') },
-            { id: 'DV770', type: 'Dịch vụ', name: 'Dịch vụ khai trương', deletedAt: getOffsetDateTimeStr(0, '11:00') }
-        ],
         transactions: [
             { id: 'GD001', date: getOffsetDateStr(0), patient: 'Nguyễn Văn A', revenue: 450000, profit: 180000, doctorConfirm: 'BS. Nguyễn Văn A', receptionConfirm: 'Lễ tân C', updatedAt: getOffsetDateTimeStr(0, '10:42'), status: 'completed' },
             { id: 'GD002', date: getOffsetDateStr(0), patient: 'Trần Thị B', revenue: 1200000, profit: 500000, doctorConfirm: 'BS. Trần Thị B', receptionConfirm: 'Lễ tân G', updatedAt: getOffsetDateTimeStr(0, '09:21'), status: 'completed' },
@@ -251,7 +244,7 @@
     ];
 
     // ============================================================
-    // LOAD/SAVE
+    // LOAD / SAVE
     // ============================================================
     function loadDB() {
         try {
@@ -265,9 +258,7 @@
             for (const k of Object.keys(seedData)) {
                 if (!db[k]) { db[k] = JSON.parse(JSON.stringify(seedData[k])); changed = true; }
             }
-            if (changed) {
-                localStorage.setItem(STORAGE_KEY, JSON.stringify(db));
-            }
+            if (changed) localStorage.setItem(STORAGE_KEY, JSON.stringify(db));
             return db;
         } catch (e) {
             localStorage.setItem(STORAGE_KEY, JSON.stringify(seedData));
@@ -335,12 +326,23 @@
     }
 
     // ============================================================
+    // RECYCLE BIN HELPERS
+    // ============================================================
+    const TYPE_MAP = {
+        'Tài khoản': 'accounts',
+        'Bác sĩ': 'doctors',
+        'Chuyên khoa': 'specialties',
+        'Dịch vụ': 'services',
+        'Mapping': 'mappings'
+    };
+
+    // ============================================================
     // API
     // ============================================================
     const mockAPI = {
         /* ============ ACCOUNTS ============ */
         getAccounts(filters = {}) {
-            let list = [...DB.accounts];
+            let list = DB.accounts.filter(a => a.status !== 'deleted');
             if (filters.role && filters.role !== 'all') list = list.filter(a => a.role === filters.role);
             if (filters.status && filters.status !== 'all') list = list.filter(a => a.status === filters.status);
             if (filters.search) {
@@ -380,16 +382,10 @@
             return Promise.resolve({ data: DB.accounts[i] });
         },
         deleteAccount(id) {
-            const i = DB.accounts.findIndex(a => a.id === id);
-            if (i === -1) return Promise.reject({ message: 'Không tìm thấy' });
-            const acc = DB.accounts[i];
-            DB.accounts.splice(i, 1);
-            DB.recycleBin.unshift({
-                id: acc.id,
-                type: 'Tài khoản',
-                name: acc.name,
-                deletedAt: new Date().toLocaleString('vi-VN')
-            });
+            const acc = DB.accounts.find(a => a.id === id);
+            if (!acc) return Promise.reject({ message: 'Không tìm thấy' });
+            acc.status = 'deleted';
+            acc.deletedAt = new Date().toLocaleString('vi-VN');
             DB.notifications.unshift({
                 id: 'N' + String(Date.now()).slice(-6),
                 title: 'Cảnh báo hệ thống',
@@ -400,32 +396,16 @@
             saveDB(DB);
             return Promise.resolve({ data: true });
         },
-        /**
-         * Khóa / Mở khóa tài khoản.
-         * - Khi khóa: bắt buộc truyền `reason` (≥ 5 ký tự)
-         * - Khi mở khóa: xóa `lockReason` cũ
-         * - Đồng bộ luôn sang medbooking_users (nếu có) để dn.html check
-         */
         toggleAccountStatus(id, reason) {
             const acc = DB.accounts.find(a => a.id === id);
             if (!acc) return Promise.reject({ message: 'Không tìm thấy' });
 
             const willLock = acc.status === 'active';
-            const cleanReason = (reason === undefined || reason === null)
-                ? ''
-                : String(reason).trim();
+            const cleanReason = (reason === undefined || reason === null) ? '' : String(reason).trim();
 
             if (willLock) {
-                if (cleanReason.length < 5) {
-                    return Promise.reject({
-                        message: 'Lý do khóa phải có ít nhất 5 ký tự'
-                    });
-                }
-                if (cleanReason.length > 300) {
-                    return Promise.reject({
-                        message: 'Lý do khóa không quá 300 ký tự'
-                    });
-                }
+                if (cleanReason.length < 5) return Promise.reject({ message: 'Lý do khóa phải có ít nhất 5 ký tự' });
+                if (cleanReason.length > 300) return Promise.reject({ message: 'Lý do khóa không quá 300 ký tự' });
                 acc.status = 'locked';
                 acc.lockReason = cleanReason;
                 acc.lockedAt = new Date().toISOString();
@@ -442,7 +422,7 @@
 
         /* ============ DOCTORS ============ */
         getDoctors(filters = {}) {
-            let list = [...DB.doctors];
+            let list = DB.doctors.filter(d => d.status !== 'deleted');
             if (filters.specialtyId && filters.specialtyId !== 'all') list = list.filter(d => d.specialtyId === filters.specialtyId);
             if (filters.search) {
                 const q = filters.search.toLowerCase();
@@ -450,25 +430,16 @@
             }
             list = list.map(d => {
                 const revs = REVIEWS.filter(r => r.doctorId === d.id);
-                return {
-                    ...d,
-                    rating: calcAvgRating(d.id),
-                    reviewCount: revs.length
-                };
+                return { ...d, rating: calcAvgRating(d.id), reviewCount: revs.length };
             });
             return Promise.resolve({ data: list, total: list.length });
         },
         getDoctorById(id) {
-            const d = DB.doctors.find(x => x.id === id);
+            const d = DB.doctors.find(x => x.id === id && x.status !== 'deleted');
             if (!d) return Promise.resolve({ data: null });
             const revs = REVIEWS.filter(r => r.doctorId === id).sort((a, b) => b.date.localeCompare(a.date));
             return Promise.resolve({
-                data: {
-                    ...d,
-                    rating: calcAvgRating(id),
-                    reviews: revs,
-                    reviewCount: revs.length
-                }
+                data: { ...d, rating: calcAvgRating(id), reviews: revs, reviewCount: revs.length }
             });
         },
         createDoctor(data) {
@@ -506,24 +477,21 @@
             const i = DB.doctors.findIndex(d => d.id === id);
             if (i === -1) return Promise.reject({ message: 'Không tìm thấy' });
             const spec = DB.specialties.find(s => s.id === data.specialtyId);
-            DB.doctors[i] = {
-                ...DB.doctors[i],
-                ...data,
-                specialtyName: spec ? spec.name : DB.doctors[i].specialtyName
-            };
+            DB.doctors[i] = { ...DB.doctors[i], ...data, specialtyName: spec ? spec.name : DB.doctors[i].specialtyName };
             saveDB(DB);
             return Promise.resolve({ data: DB.doctors[i] });
         },
         deleteDoctor(id) {
-            const i = DB.doctors.findIndex(d => d.id === id);
-            if (i === -1) return Promise.reject({ message: 'Không tìm thấy' });
-            const doc = DB.doctors[i];
-            DB.doctors.splice(i, 1);
-            DB.recycleBin.unshift({
-                id: doc.id,
-                type: 'Bác sĩ',
-                name: doc.name,
-                deletedAt: new Date().toLocaleString('vi-VN')
+            const doc = DB.doctors.find(d => d.id === id);
+            if (!doc) return Promise.reject({ message: 'Không tìm thấy' });
+            doc.status = 'deleted';
+            doc.deletedAt = new Date().toLocaleString('vi-VN');
+            DB.notifications.unshift({
+                id: 'N' + String(Date.now()).slice(-6),
+                title: 'Cảnh báo hệ thống',
+                message: `Bác sĩ "${doc.name}" đã được chuyển vào thùng rác`,
+                time: 'Vừa xong',
+                read: false
             });
             saveDB(DB);
             return Promise.resolve({ data: true });
@@ -546,7 +514,6 @@
             };
             REVIEWS.unshift(rv);
             saveReviews(REVIEWS);
-
             if (doc) {
                 doc.rating = calcAvgRating(data.doctorId);
                 saveDB(DB);
@@ -564,7 +531,7 @@
 
         /* ============ SPECIALTIES ============ */
         getSpecialties(filters = {}) {
-            let list = [...DB.specialties];
+            let list = DB.specialties.filter(s => s.status !== 'deleted');
             if (filters.search) {
                 const q = filters.search.toLowerCase();
                 list = list.filter(s => s.name.toLowerCase().includes(q));
@@ -585,15 +552,16 @@
             return Promise.resolve({ data: DB.specialties[i] });
         },
         deleteSpecialty(id) {
-            const i = DB.specialties.findIndex(s => s.id === id);
-            if (i === -1) return Promise.reject({ message: 'Không tìm thấy' });
-            const spec = DB.specialties[i];
-            DB.specialties.splice(i, 1);
-            DB.recycleBin.unshift({
-                id: spec.id,
-                type: 'Chuyên khoa',
-                name: spec.name,
-                deletedAt: new Date().toLocaleString('vi-VN')
+            const spec = DB.specialties.find(s => s.id === id);
+            if (!spec) return Promise.reject({ message: 'Không tìm thấy' });
+            spec.status = 'deleted';
+            spec.deletedAt = new Date().toLocaleString('vi-VN');
+            DB.notifications.unshift({
+                id: 'N' + String(Date.now()).slice(-6),
+                title: 'Cảnh báo hệ thống',
+                message: `Chuyên khoa "${spec.name}" đã được chuyển vào thùng rác`,
+                time: 'Vừa xong',
+                read: false
             });
             saveDB(DB);
             return Promise.resolve({ data: true });
@@ -601,7 +569,7 @@
 
         /* ============ SERVICES ============ */
         getServices(filters = {}) {
-            let list = [...DB.services];
+            let list = DB.services.filter(s => s.status !== 'deleted');
             if (filters.specialtyId && filters.specialtyId !== 'all') list = list.filter(s => s.specialtyId === filters.specialtyId);
             if (filters.search) {
                 const q = filters.search.toLowerCase();
@@ -625,15 +593,16 @@
             return Promise.resolve({ data: DB.services[i] });
         },
         deleteService(id) {
-            const i = DB.services.findIndex(s => s.id === id);
-            if (i === -1) return Promise.reject({ message: 'Không tìm thấy' });
-            const serv = DB.services[i];
-            DB.services.splice(i, 1);
-            DB.recycleBin.unshift({
-                id: serv.id,
-                type: 'Dịch vụ',
-                name: serv.name,
-                deletedAt: new Date().toLocaleString('vi-VN')
+            const serv = DB.services.find(s => s.id === id);
+            if (!serv) return Promise.reject({ message: 'Không tìm thấy' });
+            serv.status = 'deleted';
+            serv.deletedAt = new Date().toLocaleString('vi-VN');
+            DB.notifications.unshift({
+                id: 'N' + String(Date.now()).slice(-6),
+                title: 'Cảnh báo hệ thống',
+                message: `Dịch vụ "${serv.name}" đã được chuyển vào thùng rác`,
+                time: 'Vừa xong',
+                read: false
             });
             saveDB(DB);
             return Promise.resolve({ data: true });
@@ -641,7 +610,7 @@
 
         /* ============ MAPPINGS ============ */
         getMappings(filters = {}) {
-            let list = [...DB.mappings];
+            let list = DB.mappings.filter(m => m.status !== 'deleted');
             if (filters.specialtyId && filters.specialtyId !== 'all') list = list.filter(m => m.specialtyId === filters.specialtyId);
             if (filters.search) {
                 const q = filters.search.toLowerCase();
@@ -667,39 +636,95 @@
             return Promise.resolve({ data: DB.mappings[i] });
         },
         deleteMapping(id) {
-            const i = DB.mappings.findIndex(m => m.id === id);
-            if (i === -1) return Promise.reject({ message: 'Không tìm thấy' });
-            DB.mappings.splice(i, 1);
-            saveDB(DB);
-            return Promise.resolve({ data: true });
-        },
-
-        /* ============ RECYCLE BIN ============ */
-        getRecycleBin() { return Promise.resolve({ data: [...DB.recycleBin] }); },
-        restoreItem(id) {
-            const i = DB.recycleBin.findIndex(r => r.id === id);
-            if (i === -1) return Promise.reject({ message: 'Không tìm thấy' });
-            const item = DB.recycleBin[i];
-            DB.recycleBin.splice(i, 1);
+            const map = DB.mappings.find(m => m.id === id);
+            if (!map) return Promise.reject({ message: 'Không tìm thấy' });
+            map.status = 'deleted';
+            map.deletedAt = new Date().toLocaleString('vi-VN');
             DB.notifications.unshift({
                 id: 'N' + String(Date.now()).slice(-6),
-                title: 'Khôi phục thành công',
-                message: `Đã khôi phục "${item.name}" (${item.type})`,
+                title: 'Cảnh báo hệ thống',
+                message: `Quy tắc Mapping "${map.keywords}" đã được chuyển vào thùng rác`,
                 time: 'Vừa xong',
                 read: false
             });
             saveDB(DB);
             return Promise.resolve({ data: true });
         },
-        deleteItemForever(id) {
-            const i = DB.recycleBin.findIndex(r => r.id === id);
-            if (i === -1) return Promise.reject({ message: 'Không tìm thấy' });
-            DB.recycleBin.splice(i, 1);
-            saveDB(DB);
-            return Promise.resolve({ data: true });
+
+        /* ============ RECYCLE BIN ============ */
+        getRecycleBin() {
+            const items = [];
+
+            DB.accounts.filter(x => x.status === 'deleted').forEach(x => {
+                items.push({ id: x.id, type: 'Tài khoản', name: x.name, deletedAt: x.deletedAt || '' });
+            });
+            DB.doctors.filter(x => x.status === 'deleted').forEach(x => {
+                items.push({ id: x.id, type: 'Bác sĩ', name: x.name, deletedAt: x.deletedAt || '' });
+            });
+            DB.specialties.filter(x => x.status === 'deleted').forEach(x => {
+                items.push({ id: x.id, type: 'Chuyên khoa', name: x.name, deletedAt: x.deletedAt || '' });
+            });
+            DB.services.filter(x => x.status === 'deleted').forEach(x => {
+                items.push({ id: x.id, type: 'Dịch vụ', name: x.name, deletedAt: x.deletedAt || '' });
+            });
+            DB.mappings.filter(x => x.status === 'deleted').forEach(x => {
+                items.push({ id: x.id, type: 'Mapping', name: x.keywords, deletedAt: x.deletedAt || '' });
+            });
+
+            items.sort((a, b) => (b.deletedAt || '').localeCompare(a.deletedAt || ''));
+            return Promise.resolve({ data: items });
         },
+
+        restoreItem(id) {
+            for (const key of Object.keys(TYPE_MAP)) {
+                const arrName = TYPE_MAP[key];
+                const arr = DB[arrName];
+                const item = arr.find(x => x.id === id && x.status === 'deleted');
+                if (item) {
+                    if (arrName === 'accounts') item.status = 'active';
+                    else if (arrName === 'doctors') item.status = 'available';
+                    else delete item.status;
+                    delete item.deletedAt;
+
+                    DB.notifications.unshift({
+                        id: 'N' + String(Date.now()).slice(-6),
+                        title: 'Khôi phục thành công',
+                        message: `Đã khôi phục "${item.name || item.keywords}" từ thùng rác.`,
+                        time: 'Vừa xong',
+                        read: false
+                    });
+                    saveDB(DB);
+                    return Promise.resolve({ data: true });
+                }
+            }
+            return Promise.reject({ message: 'Không tìm thấy bản ghi trong thùng rác' });
+        },
+
+        deleteItemForever(id) {
+            for (const arrName of Object.values(TYPE_MAP)) {
+                const arr = DB[arrName];
+                const idx = arr.findIndex(x => x.id === id && x.status === 'deleted');
+                if (idx >= 0) {
+                    const name = arr[idx].name || arr[idx].keywords || arr[idx].id;
+                    arr.splice(idx, 1);
+                    DB.notifications.unshift({
+                        id: 'N' + String(Date.now()).slice(-6),
+                        title: 'Xóa vĩnh viễn',
+                        message: `"${name}" đã bị xóa vĩnh viễn khỏi hệ thống.`,
+                        time: 'Vừa xong',
+                        read: false
+                    });
+                    saveDB(DB);
+                    return Promise.resolve({ data: true });
+                }
+            }
+            return Promise.reject({ message: 'Không tìm thấy bản ghi' });
+        },
+
         emptyRecycleBin() {
-            DB.recycleBin = [];
+            Object.values(TYPE_MAP).forEach(arrName => {
+                DB[arrName] = DB[arrName].filter(x => x.status !== 'deleted');
+            });
             saveDB(DB);
             return Promise.resolve({ data: true });
         },
@@ -791,14 +816,13 @@
 
     // ============================================================
     // ĐỒNG BỘ TRẠNG THÁI KHÓA SANG medbooking_users
-    // (để dn.html có thể đọc lý do khóa)
     // ============================================================
     function syncLockStatusToUsers(adminAcc) {
         try {
             const USERS_KEY = 'medbooking_users';
             let users = JSON.parse(localStorage.getItem(USERS_KEY)) || [];
             const idx = users.findIndex(u => u.email === adminAcc.email);
-            if (idx === -1) return; // Không có user bên kho dk.html -> bỏ qua
+            if (idx === -1) return;
 
             if (adminAcc.status === 'locked') {
                 users[idx].status = 'locked';
@@ -817,6 +841,6 @@
 
     global.MedBookingAPI = mockAPI;
     global.MedBookingUtils = { formatMoney, formatDate };
-    console.log('[admin-data.js] ✅ Đã export MedBookingAPI (v7 - Lock Reason Sync)');
+    console.log('[admin-data.js] ✅ Đã export MedBookingAPI (v8 - Soft Delete + Recycle Bin + Notifications)');
 
 })(window);
