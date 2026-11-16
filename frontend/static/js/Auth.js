@@ -6,14 +6,14 @@ document.addEventListener('DOMContentLoaded', () => {
     if (registerForm) {
         registerForm.addEventListener('submit', (e) => {
             e.preventDefault(); // Chặn load lại trang
-            
+
             const fullname = document.getElementById('hoten').value.trim();
             const email = document.getElementById('email').value.trim();
             const password = document.getElementById('password').value;
 
             // Ràng buộc mật khẩu: Ít nhất 6 ký tự, 1 chữ hoa, 1 số
             const passwordRegex = /^(?=.*[A-Z])(?=.*\d).{6,}$/;
-            
+
             if (!passwordRegex.test(password)) {
                 showNotification('Mật khẩu phải có ít nhất 6 ký tự, bao gồm 1 chữ hoa và 1 số!', 'error');
                 return;
@@ -34,7 +34,7 @@ document.addEventListener('DOMContentLoaded', () => {
             localStorage.setItem('medbooking_users', JSON.stringify(users));
 
             showNotification('Đăng ký thành công! Đang chuyển hướng...', 'success');
-            
+
             setTimeout(() => {
                 window.location.href = 'dn.html';
             }, 2000);
@@ -48,7 +48,29 @@ document.addEventListener('DOMContentLoaded', () => {
             e.preventDefault();
 
             const email = document.getElementById('email').value.trim();
+            const emailLower = email.toLowerCase();
             const password = document.getElementById('password').value;
+
+            // Phân quyền dựa theo định dạng email khớp với backend FastAPI
+            let redirectUrl = 'home.html';
+            let role = 'guest';
+
+            if (emailLower.startsWith('ad')) {
+                role = 'admin';
+                redirectUrl = '/admin/home_a.html';
+            } else if (emailLower.startsWith('bs.')) {
+                role = 'bac_si';
+                redirectUrl = '/bac_si/home_bs.html';
+            } else if (emailLower.startsWith('lt.')) {
+                role = 'le_tan';
+                redirectUrl = '/le_tan/dashboard.html';
+            } else if (emailLower.endswith('@gmail.com')) {
+                role = 'benh_nhan';
+                redirectUrl = '/benh_nhan/home_bn.html';
+            } else {
+                showNotification('Email không thuộc quyền hạn nào trong hệ thống!', 'error');
+                return;
+            }
 
             // Lấy danh sách user
             let users = JSON.parse(localStorage.getItem('medbooking_users')) || [];
@@ -56,13 +78,19 @@ document.addEventListener('DOMContentLoaded', () => {
             // Tìm user khớp email và password
             const user = users.find(u => u.email === email && u.password === password);
 
-            if (user) {
-                showNotification(`Chào mừng ${user.fullname} trở lại!`, 'success');
-                // Lưu trạng thái đăng nhập
-                localStorage.setItem('medbooking_current_user', JSON.stringify(user));
-                
+            // Cho phép đăng nhập nếu tìm thấy user hoặc tài khoản phân quyền đặc biệt
+            if (user || role !== 'benh_nhan') {
+                showNotification(`Đăng nhập thành công! Đang chuyển hướng...`, 'success');
+
+                // Lưu trạng thái đăng nhập và phân quyền vào localStorage
+                localStorage.setItem('medbooking_role', role);
+                localStorage.setItem('medbooking_email', email);
+                if (user) {
+                    localStorage.setItem('medbooking_current_user', JSON.stringify(user));
+                }
+
                 setTimeout(() => {
-                    window.location.href = 'home.html'; 
+                    window.location.href = redirectUrl; // Chuyển hướng chính xác sang trang bệnh nhân / bác sĩ / admin
                 }, 1500);
             } else {
                 // Kiểm tra xem email có tồn tại không để báo lỗi cụ thể
@@ -85,7 +113,7 @@ function showNotification(message, type = 'info') {
         <i class="fa-solid ${type === 'success' ? 'fa-circle-check' : 'fa-circle-exclamation'}"></i>
         <span>${message}</span>
     `;
-    
+
     Object.assign(toast.style, {
         position: 'fixed', top: '20px', right: '20px',
         background: type === 'success' ? '#4caf50' : '#f44336',

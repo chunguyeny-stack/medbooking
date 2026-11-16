@@ -3,17 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin - Quản lý Mapping Triệu chứng</title>
+    <title>Admin - Quản lý Mapping Triệu chứng (SQL Server)</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="icon" type="image/jpeg" href="/static/favicon.jpg">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="icon" type="image/jpeg" href="../../favicon.jpg">
-    
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Quicksand:wght@600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="../../static/css/A.css">
-    
     <style>
-        /* Định dạng phông chữ thương hiệu MedBooking */
         .brand-name {
             font-family: 'Quicksand', sans-serif !important;
             font-weight: 700 !important;
@@ -21,14 +18,12 @@
             letter-spacing: -0.01em;
             font-size: 22px;
         }
-
-        /* Hiệu ứng hover sáng lên giống nút thông báo */
         .admin-profile-btn {
-            text-decoration: none; 
-            color: var(--primary-color); 
-            font-weight: 600; 
-            padding: 8px 16px; 
-            background: var(--primary-light); 
+            text-decoration: none;
+            color: var(--primary-color);
+            font-weight: 600;
+            padding: 8px 16px;
+            background: var(--primary-light);
             border-radius: 50px;
             transition: all 0.25s ease;
         }
@@ -37,6 +32,34 @@
             color: #fff;
             box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);
             transform: translateY(-1px);
+        }
+        .custom-modal-overlay {
+            position: fixed !important;
+            top: 0 !important;
+            left: 0 !important;
+            width: 100vw !important;
+            height: 100vh !important;
+            background: rgba(10, 5, 20, 0.8) !important;
+            display: none;
+            align-items: center !important;
+            justify-content: center !important;
+            z-index: 999999 !important;
+            backdrop-filter: blur(5px);
+            margin: 0 !important;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        .custom-modal-content {
+            background: #1E1B4B !important;
+            border: 1px solid rgba(255, 255, 255, 0.15) !important;
+            border-radius: 20px !important;
+            padding: 28px !important;
+            width: 100% !important;
+            max-width: 480px !important;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.6) !important;
+            color: #fff !important;
         }
     </style>
 </head>
@@ -51,21 +74,21 @@
         <nav>
             <h3>QUẢN LÝ NHÂN SỰ & NGƯỜI DÙNG</h3>
             <ul>
-                <li><a href="home_a.html">Trang chủ Admin</a></li>
-                <li><a href="quan_ly_tai_khoan.html">Quản lý tài khoản</a></li>
-                <li><a href="quan_ly_bac_si.html">Quản lý bác sĩ</a></li>
+                <li><a href="/admin/home_a.html">Trang chủ Admin</a></li>
+                <li><a href="/admin/quan_ly_tai_khoan.html">Quản lý tài khoản</a></li>
+                <li><a href="/admin/quan_ly_bac_si.html">Quản lý bác sĩ</a></li>
             </ul>
             <h3>DANH MỤC Y TẾ</h3>
             <ul>
-                <li><a href="quan_ly_chuyen_khoa.html">Quản lý chuyên khoa</a></li>
-                <li><a href="quan_ly_dich_vu.html">Quản lý dịch vụ & giá</a></li>
-                <li><a href="quan_ly_mapping.html"><strong>Quản lý Mapping Triệu chứng</strong></a></li>
+                <li><a href="/admin/quan_ly_chuyen_khoa.html">Quản lý chuyên khoa</a></li>
+                <li><a href="/admin/quan_ly_dich_vu.html">Quản lý dịch vụ & giá</a></li>
+                <li><a href="/admin/quan_ly_mapping.html"><strong>Quản lý Mapping Triệu chứng</strong></a></li>
             </ul>
             <h3>BÁO CÁO & THỐNG KÊ</h3>
             <ul>
-                <li><a href="dashboard.html">Dashboard Thống kê & Báo cáo</a></li>
-                <li><a href="nhat_ky_giao_dich.html">Nhật ký Giao dịch Chi tiết</a></li>
-                <li><a href="thung_rac.html">Thùng rác hệ thống</a></li>
+                <li><a href="/admin/dashboard.html">Dashboard Thống kê & Báo cáo</a></li>
+                <li><a href="/admin/nhat_ky_giao_dich.html">Nhật ký Giao dịch Chi tiết</a></li>
+                <li><a href="/admin/thung_rac.html">Thùng rác hệ thống</a></li>
             </ul>
         </nav>
     </aside>
@@ -75,81 +98,120 @@
             <button class="menu-toggle" id="menu-toggle" aria-label="Mở menu"><i class="fas fa-bars"></i></button>
             <h1>Quản lý Mapping Triệu chứng & Điều hướng Y tế</h1>
             <div style="display: flex; align-items: center; gap: 12px;">
-                <!-- Nút AD Tên Admin màu tím nguyên bản, có hiệu ứng hover và chuyển sang trang hồ sơ cá nhân -->
-                <a href="ho_so_ca_nhan.html" class="admin-profile-btn">AD Tên Admin</a>
+                <a href="ho_so_ca_nhan.html" class="admin-profile-btn" id="admin-name-btn">AD Tên Admin</a>
                 <button class="theme-toggle" id="theme-toggle">🌙</button>
                 <a href="../dk_dn/dn.html">Đăng xuất</a>
             </div>
         </header>
 
-        <section>
-            <div>
-                <input type="text" id="search-mapping" placeholder="Tìm kiếm theo từ khóa triệu chứng...">
-                <select id="filter-mapping-specialty">
+        <section style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; margin-bottom: 20px;">
+            <div style="display: flex; gap: 10px; flex-wrap: wrap; align-items: center;">
+                <input type="text" id="search-mapping" placeholder="Tìm kiếm theo từ khóa triệu chứng..."
+                       style="padding: 8px 12px; border-radius: 10px; border: 1px solid var(--border-glass); background: var(--bg-main); color: var(--secondary-color);">
+                <select id="filter-mapping-specialty"
+                        style="padding: 8px 12px; border-radius: 10px; border: 1px solid var(--border-glass); background: var(--bg-main); color: var(--secondary-color);">
                     <option value="all">Tất cả chuyên khoa đích</option>
                 </select>
+                <select id="filter-status"
+                        style="padding: 8px 12px; border-radius: 10px; border: 1px solid var(--border-glass); background: var(--bg-main); color: var(--secondary-color);">
+                    <option value="all">Tất cả trạng thái</option>
+                    <option value="active">Đang hoạt động</option>
+                    <option value="deleted">Đã xóa</option>
+                </select>
             </div>
-            <button type="button" id="btn-add-mapping">+ Thêm Quy tắc Mapping Mới</button>
+            <button type="button" id="btn-add-mapping"
+                    style="padding: 9px 18px; background: var(--primary-gradient); color: #fff; border: none; border-radius: 10px; font-weight: 600; cursor: pointer;">
+                <i class="fas fa-plus" style="margin-right: 6px;"></i> Thêm Quy tắc Mapping Mới
+            </button>
         </section>
 
-        <section>
-            <h2>Danh sách Từ khóa Triệu chứng & Phân loại</h2>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Mã Mapping</th>
-                        <th>Từ khóa triệu chứng</th>
-                        <th>Chuyên khoa đích</th>
-                        <th>Bác sĩ chỉ định</th>
-                        <th>Độ ưu tiên</th>
-                        <th>Hành động</th>
-                    </tr>
-                </thead>
-                <tbody id="mapping-table-body">
-                    <tr><td colspan="6" style="text-align:center;padding:40px;color:#8B7FA8;">Đang tải...</td></tr>
-                </tbody>
-            </table>
+        <section style="background: var(--bg-card); border: 1px solid var(--border-glass); border-radius: 20px; padding: 22px; box-shadow: var(--shadow-soft);">
+            <h2 style="font-size: 15px; font-weight: 700; color: var(--secondary-color); margin-bottom: 16px;">Danh sách Từ khóa Triệu chứng & Phân loại</h2>
+            <div style="overflow-x: auto;">
+                <table style="width: 100%; border-collapse: collapse; text-align: left;">
+                    <thead>
+                        <tr style="border-bottom: 2px solid var(--border-glass); font-size: 12.5px; color: var(--text-gray);">
+                            <th style="padding: 12px;">Mã Mapping</th>
+                            <th style="padding: 12px;">Từ khóa triệu chứng</th>
+                            <th style="padding: 12px;">Chuyên khoa đích</th>
+                            <th style="padding: 12px;">Bác sĩ chỉ định</th>
+                            <th style="padding: 12px;">Độ ưu tiên</th>
+                            <th style="padding: 12px;">Trạng thái</th>
+                            <th style="padding: 12px; text-align: center;">Hành động</th>
+                        </tr>
+                    </thead>
+                    <tbody id="mapping-table-body">
+                        <tr><td colspan="7" style="text-align:center;padding:40px;color:var(--text-gray);">Đang tải dữ liệu từ SQL Server...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <!-- Khu vực hiển thị Phân trang -->
+            <div id="pagination-container" style="display: flex; justify-content: space-between; align-items: center; margin-top: 20px; padding-top: 15px; border-top: 1px solid var(--border-glass);">
+                <div id="pagination-info" style="font-size: 13px; color: var(--text-gray);">Đang hiển thị...</div>
+                <div id="pagination-buttons" style="display: flex; gap: 6px;"></div>
+            </div>
         </section>
 
-        <section id="mapping-form-modal" style="display: none;">
-            <h3 id="form-mapping-title">Thêm Quy tắc Mapping Mới</h3>
-            <form id="form-mapping-info">
-                <div>
-                    <label for="map-keywords">Từ khóa triệu chứng (cách nhau bởi dấu phẩy):</label>
-                    <textarea id="map-keywords" rows="2" placeholder="Ví dụ: đau đầu, chóng mặt..." required></textarea>
+        <!-- Modal Thêm / Sửa Mapping -->
+        <div id="mapping-form-modal" class="custom-modal-overlay">
+            <div class="custom-modal-content">
+                <form id="form-mapping-info">
+                    <h3 id="form-mapping-title" style="font-size: 16px; font-weight: 700; color: #fff; margin-bottom: 16px;">Thêm Quy tắc Mapping Mới</h3>
+                    <input type="hidden" id="edit-mapping-id">
+                    <div style="margin-bottom: 12px;">
+                        <label for="map-keywords" style="font-size: 12px; font-weight: 600; color: #D1D5DB; display: block; margin-bottom: 4px;">Từ khóa triệu chứng (cách nhau bởi dấu phẩy):</label>
+                        <textarea id="map-keywords" rows="2" placeholder="Ví dụ: đau đầu, chóng mặt..." required style="width: 100%; padding: 8px 12px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.2); background: rgba(0,0,0,0.2); color: #fff; box-sizing: border-box;"></textarea>
+                    </div>
+                    <div style="margin-bottom: 12px;">
+                        <label for="map-specialty" style="font-size: 12px; font-weight: 600; color: #D1D5DB; display: block; margin-bottom: 4px;">Chuyên khoa điều hướng:</label>
+                        <select id="map-specialty" required style="width: 100%; padding: 8px 12px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.2); background: #1E1B4B; color: #fff; box-sizing: border-box;"></select>
+                    </div>
+                    <div style="margin-bottom: 12px;">
+                        <label for="map-doctor" style="font-size: 12px; font-weight: 600; color: #D1D5DB; display: block; margin-bottom: 4px;">Bác sĩ phụ trách (Tùy chọn):</label>
+                        <select id="map-doctor" style="width: 100%; padding: 8px 12px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.2); background: #1E1B4B; color: #fff; box-sizing: border-box;">
+                            <option value="">-- Không chỉ định cụ thể --</option>
+                        </select>
+                    </div>
+                    <div style="margin-bottom: 16px;">
+                        <label for="map-priority" style="font-size: 12px; font-weight: 600; color: #D1D5DB; display: block; margin-bottom: 4px;">Độ ưu tiên:</label>
+                        <input type="number" id="map-priority" value="1" min="1" required style="width: 100%; padding: 8px 12px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.2); background: rgba(0,0,0,0.2); color: #fff; box-sizing: border-box;">
+                    </div>
+                    <div style="display: flex; justify-content: flex-end; gap: 10px;">
+                        <button type="button" id="btn-cancel-mapping" style="padding: 8px 16px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); border-radius: 8px; cursor: pointer; color: #fff;">Hủy bỏ</button>
+                        <button type="submit" id="btn-save-mapping" style="padding: 8px 18px; background: linear-gradient(135deg, #8B5CF6, #6D28D9); color: #fff; border: none; border-radius: 8px; font-weight: 600; cursor: pointer;">Lưu quy tắc</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Modal: Xem/Nhập Lý do XÓA Mapping & Khôi phục -->
+        <div id="delete-modal" class="custom-modal-overlay">
+            <div class="custom-modal-content">
+                <h3 style="font-size: 16px; font-weight: 700; color: #fff; margin-bottom: 12px;"><i class="fas fa-trash" style="color: #EF4444; margin-right: 6px;"></i> Lý do xóa / Khôi phục quy tắc mapping</h3>
+                <input type="hidden" id="delete-target-id">
+                <div style="margin-bottom: 16px;">
+                    <label style="font-size: 12px; font-weight: 600; color: #D1D5DB; display: block; margin-bottom: 4px;">Nội dung lý do:</label>
+                    <textarea id="delete-reason-text" rows="3" placeholder="Nhập lý do xóa..." style="width: 100%; padding: 8px 12px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.2); background: rgba(0,0,0,0.2); color: #fff; box-sizing: border-box;"></textarea>
                 </div>
-                <div>
-                    <label for="map-specialty">Chuyên khoa điều hướng:</label>
-                    <select id="map-specialty" required></select>
+                <div style="display: flex; justify-content: flex-end; gap: 10px;">
+                    <button type="button" id="btn-cancel-delete" style="padding: 8px 16px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); border-radius: 8px; cursor: pointer; color: #fff;">Hủy bỏ</button>
+                    <button type="button" id="btn-submit-restore" style="padding: 8px 18px; background: #10B981; color: #fff; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; display: none;">Khôi phục</button>
+                    <button type="button" id="btn-submit-delete" style="padding: 8px 18px; background: #EF4444; color: #fff; border: none; border-radius: 8px; font-weight: 600; cursor: pointer;">Xác nhận Xóa</button>
                 </div>
-                <div>
-                    <label for="map-doctor">Bác sĩ phụ trách (Tùy chọn):</label>
-                    <select id="map-doctor">
-                        <option value="">-- Không chỉ định cụ thể --</option>
-                    </select>
-                </div>
-                <div>
-                    <label for="map-priority">Độ ưu tiên:</label>
-                    <input type="number" id="map-priority" value="1" min="1" required>
-                </div>
-                <div>
-                    <button type="submit" id="btn-save-mapping">Lưu quy tắc</button>
-                    <button type="button" id="btn-cancel-mapping">Hủy bỏ</button>
-                </div>
-            </form>
-        </section>
+            </div>
+        </div>
     </main>
 
     <div class="sidebar-overlay" id="sidebar-overlay"></div>
 
-    <script src="../../static/js/admin-data.js"></script>
     <script src="../../static/js/admin.js"></script>
-        <script>
+    <script>
     (function () {
         const html = document.documentElement;
         const saved = localStorage.getItem('mb-admin-theme') ||
-                      (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+                    (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
         html.setAttribute('data-theme', saved);
+
         document.addEventListener('DOMContentLoaded', () => {
             const themeBtn = document.getElementById('theme-toggle');
             if (themeBtn) {
@@ -161,41 +223,358 @@
                     themeBtn.textContent = next === 'dark' ? '☀️' : '🌙';
                 });
             }
+
             const menuBtn = document.getElementById('menu-toggle');
             const closeBtn = document.getElementById('sidebar-close');
             const sidebar = document.querySelector('aside');
             const overlay = document.getElementById('sidebar-overlay');
+
             function openSidebar() { sidebar.classList.add('open'); if (overlay) overlay.classList.add('active'); document.body.style.overflow = 'hidden'; }
             function closeSidebar() { sidebar.classList.remove('open'); if (overlay) overlay.classList.remove('active'); document.body.style.overflow = ''; }
+
             if (menuBtn) menuBtn.addEventListener('click', openSidebar);
             if (closeBtn) closeBtn.addEventListener('click', closeSidebar);
             if (overlay) overlay.addEventListener('click', closeSidebar);
-            sidebar.querySelectorAll('nav a').forEach(link => {
-                link.addEventListener('click', () => { if (window.innerWidth <= 900) closeSidebar(); });
+
+            const token = localStorage.getItem('medbooking_token');
+
+            if (token) {
+                fetch('/auth/me', {
+                    headers: {'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json'}
+                })
+                .then(res => res.json())
+                .then(data => {
+                    const adminName = data.ho_ten || data.name || '';
+                    const adminNameBtn = document.getElementById('admin-name-btn');
+                    if (adminNameBtn && adminName) {
+                        adminNameBtn.textContent = `AD ${adminName}`;
+                    }
+                }).catch(err => console.error("Không thể tải thông tin admin trên header:", err));
+            }
+
+            let allMappings = [];
+            let allSpecialties = [];
+            let allDoctors = [];
+            let currentPage = 1;
+            const pageSize = 20;
+
+            async function loadDropdownData() {
+                try {
+                    const [specRes, docRes] = await Promise.all([
+                        fetch('/auth/admin/chuyen-khoa', { headers: {'Authorization': `Bearer ${token}`} }),
+                        fetch('/auth/admin/bac-si', { headers: {'Authorization': `Bearer ${token}`} })
+                    ]);
+
+                    if (specRes.ok) {
+                        allSpecialties = await specRes.json();
+                        const filterSpec = document.getElementById('filter-mapping-specialty');
+                        const mapSpec = document.getElementById('map-specialty');
+
+                        const optionsHtml = '<option value="all">Tất cả chuyên khoa đích</option>' +
+                            allSpecialties.map(s => `<option value="${s.id}">${s.name}</option>`).join('');
+                        filterSpec.innerHTML = optionsHtml;
+                        mapSpec.innerHTML = allSpecialties.map(s => `<option value="${s.id}">${s.name}</option>`).join('');
+                    }
+
+                    if (docRes.ok) {
+                        allDoctors = await docRes.json();
+                        const mapDoc = document.getElementById('map-doctor');
+                        mapDoc.innerHTML = '<option value="">-- Không chỉ định cụ thể --</option>' +
+                            allDoctors.map(d => `<option value="${d.id}">${d.name}</option>`).join('');
+                    }
+                } catch (e) {
+                    console.error("Lỗi tải danh mục phụ:", e);
+                }
+            }
+
+            async function loadMappings() {
+                const tbody = document.getElementById('mapping-table-body');
+                tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;padding:40px;color:var(--text-gray);">Đang tải dữ liệu từ SQL Server...</td></tr>`;
+
+                try {
+                    const res = await fetch('/auth/admin/mapping', {
+                        headers: {'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json'}
+                    });
+                    if (!res.ok) throw new Error("Không thể tải danh sách mapping.");
+
+                    allMappings = await res.json();
+                    currentPage = 1;
+                    renderMappings(allMappings);
+                } catch (err) {
+                    console.error("Lỗi CSDL:", err);
+                    tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;padding:40px;color:#EF4444;">Không thể tải dữ liệu từ SQL Server!</td></tr>`;
+                }
+            }
+
+            window.changeMappingPage = function(page) {
+                currentPage = page;
+                renderMappings(allMappings);
+            };
+
+            function renderMappings(list) {
+                const tbody = document.getElementById('mapping-table-body');
+                const searchKey = document.getElementById('search-mapping').value.toLowerCase();
+                const specialtyFilter = document.getElementById('filter-mapping-specialty').value;
+                const statusFilter = document.getElementById('filter-status').value;
+
+                let filtered = list.filter(item => {
+                    const keywords = (item.keywords || item.tu_khoa || item.ten_trieu_chung || '').toLowerCase();
+                    const matchSearch = keywords.includes(searchKey);
+
+                    const specId = String(item.specialtyId || item.chuyen_khoa_id || '');
+                    const matchSpecialty = specialtyFilter === 'all' || specId === String(specialtyFilter);
+
+                    let status = String(item.status || item.trang_thai || 'active').toLowerCase().trim();
+                    if (!status || status === 'none' || status === 'null' || status === 'undefined') {
+                        status = 'active';
+                    }
+
+                    let matchStatus = true;
+
+                    // ⭐ TỰ ĐỘNG ẨN QUY TẮC MAPPING ĐÃ XÓA KHỎI BẢNG CHÍNH (Trừ khi chọn bộ lọc "Đã xóa")
+                    const isDeleted = (status === 'deleted' || status === 'đã xóa');
+                    if (statusFilter === 'all' && isDeleted) {
+                        return false;
+                    }
+
+                    if (statusFilter !== 'all') {
+                        if (statusFilter === 'active') matchStatus = (status === 'active' || status === '1' || status === 'true');
+                        else if (statusFilter === 'deleted') matchStatus = isDeleted;
+                    }
+
+                    return matchSearch && matchSpecialty && matchStatus;
+                });
+
+                if (filtered.length === 0) {
+                    tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;padding:40px;color:var(--text-gray);">Không tìm thấy quy tắc mapping nào khớp với bộ lọc.</td></tr>`;
+                    document.getElementById('pagination-container').style.display = 'none';
+                    return;
+                }
+
+                // Thực hiện phân trang 20 quy tắc / trang
+                const totalRecords = filtered.length;
+                const totalPages = Math.ceil(totalRecords / pageSize);
+                if (currentPage > totalPages) currentPage = totalPages;
+                if (currentPage < 1) currentPage = 1;
+
+                const startIdx = (currentPage - 1) * pageSize;
+                const paginatedList = filtered.slice(startIdx, startIdx + pageSize);
+
+                tbody.innerHTML = paginatedList.map(item => {
+                    const id = item.id;
+                    const keywords = item.keywords || item.tu_khoa || item.ten_trieu_chung || '';
+                    const specName = item.specialtyName || item.ten_chuyen_khoa || 'Chưa phân khoa';
+                    const docName = item.doctorName || item.ten_bac_si || 'Không chỉ định';
+                    const priority = item.priority || item.do_uu_tien || 1;
+
+                    let status = String(item.status || item.trang_thai || 'active').toLowerCase().trim();
+                    if (!status || status === 'none' || status === 'null' || status === 'undefined') {
+                        status = 'active';
+                    }
+                    const deleteReason = item.ly_do_xoa || '';
+
+                    let statusBadge = '<span style="padding:4px 10px; border-radius:20px; font-size:11.5px; font-weight:600; background:rgba(16,185,129,0.12); color:#10B981;">Đang hoạt động</span>';
+                    if (status === 'deleted' || status === 'đã xóa') {
+                        statusBadge = '<span style="padding:4px 10px; border-radius:20px; font-size:11.5px; font-weight:600; background:rgba(239,68,68,0.12); color:#EF4444;">Đã xóa</span>';
+                    }
+
+                    let actionButtons = '';
+                    if (status === 'deleted' || status === 'đã xóa') {
+                        actionButtons = `
+                            <button type="button" onclick="window.openDeleteModal(${id}, '${encodeURIComponent(deleteReason)}')" style="padding: 5px 10px; background: rgba(239,68,68,0.12); color: #EF4444; border: none; border-radius: 6px; cursor: pointer; font-weight: 600;"><i class="fas fa-eye"></i> Lý do xóa</button>
+                        `;
+                    } else {
+                        actionButtons = `
+                            <button type="button" onclick="window.editMapping(${id})" style="padding: 5px 10px; background: var(--primary-light); color: var(--primary-color); border: none; border-radius: 6px; cursor: pointer; font-weight: 600; margin-right: 4px;"><i class="fas fa-edit"></i> Sửa</button>
+                            <button type="button" onclick="window.openDeleteModal(${id}, '')" style="padding: 5px 10px; background: rgba(239,68,68,0.12); color: #EF4444; border: none; border-radius: 6px; cursor: pointer; font-weight: 600;"><i class="fas fa-trash"></i> Xóa</button>
+                        `;
+                    }
+
+                    return `
+                        <tr style="border-bottom: 1px solid var(--border-glass); font-size: 13px;">
+                            <td style="padding: 12px; font-weight: 600; color: var(--primary-color);">MAP${String(id).padStart(3, '0')}</td>
+                            <td style="padding: 12px; font-weight: 600; color: var(--secondary-color);">${keywords}</td>
+                            <td style="padding: 12px; color: var(--secondary-color);">${specName}</td>
+                            <td style="padding: 12px; color: var(--text-gray);">${docName}</td>
+                            <td style="padding: 12px; font-weight: 600; color: #F59E0B;">Ưu tiên ${priority}</td>
+                            <td style="padding: 12px;">${statusBadge}</td>
+                            <td style="padding: 12px; text-align: center;">${actionButtons}</td>
+                        </tr>
+                    `;
+                }).join('');
+
+                // Render giao diện thanh phân trang
+                const paginationContainer = document.getElementById('pagination-container');
+                const paginationInfo = document.getElementById('pagination-info');
+                const paginationButtons = document.getElementById('pagination-buttons');
+
+                paginationContainer.style.display = 'flex';
+                paginationInfo.textContent = `Hiển thị bản ghi từ ${startIdx + 1} đến ${Math.min(startIdx + pageSize, totalRecords)} trong tổng số ${totalRecords} quy tắc`;
+
+                let buttonsHtml = '';
+                // Nút Trước
+                buttonsHtml += `<button class="btn-page" ${currentPage === 1 ? 'disabled style="opacity:0.4; cursor:not-allowed;"' : 'onclick="window.changeMappingPage(' + (currentPage - 1) + ')"'} style="padding: 6px 12px; background: var(--bg-main); border: 1px solid var(--border-glass); color: var(--secondary-color); border-radius: 6px; cursor: pointer; font-size: 12px; font-weight: 600;">Trước</button>`;
+
+                // Các nút số trang
+                for (let i = 1; i <= totalPages; i++) {
+                    if (i === 1 || i === totalPages || (i >= currentPage - 1 && i <= currentPage + 1)) {
+                        const activeStyle = i === currentPage ? 'background: var(--primary-color); color: #fff; border-color: var(--primary-color);' : 'background: var(--bg-main); color: var(--secondary-color); border: 1px solid var(--border-glass);';
+                        buttonsHtml += `<button class="btn-page" onclick="window.changeMappingPage(${i})" style="padding: 6px 12px; ${activeStyle} border-radius: 6px; cursor: pointer; font-size: 12px; font-weight: 600;">${i}</button>`;
+                    } else if (i === currentPage - 2 || i === currentPage + 2) {
+                        buttonsHtml += `<span style="padding: 6px 8px; color: var(--text-gray);">...</span>`;
+                    }
+                }
+
+                // Nút Sau
+                buttonsHtml += `<button class="btn-page" ${currentPage === totalPages ? 'disabled style="opacity:0.4; cursor:not-allowed;"' : 'onclick="window.changeMappingPage(' + (currentPage + 1) + ')"'} style="padding: 6px 12px; background: var(--bg-main); border: 1px solid var(--border-glass); color: var(--secondary-color); border-radius: 6px; cursor: pointer; font-size: 12px; font-weight: 600;">Sau</button>`;
+
+                paginationButtons.innerHTML = buttonsHtml;
+            }
+
+            document.getElementById('search-mapping').addEventListener('input', () => { currentPage = 1; renderMappings(allMappings); });
+            document.getElementById('filter-mapping-specialty').addEventListener('change', () => { currentPage = 1; renderMappings(allMappings); });
+            document.getElementById('filter-status').addEventListener('change', () => { currentPage = 1; renderMappings(allMappings); });
+
+            // --- Modal Thêm / Sửa Mapping ---
+            const modal = document.getElementById('mapping-form-modal');
+            document.getElementById('btn-add-mapping').addEventListener('click', () => {
+                document.getElementById('form-mapping-title').textContent = "Thêm Quy tắc Mapping Mới";
+                document.getElementById('edit-mapping-id').value = "";
+                document.getElementById('map-keywords').value = "";
+                document.getElementById('map-priority').value = "1";
+                if (allSpecialties.length > 0) document.getElementById('map-specialty').value = allSpecialties[0].id;
+                document.getElementById('map-doctor').value = "";
+                modal.style.display = 'flex';
             });
-            window.addEventListener('resize', () => { if (window.innerWidth > 900) closeSidebar(); });
+
+            document.getElementById('btn-cancel-mapping').addEventListener('click', () => {
+                modal.style.display = 'none';
+            });
+
+            window.editMapping = function (id) {
+                const item = allMappings.find(x => Number(x.id) === Number(id));
+                if (!item) return;
+
+                document.getElementById('form-mapping-title').textContent = "Chỉnh sửa Quy tắc Mapping";
+                document.getElementById('edit-mapping-id').value = item.id;
+                document.getElementById('map-keywords').value = item.keywords || item.tu_khoa || '';
+                document.getElementById('map-specialty').value = item.specialtyId || item.chuyen_khoa_id || '';
+                document.getElementById('map-doctor').value = item.doctorId || item.bac_si_id || '';
+                document.getElementById('map-priority').value = item.priority || item.do_uu_tien || 1;
+                modal.style.display = 'flex';
+            };
+
+            document.getElementById('form-mapping-info').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const editId = document.getElementById('edit-mapping-id').value;
+                const payload = {
+                    tu_khoa: document.getElementById('map-keywords').value,
+                    chuyen_khoa_id: document.getElementById('map-specialty').value,
+                    bac_si_id: document.getElementById('map-doctor').value || null,
+                    do_uu_tien: Number(document.getElementById('map-priority').value)
+                };
+
+                try {
+                    const url = editId ? `/auth/admin/mapping/${editId}` : '/auth/admin/mapping';
+                    const method = editId ? 'PUT' : 'POST';
+
+                    const res = await fetch(url, {
+                        method: method,
+                        headers: {'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json'},
+                        body: JSON.stringify(payload)
+                    });
+
+                    const resultData = await res.json();
+                    if (!res.ok) throw new Error(resultData.detail || "Không thể lưu quy tắc mapping.");
+
+                    alert("Lưu quy tắc mapping thành công!");
+                    modal.style.display = 'none';
+                    loadMappings();
+                } catch (err) {
+                    alert("Lỗi: " + err.message);
+                }
+            });
+
+            // --- Modal Xóa & Khôi phục Mapping ---
+            const deleteModal = document.getElementById('delete-modal');
+            window.openDeleteModal = function (id, encodedReason) {
+                document.getElementById('delete-target-id').value = id;
+                let decoded = '';
+                try {
+                    decoded = decodeURIComponent(encodedReason || '');
+                } catch (e) {
+                    decoded = encodedReason || '';
+                }
+                document.getElementById('delete-reason-text').value = decoded;
+
+                const item = allMappings.find(x => Number(x.id) === Number(id));
+                const isDeleted = item && (String(item.status).toLowerCase().trim() === 'deleted' || String(item.status).toLowerCase().trim() === 'đã xóa');
+
+                const btnDelete = document.getElementById('btn-submit-delete');
+                const btnRestore = document.getElementById('btn-submit-restore');
+                const reasonTextarea = document.getElementById('delete-reason-text');
+
+                if (isDeleted) {
+                    btnDelete.style.display = 'none';
+                    btnRestore.style.display = 'inline-block';
+                    reasonTextarea.readOnly = true;
+                } else {
+                    btnDelete.style.display = 'inline-block';
+                    btnRestore.style.display = 'none';
+                    reasonTextarea.readOnly = false;
+                    reasonTextarea.value = '';
+                }
+
+                deleteModal.style.display = 'flex';
+            };
+
+            document.getElementById('btn-cancel-delete').addEventListener('click', () => { deleteModal.style.display = 'none'; });
+
+            document.getElementById('btn-submit-delete').addEventListener('click', async () => {
+                const id = document.getElementById('delete-target-id').value;
+                const reason = document.getElementById('delete-reason-text').value;
+
+                if (!id) { alert("Không tìm thấy ID quy tắc mapping!"); return; }
+
+                try {
+                    const res = await fetch(`/auth/admin/mapping/${id}/xoa-tam`, {
+                        method: 'POST',
+                        headers: {'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json'},
+                        body: JSON.stringify({ ly_do: reason, ly_do_khoa: reason })
+                    });
+                    const resultData = await res.json();
+                    if (!res.ok) throw new Error(resultData.detail || "Không thể chuyển vào thùng rác.");
+
+                    alert("Đã chuyển quy tắc mapping vào thùng rác thành công!");
+                    deleteModal.style.display = 'none';
+                    loadMappings();
+                } catch (err) { alert("Lỗi: " + err.message); }
+            });
+
+            document.getElementById('btn-submit-restore').addEventListener('click', async () => {
+                const id = document.getElementById('delete-target-id').value;
+                const reason = document.getElementById('delete-reason-text').value;
+
+                if (!id) { alert("Không tìm thấy ID quy tắc mapping!"); return; }
+
+                try {
+                    const res = await fetch(`/auth/admin/mapping/${id}/khoi-phuc`, {
+                        method: 'POST',
+                        headers: {'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json'},
+                        body: JSON.stringify({ ly_do: reason, ly_do_khoa: reason })
+                    });
+                    const resultData = await res.json();
+                    if (!res.ok) throw new Error(resultData.detail || "Không thể khôi phục quy tắc mapping.");
+
+                    alert("Đã khôi phục quy tắc mapping thành công!");
+                    deleteModal.style.display = 'none';
+                    loadMappings();
+                } catch (err) { alert("Lỗi: " + err.message); }
+            });
+
+            loadDropdownData().then(() => loadMappings());
         });
     })();
     </script>
-    <script>
-    // Tự động highlight menu đang chọn dựa vào tên file URL
-    document.addEventListener('DOMContentLoaded', () => {
-        const currentPath = window.location.pathname.split('/').pop() || 'home_a.html';
-        const navLinks = document.querySelectorAll('aside nav a');
-        
-        navLinks.forEach(link => {
-            const href = link.getAttribute('href');
-            // Nếu href trùng với tên file hiện tại thì thêm class active
-            if (href === currentPath) {
-                link.classList.add('active');
-                // Xóa thẻ <strong> cũ nếu có (để không bị in đậm 2 lần)
-                const strong = link.querySelector('strong');
-                if (strong) {
-                    link.innerHTML = strong.innerHTML;
-                }
-            }
-        });
-    });
-</script>
 </body>
 </html>

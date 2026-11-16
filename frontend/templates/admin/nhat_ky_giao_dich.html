@@ -3,17 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin - Nhật ký Giao dịch & Kiểm toán</title>
+    <title>Admin - Nhật ký Giao dịch & Kiểm toán (SQL Backend)</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="icon" type="image/jpeg" href="../../favicon.jpg">
-    
+    <link rel="icon" type="image/jpeg" href="/static/favicon.jpg">
+
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Quicksand:wght@600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Quicksand:wght@600;700&display=swap"
+          rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="../../static/css/A.css">
-    
+
     <style>
-        /* Định dạng phông chữ thương hiệu MedBooking */
         .brand-name {
             font-family: 'Quicksand', sans-serif !important;
             font-weight: 700 !important;
@@ -22,16 +22,16 @@
             font-size: 22px;
         }
 
-        /* Hiệu ứng hover sáng lên giống nút thông báo */
         .admin-profile-btn {
-            text-decoration: none; 
-            color: var(--primary-color); 
-            font-weight: 600; 
-            padding: 8px 16px; 
-            background: var(--primary-light); 
+            text-decoration: none;
+            color: var(--primary-color);
+            font-weight: 600;
+            padding: 8px 16px;
+            background: var(--primary-light);
             border-radius: 50px;
             transition: all 0.25s ease;
         }
+
         .admin-profile-btn:hover {
             background: var(--primary-color);
             color: #fff;
@@ -42,56 +42,66 @@
 </head>
 <body>
 
-    <aside>
-        <button class="sidebar-close" id="sidebar-close" aria-label="Đóng menu"><i class="fas fa-times"></i></button>
-        <div class="brand">
-            <span class="brand-name">MedBooking</span>
-            <span class="brand-sub">ADMIN PANEL</span>
+<aside>
+    <button class="sidebar-close" id="sidebar-close" aria-label="Đóng menu"><i class="fas fa-times"></i></button>
+    <div class="brand">
+        <span class="brand-name">MedBooking</span>
+        <span class="brand-sub">ADMIN PANEL</span>
+    </div>
+    <nav>
+        <h3>QUẢN LÝ NHÂN SỰ & NGƯỜI DÙNG</h3>
+        <ul>
+            <li><a href="home_a.html">Trang chủ Admin</a></li>
+            <li><a href="quan_ly_tai_khoan.html">Quản lý tài khoản</a></li>
+            <li><a href="quan_ly_bac_si.html">Quản lý bác sĩ</a></li>
+        </ul>
+        <h3>DANH MỤC Y TẾ</h3>
+        <ul>
+            <li><a href="quan_ly_chuyen_khoa.html">Quản lý chuyên khoa</a></li>
+            <li><a href="quan_ly_dich_vu.html">Quản lý dịch vụ & giá</a></li>
+            <li><a href="quan_ly_mapping.html">Quản lý Mapping Triệu chứng</a></li>
+        </ul>
+        <h3>BÁO CÁO & THỐNG KÊ</h3>
+        <ul>
+            <li><a href="dashboard.html">Dashboard Thống kê & Báo cáo</a></li>
+            <li><a href="nhat_ky_giao_dich.html"><strong>Nhật ký Giao dịch Chi tiết</strong></a></li>
+            <li><a href="thung_rac.html">Thùng rác hệ thống</a></li>
+        </ul>
+    </nav>
+</aside>
+
+<main>
+    <header>
+        <button class="menu-toggle" id="menu-toggle" aria-label="Mở menu"><i class="fas fa-bars"></i></button>
+        <h1>Nhật ký Giao dịch & Kiểm toán Lịch khám</h1>
+        <div style="display: flex; align-items: center; gap: 12px;">
+            <a href="ho_so_ca_nhan.html" class="admin-profile-btn" id="admin-name-btn">AD Tên Admin</a>
+            <button class="theme-toggle" id="theme-toggle">🌙</button>
+            <a href="../dk_dn/dn.html">Đăng xuất</a>
         </div>
-        <nav>
-            <h3>QUẢN LÝ NHÂN SỰ & NGƯỜI DÙNG</h3>
-            <ul>
-                <li><a href="home_a.html">Trang chủ Admin</a></li>
-                <li><a href="quan_ly_tai_khoan.html">Quản lý tài khoản</a></li>
-                <li><a href="quan_ly_bac_si.html">Quản lý bác sĩ</a></li>
-            </ul>
-            <h3>DANH MỤC Y TẾ</h3>
-            <ul>
-                <li><a href="quan_ly_chuyen_khoa.html">Quản lý chuyên khoa</a></li>
-                <li><a href="quan_ly_dich_vu.html">Quản lý dịch vụ & giá</a></li>
-                <li><a href="quan_ly_mapping.html">Quản lý Mapping Triệu chứng</a></li>
-            </ul>
-            <h3>BÁO CÁO & THỐNG KÊ</h3>
-            <ul>
-                <li><a href="dashboard.html">Dashboard Thống kê & Báo cáo</a></li>
-                <li><a href="nhat_ky_giao_dich.html"><strong>Nhật ký Giao dịch Chi tiết</strong></a></li>
-                <li><a href="thung_rac.html">Thùng rác hệ thống</a></li>
-            </ul>
-        </nav>
-    </aside>
+    </header>
 
-    <main>
-        <header>
-            <button class="menu-toggle" id="menu-toggle" aria-label="Mở menu"><i class="fas fa-bars"></i></button>
-            <h1>Nhật ký Giao dịch & Kiểm toán Lịch khám</h1>
-            <div style="display: flex; align-items: center; gap: 12px;">
-                <!-- Nút AD Tên Admin màu tím nguyên bản, có hiệu ứng hover và chuyển sang trang hồ sơ cá nhân -->
-                <a href="ho_so_ca_nhan.html" class="admin-profile-btn">AD Tên Admin</a>
-                <button class="theme-toggle" id="theme-toggle">🌙</button>
-                <a href="../dk_dn/dn.html">Đăng xuất</a>
-            </div>
-        </header>
-
-        <section>
+    <section
+            style="display:flex; flex-wrap:wrap; gap:16px; align-items:center; justify-content:space-between; padding:20px; background:var(--bg-card); border:1px solid var(--border-glass); border-radius:18px; margin-bottom:20px; box-shadow:var(--shadow-soft);">
+        <div style="display:flex; flex-wrap:wrap; gap:12px; align-items:center;">
             <div>
-                <label for="filter-year">Chọn Năm:</label>
-                <select id="filter-year">
-                    <option value="2026">2026</option>
+                <label for="filter-year"
+                       style="font-size:12px; font-weight:600; color:var(--text-gray); display:block; margin-bottom:4px;">Chọn
+                    Năm:</label>
+                <select id="filter-year"
+                        style="padding:8px 12px; border-radius:10px; border:1px solid var(--border-glass); background:var(--bg-main); color:var(--secondary-color);">
+                    <option value="all">Tất cả các năm</option>
+                    <option value="2026" selected>2026</option>
                     <option value="2025">2025</option>
                 </select>
+            </div>
 
-                <label for="filter-month">Chọn Tháng:</label>
-                <select id="filter-month">
+            <div>
+                <label for="filter-month"
+                       style="font-size:12px; font-weight:600; color:var(--text-gray); display:block; margin-bottom:4px;">Chọn
+                    Tháng:</label>
+                <select id="filter-month"
+                        style="padding:8px 12px; border-radius:10px; border:1px solid var(--border-glass); background:var(--bg-main); color:var(--secondary-color);">
                     <option value="all">Tất cả các tháng</option>
                     <option value="1">Tháng 1</option>
                     <option value="2">Tháng 2</option>
@@ -106,53 +116,75 @@
                     <option value="11">Tháng 11</option>
                     <option value="12">Tháng 12</option>
                 </select>
+            </div>
 
-                <label for="filter-status">Trạng thái:</label>
-                <select id="filter-status">
+            <div>
+                <label for="filter-status"
+                       style="font-size:12px; font-weight:600; color:var(--text-gray); display:block; margin-bottom:4px;">Trạng
+                    thái:</label>
+                <select id="filter-status"
+                        style="padding:8px 12px; border-radius:10px; border:1px solid var(--border-glass); background:var(--bg-main); color:var(--secondary-color);">
                     <option value="all">Tất cả trạng thái</option>
-                    <option value="completed">Đã hoàn thành & xác nhận</option>
+                    <option value="completed">Đã hoàn thành</option>
+                    <option value="pending">Chờ khám</option>
                     <option value="cancelled">Đã hủy</option>
                 </select>
             </div>
-            <div>
-                <button type="button" id="btn-search-log">Tra cứu</button>
-                <button type="button" id="btn-export-log">Xuất Excel Nhật ký</button>
-            </div>
-        </section>
+        </div>
 
-        <section>
-            <h2>Danh sách Vết thao tác & Doanh thu chi tiết</h2>
-            <table>
+        <div style="display:flex; gap:10px; align-items:flex-end;">
+            <button type="button" id="btn-search-log"
+                    style="padding:9px 18px; background:var(--primary-gradient); color:#fff; border:none; border-radius:10px; font-weight:600; cursor:pointer;">
+                <i class="fas fa-search" style="margin-right:6px;"></i> Tra cứu
+            </button>
+            <button type="button" id="btn-export-log"
+                    style="padding:9px 18px; background:var(--primary-light); color:var(--primary-color); border:none; border-radius:10px; font-weight:600; cursor:pointer;">
+                <i class="fas fa-file-excel" style="margin-right:6px;"></i> Xuất Excel
+            </button>
+        </div>
+    </section>
+
+    <section
+            style="background:var(--bg-card); border:1px solid var(--border-glass); border-radius:20px; padding:22px; box-shadow:var(--shadow-soft);">
+        <h2 style="font-size:15px; font-weight:700; color:var(--secondary-color); margin-bottom:16px;">Danh sách Vết
+            thao tác & Doanh thu chi tiết</h2>
+        <div style="overflow-x:auto;">
+            <table style="width:100%; border-collapse:collapse; text-align:left;">
                 <thead>
-                    <tr>
-                        <th>Mã GD</th>
-                        <th>Ngày khám</th>
-                        <th>Bệnh nhân</th>
-                        <th>Doanh thu</th>
-                        <th>Lợi nhuận</th>
-                        <th>Bác sĩ xác nhận</th>
-                        <th>Lễ tân xác nhận</th>
-                        <th>Thời gian cập nhật</th>
-                        <th>Trạng thái</th>
-                    </tr>
+                <tr style="border-bottom:2px solid var(--border-glass); font-size:12.5px; color:var(--text-gray);">
+                    <th style="padding:12px;">Mã GD</th>
+                    <th style="padding:12px;">Ngày khám</th>
+                    <th style="padding:12px;">Bệnh nhân</th>
+                    <th style="padding:12px;">Doanh thu</th>
+                    <th style="padding:12px;">Lợi nhuận</th>
+                    <th style="padding:12px;">Bác sĩ xác nhận</th>
+                    <th style="padding:12px;">Lễ tân xác nhận</th>
+                    <th style="padding:12px;">Thời gian cập nhật</th>
+                    <th style="padding:12px;">Trạng thái</th>
+                </tr>
                 </thead>
                 <tbody id="audit-log-table-body">
-                    <tr><td colspan="9" style="text-align:center;padding:40px;color:#8B7FA8;">Đang tải...</td></tr>
+                <tr>
+                    <td colspan="9" style="text-align:center;padding:40px;color:var(--text-gray);">Đang tải dữ liệu từ
+                        cơ sở dữ liệu...
+                    </td>
+                </tr>
                 </tbody>
             </table>
-        </section>
-    </main>
+        </div>
+    </section>
+</main>
 
-    <div class="sidebar-overlay" id="sidebar-overlay"></div>
+<div class="sidebar-overlay" id="sidebar-overlay"></div>
 
-    <script src="../../static/js/admin-data.js"></script>
-    <script src="../../static/js/admin.js"></script>
-    <script>
+<script src="../../static/js/admin.js"></script>
+<script>
     (function () {
         const html = document.documentElement;
         const saved = localStorage.getItem('mb-admin-theme') ||
-                      (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+                (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
         html.setAttribute('data-theme', saved);
+
         document.addEventListener('DOMContentLoaded', () => {
             const themeBtn = document.getElementById('theme-toggle');
             if (themeBtn) {
@@ -164,41 +196,164 @@
                     themeBtn.textContent = next === 'dark' ? '☀️' : '🌙';
                 });
             }
+
             const menuBtn = document.getElementById('menu-toggle');
             const closeBtn = document.getElementById('sidebar-close');
             const sidebar = document.querySelector('aside');
             const overlay = document.getElementById('sidebar-overlay');
-            function openSidebar() { sidebar.classList.add('open'); if (overlay) overlay.classList.add('active'); document.body.style.overflow = 'hidden'; }
-            function closeSidebar() { sidebar.classList.remove('open'); if (overlay) overlay.classList.remove('active'); document.body.style.overflow = ''; }
+
+            function openSidebar() {
+                sidebar.classList.add('open');
+                if (overlay) overlay.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            }
+
+            function closeSidebar() {
+                sidebar.classList.remove('open');
+                if (overlay) overlay.classList.remove('active');
+                document.body.style.overflow = '';
+            }
+
             if (menuBtn) menuBtn.addEventListener('click', openSidebar);
             if (closeBtn) closeBtn.addEventListener('click', closeSidebar);
             if (overlay) overlay.addEventListener('click', closeSidebar);
-            sidebar.querySelectorAll('nav a').forEach(link => {
-                link.addEventListener('click', () => { if (window.innerWidth <= 900) closeSidebar(); });
-            });
-            window.addEventListener('resize', () => { if (window.innerWidth > 900) closeSidebar(); });
-        });
-    })();
-    </script>
-    <script>
-    // Tự động highlight menu đang chọn dựa vào tên file URL
-    document.addEventListener('DOMContentLoaded', () => {
-        const currentPath = window.location.pathname.split('/').pop() || 'home_a.html';
-        const navLinks = document.querySelectorAll('aside nav a');
-        
-        navLinks.forEach(link => {
-            const href = link.getAttribute('href');
-            // Nếu href trùng với tên file hiện tại thì thêm class active
-            if (href === currentPath) {
-                link.classList.add('active');
-                // Xóa thẻ <strong> cũ nếu có (để không bị in đậm 2 lần)
-                const strong = link.querySelector('strong');
-                if (strong) {
-                    link.innerHTML = strong.innerHTML;
+
+            const token = localStorage.getItem('medbooking_token');
+            if (token) {
+                fetch('/auth/me', {
+                    headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' }
+                })
+                .then(res => res.json())
+                .then(data => {
+                    const adminName = data.ho_ten || data.name || '';
+                    const adminNameBtn = document.getElementById('admin-name-btn');
+                    if (adminNameBtn && adminName) {
+                        adminNameBtn.textContent = `AD ${adminName}`;
+                    }
+                }).catch(err => console.error(err));
+            }
+
+            function formatCurrency(amount) {
+                return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(amount).replace('₫', '₫');
+            }
+
+            async function loadAuditLogs() {
+                const selectedYear = document.getElementById('filter-year').value;
+                const selectedMonth = document.getElementById('filter-month').value;
+                const selectedStatus = document.getElementById('filter-status').value;
+                const tbody = document.getElementById('audit-log-table-body');
+
+                tbody.innerHTML = `<tr><td colspan="9" style="text-align:center;padding:40px;color:var(--text-gray);">Đang tải dữ liệu từ CSDL...</td></tr>`;
+
+                try {
+                    const response = await fetch('/auth/admin/nhat-ky-giao-dich', {
+                        method: 'GET',
+                        headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' }
+                    });
+
+                    if (!response.ok) throw new Error("Lỗi kết nối API");
+
+                    const jsonRes = await response.json();
+                    let formattedList = jsonRes.data || jsonRes || [];
+
+                    // 1. Lọc theo Năm (Linh hoạt nếu chọn 'all' thì hiển thị tất cả)
+                    if (selectedYear && selectedYear !== 'all') {
+                        formattedList = formattedList.filter(item => String(item.date).includes(selectedYear));
+                    }
+
+                    // 2. Lọc theo Tháng
+                    if (selectedMonth && selectedMonth !== 'all') {
+                        formattedList = formattedList.filter(item => {
+                            const parts = String(item.date).split('-');
+                            if (parts.length >= 2) {
+                                return parseInt(parts[1], 10) === parseInt(selectedMonth, 10);
+                            }
+                            return false;
+                        });
+                    }
+
+                    // 3. Lọc theo Trạng thái
+                    if (selectedStatus && selectedStatus !== 'all') {
+                        formattedList = formattedList.filter(item => {
+                            const st = String(item.status).toLowerCase();
+                            if (selectedStatus === 'completed') {
+                                return st.includes('hoàn thành') || st.includes('completed') || st.includes('check-in');
+                            }
+                            if (selectedStatus === 'cancelled') {
+                                return st.includes('hủy') || st.includes('cancel');
+                            }
+                            if (selectedStatus === 'pending') {
+                                return st.includes('chờ') || st.includes('xác nhận') || st.includes('pending');
+                            }
+                            return true;
+                        });
+                    }
+
+                    formattedList.sort((x, y) => (y.raw_id || 0) - (x.raw_id || 0));
+
+                    if (formattedList.length === 0) {
+                        tbody.innerHTML = `<tr><td colspan="9" style="text-align:center;padding:40px;color:var(--text-gray);">Không tìm thấy bản ghi giao dịch nào khớp với điều kiện lọc.</td></tr>`;
+                        return;
+                    }
+
+                    tbody.innerHTML = formattedList.map(item => {
+                        const rawStatus = String(item.status).toLowerCase();
+
+                        let statusText = 'Chờ khám';
+                        let badgeBg = 'rgba(245, 158, 11, 0.12)';
+                        let badgeColor = '#F59E0B';
+
+                        if (rawStatus.includes('hoàn thành') || rawStatus.includes('completed') || rawStatus.includes('check-in')) {
+                            statusText = 'Hoàn thành';
+                            badgeBg = 'rgba(16, 185, 129, 0.12)';
+                            badgeColor = '#10B981';
+                        } else if (rawStatus.includes('hủy') || rawStatus.includes('cancel')) {
+                            statusText = 'Đã hủy';
+                            badgeBg = 'rgba(239, 68, 68, 0.12)';
+                            badgeColor = '#EF4444';
+                        } else {
+                            statusText = 'Chờ khám';
+                            badgeBg = 'rgba(245, 158, 11, 0.12)';
+                            badgeColor = '#F59E0B';
+                        }
+
+                        return `
+                            <tr style="border-bottom:1px solid var(--border-glass); font-size:13px;">
+                                <td style="padding:12px; font-weight:600; color:var(--primary-color);">${item.id}</td>
+                                <td style="padding:12px; color:var(--secondary-color);">${item.date}</td>
+                                <td style="padding:12px; font-weight:600; color:var(--secondary-color);">${item.patient}</td>
+                                <td style="padding:12px; font-family:'Plus Jakarta Sans'; font-weight:700; color:#10B981;">+${formatCurrency(item.revenue)}</td>
+                                <td style="padding:12px; font-family:'Plus Jakarta Sans'; font-weight:700; color:#8B5CF6;">+${formatCurrency(item.profit)}</td>
+                                <td style="padding:12px; color:var(--secondary-color);">${item.doctorConfirm}</td>
+                                <td style="padding:12px; color:var(--secondary-color);">${item.receptionistConfirm}</td>
+                                <td style="padding:12px; font-size:12px; color:var(--text-gray);">${item.updatedAt}</td>
+                                <td style="padding:12px;">
+                                    <span style="padding:4px 10px; border-radius:20px; font-size:11.5px; font-weight:600; background:${badgeBg}; color:${badgeColor};">
+                                        ${statusText}
+                                    </span>
+                                </td>
+                            </tr>
+                        `;
+                    }).join('');
+
+                } catch (err) {
+                    console.error("Lỗi tải nhật ký giao dịch:", err);
+                    tbody.innerHTML = `<tr><td colspan="9" style="text-align:center;padding:40px;color:#EF4444;">Không thể tải dữ liệu từ cơ sở dữ liệu!</td></tr>`;
                 }
             }
+
+            const btnSearch = document.getElementById('btn-search-log');
+            if (btnSearch) {
+                btnSearch.addEventListener('click', loadAuditLogs);
+            }
+
+            document.getElementById('filter-status').addEventListener('change', loadAuditLogs);
+            document.getElementById('filter-year').addEventListener('change', loadAuditLogs);
+            document.getElementById('filter-month').addEventListener('change', loadAuditLogs);
+
+            loadAuditLogs();
         });
-    });
+    })();
 </script>
 </body>
 </html>

@@ -5,15 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MedBooking - Đặt lịch Khám bệnh</title>
     <!-- Favicon chuẩn hình trái tim hồng sóng điện tim -->
-    <link rel="icon" type="image/jpeg" href="../../favicon.jpg">
-    
+    <link rel="icon" type="image/jpeg" href="/static/favicon.jpg">
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
+
     <link rel="stylesheet" href="../../static/css/BN.css">
-    
+
     <style>
         main {
             max-width: 1000px;
@@ -364,238 +364,322 @@
 </head>
 <body>
 
-    <header>
-        <div class="logo-container">
+<header>
+    <div class="logo-container">
+        <div class="logo-icon"><i class="fa-solid fa-heart-pulse"></i></div>
+        <div class="logo-text">
+            <h1>MedBooking</h1>
+            <p>Chăm sóc sức khỏe toàn diện</p>
+        </div>
+    </div>
+    <div class="header-right">
+        <nav>
+            <ul>
+                <li><a href="/benh_nhan/home_bn.html">Trang chủ</a></li>
+                <li><a href="/benh_nhan/danh_sach_bac_si.html">Tìm kiếm Bác sĩ</a></li>
+                <li><a href="/benh_nhan/dat_lich.html"><strong>Đặt lịch khám</strong></a></li>
+                <li><a href="/benh_nhan/danh_sach_lich_hen.html">Lịch hẹn của tôi</a></li>
+                <li><a href="/benh_nhan/ho_so_ca_nhan.html">Hồ sơ cá nhân</a></li>
+                <li><a href="/dk_dn/dn.html">Đăng xuất</a></li>
+            </ul>
+        </nav>
+        <button class="theme-toggle" id="theme-toggle" title="Chuyển đổi chế độ Sáng/Tối">
+            <i class="fas fa-moon"></i>
+        </button>
+    </div>
+</header>
+
+<main>
+    <div class="page-title">
+        <h2>Đăng ký Lịch khám Bệnh</h2>
+        <p>Vui lòng hoàn thành các bước bên dưới để đặt lịch hẹn</p>
+    </div>
+
+    <div class="prefill-banner" id="prefill-banner" style="display: none;">
+        <div class="banner-avatar" id="banner-avatar"></div>
+        <div class="banner-info">
+            <h4 id="banner-doctor-name"></h4>
+            <p>Thông tin bác sĩ đã được điền sẵn. Vui lòng chọn thời gian khám.</p>
+            <span class="specialty-tag" id="banner-specialty"></span>
+        </div>
+        <i class="fas fa-calendar-check banner-icon"></i>
+    </div>
+
+    <div class="progress-container">
+        <div class="progress-step active" id="step-indicator-1">1</div>
+        <div class="progress-step" id="step-indicator-2">2</div>
+        <div class="progress-step" id="step-indicator-3">3</div>
+    </div>
+
+    <form id="booking-form">
+
+        <div class="form-step active" id="step-1">
+            <div class="step-card">
+                <h3><i class="fas fa-user-md"></i> Bước 1: Chọn Chuyên khoa & Bác sĩ</h3>
+
+                <div class="form-group">
+                    <label>Chọn chuyên khoa:</label>
+                    <div class="custom-select-wrapper" id="specialty-dropdown">
+                        <div class="custom-select-trigger" onclick="toggleDropdown('specialty')">
+                            <span class="placeholder" id="specialty-label">-- Chọn chuyên khoa khám --</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="custom-options" id="specialty-options"></div>
+                        <input type="hidden" name="specialty" id="specialty-value">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Chọn Bác sĩ:</label>
+                    <div class="custom-select-wrapper" id="doctor-dropdown">
+                        <div class="custom-select-trigger" onclick="toggleDropdown('doctor')">
+                            <span class="placeholder" id="doctor-label">-- Chọn bác sĩ khám --</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="custom-options" id="doctor-options"></div>
+                        <input type="hidden" name="doctor_id" id="doctor-value">
+                    </div>
+                </div>
+            </div>
+            <div class="step-actions" style="justify-content: flex-end;">
+                <button type="button" class="btn btn-primary" onclick="nextStep(1)">Tiếp tục <i
+                        class="fas fa-arrow-right"></i></button>
+            </div>
+        </div>
+
+        <div class="form-step" id="step-2">
+            <div class="step-card">
+                <h3><i class="fas fa-calendar-alt"></i> Bước 2: Chọn Thời gian khám</h3>
+
+                <div class="form-group">
+                    <label>Ngày khám (Chỉ được chọn trong vòng 30 ngày tới):</label>
+                    <div class="date-picker-wrapper" id="date-picker-wrapper">
+                        <div class="date-picker-trigger" onclick="toggleCalendar()">
+                            <span class="placeholder" id="date-label">-- Chọn ngày khám --</span>
+                            <i class="fas fa-calendar-alt"></i>
+                        </div>
+                        <div class="calendar-dropdown" id="calendar-dropdown">
+                            <div class="calendar-header">
+                                <button type="button" class="calendar-nav-btn" id="prev-month"
+                                        onclick="changeMonth(-1)">
+                                    <i class="fas fa-chevron-left"></i>
+                                </button>
+                                <h4 id="calendar-month-year">Tháng 11/2026</h4>
+                                <button type="button" class="calendar-nav-btn" id="next-month" onclick="changeMonth(1)">
+                                    <i class="fas fa-chevron-right"></i>
+                                </button>
+                            </div>
+                            <div class="calendar-weekdays">
+                                <div>T2</div>
+                                <div>T3</div>
+                                <div>T4</div>
+                                <div>T5</div>
+                                <div>T6</div>
+                                <div>T7</div>
+                                <div>CN</div>
+                            </div>
+                            <div class="calendar-days" id="calendar-days"></div>
+                        </div>
+                        <input type="hidden" name="date" id="appointment-date">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Khung giờ khám:</label>
+
+                    <p style="font-weight: 600; margin: 15px 0 5px; color: var(--primary-pink);">Ca sáng (07:30 -
+                        11:30)</p>
+                    <div class="time-slots-grid">
+                        <div class="time-slot"><input type="radio" id="time-1" name="time_slot"
+                                                      value="07:30 - 08:00"><label for="time-1">07:30 - 08:00</label>
+                        </div>
+                        <div class="time-slot"><input type="radio" id="time-2" name="time_slot"
+                                                      value="08:00 - 08:30"><label for="time-2">08:00 - 08:30</label>
+                        </div>
+                        <div class="time-slot"><input type="radio" id="time-3" name="time_slot"
+                                                      value="08:30 - 09:00"><label for="time-3">08:30 - 09:00</label>
+                        </div>
+                        <div class="time-slot"><input type="radio" id="time-4" name="time_slot"
+                                                      value="09:00 - 09:30"><label for="time-4">09:00 - 09:30</label>
+                        </div>
+                        <div class="time-slot"><input type="radio" id="time-5" name="time_slot"
+                                                      value="09:30 - 10:00"><label for="time-5">09:30 - 10:00</label>
+                        </div>
+                        <div class="time-slot"><input type="radio" id="time-6" name="time_slot"
+                                                      value="10:00 - 10:30"><label for="time-6">10:00 - 10:30</label>
+                        </div>
+                        <div class="time-slot"><input type="radio" id="time-7" name="time_slot"
+                                                      value="10:30 - 11:00"><label for="time-7">10:30 - 11:00</label>
+                        </div>
+                        <div class="time-slot"><input type="radio" id="time-8" name="time_slot"
+                                                      value="11:00 - 11:30"><label for="time-8">11:00 - 11:30</label>
+                        </div>
+                    </div>
+
+                    <p style="font-weight: 600; margin: 20px 0 5px; color: var(--primary-pink);">Ca chiều (13:30 -
+                        18:30)</p>
+                    <div class="time-slots-grid">
+                        <div class="time-slot"><input type="radio" id="time-9" name="time_slot"
+                                                      value="13:30 - 14:00"><label for="time-9">13:30 - 14:00</label>
+                        </div>
+                        <div class="time-slot"><input type="radio" id="time-10" name="time_slot"
+                                                      value="14:00 - 14:30"><label for="time-10">14:00 - 14:30</label>
+                        </div>
+                        <div class="time-slot"><input type="radio" id="time-11" name="time_slot"
+                                                      value="14:30 - 15:00"><label for="time-11">14:30 - 15:00</label>
+                        </div>
+                        <div class="time-slot"><input type="radio" id="time-12" name="time_slot"
+                                                      value="15:00 - 15:30"><label for="time-12">15:00 - 15:30</label>
+                        </div>
+                        <div class="time-slot"><input type="radio" id="time-13" name="time_slot"
+                                                      value="15:30 - 16:00"><label for="time-13">15:30 - 16:00</label>
+                        </div>
+                        <div class="time-slot"><input type="radio" id="time-14" name="time_slot"
+                                                      value="16:00 - 16:30"><label for="time-14">16:00 - 16:30</label>
+                        </div>
+                        <div class="time-slot"><input type="radio" id="time-15" name="time_slot"
+                                                      value="16:30 - 17:00"><label for="time-15">16:30 - 17:00</label>
+                        </div>
+                        <div class="time-slot"><input type="radio" id="time-16" name="time_slot"
+                                                      value="17:00 - 17:30"><label for="time-16">17:00 - 17:30</label>
+                        </div>
+                        <div class="time-slot"><input type="radio" id="time-17" name="time_slot"
+                                                      value="17:30 - 18:00"><label for="time-17">17:30 - 18:00</label>
+                        </div>
+                        <div class="time-slot"><input type="radio" id="time-18" name="time_slot"
+                                                      value="18:00 - 18:30"><label for="time-18">18:00 - 18:30</label>
+                        </div>
+                    </div>
+
+                    <!-- BỔ SUNG CA TỐI (ĐẾN 22:30 KÈM PHỤ THU +10%) -->
+                    <p style="font-weight: 600; margin: 20px 0 5px; color: var(--primary-pink);">Ca tối (18:30 - 22:30) - <span style="color:#e91e63;">Phụ thu +10%</span></p>
+                    <div class="time-slots-grid">
+                        <div class="time-slot"><input type="radio" id="time-19" name="time_slot"
+                                                      value="18:30 - 19:00"><label for="time-19">18:30 - 19:00</label>
+                        </div>
+                        <div class="time-slot"><input type="radio" id="time-20" name="time_slot"
+                                                      value="19:00 - 19:30"><label for="time-20">19:00 - 19:30</label>
+                        </div>
+                        <div class="time-slot"><input type="radio" id="time-21" name="time_slot"
+                                                      value="19:30 - 20:00"><label for="time-21">19:30 - 20:00</label>
+                        </div>
+                        <div class="time-slot"><input type="radio" id="time-22" name="time_slot"
+                                                      value="20:00 - 20:30"><label for="time-22">20:00 - 20:30</label>
+                        </div>
+                        <div class="time-slot"><input type="radio" id="time-23" name="time_slot"
+                                                      value="20:30 - 21:00"><label for="time-23">20:30 - 21:00</label>
+                        </div>
+                        <div class="time-slot"><input type="radio" id="time-24" name="time_slot"
+                                                      value="21:00 - 21:30"><label for="time-24">21:00 - 21:30</label>
+                        </div>
+                        <div class="time-slot"><input type="radio" id="time-25" name="time_slot"
+                                                      value="21:30 - 22:00"><label for="time-25">21:30 - 22:00</label>
+                        </div>
+                        <div class="time-slot"><input type="radio" id="time-26" name="time_slot"
+                                                      value="22:00 - 22:30"><label for="time-26">22:00 - 22:30</label>
+                        </div>
+                    </div>
+
+                    <div class="warning-box" id="conflict-warning" style="display: none;">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <div class="warning-content" id="conflict-content"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="step-actions">
+                <button type="button" class="btn btn-outline" onclick="prevStep(2)"><i class="fas fa-arrow-left"></i>
+                    Quay lại
+                </button>
+                <button type="button" class="btn btn-primary" onclick="nextStep(2)">Tiếp tục <i
+                        class="fas fa-arrow-right"></i></button>
+            </div>
+        </div>
+
+        <div class="form-step" id="step-3">
+            <div class="step-card">
+                <h3><i class="fas fa-notes-medical"></i> Bước 3: Triệu chứng & Xác nhận</h3>
+                <div class="form-group">
+                    <label for="patient-symptoms">Mô tả triệu chứng / Ghi chú cho bác sĩ:</label>
+                    <textarea id="patient-symptoms" name="symptoms" rows="5"
+                              placeholder="Ví dụ: Đau đầu kéo dài, sốt nhẹ về chiều, mệt mỏi..."></textarea>
+                </div>
+            </div>
+            <div class="step-actions">
+                <button type="button" class="btn btn-outline" onclick="prevStep(3)"><i class="fas fa-arrow-left"></i>
+                    Quay lại
+                </button>
+                <button type="submit" class="btn btn-primary"><i class="fas fa-check-circle"></i> Xác nhận đặt lịch
+                </button>
+            </div>
+        </div>
+
+    </form>
+</main>
+
+<footer>
+    <div>
+        <div class="footer-logo">
             <div class="logo-icon"><i class="fa-solid fa-heart-pulse"></i></div>
             <div class="logo-text">
                 <h1>MedBooking</h1>
                 <p>Chăm sóc sức khỏe toàn diện</p>
             </div>
         </div>
-        <div class="header-right">
-            <nav>
-                <ul>
-                    <li><a href="home_bn.html">Trang chủ</a></li>
-                    <li><a href="danh_sach_bac_si.html">Tìm kiếm Bác sĩ</a></li>
-                    <li><a href="dat_lich.html"><strong>Đặt lịch khám</strong></a></li>
-                    <li><a href="danh_sach_lich_hen.html">Lịch hẹn của tôi</a></li>
-                    <li><a href="ho_so_ca_nhan.html">Hồ sơ cá nhân</a></li>
-                    <li><a href="../dk_dn/dn.html">Đăng xuất</a></li>
-                </ul>
-            </nav>
-            <button class="theme-toggle" id="theme-toggle" title="Chuyển đổi chế độ Sáng/Tối">
-                <i class="fas fa-moon"></i>
+        <p>Nền tảng công nghệ y tế kết nối người bệnh với các bệnh viện và phòng khám uy tín hàng đầu. Cam kết quy trình
+            nhanh gọn, minh bạch chi phí và bảo mật thông tin tuyệt đối.</p>
+        <p><strong>"MedBooking chúc quý khách và gia đình luôn có một sức khỏe dồi dào, bình an và hạnh phúc!"</strong>
+        </p>
+    </div>
+    <div>
+        <h4>Liên kết nhanh</h4>
+        <ul>
+            <li><a href="home_bn.html">Trang chủ</a></li>
+            <li><a href="danh_sach_bac_si.html">Tìm kiếm Bác sĩ</a></li>
+            <li><a href="dat_lich.html">Đặt lịch khám</a></li>
+            <li><a href="danh_sach_lich_hen.html">Lịch hẹn cá nhân</a></li>
+        </ul>
+    </div>
+    <div>
+        <h4>Thông tin liên hệ & Địa chỉ</h4>
+        <p>Địa chỉ: Số 15, Phố Dịch Vọng Hậu, Quận Cầu Giấy, Hà Nội</p>
+        <p>Hotline: 1900 6868</p>
+        <p>Email: support@medbooking.vn</p>
+    </div>
+    <div>
+        <p>&copy; 2026 MedBooking. Bản quyền thuộc về Đội ngũ phát triển dự án.</p>
+    </div>
+</footer>
+
+<div class="modal-overlay" id="modal-overlay">
+    <div class="modal-box">
+        <div class="modal-icon" id="modal-icon"><i class="fas fa-info"></i></div>
+        <h3 id="modal-title">Thông báo</h3>
+        <div class="modal-details" id="modal-details" style="display: none;"></div>
+        <p id="modal-message">Nội dung thông báo</p>
+        <div class="modal-actions" id="modal-actions">
+            <button class="modal-btn modal-btn-primary" id="modal-confirm-btn">
+                <i class="fas fa-check"></i> Đã hiểu
             </button>
         </div>
-    </header>
-
-    <main>
-        <div class="page-title">
-            <h2>Đăng ký Lịch khám Bệnh</h2>
-            <p>Vui lòng hoàn thành các bước bên dưới để đặt lịch hẹn</p>
-        </div>
-
-        <div class="prefill-banner" id="prefill-banner" style="display: none;">
-            <div class="banner-avatar" id="banner-avatar"></div>
-            <div class="banner-info">
-                <h4 id="banner-doctor-name"></h4>
-                <p>Thông tin bác sĩ đã được điền sẵn. Vui lòng chọn thời gian khám.</p>
-                <span class="specialty-tag" id="banner-specialty"></span>
-            </div>
-            <i class="fas fa-calendar-check banner-icon"></i>
-        </div>
-
-        <div class="progress-container">
-            <div class="progress-step active" id="step-indicator-1">1</div>
-            <div class="progress-step" id="step-indicator-2">2</div>
-            <div class="progress-step" id="step-indicator-3">3</div>
-        </div>
-
-        <form action="danh_sach_lich_hen.html" method="GET" id="booking-form">
-            
-            <div class="form-step active" id="step-1">
-                <div class="step-card">
-                    <h3><i class="fas fa-user-md"></i> Bước 1: Chọn Chuyên khoa & Bác sĩ</h3>
-                    
-                    <div class="form-group">
-                        <label>Chọn chuyên khoa:</label>
-                        <div class="custom-select-wrapper" id="specialty-dropdown">
-                            <div class="custom-select-trigger" onclick="toggleDropdown('specialty')">
-                                <span class="placeholder" id="specialty-label">-- Chọn chuyên khoa khám --</span>
-                                <i class="fas fa-chevron-down"></i>
-                            </div>
-                            <div class="custom-options" id="specialty-options"></div>
-                            <input type="hidden" name="specialty" id="specialty-value">
-                        </div>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label>Chọn Bác sĩ (Tùy chọn):</label>
-                        <div class="custom-select-wrapper" id="doctor-dropdown">
-                            <div class="custom-select-trigger" onclick="toggleDropdown('doctor')">
-                                <span class="placeholder" id="doctor-label">-- Bất kỳ bác sĩ nào phù hợp --</span>
-                                <i class="fas fa-chevron-down"></i>
-                            </div>
-                            <div class="custom-options" id="doctor-options"></div>
-                            <input type="hidden" name="doctor_id" id="doctor-value">
-                        </div>
-                    </div>
-                </div>
-                <div class="step-actions" style="justify-content: flex-end;">
-                    <button type="button" class="btn btn-primary" onclick="nextStep(1)">Tiếp tục <i class="fas fa-arrow-right"></i></button>
-                </div>
-            </div>
-
-            <div class="form-step" id="step-2">
-                <div class="step-card">
-                    <h3><i class="fas fa-calendar-alt"></i> Bước 2: Chọn Thời gian khám</h3>
-                    
-                    <div class="form-group">
-                        <label>Ngày khám (Chỉ được chọn trong vòng 30 ngày tới):</label>
-                        <div class="date-picker-wrapper" id="date-picker-wrapper">
-                            <div class="date-picker-trigger" onclick="toggleCalendar()">
-                                <span class="placeholder" id="date-label">-- Chọn ngày khám --</span>
-                                <i class="fas fa-calendar-alt"></i>
-                            </div>
-                            <div class="calendar-dropdown" id="calendar-dropdown">
-                                <div class="calendar-header">
-                                    <button type="button" class="calendar-nav-btn" id="prev-month" onclick="changeMonth(-1)">
-                                        <i class="fas fa-chevron-left"></i>
-                                    </button>
-                                    <h4 id="calendar-month-year">Tháng 10/2026</h4>
-                                    <button type="button" class="calendar-nav-btn" id="next-month" onclick="changeMonth(1)">
-                                        <i class="fas fa-chevron-right"></i>
-                                    </button>
-                                </div>
-                                <div class="calendar-weekdays">
-                                    <div>T2</div><div>T3</div><div>T4</div><div>T5</div><div>T6</div><div>T7</div><div>CN</div>
-                                </div>
-                                <div class="calendar-days" id="calendar-days"></div>
-                            </div>
-                            <input type="hidden" name="date" id="appointment-date">
-                        </div>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label>Khung giờ khám:</label>
-                        
-                        <p style="font-weight: 600; margin: 15px 0 5px; color: var(--primary-pink);">Ca sáng (07:30 - 11:30)</p>
-                        <div class="time-slots-grid">
-                            <div class="time-slot"><input type="radio" id="time-1" name="time_slot" value="07:30-08:30"><label for="time-1">07:30 - 08:30</label></div>
-                            <div class="time-slot"><input type="radio" id="time-2" name="time_slot" value="08:30-09:30"><label for="time-2">08:30 - 09:30</label></div>
-                            <div class="time-slot"><input type="radio" id="time-3" name="time_slot" value="09:30-10:30"><label for="time-3">09:30 - 10:30</label></div>
-                            <div class="time-slot"><input type="radio" id="time-4" name="time_slot" value="10:30-11:30"><label for="time-4">10:30 - 11:30</label></div>
-                        </div>
-                        
-                        <p style="font-weight: 600; margin: 20px 0 5px; color: var(--primary-pink);">Ca chiều (13:30 - 18:30)</p>
-                        <div class="time-slots-grid">
-                            <div class="time-slot"><input type="radio" id="time-5" name="time_slot" value="13:30-14:30"><label for="time-5">13:30 - 14:30</label></div>
-                            <div class="time-slot"><input type="radio" id="time-6" name="time_slot" value="14:30-15:30"><label for="time-6">14:30 - 15:30</label></div>
-                            <div class="time-slot"><input type="radio" id="time-7" name="time_slot" value="15:30-16:30"><label for="time-7">15:30 - 16:30</label></div>
-                            <div class="time-slot"><input type="radio" id="time-8" name="time_slot" value="16:30-17:30"><label for="time-8">16:30 - 17:30</label></div>
-                            <div class="time-slot"><input type="radio" id="time-9" name="time_slot" value="17:30-18:30"><label for="time-9">17:30 - 18:30</label></div>
-                        </div>
-                        
-                        <p style="font-weight: 600; margin: 20px 0 5px; color: var(--primary-pink);">Ca tối ngoài giờ (18:30 - 22:30) - Phụ thu +10% phí</p>
-                        <div class="time-slots-grid">
-                            <div class="time-slot"><input type="radio" id="time-10" name="time_slot" value="18:30-19:30"><label for="time-10">18:30 - 19:30 <span>+10% phí</span></label></div>
-                            <div class="time-slot"><input type="radio" id="time-11" name="time_slot" value="19:30-20:30"><label for="time-11">19:30 - 20:30 <span>+10% phí</span></label></div>
-                            <div class="time-slot"><input type="radio" id="time-12" name="time_slot" value="20:30-21:30"><label for="time-12">20:30 - 21:30 <span>+10% phí</span></label></div>
-                            <div class="time-slot"><input type="radio" id="time-13" name="time_slot" value="21:30-22:30"><label for="time-13">21:30 - 22:30 <span>+10% phí</span></label></div>
-                        </div>
-                        
-                        <div class="warning-box" id="conflict-warning" style="display: none;">
-                            <i class="fas fa-exclamation-triangle"></i>
-                            <div class="warning-content" id="conflict-content"></div>
-                        </div>
-                    </div>
-                </div>
-                <div class="step-actions">
-                    <button type="button" class="btn btn-outline" onclick="prevStep(2)"><i class="fas fa-arrow-left"></i> Quay lại</button>
-                    <button type="button" class="btn btn-primary" onclick="nextStep(2)">Tiếp tục <i class="fas fa-arrow-right"></i></button>
-                </div>
-            </div>
-
-            <div class="form-step" id="step-3">
-                <div class="step-card">
-                    <h3><i class="fas fa-notes-medical"></i> Bước 3: Triệu chứng & Xác nhận</h3>
-                    <div class="form-group">
-                        <label for="patient-symptoms">Mô tả triệu chứng / Ghi chú cho bác sĩ:</label>
-                        <textarea id="patient-symptoms" name="symptoms" rows="5" placeholder="Ví dụ: Đau đầu kéo dài, sốt nhẹ về chiều, mệt mỏi..."></textarea>
-                    </div>
-                </div>
-                <div class="step-actions">
-                    <button type="button" class="btn btn-outline" onclick="prevStep(3)"><i class="fas fa-arrow-left"></i> Quay lại</button>
-                    <button type="submit" class="btn btn-primary"><i class="fas fa-check-circle"></i> Xác nhận đặt lịch</button>
-                </div>
-            </div>
-
-        </form>
-    </main>
-
-    <footer>
-        <div>
-            <div class="footer-logo">
-                <div class="logo-icon"><i class="fa-solid fa-heart-pulse"></i></div>
-                <div class="logo-text">
-                    <h1>MedBooking</h1>
-                    <p>Chăm sóc sức khỏe toàn diện</p>
-                </div>
-            </div>
-            <p>Nền tảng công nghệ y tế kết nối người bệnh với các bệnh viện và phòng khám uy tín hàng đầu. Cam kết quy trình nhanh gọn, minh bạch chi phí và bảo mật thông tin tuyệt đối.</p>
-            <p><strong>"MedBooking chúc quý khách và gia đình luôn có một sức khỏe dồi dào, bình an và hạnh phúc!"</strong></p>
-        </div>
-        <div>
-            <h4>Liên kết nhanh</h4>
-            <ul>
-                <li><a href="home_bn.html">Trang chủ</a></li>
-                <li><a href="danh_sach_bac_si.html">Tìm kiếm Bác sĩ</a></li>
-                <li><a href="dat_lich.html">Đặt lịch khám</a></li>
-                <li><a href="danh_sach_lich_hen.html">Lịch hẹn cá nhân</a></li>
-            </ul>
-        </div>
-        <div>
-            <h4>Thông tin liên hệ & Địa chỉ</h4>
-            <p>Địa chỉ: Số 15, Phố Dịch Vọng Hậu, Quận Cầu Giấy, Hà Nội</p>
-            <p>Hotline: 1900 6868</p>
-            <p>Email: support@medbooking.vn</p>
-        </div>
-        <div>
-            <p>&copy; 2026 MedBooking. Bản quyền thuộc về Đội ngũ phát triển dự án.</p>
-        </div>
-    </footer>
-
-    <div class="modal-overlay" id="modal-overlay">
-        <div class="modal-box">
-            <div class="modal-icon" id="modal-icon"><i class="fas fa-info"></i></div>
-            <h3 id="modal-title">Thông báo</h3>
-            <div class="modal-details" id="modal-details" style="display: none;"></div>
-            <p id="modal-message">Nội dung thông báo</p>
-            <div class="modal-actions" id="modal-actions">
-                <button class="modal-btn modal-btn-primary" id="modal-confirm-btn">
-                    <i class="fas fa-check"></i> Đã hiểu
-                </button>
-            </div>
-        </div>
     </div>
+</div>
 
-    <script src="../../static/js/client.js"></script>
-    <script src="../../static/js/BN_Store.js"></script>
+<script src="../../static/js/BN_Store.js"></script>
 
-    <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+
         const themeToggle = document.getElementById('theme-toggle');
         const icon = themeToggle.querySelector('i');
         const currentTheme = localStorage.getItem('theme') || 'light';
-        
+
         if (currentTheme === 'dark') {
             document.documentElement.setAttribute('data-theme', 'dark');
             icon.classList.remove('fa-moon');
             icon.classList.add('fa-sun');
         }
 
-        themeToggle.addEventListener('click', function() {
+        themeToggle.addEventListener('click', function () {
             let theme = document.documentElement.getAttribute('data-theme');
             if (theme === 'dark') {
                 document.documentElement.removeAttribute('data-theme');
@@ -617,14 +701,19 @@
         const modalDetails = document.getElementById('modal-details');
         const modalActions = document.getElementById('modal-actions');
 
-        window.showAlert = function(title, message, type = 'info', callback = null, details = null) {
+        window.showAlert = function (title, message, type = 'info', callback = null, details = null) {
             modalIcon.className = 'modal-icon ' + type;
             const iconEl = modalIcon.querySelector('i');
-            const icons = { success: 'fa-check-circle', warning: 'fa-exclamation-triangle', error: 'fa-times-circle', info: 'fa-info-circle' };
-            iconEl.className = 'fas ' + icons[type];
+            const icons = {
+                success: 'fa-check-circle',
+                warning: 'fa-exclamation-triangle',
+                error: 'fa-times-circle',
+                info: 'fa-info-circle'
+            };
+            iconEl.className = 'fas ' + (icons[type] || icons.info);
             modalTitle.textContent = title;
             modalMessage.textContent = message;
-            
+
             if (details && Object.keys(details).length > 0) {
                 let detailHTML = '';
                 for (const [key, value] of Object.entries(details)) {
@@ -635,71 +724,82 @@
             } else {
                 modalDetails.style.display = 'none';
             }
-            
+
             modalActions.innerHTML = `<button class="modal-btn modal-btn-primary" id="modal-confirm-btn"><i class="fas fa-check"></i> Đã hiểu</button>`;
             modalOverlay.classList.add('active');
-            document.getElementById('modal-confirm-btn').onclick = function() {
+            document.getElementById('modal-confirm-btn').onclick = function () {
                 closeModal();
                 if (callback) callback();
             };
         };
 
-        function closeModal() { modalOverlay.classList.remove('active'); }
-        modalOverlay.addEventListener('click', function(e) { if (e.target === modalOverlay) closeModal(); });
-        document.addEventListener('keydown', function(e) { if (e.key === 'Escape' && modalOverlay.classList.contains('active')) closeModal(); });
+        function closeModal() {
+            modalOverlay.classList.remove('active');
+        }
+
+        modalOverlay.addEventListener('click', function (e) {
+            if (e.target === modalOverlay) closeModal();
+        });
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape' && modalOverlay.classList.contains('active')) closeModal();
+        });
 
         const specialties = [
-            { id: 'noi', name: '1. Nội Tổng Quát' },
-            { id: 'tim-mach', name: '2. Tim Mạch' },
-            { id: 'nhi', name: '3. Nhi Khoa' },
-            { id: 'than-kinh', name: '4. Thần Kinh' },
-            { id: 'xuong-khop', name: '5. Cơ Xương Khớp' },
-            { id: 'da-lieu', name: '6. Da Liễu' },
-            { id: 'tai-mui-hong', name: '7. Tai Mũi Họng' },
-            { id: 'mat', name: '8. Mắt' },
-            { id: 'rang-ham-mat', name: '9. Răng Hàm Mặt' },
-            { id: 'y-hoc-co-truyen', name: '10. Y Học Cổ Truyền' }
+            {id: 'noi', name: 'Nội Tổng Quát', icon: 'fa-stethoscope'},
+            {id: 'tim-mach', name: 'Tim Mạch', icon: 'fa-heartbeat'},
+            {id: 'nhi', name: 'Nhi Khoa', icon: 'fa-baby'},
+            {id: 'than-kinh', name: 'Thần Kinh', icon: 'fa-brain'},
+            {id: 'xuong-khop', name: 'Cơ Xương Khớp', icon: 'fa-bone'},
+            {id: 'da-lieu', name: 'Da Liễu', icon: 'fa-allergies'},
+            {id: 'tai-mui-hong', name: 'Tai Mũi Họng', icon: 'fa-ear-listen'},
+            {id: 'mat', name: 'Mắt', icon: 'fa-eye'},
+            {id: 'phu-khoa', name: 'Sản Phụ Khoa', icon: 'fa-baby'},
+            {id: 'tieu-hoa', name: 'Tiêu Hóa', icon: 'fa-utensils'}
         ];
+
+        const DEFAULT_AVATAR = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'%3E%3Crect width='200' height='200' fill='%23ffe4ec'/%3E%3Ccircle cx='100' cy='75' r='35' fill='%23ff6b9d'/%3E%3Cpath d='M40 180 C40 135, 160 135, 160 180' fill='%23ff6b9d'/%3E%3C/svg%3E";
+
         const doctors = [
-            { id: 'bs01', name: 'ThS.BS Nguyễn Văn A', specialtyId: 'noi', avatar: 'https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80' },
-            { id: 'bs02', name: 'BS.CKI Trần Thị C', specialtyId: 'tim-mach', avatar: 'https://images.unsplash.com/photo-1594824476967-48c8b964273f?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80' },
-            { id: 'bs03', name: 'TS.BS Lê Hoàng D', specialtyId: 'than-kinh', avatar: 'https://images.unsplash.com/photo-1622253692010-333f2da6031d?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80' },
-            { id: 'bs04', name: 'BS.CKII Phạm Văn E', specialtyId: 'xuong-khop', avatar: 'https://images.unsplash.com/photo-1537368910025-700350fe46c7?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80' },
-            { id: 'bs05', name: 'BS. Nguyễn Thị Nhi', specialtyId: 'nhi', avatar: 'https://images.unsplash.com/photo-1559839734-2b71ea197ec2?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80' },
-            { id: 'bs06', name: 'BS. Trần Văn Mắt', specialtyId: 'mat', avatar: 'https://images.unsplash.com/photo-1582750433449-648ed127bb54?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80' }
+            { id: 'bs017', name: 'ThS.BS Vũ Đăng Khôi', specialtyId: 'noi', specialty: 'Nội Tổng Quát', degree: 'Thạc sĩ - Bác sĩ nội trú', rating: 4.9, reviews: 120, experience: 12, avatar: DEFAULT_AVATAR },
+            { id: 'bs023', name: 'TS.BS Vũ Kim Linh', specialtyId: 'noi', specialty: 'Nội Tổng Quát', degree: 'Bác sĩ Chuyên khoa I', rating: 4.8, reviews: 95, experience: 11, avatar: DEFAULT_AVATAR },
+            { id: 'bs05', name: 'TS.BS Hoàng Minh Đức', specialtyId: 'tim-mach', specialty: 'Tim Mạch', degree: 'Bác sĩ Chuyên khoa I', rating: 4.8, reviews: 95, experience: 11, avatar: DEFAULT_AVATAR },
+            { id: 'bs024', name: 'BS.Hoàng Kiều Anh', specialtyId: 'tim-mach', specialty: 'Tim Mạch', degree: 'Bác sĩ Ngoại khoa', rating: 4.8, reviews: 98, experience: 10, avatar: DEFAULT_AVATAR },
+            { id: 'bs06', name: 'TS.BS Vũ Hải Nam', specialtyId: 'tim-mach', specialty: 'Tim Mạch', degree: 'Bác sĩ Chuyên khoa I', rating: 4.8, reviews: 95, experience: 15, avatar: DEFAULT_AVATAR },
+            { id: 'bs03', name: 'TS.BS. Nguyễn Văn Hùng', specialtyId: 'than-kinh', specialty: 'Thần Kinh', degree: 'Bác sĩ nội trú', rating: 4.8, reviews: 95, experience: 14, avatar: DEFAULT_AVATAR },
+            { id: 'bs04', name: 'PGS.TS Trần Thị Lan', specialtyId: 'than-kinh', specialty: 'Thần Kinh', degree: 'Bác sĩ Chuyên khoa II', rating: 4.8, reviews: 95, experience: 20, avatar: DEFAULT_AVATAR },
+            { id: 'bs13', name: 'BS.Phan Quốc Uy', specialtyId: 'xuong-khop', specialty: 'Cơ Xương Khớp', degree: 'Bác sĩ Chuyên khoa I', rating: 4.7, reviews: 85, experience: 15, avatar: DEFAULT_AVATAR },
+            { id: 'bs14', name: 'BS. Vũ Thế Vinh', specialtyId: 'xuong-khop', specialty: 'Cơ Xương Khớp', degree: 'Bác sĩ Ngoại Khoa', rating: 4.8, reviews: 95, experience: 12, avatar: DEFAULT_AVATAR },
+            { id: 'bs25', name: 'BS. Nguyễn Thị Nhi', specialtyId: 'nhi', specialty: 'Nhi Khoa', degree: 'Bác sĩ Đa khoa', rating: 4.9, reviews: 200, experience: 8, avatar: DEFAULT_AVATAR },
+            { id: 'bs08', name: 'BS. Lý Thanh Bình', specialtyId: 'nhi', specialty: 'Nhi Khoa', degree: 'Bác sĩ chuyên khoa I', rating: 4.8, reviews: 95, experience: 9, avatar: DEFAULT_AVATAR },
+            { id: 'bs22', name: 'BS. Nguyễn Quang Vinh', specialtyId: 'mat', specialty: 'Mắt', degree: 'Bác sĩ Chuyên khoa I', rating: 4.6, reviews: 75, experience: 9, avatar: DEFAULT_AVATAR },
+            { id: 'bs18', name: 'BS. Trịnh Khánh Linh', specialtyId: 'mat', specialty: 'Mắt', degree: 'Bác sĩ Đa khoa', rating: 4.8, reviews: 95, experience: 10, avatar: DEFAULT_AVATAR },
+            { id: 'bs09', name: 'BS. Nguyễn Quang Hải', specialtyId: 'tai-mui-hong', specialty: 'Tai Mũi Họng', degree: 'Bác sĩ Đa khoa', rating: 4.9, reviews: 95, experience: 10, avatar: DEFAULT_AVATAR },
+            { id: 'bs10', name: 'BS. Đỗ Vân Khánh', specialtyId: 'tai-mui-hong', specialty: 'Tai Mũi Họng', degree: 'Bác sĩ nội trú', rating: 4.8, reviews: 95, experience: 12, avatar: DEFAULT_AVATAR },
+            { id: 'bs11', name: 'BS. Hoàng Kiều Oanh', specialtyId: 'da-lieu', specialty: 'Da liễu', degree: 'Bác sĩ chuyên khoa I', rating: 4.8, reviews: 95, experience: 15, avatar: DEFAULT_AVATAR },
+            { id: 'bs012', name: 'BS. Lê Thanh Phong', specialtyId: 'da-lieu', specialty: 'Da liễu', degree: 'Bác sĩ Ngoại Khoa', rating: 4.8, reviews: 95, experience: 10, avatar: DEFAULT_AVATAR },
+            { id: 'bs15', name: 'BS. Hoàng Gia Bảo', specialtyId: 'tieu-hoa', specialty: 'Tiêu hóa', degree: 'Bác sĩ Ngoại khoa', rating: 4.8, reviews: 95, experience: 14, avatar: DEFAULT_AVATAR },
+            { id: 'bs16', name: 'BS. Đỗ Minh Châu', specialtyId: 'tieu-hoa', specialty: 'Tiêu hóa', degree: 'Bác sĩ chuyên khoa II', rating: 4.8, reviews: 95, experience: 16, avatar: DEFAULT_AVATAR },
+            { id: 'bs19', name: 'BS. Nguyễn Như Quỳnh', specialtyId: 'phu-khoa', specialty: 'Sản Phụ Khoa', degree: 'Bác sĩ Đa khoa', rating: 4.8, reviews: 95, experience: 10, avatar: DEFAULT_AVATAR },
+            { id: 'bs20', name: 'BS. Đỗ Tấn Sáng', specialtyId: 'phu-khoa', specialty: 'Sản Phụ Khoa', degree: 'Bác sĩ Đa khoa', rating: 4.8, reviews: 95, experience: 10, avatar: DEFAULT_AVATAR },
+            { id: 'bs21', name: 'BS. Hoàng Quốc Việt', specialtyId: 'ho-hap', specialty: 'Hô Hấp', degree: 'Bác sĩ nội trú', rating: 4.8, reviews: 95, experience: 15, avatar: DEFAULT_AVATAR }
         ];
 
-        const bookedSlots = {
-            'bs01': { '2026-10-15': ['08:30-09:30', '09:30-10:30', '14:30-15:30'], '2026-10-16': ['07:30-08:30', '15:30-16:30'] },
-            'bs02': { '2026-10-15': ['10:30-11:30', '16:30-17:30'], '2026-10-17': ['08:30-09:30', '13:30-14:30'] },
-            'bs03': { '2026-10-14': ['09:30-10:30'], '2026-10-15': ['07:30-08:30', '13:30-14:30', '18:30-19:30'] }
-        };
-
-        const doctorSchedules = {
-            'bs01': [1, 2, 3, 4, 5],
-            'bs02': [1, 2, 3, 4, 5],
-            'bs03': [1, 2, 3, 4, 5, 6],
-            'bs04': [1, 3, 5],
-            'bs05': [1, 2, 3, 4, 5],
-            'bs06': [2, 4, 6]
-        };
-
-        function getDoctorName(doctorId) { const doc = doctors.find(d => d.id === doctorId); return doc ? doc.name : doctorId; }
-        function getSpecialtyName(specialtyId) { const spec = specialties.find(s => s.id === specialtyId); return spec ? spec.name : specialtyId; }
-        function formatDateDisplay(dateStr) { if (!dateStr) return ''; const date = new Date(dateStr); return `${String(date.getDate()).padStart(2, '0')}/${String(date.getMonth() + 1).padStart(2, '0')}/${date.getFullYear()}`; }
-        function getDayOfWeekName(dateStr) { const days = ['Chủ Nhật', 'Thứ Hai', 'Thứ Ba', 'Thứ Tư', 'Thứ Năm', 'Thứ Sáu', 'Thứ Bảy']; return days[new Date(dateStr).getDay()]; }
-        function isSlotBooked(doctorId, dateStr, timeSlot) { if (!doctorId || !dateStr || !timeSlot) return false; if (!bookedSlots[doctorId]) return false; if (!bookedSlots[doctorId][dateStr]) return false; return bookedSlots[doctorId][dateStr].includes(timeSlot); }
-        
-        function isPatientBusy(dateStr, timeSlot) {
-            const myAppts = BN_Store.getAppointments();
-            return myAppts.some(appt => 
-                appt.date === dateStr && 
-                appt.time === timeSlot && 
-                appt.status !== 'cancelled'
-            );
+        function getDoctorName(doctorId) {
+            const doc = doctors.find(d => d.id === doctorId);
+            return doc ? doc.name : doctorId;
         }
-        
-        function isDoctorWorking(doctorId, dateStr) { if (!doctorId || !dateStr) return true; if (!doctorSchedules[doctorId]) return true; return doctorSchedules[doctorId].includes(new Date(dateStr).getDay()); }
+
+        function getSpecialtyName(specialtyId) {
+            const spec = specialties.find(s => s.id === specialtyId);
+            return spec ? spec.name : specialtyId;
+        }
+
+        function formatDateDisplay(dateStr) {
+            if (!dateStr) return '';
+            const parts = dateStr.split('-');
+            if (parts.length === 3) return `${parts[2]}/${parts[1]}/${parts[0]}`;
+            return dateStr;
+        }
 
         const specialtyOptionsContainer = document.getElementById('specialty-options');
         const doctorOptionsContainer = document.getElementById('doctor-options');
@@ -715,19 +815,16 @@
                 div.className = 'custom-option';
                 div.textContent = spec.name;
                 div.dataset.value = spec.id;
-                div.onclick = (e) => { e.stopPropagation(); selectOption('specialty', spec.id, spec.name); };
+                div.onclick = (e) => {
+                    e.stopPropagation();
+                    selectOption('specialty', spec.id, spec.name);
+                };
                 specialtyOptionsContainer.appendChild(div);
             });
         }
 
         function renderDoctorOptions(filterSpecialtyId = null) {
             doctorOptionsContainer.innerHTML = '';
-            const anyDiv = document.createElement('div');
-            anyDiv.className = 'custom-option';
-            anyDiv.textContent = '-- Bất kỳ bác sĩ nào phù hợp --';
-            anyDiv.onclick = (e) => { e.stopPropagation(); selectOption('doctor', '', '-- Bất kỳ bác sĩ nào phù hợp --'); };
-            doctorOptionsContainer.appendChild(anyDiv);
-
             let filteredDoctors = doctors;
             if (filterSpecialtyId) filteredDoctors = doctors.filter(doc => doc.specialtyId === filterSpecialtyId);
 
@@ -743,7 +840,10 @@
                     const div = document.createElement('div');
                     div.className = 'custom-option';
                     div.textContent = doc.name;
-                    div.onclick = (e) => { e.stopPropagation(); selectOption('doctor', doc.id, doc.name); };
+                    div.onclick = (e) => {
+                        e.stopPropagation();
+                        selectOption('doctor', doc.id, doc.name);
+                    };
                     doctorOptionsContainer.appendChild(div);
                 });
             }
@@ -755,33 +855,31 @@
                 specialtyLabel.classList.remove('placeholder');
                 specialtyLabel.classList.add('selected-value');
                 specialtyValue.value = value;
-                doctorLabel.textContent = '-- Bất kỳ bác sĩ nào phù hợp --';
+                doctorLabel.textContent = '-- Chọn bác sĩ khám --';
                 doctorLabel.classList.add('placeholder');
                 doctorLabel.classList.remove('selected-value');
                 doctorValue.value = '';
                 renderDoctorOptions(value);
             } else if (type === 'doctor') {
-                if (value === '') {
-                    doctorLabel.textContent = text;
-                    doctorLabel.classList.add('placeholder');
-                    doctorLabel.classList.remove('selected-value');
-                } else {
-                    doctorLabel.textContent = text;
-                    doctorLabel.classList.remove('placeholder');
-                    doctorLabel.classList.add('selected-value');
-                }
+                doctorLabel.textContent = text;
+                doctorLabel.classList.remove('placeholder');
+                doctorLabel.classList.add('selected-value');
                 doctorValue.value = value;
             }
             closeAllDropdowns();
             renderTimeSlots();
         }
 
-        window.toggleDropdown = function(type) {
+        window.toggleDropdown = function (type) {
             const wrapper = document.getElementById(type + '-dropdown');
             const options = wrapper.querySelector('.custom-options');
             const trigger = wrapper.querySelector('.custom-select-trigger');
-            document.querySelectorAll('.custom-options').forEach(el => { if (el !== options) el.classList.remove('open'); });
-            document.querySelectorAll('.custom-select-trigger').forEach(el => { if (el !== trigger) el.classList.remove('active'); });
+            document.querySelectorAll('.custom-options').forEach(el => {
+                if (el !== options) el.classList.remove('open');
+            });
+            document.querySelectorAll('.custom-select-trigger').forEach(el => {
+                if (el !== trigger) el.classList.remove('active');
+            });
             document.querySelectorAll('.calendar-dropdown').forEach(el => el.classList.remove('open'));
             options.classList.toggle('open');
             trigger.classList.toggle('active');
@@ -792,7 +890,7 @@
             document.querySelectorAll('.custom-select-trigger').forEach(el => el.classList.remove('active'));
         }
 
-        document.addEventListener('click', function(e) {
+        document.addEventListener('click', function (e) {
             if (!e.target.closest('.custom-select-wrapper') && !e.target.closest('.date-picker-wrapper')) {
                 closeAllDropdowns();
                 document.querySelectorAll('.calendar-dropdown').forEach(el => el.classList.remove('open'));
@@ -814,27 +912,22 @@
 
         const today = new Date();
         today.setHours(0, 0, 0, 0);
-        const minDate = new Date(today); minDate.setDate(minDate.getDate() + 1);
-        const maxDate = new Date(today); maxDate.setDate(maxDate.getDate() + 30);
+        const minDate = new Date(today);
+        minDate.setDate(minDate.getDate() + 1);
+        const maxDate = new Date(today);
+        maxDate.setDate(maxDate.getDate() + 30);
 
         let currentMonth = today.getMonth();
         let currentYear = today.getFullYear();
         let selectedDate = null;
 
-        function formatDate(date) {
-            const year = date.getFullYear();
-            const month = String(date.getMonth() + 1).padStart(2, '0');
-            const day = String(date.getDate()).padStart(2, '0');
-            return `${year}-${month}-${day}`;
-        }
-        
         function formatDisplayDate(date) {
             const day = String(date.getDate()).padStart(2, '0');
             const month = String(date.getMonth() + 1).padStart(2, '0');
             return `${day}/${month}/${date.getFullYear()}`;
         }
 
-        window.toggleCalendar = function() {
+        window.toggleCalendar = function () {
             calendarDropdown.classList.toggle('open');
             datePickerTrigger.classList.toggle('active');
             closeAllDropdowns();
@@ -845,7 +938,7 @@
             const firstDay = new Date(currentYear, currentMonth, 1);
             const lastDay = new Date(currentYear, currentMonth + 1, 0);
             const daysInMonth = lastDay.getDate();
-            
+
             let startDay = firstDay.getDay();
             startDay = startDay === 0 ? 6 : startDay - 1;
 
@@ -859,11 +952,14 @@
             for (let day = 1; day <= daysInMonth; day++) {
                 const date = new Date(currentYear, currentMonth, day);
                 date.setHours(0, 0, 0, 0);
-                
+
                 let classes = 'calendar-day';
                 let isDisabled = false;
 
-                if (date < minDate || date > maxDate) { classes += ' disabled'; isDisabled = true; }
+                if (date < minDate || date > maxDate) {
+                    classes += ' disabled';
+                    isDisabled = true;
+                }
                 if (date.getTime() === today.getTime()) classes += ' today';
                 if (selectedDate && date.getTime() === selectedDate.getTime()) classes += ' selected';
 
@@ -874,18 +970,29 @@
             calendarDays.innerHTML = html;
         }
 
-        window.changeMonth = function(direction) {
+        window.changeMonth = function (direction) {
             currentMonth += direction;
-            if (currentMonth < 0) { currentMonth = 11; currentYear--; }
-            else if (currentMonth > 11) { currentMonth = 0; currentYear++; }
+            if (currentMonth < 0) {
+                currentMonth = 11;
+                currentYear--;
+            } else if (currentMonth > 11) {
+                currentMonth = 0;
+                currentYear++;
+            }
             renderCalendar();
         };
 
-        window.selectDate = function(year, month, day) {
+        window.selectDate = function (year, month, day) {
+            const yStr = year;
+            const mStr = String(month + 1).padStart(2, '0');
+            const dStr = String(day).padStart(2, '0');
+
+            appointmentDate.value = `${yStr}-${mStr}-${dStr}`;
+            dateLabel.textContent = `${dStr}/${mStr}/${yStr}`;
+
             selectedDate = new Date(year, month, day);
             selectedDate.setHours(0, 0, 0, 0);
-            appointmentDate.value = formatDate(selectedDate);
-            dateLabel.textContent = formatDisplayDate(selectedDate);
+
             dateLabel.classList.remove('placeholder');
             dateLabel.classList.add('selected-value');
             calendarDropdown.classList.remove('open');
@@ -894,83 +1001,95 @@
             renderTimeSlots();
         };
 
-        function renderTimeSlots() {
+        // Hàm chuyển "HH:MM" thành tổng số phút để so sánh chính xác khoảng thời gian
+        function timeToMinutes(tStr) {
+            const parts = String(tStr).trim().split(':');
+            if (parts.length < 2) return 0;
+            return parseInt(parts[0], 10) * 60 + parseInt(parts[1], 10);
+        }
+
+        function isSlotOverlapping(slotRange, busyRange) {
+            const sParts = slotRange.split('-').map(s => s.trim());
+            const bParts = String(busyRange).split('-').map(s => s.trim());
+
+            if (sParts.length < 2 || bParts.length < 2) {
+                return String(busyRange).replace(/\s+/g, '') === slotRange.replace(/\s+/g, '');
+            }
+
+            const sStart = timeToMinutes(sParts[0]);
+            const sEnd = timeToMinutes(sParts[1]);
+            const bStart = timeToMinutes(bParts[0]);
+            const bEnd = timeToMinutes(bParts[1]);
+
+            return sStart < bEnd && sEnd > bStart;
+        }
+
+        // =========================================================================
+        // GỌI CHÍNH XÁC API /gio-ban ĐỂ LẤY LỊCH BẬN CỦA BÁC SĨ TỪ SQL SERVER
+        // =========================================================================
+        async function renderTimeSlots() {
             const selectedDoctorId = doctorValue.value;
-            const selectedDateStr = appointmentDate.value;
+            const selectedDateStr = appointmentDate.value; // YYYY-MM-DD
             const timeSlotInputs = document.querySelectorAll('input[name="time_slot"]');
             const warningBox = document.getElementById('conflict-warning');
             const warningContent = document.getElementById('conflict-content');
-            
-            if (!selectedDoctorId || !selectedDateStr) {
-                timeSlotInputs.forEach(input => {
-                    input.disabled = false; input.checked = false;
-                    const label = document.querySelector(`label[for="${input.id}"]`);
-                    label.classList.remove('disabled'); label.title = '';
-                    const note = label.querySelector('.slot-note'); if (note) note.remove();
-                });
-                warningBox.style.display = 'none';
-                return;
-            }
-            
-            if (!isDoctorWorking(selectedDoctorId, selectedDateStr)) {
-                const dayOfWeek = getDayOfWeekName(selectedDateStr);
-                warningContent.innerHTML = `
-                    <strong>Bác sĩ không làm việc vào ngày này</strong>
-                    <div style="margin-top:8px; font-size:13px;">
-                        <div>📅 Ngày đã chọn: <strong>${formatDateDisplay(selectedDateStr)}</strong> (${dayOfWeek})</div>
-                        <div>👨‍⚕️ Bác sĩ: <strong>${getDoctorName(selectedDoctorId)}</strong></div>
-                    </div>
-                    <div style="margin-top:10px; font-size:13px; font-style:italic;">💡 Vui lòng chọn ngày khác trong tuần.</div>
-                `;
-                warningBox.style.display = 'flex';
-                timeSlotInputs.forEach(input => {
-                    input.disabled = true; input.checked = false;
-                    const label = document.querySelector(`label[for="${input.id}"]`);
-                    label.classList.add('disabled'); label.title = 'Bác sĩ không làm việc ngày này';
-                });
-                return;
-            }
-            
-            const bookedList = [], busyList = [];
+
             timeSlotInputs.forEach(input => {
-                const slotValue = input.value;
+                input.disabled = false;
+                input.checked = false;
                 const label = document.querySelector(`label[for="${input.id}"]`);
-                input.disabled = false; input.checked = false;
-                label.classList.remove('disabled'); label.title = '';
-                const existingNote = label.querySelector('.slot-note'); if (existingNote) existingNote.remove();
-                
-                const booked = isSlotBooked(selectedDoctorId, selectedDateStr, slotValue);
-                const patientBusy = isPatientBusy(selectedDateStr, slotValue);
-                
-                if (booked) {
-                    input.disabled = true; label.classList.add('disabled'); label.title = 'Khung giờ này đã được đặt';
-                    const note = document.createElement('span'); note.className = 'slot-note'; note.textContent = 'Đã đặt'; label.appendChild(note);
-                    bookedList.push(slotValue);
-                } else if (patientBusy) {
-                    input.disabled = true; label.classList.add('disabled'); label.title = 'Bạn đã có lịch hẹn vào giờ này';
-                    const note = document.createElement('span'); note.className = 'slot-note'; note.textContent = 'Bạn bận'; label.appendChild(note);
-                    busyList.push(slotValue);
+                label.classList.remove('disabled');
+                label.title = '';
+                const note = label.querySelector('.slot-note');
+                if (note) note.remove();
+            });
+            warningBox.style.display = 'none';
+
+            if (!selectedDoctorId || !selectedDateStr) return;
+
+            const doctorIdInt = parseInt(selectedDoctorId.replace(/\D/g, ''), 10) || 1;
+            let gioBanList = [];
+
+            try {
+                const res = await fetch(`/appointments/bac-si/${doctorIdInt}/gio-ban?ngay_kham=${selectedDateStr}&_t=${Date.now()}`);
+                if (res.ok) {
+                    const data = await res.json();
+                    if (data.success && Array.isArray(data.gio_ban)) {
+                        gioBanList = data.gio_ban;
+                    }
+                }
+            } catch (e) {
+                console.error("Lỗi tải /gio-ban từ SQL:", e);
+            }
+
+            let busyCount = 0;
+            timeSlotInputs.forEach(input => {
+                const slotValue = input.value.trim();
+                const label = document.querySelector(`label[for="${input.id}"]`);
+
+                const isBlocked = gioBanList.some(gb => isSlotOverlapping(slotValue, gb));
+
+                if (isBlocked) {
+                    input.disabled = true;
+                    label.classList.add('disabled');
+                    label.title = 'Khung giờ này bác sĩ bận, nghỉ hoặc đã có lịch hẹn';
+                    const note = document.createElement('span');
+                    note.className = 'slot-note';
+                    note.textContent = 'ĐÃ BẬN';
+                    label.appendChild(note);
+                    busyCount++;
                 }
             });
-            
-            const totalConflicts = bookedList.length + busyList.length;
-            if (totalConflicts > 0) {
-                let html = '';
-                if (bookedList.length > 0) {
-                    html += `<strong>⏰ Có ${bookedList.length} khung giờ đã được đặt</strong><ul>${bookedList.map(slot => `<li>${slot} - Đã có người đặt</li>`).join('')}</ul>`;
-                }
-                if (busyList.length > 0) {
-                    html += `<strong style="margin-top: 10px; display: block;">👤 Có ${busyList.length} khung giờ trùng với lịch của bạn</strong><ul>${busyList.map(slot => `<li>${slot} - Bạn đã có lịch hẹn</li>`).join('')}</ul>`;
-                }
-                html += `<div style="margin-top:10px; font-size:12px; font-style:italic;">💡 Các khung giờ bị gạch ngang không thể chọn.</div>`;
-                warningContent.innerHTML = html;
+
+            if (busyCount > 0) {
+                warningContent.innerHTML = `<strong>⏰ Ngày ${formatDisplayDate(selectedDate)} có ${busyCount} khung giờ bận hoặc đã được đặt trên hệ thống cơ sở dữ liệu.</strong>`;
                 warningBox.style.display = 'flex';
-            } else {
-                warningBox.style.display = 'none';
             }
         }
 
-        function getUrlParam(name) { return new URLSearchParams(window.location.search).get(name); }
+        function getUrlParam(name) {
+            return new URLSearchParams(window.location.search).get(name);
+        }
 
         function showPrefillBanner(doctorName, specialtyName, doctorAvatar, isRebook = false) {
             const banner = document.getElementById('prefill-banner');
@@ -998,22 +1117,23 @@
         }
 
         function prefillFromRebook(appointmentId) {
+            if (typeof BN_Store === 'undefined') return false;
             const appt = BN_Store.getAppointmentById(appointmentId);
             if (!appt) return false;
-            
+
             const doctor = doctors.find(d => d.id === appt.doctorId);
             if (!doctor) return false;
-            
+
             const specialty = specialties.find(s => s.id === doctor.specialtyId);
             if (specialty) selectOption('specialty', specialty.id, specialty.name);
-            
+
             setTimeout(() => {
                 selectOption('doctor', doctor.id, doctor.name);
                 document.getElementById('patient-symptoms').value = appt.symptom;
             }, 50);
-            
+
             showPrefillBanner(doctor.name, specialty ? specialty.name : '', doctor.avatar, true);
-            
+
             setTimeout(() => {
                 document.getElementById('step-1').classList.remove('active');
                 document.getElementById('step-2').classList.add('active');
@@ -1022,105 +1142,154 @@
             return true;
         }
 
-        window.nextStep = function(currentStep) {
-            if (currentStep === 1 && !specialtyValue.value) {
-                showAlert('Thiếu thông tin', 'Vui lòng chọn chuyên khoa trước khi tiếp tục!', 'warning');
-                return;
+        window.nextStep = function (currentStep) {
+            if (currentStep === 1) {
+                if (!specialtyValue.value) {
+                    showAlert('Thiếu thông tin', 'Vui lòng chọn chuyên khoa trước khi tiếp tục!', 'warning');
+                    return;
+                }
+                if (!doctorValue.value) {
+                    showAlert('Thiếu thông tin', 'Vui lòng chọn bác sĩ khám bệnh!', 'warning');
+                    return;
+                }
             }
             if (currentStep === 2) {
-                if (!appointmentDate.value) { showAlert('Thiếu thông tin', 'Vui lòng chọn ngày khám!', 'warning'); return; }
-                if (!document.querySelector('input[name="time_slot"]:checked')) { showAlert('Thiếu thông tin', 'Vui lòng chọn khung giờ khám!', 'warning'); return; }
+                if (!appointmentDate.value) {
+                    showAlert('Thiếu thông tin', 'Vui lòng chọn ngày khám!', 'warning');
+                    return;
+                }
+                if (!document.querySelector('input[name="time_slot"]:checked')) {
+                    showAlert('Thiếu thông tin', 'Vui lòng chọn khung giờ khám!', 'warning');
+                    return;
+                }
             }
             document.getElementById('step-' + currentStep).classList.remove('active');
             document.getElementById('step-' + (currentStep + 1)).classList.add('active');
             updateProgress(currentStep + 1);
-            window.scrollTo({ top: 0, behavior: 'smooth' });
+            window.scrollTo({top: 0, behavior: 'smooth'});
         };
 
-        window.prevStep = function(currentStep) {
+        window.prevStep = function (currentStep) {
             document.getElementById('step-' + currentStep).classList.remove('active');
             document.getElementById('step-' + (currentStep - 1)).classList.add('active');
             updateProgress(currentStep - 1);
-            window.scrollTo({ top: 0, behavior: 'smooth' });
+            window.scrollTo({top: 0, behavior: 'smooth'});
         };
 
         function updateProgress(step) {
             for (let i = 1; i <= 3; i++) {
                 const indicator = document.getElementById('step-indicator-' + i);
                 indicator.classList.remove('active', 'completed');
-                if (i < step) { indicator.classList.add('completed'); indicator.innerHTML = '<i class="fas fa-check"></i>'; }
-                else if (i === step) { indicator.classList.add('active'); indicator.innerHTML = i; }
-                else { indicator.innerHTML = i; }
+                if (i < step) {
+                    indicator.classList.add('completed');
+                    indicator.innerHTML = '<i class="fas fa-check"></i>';
+                } else if (i === step) {
+                    indicator.classList.add('active');
+                    indicator.innerHTML = i;
+                } else {
+                    indicator.innerHTML = i;
+                }
             }
         }
 
-        document.getElementById('booking-form').addEventListener('submit', function(e) {
+        // =========================================================================
+        // GỌI TRỰC TIẾP API BACKEND ĐỂ LƯU LỊCH HẸN XUỐNG SQL SERVER
+        // =========================================================================
+        document.getElementById('booking-form').addEventListener('submit', async function (e) {
             e.preventDefault();
-            
+
             const selectedDoctorId = doctorValue.value;
             const selectedDateStr = appointmentDate.value;
             const selectedTimeInput = document.querySelector('input[name="time_slot"]:checked');
-            
-            if (!specialtyValue.value) { showAlert('Thiếu thông tin', 'Vui lòng chọn chuyên khoa!', 'warning'); return; }
-            if (!selectedDoctorId) { showAlert('Thiếu thông tin', 'Vui lòng chọn bác sĩ!', 'warning'); return; }
-            if (!selectedDateStr) { showAlert('Thiếu thông tin', 'Vui lòng chọn ngày khám!', 'warning'); return; }
-            if (!selectedTimeInput) { showAlert('Thiếu thông tin', 'Vui lòng chọn khung giờ khám!', 'warning'); return; }
-            
+            const selectedSpecialtyId = specialtyValue.value;
+
+            if (!selectedSpecialtyId) {
+                showAlert('Thiếu thông tin', 'Vui lòng chọn chuyên khoa!', 'warning');
+                return;
+            }
+            if (!selectedDoctorId) {
+                showAlert('Thiếu thông tin', 'Vui lòng chọn bác sĩ!', 'warning');
+                return;
+            }
+            if (!selectedDateStr) {
+                showAlert('Thiếu thông tin', 'Vui lòng chọn ngày khám!', 'warning');
+                return;
+            }
+            if (!selectedTimeInput) {
+                showAlert('Thiếu thông tin', 'Vui lòng chọn khung giờ khám!', 'warning');
+                return;
+            }
+
             const selectedTimeSlot = selectedTimeInput.value;
-            const specialtyId = specialtyValue.value;
-            
-            if (!isDoctorWorking(selectedDoctorId, selectedDateStr)) {
-                showAlert('Bác sĩ không làm việc', `Bác sĩ ${getDoctorName(selectedDoctorId)} không có lịch làm việc vào ${getDayOfWeekName(selectedDateStr)}.`, 'error');
-                return;
-            }
-            
-            if (isPatientBusy(selectedDateStr, selectedTimeSlot)) {
-                showAlert('Bạn đã có lịch hẹn', 'Bạn đã có một lịch hẹn khác vào cùng khung giờ này.', 'warning');
-                return;
-            }
-            
-            if (isSlotBooked(selectedDoctorId, selectedDateStr, selectedTimeSlot)) {
-                showAlert('Khung giờ đã được đặt', 'Rất tiếc, khung giờ này vừa được đặt bởi người khác. Vui lòng chọn khung giờ khác.', 'error');
-                renderTimeSlots();
-                return;
-            }
-            
-            const symptomText = document.getElementById('patient-symptoms').value.trim();
-            const isNightShift = selectedTimeSlot.startsWith('18') || selectedTimeSlot.startsWith('19') || selectedTimeSlot.startsWith('20') || selectedTimeSlot.startsWith('21');
-            
-            const items = [
-                { name: 'Tiền khám chuyên khoa', qty: 1, price: 300000 }
-            ];
+            let symptomText = document.getElementById('patient-symptoms').value.trim();
+
+            const isNightShift = selectedTimeSlot.startsWith('18:') || selectedTimeSlot.startsWith('19:') ||
+                                 selectedTimeSlot.startsWith('20:') || selectedTimeSlot.startsWith('21:') ||
+                                 selectedTimeSlot.startsWith('22:');
+
+            let basePrice = 300000;
+            let totalFee = isNightShift ? Math.round(basePrice * 1.1) : basePrice;
+
             if (isNightShift) {
-                items.push({ name: 'Phụ thu ca tối (+10%)', qty: 1, price: 30000 });
+                symptomText += ` [Phụ thu ca tối +10%: ${totalFee.toLocaleString('vi-VN')} VNĐ]`;
             }
-            
-            const result = BN_Store.createAppointment({
-                date: selectedDateStr,
-                time_slot: selectedTimeSlot,
-                doctorId: selectedDoctorId,
-                doctorName: getDoctorName(selectedDoctorId),
-                specialtyName: getSpecialtyName(specialtyId),
-                symptoms: symptomText,
-                items: items
-            });
-            
-            if (result.success) {
-                const totalFee = items.reduce((sum, i) => sum + i.qty * i.price, 0);
-                showAlert(
-                    'Đặt lịch thành công! 🎉',
-                    `Lịch hẹn của bạn đã được ghi nhận. Vui lòng đến đúng giờ.`,
-                    'success',
-                    () => { window.location.href = 'danh_sach_lich_hen.html'; },
-                    {
-                        'Mã lịch hẹn': result.appointment.id,
-                        'Bác sĩ': result.appointment.doctor,
-                        'Chuyên khoa': result.appointment.specialty,
-                        'Ngày khám': formatDateDisplay(selectedDateStr),
-                        'Khung giờ': selectedTimeSlot,
-                        'Phí khám': totalFee.toLocaleString('vi-VN') + ' VNĐ'
-                    }
-                );
+
+            const token = localStorage.getItem('medbooking_token');
+            if (!token) {
+                showAlert('Chưa đăng nhập', 'Vui lòng đăng nhập lại với tư cách bệnh nhân!', 'error', () => {
+                    window.location.href = '../dk_dn/dn.html';
+                });
+                return;
+            }
+
+            let doctorIdInt = parseInt(selectedDoctorId.replace(/\D/g, ''), 10) || 1;
+
+            const payload = {
+                dich_vu_id: 1,
+                ngay_kham: selectedDateStr,
+                khung_gio: selectedTimeSlot,
+                ghi_chu: symptomText,
+                bac_si_id: doctorIdInt
+            };
+
+            try {
+                const response = await fetch('/appointments/dat-lich', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify(payload)
+                });
+
+                const result = await response.json();
+
+                if (response.ok && result.success) {
+                    const newId = result.id_lich_hen || result.ma_lich_hen || '100';
+                    localStorage.setItem(`appt_booked_at_${newId}`, new Date().toISOString());
+
+                    showAlert(
+                            'Đặt lịch thành công! 🎉',
+                            `Lịch hẹn của bạn đã được lưu thẳng lên hệ thống cơ sở dữ liệu.`,
+                            'success',
+                            () => {
+                                window.location.href = 'danh_sach_lich_hen.html';
+                            },
+                            {
+                                'Mã lịch hẹn': '#' + newId,
+                                'Chuyên khoa': getSpecialtyName(selectedSpecialtyId),
+                                'Bác sĩ khám': getDoctorName(selectedDoctorId),
+                                'Ngày khám': formatDateDisplay(selectedDateStr),
+                                'Khung giờ': selectedTimeSlot + (isNightShift ? ' (Ca tối +10%)' : ''),
+                                'Giá khám': totalFee.toLocaleString('vi-VN') + ' VNĐ'
+                            }
+                    );
+                } else {
+                    showAlert('Đặt lịch thất bại', result.detail || 'Không thể lưu lịch hẹn vào cơ sở dữ liệu.', 'error');
+                }
+            } catch (error) {
+                console.error('Lỗi kết nối API đặt lịch:', error);
+                showAlert('Lỗi kết nối', 'Không thể kết nối đến máy chủ Backend FastAPI.', 'error');
             }
         });
 
@@ -1130,6 +1299,6 @@
         if (rebookFrom) prefillFromRebook(rebookFrom);
         else if (doctorId) prefillFromDoctor(doctorId);
     });
-    </script>
+</script>
 </body>
 </html>

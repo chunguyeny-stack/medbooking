@@ -3,19 +3,141 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MedBooking - Hồ sơ Lễ tân</title>
+    <title>MEDBOOKING - Hồ sơ Lễ tân</title>
     <!-- Favicon chuẩn hình trái tim xanh dương -->
-    <link rel="icon" type="image/jpeg" href="../../favicon.jpg">
-    
+    <link rel="icon" type="image/jpeg" href="/static/favicon.jpg">
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Poppins:wght@300;400;500;600;700&display=swap"
+          rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
+
     <link rel="stylesheet" href="../../static/css/LT_BS.css">
-    
+
     <style>
-        main { max-width: 1100px; margin: 30px auto 80px; padding: 0 20px; }
+        /* ⭐ THANH HEADER DÀI, RỘNG VÀ CÂN ĐỐI ĐỒNG BỘ */
+        header {
+            width: 100% !important;
+            max-width: 1480px !important;
+            margin: 8px auto 15px auto !important;
+            padding: 8px 30px !important;
+            display: flex !important;
+            justify-content: space-between !important;
+            align-items: center !important;
+            background: var(--bg-card);
+            border-radius: 14px !important;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+            box-sizing: border-box !important;
+            white-space: nowrap !important;
+        }
+
+        header nav ul {
+            display: flex !important;
+            gap: 20px !important;
+            align-items: center !important;
+            margin: 0 !important;
+            padding: 0 !important;
+            list-style: none !important;
+        }
+
+        header nav ul li a {
+            font-size: 13.5px !important;
+            font-weight: 500;
+            white-space: nowrap !important;
+            padding: 8px 12px !important;
+        }
+
+        .header-right {
+            display: flex !important;
+            align-items: center !important;
+            gap: 15px !important;
+            flex-shrink: 0 !important;
+        }
+
+        .user-badge {
+            white-space: nowrap !important;
+            padding: 6px 14px !important;
+        }
+
+        .user-info-text .user-name {
+            font-size: 13.5px !important;
+            max-width: 140px !important;
+            overflow: hidden !important;
+            text-overflow: ellipsis !important;
+        }
+
+        /* Chuông thông báo */
+        .notification-bell-container {
+            position: relative;
+            cursor: pointer;
+        }
+
+        .notification-dropdown {
+            position: absolute;
+            right: 0;
+            top: 50px;
+            width: 380px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 14px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            display: none;
+            z-index: 1000;
+            overflow: hidden;
+            white-space: normal !important;
+            text-align: left;
+        }
+
+        .notification-dropdown.active {
+            display: block;
+        }
+
+        .notification-header {
+            padding: 14px 18px;
+            font-weight: 700;
+            font-size: 15px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--primary-blue-light);
+            color: var(--primary-blue);
+            font-family: 'Playfair Display', serif;
+        }
+
+        .notification-list {
+            max-height: 320px;
+            overflow-y: auto;
+            overflow-x: hidden !important;
+        }
+
+        .notification-item {
+            padding: 12px 18px;
+            border-bottom: 1px solid var(--border-color);
+            font-size: 12.5px;
+            line-height: 1.5;
+            cursor: pointer;
+            transition: background 0.2s;
+            white-space: normal !important;
+            word-break: break-word;
+            color: var(--text-color);
+        }
+
+        .notification-item:hover {
+            background: rgba(37, 99, 235, 0.04);
+        }
+
+        .notification-item.unread {
+            background: rgba(37, 99, 235, 0.02);
+            font-weight: 500;
+        }
+
+        main {
+            max-width: 1100px;
+            margin: 30px auto 80px;
+            padding: 0 20px;
+        }
 
         .profile-header {
             background: linear-gradient(135deg, var(--primary-blue), #6FB1F5);
@@ -33,18 +155,21 @@
         .profile-header::before {
             content: '';
             position: absolute;
-            top: -50%; right: -20%;
-            width: 400px; height: 400px;
-            background: radial-gradient(circle, rgba(255,255,255,0.15) 0%, transparent 70%);
+            top: -50%;
+            right: -20%;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.15) 0%, transparent 70%);
             border-radius: 50%;
         }
 
         .profile-avatar {
-            width: 100px; height: 100px;
+            width: 100px;
+            height: 100px;
             border-radius: 50%;
-            background: rgba(255,255,255,0.25);
+            background: rgba(255, 255, 255, 0.25);
             backdrop-filter: blur(10px);
-            border: 4px solid rgba(255,255,255,0.4);
+            border: 4px solid rgba(255, 255, 255, 0.4);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -57,9 +182,22 @@
             z-index: 1;
         }
 
-        .profile-info { position: relative; z-index: 1; }
-        .profile-info h2 { color: #fff; font-size: 26px; margin-bottom: 5px; }
-        .profile-info p { color: rgba(255,255,255,0.9); font-size: 14px; margin-bottom: 10px; }
+        .profile-info {
+            position: relative;
+            z-index: 1;
+        }
+
+        .profile-info h2 {
+            color: #fff;
+            font-size: 26px;
+            margin-bottom: 5px;
+        }
+
+        .profile-info p {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
 
         .profile-info .badges {
             display: flex;
@@ -68,7 +206,7 @@
         }
 
         .profile-info .badge {
-            background: rgba(255,255,255,0.2);
+            background: rgba(255, 255, 255, 0.2);
             padding: 4px 12px;
             border-radius: 20px;
             font-size: 12px;
@@ -122,7 +260,8 @@
         .logout-btn {
             background: rgba(239, 68, 68, 0.1);
             border: 1px solid rgba(239, 68, 68, 0.2);
-            width: 40px; height: 40px;
+            width: 40px;
+            height: 40px;
             border-radius: 50%;
             cursor: pointer;
             display: flex;
@@ -132,6 +271,7 @@
             font-size: 16px;
             transition: all 0.3s;
         }
+
         .logout-btn:hover {
             background: #EF4444;
             color: #fff;
@@ -139,250 +279,513 @@
         }
 
         @media (max-width: 900px) {
-            .profile-grid { grid-template-columns: 1fr; }
-            .profile-header { flex-direction: column; text-align: center; }
+            .profile-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .profile-header {
+                flex-direction: column;
+                text-align: center;
+            }
         }
     </style>
 </head>
 <body>
 
-    <!-- HEADER -->
-    <header>
-        <div class="logo-container">
+<!-- HEADER -->
+<header>
+    <div class="logo-container">
+        <div class="logo-icon"><i class="fa-solid fa-hospital-user"></i></div>
+        <div class="logo-text">
+            <h1>MedBooking</h1>
+            <p>Cổng Lễ Tân</p>
+        </div>
+    </div>
+    <div class="header-right">
+        <nav>
+            <ul>
+                <li><a href="/le_tan/dashboard.html">Tổng quan</a></li>
+                <li><a href="/le_tan/quan_ly_lich_hen.html">Quản lý lịch hẹn</a></li>
+                <li><a href="/le_tan/danh_sach_lich_hen.html">Danh sách ca trực</a></li>
+                <li><a href="/le_tan/check_in.html">Check-in</a></li>
+                <li><a href="/le_tan/vien_phi.html">Viện phí</a></li>
+            </ul>
+        </nav>
+
+        <!-- ⭐ CHUÔNG THÔNG BÁO CHO LỄ TÂN -->
+        <div class="notification-bell-container" id="bell-container" onclick="toggleNotificationDropdown()">
+            <button class="theme-toggle" title="Thông báo hệ thống">
+                <i class="fas fa-bell"></i>
+                <span id="notification-badge" style="position: absolute; top: 5px; right: 5px; width: 8px; height: 8px; background: #EF4444; border-radius: 50%; display: none;"></span>
+            </button>
+            <div class="notification-dropdown" id="notification-dropdown" onclick="event.stopPropagation()">
+                <div class="notification-header">
+                    <span>Thông báo mới từ Bác sĩ</span>
+                    <span style="font-size:12px; cursor:pointer; color:var(--primary-blue); font-weight:500;" onclick="markAllNotificationsRead()">Đã đọc tất cả</span>
+                </div>
+                <div class="notification-list" id="notification-list">
+                    <div class="notification-item" style="text-align:center; color:var(--text-gray);">Không có thông báo mới</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="user-badge" onclick="window.location.href='ho_so_ca_nhan.html'">
+            <div class="user-avatar" id="topbar-avatar">LT</div>
+            <div class="user-info-text">
+                <div class="user-name" id="topbar-receptionist-name">Lễ tân</div>
+                <div class="user-role">Lễ tân</div>
+            </div>
+        </div>
+        <!-- Nút chuyển giao diện sáng/tối -->
+        <button class="theme-toggle" id="theme-toggle" title="Chuyển đổi giao diện">
+            <i class="fas fa-moon"></i>
+        </button>
+        <!-- Nút Đăng xuất nằm cạnh nút giao diện -->
+        <button class="logout-btn" onclick="window.location.href='../dk_dn/dn.html'" title="Đăng xuất">
+            <i class="fas fa-sign-out-alt"></i>
+        </button>
+    </div>
+</header>
+
+<main>
+    <div class="breadcrumb">
+        <a href="dashboard.html"><i class="fas fa-home"></i> Tổng quan</a>
+        <i class="fas fa-chevron-right"></i>
+        <span>Hồ sơ cá nhân</span>
+    </div>
+
+    <!-- Profile Header -->
+    <div class="profile-header">
+        <div class="profile-avatar" id="profile-avatar-large">LT</div>
+        <div class="profile-info">
+            <h2 id="profile-name">Lễ tân</h2>
+            <p><i class="fas fa-envelope"></i> <span id="profile-email">Đang tải...</span> &nbsp;&nbsp; <i
+                    class="fas fa-phone"></i> <span id="profile-phone">Chưa cập nhật</span></p>
+            <div class="badges">
+                <span class="badge"><i class="fas fa-id-badge"></i> Mã NV: <span id="profile-id">LT8801</span></span>
+                <span class="badge"><i class="fas fa-user-tie"></i> Lễ tân</span>
+                <span class="badge"><i class="fas fa-calendar-alt"></i> Hệ thống MedBooking</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="profile-grid">
+        <!-- Personal info -->
+        <div class="card">
+            <div class="card-header">
+                <h3><i class="fas fa-user-circle"></i> Thông tin cá nhân</h3>
+            </div>
+            <form id="profileForm" onsubmit="event.preventDefault(); updateInfo();">
+                <div class="form-group">
+                    <label for="fullname">Họ và tên</label>
+                    <input type="text" id="fullname" required>
+                </div>
+                <div class="form-group">
+                    <label for="email">Email công việc</label>
+                    <input type="email" id="email" readonly>
+                </div>
+                <div class="form-group">
+                    <label for="phone">Số điện thoại</label>
+                    <input type="tel" id="phone">
+                </div>
+                <div class="form-group">
+                    <label for="address">Địa chỉ</label>
+                    <input type="text" id="address">
+                </div>
+                <button type="submit" class="btn-submit"><i class="fas fa-save"></i> Cập nhật thông tin</button>
+            </form>
+        </div>
+
+        <!-- Change password -->
+        <div class="card">
+            <div class="card-header">
+                <h3><i class="fas fa-shield-alt"></i> Đổi mật khẩu</h3>
+            </div>
+            <form id="passwordForm" onsubmit="event.preventDefault(); changePassword();">
+                <div class="form-group">
+                    <label for="current-pass">Mật khẩu hiện tại</label>
+                    <input type="password" id="current-pass" placeholder="Nhập mật khẩu cũ..." required>
+                </div>
+                <div class="form-group">
+                    <label for="new-pass">Mật khẩu mới</label>
+                    <input type="password" id="new-pass" placeholder="Nhập mật khẩu mới..." required>
+                </div>
+                <div class="form-group">
+                    <label for="confirm-pass">Xác nhận mật khẩu mới</label>
+                    <input type="password" id="confirm-pass" placeholder="Nhập lại mật khẩu mới..." required>
+                </div>
+                <button type="submit" class="btn-submit btn-secondary"><i class="fas fa-key"></i> Đổi mật khẩu</button>
+            </form>
+        </div>
+    </div>
+</main>
+
+<!-- FOOTER -->
+<footer>
+    <div>
+        <div class="footer-logo">
             <div class="logo-icon"><i class="fa-solid fa-hospital-user"></i></div>
             <div class="logo-text">
                 <h1>MedBooking</h1>
                 <p>Cổng Lễ Tân</p>
             </div>
         </div>
-        <div class="header-right">
-            <nav>
-                <ul>
-                    <li><a href="dashboard.html">Tổng quan</a></li>
-                    <li><a href="quan_ly_lich_hen.html">Quản lý lịch hẹn</a></li>
-                    <li><a href="danh_sach_lich_hen.html">Danh sách ca trực</a></li>
-                    <li><a href="check_in.html">Check-in</a></li>
-                    <li><a href="vien_phi.html">Viện phí</a></li>
-                </ul>
-            </nav>
-            <div class="user-badge" onclick="window.location.href='ho_so_ca_nhan.html'">
-                <div class="user-avatar">LT</div>
-                <div class="user-info-text">
-                    <div class="user-name">Nguyễn Thị Lễ Tân</div>
-                    <div class="user-role">Lễ tân</div>
-                </div>
-            </div>
-            <!-- Nút chuyển giao diện sáng/tối -->
-            <button class="theme-toggle" id="theme-toggle" title="Chuyển đổi giao diện">
-                <i class="fas fa-moon"></i>
+        <p>Hệ thống quản lý y tế MedBooking - Giải pháp toàn diện cho bệnh viện và phòng khám.</p>
+        <p><strong>"MedBooking chúc quý khách và gia đình luôn có một sức khỏe dồi dào!"</strong></p>
+    </div>
+    <div>
+        <h4>Liên kết nhanh</h4>
+        <ul>
+            <li><a href="dashboard.html">Tổng quan</a></li>
+            <li><a href="quan_ly_lich_hen.html">Quản lý lịch hẹn</a></li>
+            <li><a href="danh_sach_lich_hen.html">Danh sách ca trực</a></li>
+            <li><a href="check_in.html">Check-in</a></li>
+            <li><a href="vien_phi.html">Viện phí</a></li>
+        </ul>
+    </div>
+    <div>
+        <h4>Thông tin liên hệ</h4>
+        <p>Địa chỉ: Số 15, Phố Dịch Vọng Hậu, Quận Cầu Giấy, Hà Nội</p>
+        <p>Hotline: 1900 6868</p>
+        <p>Email: support@medbooking.vn</p>
+    </div>
+    <div>
+        <p>&copy; 2026 MedBooking. Bản quyền thuộc về Đội ngũ phát triển dự án.</p>
+    </div>
+</footer>
+
+<!-- MODAL -->
+<div class="modal-overlay" id="modal-overlay">
+    <div class="modal-box">
+        <div class="modal-icon" id="modal-icon"><i class="fas fa-info"></i></div>
+        <h3 id="modal-title">Thông báo</h3>
+        <p id="modal-message">Nội dung thông báo</p>
+        <div class="modal-actions" id="modal-actions">
+            <button class="modal-btn modal-btn-primary" id="modal-confirm-btn">
+                <i class="fas fa-check"></i> Đã hiểu
             </button>
-            <!-- Nút Đăng xuất nằm cạnh nút giao diện -->
-            <button class="logout-btn" onclick="window.location.href='../dk_dn/dn.html'" title="Đăng xuất">
-                <i class="fas fa-sign-out-alt"></i>
-            </button>
-        </div>
-    </header>
-
-    <main>
-        <div class="breadcrumb">
-            <a href="dashboard.html"><i class="fas fa-home"></i> Tổng quan</a>
-            <i class="fas fa-chevron-right"></i>
-            <span>Hồ sơ cá nhân</span>
-        </div>
-
-        <!-- Profile Header -->
-        <div class="profile-header">
-            <div class="profile-avatar">LT</div>
-            <div class="profile-info">
-                <h2>Nguyễn Thị Lễ Tân</h2>
-                <p><i class="fas fa-envelope"></i> letan.nv@medbooking.vn • <i class="fas fa-phone"></i> 0987654321</p>
-                <div class="badges">
-                    <span class="badge"><i class="fas fa-id-badge"></i> Mã NV: LT8801</span>
-                    <span class="badge"><i class="fas fa-user-tie"></i> Lễ tân</span>
-                    <span class="badge"><i class="fas fa-calendar-alt"></i> Tham gia: 01/03/2023</span>
-                </div>
-            </div>
-        </div>
-
-        <div class="profile-grid">
-            <!-- Personal info -->
-            <div class="card">
-                <div class="card-header">
-                    <h3><i class="fas fa-user-circle"></i> Thông tin cá nhân</h3>
-                </div>
-                <form onsubmit="event.preventDefault(); updateInfo();">
-                    <div class="form-group">
-                        <label for="fullname">Họ và tên</label>
-                        <input type="text" id="fullname" value="Nguyễn Thị Lễ Tân">
-                    </div>
-                    <div class="form-group">
-                        <label for="email">Email công việc</label>
-                        <input type="email" id="email" value="letan.nv@medbooking.vn">
-                    </div>
-                    <div class="form-group">
-                        <label for="phone">Số điện thoại</label>
-                        <input type="tel" id="phone" value="0987654321">
-                    </div>
-                    <div class="form-group">
-                        <label for="address">Địa chỉ</label>
-                        <input type="text" id="address" value="Hà Nội, Việt Nam">
-                    </div>
-                    <button type="submit" class="btn-submit"><i class="fas fa-save"></i> Cập nhật thông tin</button>
-                </form>
-            </div>
-
-            <!-- Change password -->
-            <div class="card">
-                <div class="card-header">
-                    <h3><i class="fas fa-shield-alt"></i> Đổi mật khẩu</h3>
-                </div>
-                <form onsubmit="event.preventDefault(); changePassword();">
-                    <div class="form-group">
-                        <label for="current-pass">Mật khẩu hiện tại</label>
-                        <input type="password" id="current-pass" placeholder="Nhập mật khẩu cũ...">
-                    </div>
-                    <div class="form-group">
-                        <label for="new-pass">Mật khẩu mới</label>
-                        <input type="password" id="new-pass" placeholder="Nhập mật khẩu mới...">
-                    </div>
-                    <div class="form-group">
-                        <label for="confirm-pass">Xác nhận mật khẩu mới</label>
-                        <input type="password" id="confirm-pass" placeholder="Nhập lại mật khẩu mới...">
-                    </div>
-                    <button type="submit" class="btn-submit btn-secondary"><i class="fas fa-key"></i> Đổi mật khẩu</button>
-                </form>
-            </div>
-        </div>
-    </main>
-
-    <!-- FOOTER -->
-    <footer>
-        <div>
-            <div class="footer-logo">
-                <div class="logo-icon"><i class="fa-solid fa-hospital-user"></i></div>
-                <div class="logo-text">
-                    <h1>MedBooking</h1>
-                    <p>Cổng Lễ Tân</p>
-                </div>
-            </div>
-            <p>Hệ thống quản lý y tế MedBooking - Giải pháp toàn diện cho bệnh viện và phòng khám.</p>
-            <p><strong>"MedBooking chúc quý khách và gia đình luôn có một sức khỏe dồi dào!"</strong></p>
-        </div>
-        <div>
-            <h4>Liên kết nhanh</h4>
-            <ul>
-                <li><a href="dashboard.html">Tổng quan</a></li>
-                <li><a href="quan_ly_lich_hen.html">Quản lý lịch hẹn</a></li>
-                <li><a href="check_in.html">Check-in</a></li>
-                <li><a href="vien_phi.html">Viện phí</a></li>
-            </ul>
-        </div>
-        <div>
-            <h4>Thông tin liên hệ</h4>
-            <p>Địa chỉ: Số 15, Phố Dịch Vọng Hậu, Quận Cầu Giấy, Hà Nội</p>
-            <p>Hotline: 1900 6868</p>
-            <p>Email: support@medbooking.vn</p>
-        </div>
-        <div>
-            <p>&copy; 2026 MedBooking. Bản quyền thuộc về Đội ngũ phát triển dự án.</p>
-        </div>
-    </footer>
-
-    <!-- MODAL -->
-    <div class="modal-overlay" id="modal-overlay">
-        <div class="modal-box">
-            <div class="modal-icon" id="modal-icon"><i class="fas fa-info"></i></div>
-            <h3 id="modal-title">Thông báo</h3>
-            <p id="modal-message">Nội dung thông báo</p>
-            <div class="modal-actions" id="modal-actions">
-                <button class="modal-btn modal-btn-primary" id="modal-confirm-btn">
-                    <i class="fas fa-check"></i> Đã hiểu
-                </button>
-            </div>
         </div>
     </div>
+</div>
 
-    <script src="../../static/js/client.js"></script>
+<script>
+    let systemNotifications = [];
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            const themeToggle = document.getElementById('theme-toggle');
-            const icon = themeToggle.querySelector('i');
-            const currentTheme = localStorage.getItem('theme') || 'light';
-            
-            if (currentTheme === 'dark') {
+    function getReadNotifications() {
+        try {
+            return JSON.parse(localStorage.getItem('read_notifications') || '[]');
+        } catch(e) {
+            return [];
+        }
+    }
+
+    function saveReadNotification(notifId) {
+        let readList = getReadNotifications();
+        if (!readList.includes(notifId)) {
+            readList.push(notifId);
+            localStorage.setItem('read_notifications', JSON.stringify(readList));
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', async function () {
+        const token = localStorage.getItem('medbooking_token');
+
+        // ============================================================
+        // 1. TẢI THÔNG TIN HỒ SƠ LỄ TÂN THỰC TẾ TỪ SQL SERVER (API /auth/tai-khoan/ho-so)
+        // ============================================================
+        try {
+            if (token) {
+                const response = await fetch('/auth/tai-khoan/ho-so', {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+
+                if (response.ok) {
+                    const result = await response.json();
+                    const data = result.data || result;
+
+                    const recName = data.ho_ten || data.fullname || "Lễ tân";
+                    const recEmail = data.email || data.thu_dien_tu || localStorage.getItem('medbooking_email') || "";
+                    const recPhone = data.so_dien_thoai || data.phone || "";
+                    const recId = "LT" + String(data.id || "8801");
+
+                    document.getElementById('topbar-receptionist-name').textContent = recName;
+                    document.getElementById('profile-name').textContent = recName;
+                    document.getElementById('profile-email').textContent = recEmail || "Chưa cập nhật";
+                    document.getElementById('profile-phone').textContent = recPhone || "Chưa cập nhật";
+                    document.getElementById('profile-id').textContent = recId;
+
+                    document.getElementById('fullname').value = recName;
+                    document.getElementById('email').value = recEmail;
+                    document.getElementById('phone').value = recPhone;
+                    if (document.getElementById('address')) {
+                        document.getElementById('address').value = data.dia_chi || data.address || "";
+                    }
+
+                    const cleanName = recName.trim();
+                    const parts = cleanName.split(/\s+/);
+                    let initials = 'LT';
+                    if (parts.length >= 2) {
+                        initials = (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+                    } else if (parts.length === 1 && parts[0].length > 0) {
+                        initials = parts[0].slice(0, 2).toUpperCase();
+                    }
+
+                    document.getElementById('topbar-avatar').textContent = initials;
+                    document.getElementById('profile-avatar-large').textContent = initials;
+                }
+
+                // ⭐ Tải thông báo lịch trực từ bác sĩ
+                const schedRes = await fetch('/appointments/admin/lich-lam-viec', {
+                    method: 'GET',
+                    headers: {'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json'}
+                });
+                if (schedRes.ok) {
+                    const schedData = await schedRes.json();
+                    systemNotifications = [];
+
+                    schedData.forEach(item => {
+                        const rawId = String(item.id || "");
+                        const docNameStr = item.doctorName || 'Bác sĩ';
+                        const dateStr = item.ngay_lam_viec || '';
+                        const shiftName = item.ca_lam_viec || 'Ca trực';
+                        const lyDoSuam = item.ly_do_sua || '';
+                        const lyDoBanm = item.ly_do_ban || '';
+                        const docIdVal = String(item.bac_si_id || '');
+
+                        if (lyDoBanm) {
+                            systemNotifications.push({
+                                id: rawId + '_ban_' + dateStr,
+                                doctorId: docIdVal,
+                                date: dateStr,
+                                text: `Bác sĩ ${docNameStr} đã BÁO BẬN ngày ${dateStr} (${shiftName}). Lý do: ${lyDoBanm}`,
+                                rawId: rawId
+                            });
+                        }
+                        if (lyDoSuam) {
+                            systemNotifications.push({
+                                id: rawId + '_sua_' + dateStr,
+                                doctorId: docIdVal,
+                                date: dateStr,
+                                text: `Bác sĩ ${docNameStr} đã ĐỀ XUẤT SỬA ngày ${dateStr} (${shiftName}). Lý do: ${lyDoSuam}`,
+                                rawId: rawId
+                            });
+                        }
+                    });
+                    updateNotificationUI();
+                }
+            }
+        } catch (e) {
+            console.error("Lỗi kết nối lấy thông tin hồ sơ từ SQL Server:", e);
+        }
+
+        // THEME TOGGLE
+        const themeToggle = document.getElementById('theme-toggle');
+        const icon = themeToggle.querySelector('i');
+        const currentTheme = localStorage.getItem('theme') || 'light';
+
+        if (currentTheme === 'dark') {
+            document.documentElement.setAttribute('data-theme', 'dark');
+            icon.classList.remove('fa-moon');
+            icon.classList.add('fa-sun');
+        }
+
+        themeToggle.addEventListener('click', function () {
+            let theme = document.documentElement.getAttribute('data-theme');
+            if (theme === 'dark') {
+                document.documentElement.removeAttribute('data-theme');
+                localStorage.setItem('theme', 'light');
+                icon.classList.remove('fa-sun');
+                icon.classList.add('fa-moon');
+            } else {
                 document.documentElement.setAttribute('data-theme', 'dark');
+                localStorage.setItem('theme', 'dark');
                 icon.classList.remove('fa-moon');
                 icon.classList.add('fa-sun');
             }
-
-            themeToggle.addEventListener('click', function() {
-                let theme = document.documentElement.getAttribute('data-theme');
-                if (theme === 'dark') {
-                    document.documentElement.removeAttribute('data-theme');
-                    localStorage.setItem('theme', 'light');
-                    icon.classList.remove('fa-sun');
-                    icon.classList.add('fa-moon');
-                } else {
-                    document.documentElement.setAttribute('data-theme', 'dark');
-                    localStorage.setItem('theme', 'dark');
-                    icon.classList.remove('fa-moon');
-                    icon.classList.add('fa-sun');
-                }
-            });
-
-            const modalOverlay = document.getElementById('modal-overlay');
-            const modalIcon = document.getElementById('modal-icon');
-            const modalTitle = document.getElementById('modal-title');
-            const modalMessage = document.getElementById('modal-message');
-            const modalActions = document.getElementById('modal-actions');
-
-            window.showAlert = function(title, message, type = 'info', callback = null) {
-                modalIcon.className = 'modal-icon ' + type;
-                const iconEl = modalIcon.querySelector('i');
-                const icons = { success: 'fa-check-circle', warning: 'fa-exclamation-triangle', error: 'fa-times-circle', info: 'fa-info-circle' };
-                iconEl.className = 'fas ' + icons[type];
-                modalTitle.textContent = title;
-                modalMessage.textContent = message;
-                modalActions.innerHTML = `<button class="modal-btn modal-btn-primary" id="modal-confirm-btn"><i class="fas fa-check"></i> Đã hiểu</button>`;
-                modalOverlay.classList.add('active');
-                document.getElementById('modal-confirm-btn').onclick = function() {
-                    closeModal();
-                    if (callback) callback();
-                };
-            };
-
-            function closeModal() { modalOverlay.classList.remove('active'); }
-            modalOverlay.addEventListener('click', function(e) { if (e.target === modalOverlay) closeModal(); });
-            document.addEventListener('keydown', function(e) { if (e.key === 'Escape' && modalOverlay.classList.contains('active')) closeModal(); });
-
-            window.updateInfo = function() {
-                showAlert('Cập nhật thành công', 'Thông tin cá nhân đã được cập nhật.', 'success');
-            };
-
-            window.changePassword = function() {
-                const curr = document.getElementById('current-pass').value;
-                const newP = document.getElementById('new-pass').value;
-                const conf = document.getElementById('confirm-pass').value;
-
-                if (!curr || !newP || !conf) {
-                    showAlert('Thiếu thông tin', 'Vui lòng nhập đầy đủ các trường mật khẩu!', 'warning');
-                    return;
-                }
-                if (newP !== conf) {
-                    showAlert('Lỗi', 'Mật khẩu xác nhận không khớp!', 'error');
-                    return;
-                }
-                if (newP.length < 6) {
-                    showAlert('Lỗi', 'Mật khẩu phải có ít nhất 6 ký tự!', 'error');
-                    return;
-                }
-                showAlert('Đổi mật khẩu thành công', 'Mật khẩu của bạn đã được cập nhật.', 'success');
-                document.getElementById('current-pass').value = '';
-                document.getElementById('new-pass').value = '';
-                document.getElementById('confirm-pass').value = '';
-            };
         });
-    </script>
+
+        // ⭐ QUẢN LÝ GIAO DIỆN CHUÔNG THÔNG BÁO VÀ LƯU TRẠNG THÁI ĐÃ XEM VĨNH VIỄN
+        window.toggleNotificationDropdown = function() {
+            const dropdown = document.getElementById('notification-dropdown');
+            dropdown.classList.toggle('active');
+        };
+
+        function updateNotificationUI() {
+            const listEl = document.getElementById('notification-list');
+            const badgeEl = document.getElementById('notification-badge');
+            const readList = getReadNotifications();
+
+            const activeNotifs = systemNotifications.filter(n => !readList.includes(n.id));
+
+            if (activeNotifs.length === 0) {
+                listEl.innerHTML = `<div class="notification-item" style="text-align:center; color:var(--text-gray);">Không có thông báo mới</div>`;
+                if (badgeEl) badgeEl.style.display = 'none';
+                return;
+            }
+
+            if (badgeEl) badgeEl.style.display = 'block';
+            listEl.innerHTML = activeNotifs.map(n => `
+                <div class="notification-item unread" onclick="jumpToSchedule('${n.doctorId}', '${n.date}', '${n.rawId}', '${n.id}')">
+                    <i class="fas fa-bell" style="color:var(--primary-blue); margin-right:6px;"></i> ${n.text}
+                </div>
+            `).join('');
+        }
+
+        window.jumpToSchedule = function(doctorId, dateStr, rawId, notifId) {
+            saveReadNotification(notifId); // Lưu vĩnh viễn vào localStorage để thông báo biến mất
+            updateNotificationUI();
+            toggleNotificationDropdown();
+
+            sessionStorage.setItem('jump_doctor_id', doctorId);
+            sessionStorage.setItem('jump_date', dateStr);
+            sessionStorage.setItem('jump_notif_id', rawId);
+
+            window.location.href = 'danh_sach_lich_hen.html';
+        };
+
+        window.markAllNotificationsRead = function() {
+            systemNotifications.forEach(n => saveReadNotification(n.id));
+            updateNotificationUI();
+        };
+
+        document.addEventListener('click', function(e) {
+            const bellContainer = document.getElementById('bell-container');
+            if (bellContainer && !bellContainer.contains(e.target)) {
+                document.getElementById('notification-dropdown').classList.remove('active');
+            }
+        });
+
+        // MODAL SYSTEM
+        const modalOverlay = document.getElementById('modal-overlay');
+        const modalIcon = document.getElementById('modal-icon');
+        const modalTitle = document.getElementById('modal-title');
+        const modalMessage = document.getElementById('modal-message');
+        const modalActions = document.getElementById('modal-actions');
+
+        window.showAlert = function (title, message, type = 'info', callback = null) {
+            modalIcon.className = 'modal-icon ' + type;
+            const iconEl = modalIcon.querySelector('i');
+            const icons = {
+                success: 'fa-check-circle',
+                warning: 'fa-exclamation-triangle',
+                error: 'fa-times-circle',
+                info: 'fa-info-circle'
+            };
+            iconEl.className = 'fas ' + icons[type];
+            modalTitle.textContent = title;
+            modalMessage.textContent = message;
+            modalActions.innerHTML = `<button class="modal-btn modal-btn-primary" id="modal-confirm-btn"><i class="fas fa-check"></i> Đã hiểu</button>`;
+            modalOverlay.classList.add('active');
+            document.getElementById('modal-confirm-btn').onclick = function () {
+                closeModal();
+                if (callback) callback();
+            };
+        };
+
+        function closeModal() {
+            modalOverlay.classList.remove('active');
+        }
+
+        modalOverlay.addEventListener('click', function (e) {
+            if (e.target === modalOverlay) closeModal();
+        });
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'Escape' && modalOverlay.classList.contains('active')) closeModal();
+        });
+
+        // ============================================================
+        // 2. GỬI YÊU CẦU CẬP NHẬT THÔNG TIN LÊN SQL SERVER (API PUT /auth/tai-khoan/ho-so)
+        // ============================================================
+        window.updateInfo = async function () {
+            const fullnameVal = document.getElementById('fullname').value.trim();
+            const phoneVal = document.getElementById('phone').value.trim();
+            const addressVal = document.getElementById('address') ? document.getElementById('address').value.trim() : "";
+
+            const payload = {
+                fullname: fullnameVal,
+                phone: phoneVal,
+                address: addressVal
+            };
+
+            try {
+                const response = await fetch('/auth/tai-khoan/ho-so', {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify(payload)
+                });
+
+                const result = await response.json();
+
+                if (response.ok && (result.success !== false)) {
+                    showAlert('Cập nhật thành công', 'Thông tin cá nhân đã được lưu vào cơ sở dữ liệu.', 'success', () => {
+                        location.reload();
+                    });
+                } else {
+                    showAlert('Cập nhật thất bại', result.detail || 'Không thể lưu thông tin vào SQL.', 'error');
+                }
+            } catch (err) {
+                console.error("Lỗi kết nối:", err);
+                showAlert('Lỗi kết nối', 'Không thể kết nối đến máy chủ Backend.', 'error');
+            }
+        };
+
+        // ============================================================
+        // 3. GỬI YÊU CẦU ĐỔI MẬT KHẨU LÊN SQL SERVER (API PUT /auth/change-password)
+        // ============================================================
+        window.changePassword = async function () {
+            const curr = document.getElementById('current-pass').value;
+            const newP = document.getElementById('new-pass').value;
+            const conf = document.getElementById('confirm-pass').value;
+
+            if (!curr || !newP || !conf) {
+                showAlert('Thiếu thông tin', 'Vui lòng nhập đầy đủ các trường mật khẩu!', 'warning');
+                return;
+            }
+            if (newP !== conf) {
+                showAlert('Lỗi', 'Mật khẩu xác nhận mới không khớp!', 'error');
+                return;
+            }
+            if (newP.length < 6) {
+                showAlert('Lỗi', 'Mật khẩu phải có ít nhất 6 ký tự!', 'error');
+                return;
+            }
+
+            try {
+                const response = await fetch('/auth/change-password', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify({
+                        mat_khau_cu: curr,
+                        mat_khau_moi: newP
+                    })
+                });
+
+                const result = await response.json();
+
+                if (response.ok && (result.success !== false)) {
+                    showAlert('Đổi mật khẩu thành công', 'Mật khẩu mới đã được cập nhật vào cơ sở dữ liệu.', 'success');
+                    document.getElementById('current-pass').value = '';
+                    document.getElementById('new-pass').value = '';
+                    document.getElementById('confirm-pass').value = '';
+                } else {
+                    showAlert('Đổi mật khẩu thất bại', result.detail || 'Mật khẩu hiện tại không chính xác.', 'error');
+                }
+            } catch (err) {
+                console.error("Lỗi kết nối đổi mật khẩu:", err);
+                showAlert('Lỗi kết nối', 'Không thể kết nối đến máy chủ Backend.', 'error');
+            }
+        };
+    });
+</script>
 </body>
 </html>

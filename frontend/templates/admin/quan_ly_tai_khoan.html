@@ -3,229 +3,191 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin - Quản lý Tài khoản & Phân quyền</title>
+    <title>Admin - Quản lý Tài khoản & Phân quyền (SQL Server)</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="icon" type="image/jpeg" href="../../favicon.jpg">
-    
+    <link rel="icon" type="image/jpeg" href="/static/favicon.jpg">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Quicksand:wght@600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="../../static/css/A.css">
-    
     <style>
-        .brand-name {
-            font-family: 'Quicksand', sans-serif !important;
-            font-weight: 700 !important;
-            text-transform: none !important;
-            letter-spacing: -0.01em;
-            font-size: 22px;
-        }
-        .admin-profile-btn {
-            text-decoration: none; 
-            color: var(--primary-color); 
-            font-weight: 600; 
-            padding: 8px 16px; 
-            background: var(--primary-light); 
-            border-radius: 50px;
-            transition: all 0.25s ease;
-        }
-        .admin-profile-btn:hover {
-            background: var(--primary-color);
-            color: #fff;
-            box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);
-            transform: translateY(-1px);
-        }
-        #lock-reason-text {
-            font-family: inherit;
-            resize: vertical;
-            min-height: 90px;
-            line-height: 1.5;
-        }
-        .lock-reason-hint {
-            display: block;
-            margin-top: 8px;
-            font-size: 12px;
-            color: var(--text-gray);
-            line-height: 1.4;
-        }
-        .badge.danger[title] { position: relative; }
-        .badge.danger[title]:hover::after {
-            content: attr(title);
-            position: absolute;
-            bottom: calc(100% + 6px);
-            left: 50%;
-            transform: translateX(-50%);
-            background: #1A1428;
-            color: #fff;
-            padding: 8px 12px;
-            border-radius: 8px;
-            font-size: 11.5px;
-            font-weight: 500;
-            white-space: normal;
-            min-width: 220px;
-            max-width: 320px;
-            line-height: 1.5;
-            text-transform: none;
-            letter-spacing: 0;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
-            z-index: 100;
-            pointer-events: none;
-            animation: fadeInTooltip 0.2s ease-out;
-        }
-        @keyframes fadeInTooltip {
-            from { opacity: 0; transform: translateX(-50%) translateY(4px); }
-            to   { opacity: 1; transform: translateX(-50%) translateY(0); }
-        }
+        .brand-name { font-family: 'Quicksand', sans-serif !important; font-weight: 700 !important; font-size: 22px; }
+        .admin-profile-btn { text-decoration: none; color: var(--primary-color); font-weight: 600; padding: 8px 16px; background: var(--primary-light); border-radius: 50px; transition: all 0.25s ease; }
+        .admin-profile-btn:hover { background: var(--primary-color); color: #fff; box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3); transform: translateY(-1px); }
+        .custom-modal-overlay { position: fixed !important; top: 0 !important; left: 0 !important; width: 100vw !important; height: 100vh !important; background: rgba(10, 5, 20, 0.8) !important; display: none; align-items: center !important; justify-content: center !important; z-index: 999999 !important; backdrop-filter: blur(5px); margin: 0 !important; padding: 20px; box-sizing: border-box; }
+        .custom-modal-content { background: #1E1B4B !important; border: 1px solid rgba(255, 255, 255, 0.15) !important; border-radius: 20px !important; padding: 28px !important; width: 100% !important; max-width: 480px !important; max-height: 90vh; overflow-y: auto; box-shadow: 0 25px 50px rgba(0, 0, 0, 0.6) !important; color: #fff !important; }
     </style>
 </head>
 <body>
 
-    <aside>
-        <button class="sidebar-close" id="sidebar-close" aria-label="Đóng menu"><i class="fas fa-times"></i></button>
-        <div class="brand">
-            <span class="brand-name">MedBooking</span>
-            <span class="brand-sub">ADMIN PANEL</span>
+<aside>
+    <button class="sidebar-close" id="sidebar-close" aria-label="Đóng menu"><i class="fas fa-times"></i></button>
+    <div class="brand"><span class="brand-name">MedBooking</span><span class="brand-sub">ADMIN PANEL</span></div>
+    <nav>
+        <h3>QUẢN LÝ NHÂN SỰ & NGƯỜI DÙNG</h3>
+        <ul>
+            <li><a href="/admin/home_a.html">Trang chủ Admin</a></li>
+            <li><a href="/admin/quan_ly_tai_khoan.html"><strong>Quản lý tài khoản</strong></a></li>
+            <li><a href="/admin/quan_ly_bac_si.html">Quản lý bác sĩ</a></li>
+        </ul>
+        <h3>DANH MỤC Y TẾ</h3>
+        <ul>
+            <li><a href="/admin/quan_ly_chuyen_khoa.html">Quản lý chuyên khoa</a></li>
+            <li><a href="/admin/quan_ly_dich_vu.html">Quản lý dịch vụ & giá</a></li>
+            <li><a href="/admin/quan_ly_mapping.html">Quản lý Mapping Triệu chứng</a></li>
+        </ul>
+        <h3>BÁO CÁO & THỐNG KÊ</h3>
+        <ul>
+            <li><a href="/admin/dashboard.html">Dashboard Thống kê & Báo cáo</a></li>
+            <li><a href="/admin/nhat_ky_giao_dich.html">Nhật ký Giao dịch Chi tiết</a></li>
+            <li><a href="/admin/thung_rac.html">Thùng rác hệ thống</a></li>
+        </ul>
+    </nav>
+</aside>
+
+<main>
+    <header>
+        <button class="menu-toggle" id="menu-toggle" aria-label="Mở menu"><i class="fas fa-bars"></i></button>
+        <h1>Quản lý Tài khoản & Phân quyền Hệ thống</h1>
+        <div style="display: flex; align-items: center; gap: 12px;">
+            <a href="ho_so_ca_nhan.html" class="admin-profile-btn" id="admin-name-btn">AD Tên Admin</a>
+            <button class="theme-toggle" id="theme-toggle">🌙</button>
+            <a href="../dk_dn/dn.html">Đăng xuất</a>
         </div>
-        <nav>
-            <h3>QUẢN LÝ NHÂN SỰ & NGƯỜI DÙNG</h3>
-            <ul>
-                <li><a href="home_a.html">Trang chủ Admin</a></li>
-                <li><a href="quan_ly_tai_khoan.html"><strong>Quản lý tài khoản</strong></a></li>
-                <li><a href="quan_ly_bac_si.html">Quản lý bác sĩ</a></li>
-            </ul>
-            <h3>DANH MỤC Y TẾ</h3>
-            <ul>
-                <li><a href="quan_ly_chuyen_khoa.html">Quản lý chuyên khoa</a></li>
-                <li><a href="quan_ly_dich_vu.html">Quản lý dịch vụ & giá</a></li>
-                <li><a href="quan_ly_mapping.html">Quản lý Mapping Triệu chứng</a></li>
-            </ul>
-            <h3>BÁO CÁO & THỐNG KÊ</h3>
-            <ul>
-                <li><a href="dashboard.html">Dashboard Thống kê & Báo cáo</a></li>
-                <li><a href="nhat_ky_giao_dich.html">Nhật ký Giao dịch Chi tiết</a></li>
-                <li><a href="thung_rac.html">Thùng rác hệ thống</a></li>
-            </ul>
-        </nav>
-    </aside>
+    </header>
 
-    <main>
-        <header>
-            <button class="menu-toggle" id="menu-toggle" aria-label="Mở menu"><i class="fas fa-bars"></i></button>
-            <h1>Quản lý Tài khoản & Phân quyền Hệ thống</h1>
-            <div style="display: flex; align-items: center; gap: 12px;">
-                <a href="ho_so_ca_nhan.html" class="admin-profile-btn">AD Tên Admin</a>
-                <button class="theme-toggle" id="theme-toggle">🌙</button>
-                <a href="../dk_dn/dn.html">Đăng xuất</a>
-            </div>
-        </header>
+    <section style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; margin-bottom: 20px;">
+        <div style="display: flex; gap: 10px; flex-wrap: wrap; align-items: center;">
+            <input type="text" id="search-account" placeholder="Tìm kiếm theo tên, email, số điện thoại..." style="padding: 8px 12px; border-radius: 10px; border: 1px solid var(--border-glass); background: var(--bg-main); color: var(--secondary-color);">
+            <select id="filter-role" style="padding: 8px 12px; border-radius: 10px; border: 1px solid var(--border-glass); background: var(--bg-main); color: var(--secondary-color);">
+                <option value="all">Tất cả vai trò</option>
+                <option value="admin">Quản trị viên (Admin)</option>
+                <option value="doctor">Bác sĩ</option>
+                <option value="receptionist">Lễ tân</option>
+                <option value="patient">Bệnh nhân</option>
+            </select>
+            <select id="filter-status" style="padding: 8px 12px; border-radius: 10px; border: 1px solid var(--border-glass); background: var(--bg-main); color: var(--secondary-color);">
+                <option value="all">Tất cả trạng thái</option>
+                <option value="active">Đang hoạt động</option>
+                <option value="locked">Đã khóa</option>
+                <option value="deleted">Đã xóa</option>
+            </select>
+        </div>
+        <button type="button" id="btn-add-account" style="padding: 9px 18px; background: var(--primary-gradient); color: #fff; border: none; border-radius: 10px; font-weight: 600; cursor: pointer;">
+            <i class="fas fa-plus" style="margin-right: 6px;"></i> Thêm Tài khoản Mới
+        </button>
+    </section>
 
-        <section>
-            <div>
-                <input type="text" id="search-account" placeholder="Tìm kiếm theo tên, email, số điện thoại...">
-                <select id="filter-role">
-                    <option value="all">Tất cả vai trò</option>
-                    <option value="admin">Quản trị viên (Admin)</option>
-                    <option value="doctor">Bác sĩ</option>
-                    <option value="receptionist">Lễ tân</option>
-                    <option value="patient">Bệnh nhân</option>
-                </select>
-                <select id="filter-status">
-                    <option value="all">Tất cả trạng thái</option>
-                    <option value="active">Đang hoạt động</option>
-                    <option value="locked">Đã khóa</option>
-                </select>
-            </div>
-            <button type="button" id="btn-add-account">+ Thêm Tài khoản Mới</button>
-        </section>
-
-        <section>
-            <h2>Danh sách Người dùng trong Hệ thống</h2>
-            <table>
+    <section style="background: var(--bg-card); border: 1px solid var(--border-glass); border-radius: 20px; padding: 22px; box-shadow: var(--shadow-soft);">
+        <h2 style="font-size: 15px; font-weight: 700; color: var(--secondary-color); margin-bottom: 16px;">Danh sách Người dùng trong Hệ thống</h2>
+        <div style="overflow-x: auto;">
+            <table style="width: 100%; border-collapse: collapse; text-align: left;">
                 <thead>
-                    <tr>
-                        <th>Mã TK</th>
-                        <th>Họ và tên</th>
-                        <th>Email đăng nhập</th>
-                        <th>Số điện thoại</th>
-                        <th>Vai trò</th>
-                        <th>Trạng thái</th>
-                        <th>Hành động</th>
-                    </tr>
+                <tr style="border-bottom: 2px solid var(--border-glass); font-size: 12.5px; color: var(--text-gray);">
+                    <th style="padding: 12px;">Mã TK</th>
+                    <th style="padding: 12px;">Họ và tên</th>
+                    <th style="padding: 12px;">Email đăng nhập</th>
+                    <th style="padding: 12px;">Số điện thoại</th>
+                    <th style="padding: 12px;">Vai trò</th>
+                    <th style="padding: 12px;">Trạng thái</th>
+                    <th style="padding: 12px; text-align: center;">Hành động</th>
+                </tr>
                 </thead>
                 <tbody id="account-table-body">
-                    <tr><td colspan="7" style="text-align:center;padding:40px;color:#8B7FA8;">Đang tải...</td></tr>
+                <tr><td colspan="7" style="text-align:center;padding:40px;color:var(--text-gray);">Đang tải dữ liệu trực tiếp từ SQL Server...</td></tr>
                 </tbody>
             </table>
-        </section>
+        </div>
+        <!-- Khu vực hiển thị Phân trang -->
+        <div id="pagination-container" style="display: flex; justify-content: space-between; align-items: center; margin-top: 20px; padding-top: 15px; border-top: 1px solid var(--border-glass);">
+            <div id="pagination-info" style="font-size: 13px; color: var(--text-gray);">Đang hiển thị...</div>
+            <div id="pagination-buttons" style="display: flex; gap: 6px;"></div>
+        </div>
+    </section>
 
-        <section id="account-form-modal" style="display: none;">
-            <h3 id="form-account-title">Thêm Tài khoản Mới</h3>
+    <!-- Modal Thêm / Sửa Tài khoản Mới (Đã sửa đúng dạng popup overlay) -->
+    <div id="account-form-modal" class="custom-modal-overlay">
+        <div class="custom-modal-content">
             <form id="form-account-info">
-                <div>
-                    <label for="acc-name">Họ và tên:</label>
-                    <input type="text" id="acc-name" required>
+                <h3 id="form-account-title" style="font-size: 16px; font-weight: 700; color: #fff; margin-bottom: 16px;">Thêm Tài khoản Mới</h3>
+                <input type="hidden" id="edit-account-id">
+                <div style="margin-bottom: 12px;">
+                    <label for="acc-name" style="font-size: 12px; font-weight: 600; color: #D1D5DB; display: block; margin-bottom: 4px;">Họ và tên:</label>
+                    <input type="text" id="acc-name" required style="width: 100%; padding: 8px 12px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.2); background: rgba(0,0,0,0.2); color: #fff; box-sizing: border-box;">
                 </div>
-                <div>
-                    <label for="acc-email">Email đăng nhập:</label>
-                    <input type="email" id="acc-email" required>
+                <div style="margin-bottom: 12px;">
+                    <label for="acc-email" style="font-size: 12px; font-weight: 600; color: #D1D5DB; display: block; margin-bottom: 4px;">Email đăng nhập:</label>
+                    <input type="email" id="acc-email" required style="width: 100%; padding: 8px 12px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.2); background: rgba(0,0,0,0.2); color: #fff; box-sizing: border-box;">
                 </div>
-                <div>
-                    <label for="acc-phone">Số điện thoại:</label>
-                    <input type="text" id="acc-phone" required>
+                <div style="margin-bottom: 12px;">
+                    <label for="acc-phone" style="font-size: 12px; font-weight: 600; color: #D1D5DB; display: block; margin-bottom: 4px;">Số điện thoại:</label>
+                    <input type="text" id="acc-phone" required style="width: 100%; padding: 8px 12px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.2); background: rgba(0,0,0,0.2); color: #fff; box-sizing: border-box;">
                 </div>
-                <div>
-                    <label for="acc-role">Vai trò hệ thống:</label>
-                    <select id="acc-role" required>
+                <div style="margin-bottom: 12px;">
+                    <label for="acc-role" style="font-size: 12px; font-weight: 600; color: #D1D5DB; display: block; margin-bottom: 4px;">Vai trò hệ thống:</label>
+                    <select id="acc-role" required style="width: 100%; padding: 8px 12px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.2); background: #1E1B4B; color: #fff; box-sizing: border-box;">
                         <option value="patient">Bệnh nhân</option>
                         <option value="doctor">Bác sĩ</option>
                         <option value="receptionist">Lễ tân</option>
                         <option value="admin">Quản trị viên (Admin)</option>
                     </select>
                 </div>
-                <div>
-                    <label for="acc-password">Mật khẩu ban đầu:</label>
-                    <input type="password" id="acc-password" placeholder="Nhập mật khẩu (chỉ khi tạo mới)">
+                <div style="margin-bottom: 16px;">
+                    <label for="acc-password" style="font-size: 12px; font-weight: 600; color: #D1D5DB; display: block; margin-bottom: 4px;">Mật khẩu ban đầu:</label>
+                    <input type="password" id="acc-password" placeholder="Nhập mật khẩu (mặc định 123456 nếu bỏ trống)" style="width: 100%; padding: 8px 12px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.2); background: rgba(0,0,0,0.2); color: #fff; box-sizing: border-box;">
                 </div>
-                <div>
-                    <button type="submit" id="btn-save-account">Lưu tài khoản</button>
-                    <button type="button" id="btn-cancel-account">Hủy bỏ</button>
-                </div>
-            </form>
-        </section>
-
-        <section id="lock-modal" style="display: none;">
-            <h3 id="lock-modal-title">Lý do khóa tài khoản</h3>
-            <form id="form-lock-reason">
-                <input type="hidden" id="lock-target-id">
-                <div>
-                    <label for="lock-reason-text">Vui lòng nhập lý do khóa tài khoản này:</label>
-                    <textarea id="lock-reason-text" rows="3"
-                        placeholder="VD: Tài khoản vi phạm điều khoản sử dụng, đăng thông tin sai sự thật..."
-                        maxlength="300" required></textarea>
-                    <small class="lock-reason-hint">
-                        <i class="fas fa-info-circle"></i>
-                        Tối thiểu <strong>5 ký tự</strong>, tối đa <strong>300 ký tự</strong>.
-                        Lý do này sẽ <strong>hiển thị cho người dùng</strong> khi họ đăng nhập.
-                    </small>
-                </div>
-                <div>
-                    <button type="submit" id="btn-confirm-lock">Xác nhận Khóa</button>
-                    <button type="button" id="btn-cancel-lock">Hủy bỏ</button>
+                <div style="display: flex; justify-content: flex-end; gap: 10px;">
+                    <button type="button" id="btn-cancel-account" style="padding: 8px 16px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); border-radius: 8px; cursor: pointer; color: #fff;">Hủy bỏ</button>
+                    <button type="submit" style="padding: 8px 18px; background: linear-gradient(135deg, #8B5CF6, #6D28D9); color: #fff; border: none; border-radius: 8px; font-weight: 600; cursor: pointer;">Lưu tài khoản</button>
                 </div>
             </form>
-        </section>
-    </main>
+        </div>
+    </div>
 
-    <div class="sidebar-overlay" id="sidebar-overlay"></div>
+    <!-- Modal: Quản lý Lý do Khóa / Gỡ Khóa tài khoản -->
+    <div id="lock-modal" class="custom-modal-overlay">
+        <div class="custom-modal-content">
+            <h3 style="font-size: 16px; font-weight: 700; color: #fff; margin-bottom: 12px;"><i class="fas fa-lock" style="color: #F59E0B; margin-right: 6px;"></i> Lý do khóa / Gỡ khóa tài khoản</h3>
+            <input type="hidden" id="lock-target-id">
+            <div style="margin-bottom: 16px;">
+                <label style="font-size: 12px; font-weight: 600; color: #D1D5DB; display: block; margin-bottom: 4px;">Nội dung lý do:</label>
+                <textarea id="lock-reason-text" rows="3" placeholder="Nhập lý do khóa hoặc gỡ khóa..." style="width: 100%; padding: 8px 12px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.2); background: rgba(0,0,0,0.2); color: #fff; box-sizing: border-box;"></textarea>
+            </div>
+            <div style="display: flex; justify-content: flex-end; gap: 10px;">
+                <button type="button" id="btn-cancel-lock" style="padding: 8px 16px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); border-radius: 8px; cursor: pointer; color: #fff;">Hủy bỏ</button>
+                <button type="button" id="btn-submit-unlock" style="padding: 8px 18px; background: #10B981; color: #fff; border: none; border-radius: 8px; font-weight: 600; cursor: pointer;">Gỡ khóa</button>
+                <button type="button" id="btn-submit-lock" style="padding: 8px 18px; background: #F59E0B; color: #fff; border: none; border-radius: 8px; font-weight: 600; cursor: pointer;">Khóa</button>
+            </div>
+        </div>
+    </div>
 
-    <script src="../../static/js/admin-data.js"></script>
-    <script src="../../static/js/admin.js"></script>
-    <script>
+    <!-- Modal: Xem/Nhập Lý do XÓA tài khoản & Khôi phục -->
+    <div id="delete-modal" class="custom-modal-overlay">
+        <div class="custom-modal-content">
+            <h3 style="font-size: 16px; font-weight: 700; color: #fff; margin-bottom: 12px;"><i class="fas fa-trash" style="color: #EF4444; margin-right: 6px;"></i> Lý do xóa / Khôi phục tài khoản</h3>
+            <input type="hidden" id="delete-target-id">
+            <div style="margin-bottom: 16px;">
+                <label style="font-size: 12px; font-weight: 600; color: #D1D5DB; display: block; margin-bottom: 4px;">Nội dung lý do:</label>
+                <textarea id="delete-reason-text" rows="3" placeholder="Nhập lý do xóa..." style="width: 100%; padding: 8px 12px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.2); background: rgba(0,0,0,0.2); color: #fff; box-sizing: border-box;"></textarea>
+            </div>
+            <div style="display: flex; justify-content: flex-end; gap: 10px;">
+                <button type="button" id="btn-cancel-delete" style="padding: 8px 16px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); border-radius: 8px; cursor: pointer; color: #fff;">Hủy bỏ</button>
+                <button type="button" id="btn-submit-restore" style="padding: 8px 18px; background: #10B981; color: #fff; border: none; border-radius: 8px; font-weight: 600; cursor: pointer;">Khôi phục</button>
+                <button type="button" id="btn-submit-delete" style="padding: 8px 18px; background: #EF4444; color: #fff; border: none; border-radius: 8px; font-weight: 600; cursor: pointer;">Xác nhận Xóa</button>
+            </div>
+        </div>
+    </div>
+</main>
+
+<div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+<script src="../../static/js/admin.js"></script>
+<script>
     (function () {
         const html = document.documentElement;
-        const saved = localStorage.getItem('mb-admin-theme') ||
-                      (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        const saved = localStorage.getItem('mb-admin-theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
         html.setAttribute('data-theme', saved);
+
         document.addEventListener('DOMContentLoaded', () => {
             const themeBtn = document.getElementById('theme-toggle');
             if (themeBtn) {
@@ -237,41 +199,397 @@
                     themeBtn.textContent = next === 'dark' ? '☀️' : '🌙';
                 });
             }
+
             const menuBtn = document.getElementById('menu-toggle');
             const closeBtn = document.getElementById('sidebar-close');
             const sidebar = document.querySelector('aside');
             const overlay = document.getElementById('sidebar-overlay');
+
             function openSidebar() { sidebar.classList.add('open'); if (overlay) overlay.classList.add('active'); document.body.style.overflow = 'hidden'; }
             function closeSidebar() { sidebar.classList.remove('open'); if (overlay) overlay.classList.remove('active'); document.body.style.overflow = ''; }
+
             if (menuBtn) menuBtn.addEventListener('click', openSidebar);
             if (closeBtn) closeBtn.addEventListener('click', closeSidebar);
             if (overlay) overlay.addEventListener('click', closeSidebar);
-            sidebar.querySelectorAll('nav a').forEach(link => {
-                link.addEventListener('click', () => { if (window.innerWidth <= 900) closeSidebar(); });
-            });
-            window.addEventListener('resize', () => { if (window.innerWidth > 900) closeSidebar(); });
-        });
-    })();
-    </script>
-    <script>
-    // Tự động highlight menu đang chọn dựa vào tên file URL
-    document.addEventListener('DOMContentLoaded', () => {
-        const currentPath = window.location.pathname.split('/').pop() || 'home_a.html';
-        const navLinks = document.querySelectorAll('aside nav a');
-        
-        navLinks.forEach(link => {
-            const href = link.getAttribute('href');
-            // Nếu href trùng với tên file hiện tại thì thêm class active
-            if (href === currentPath) {
-                link.classList.add('active');
-                // Xóa thẻ <strong> cũ nếu có (để không bị in đậm 2 lần)
-                const strong = link.querySelector('strong');
-                if (strong) {
-                    link.innerHTML = strong.innerHTML;
+
+            const token = localStorage.getItem('medbooking_token');
+            if (token) {
+                fetch('/auth/me', { headers: {'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json'} })
+                .then(res => res.json())
+                .then(data => {
+                    const adminName = data.ho_ten || data.name || '';
+                    const adminNameBtn = document.getElementById('admin-name-btn');
+                    if (adminNameBtn && adminName) adminNameBtn.textContent = `AD ${adminName}`;
+                }).catch(err => console.error("Lỗi tải thông tin admin:", err));
+            }
+
+            let allAccounts = [];
+            let currentPage = 1;
+            const pageSize = 15;
+
+            async function loadAccounts() {
+                const tbody = document.getElementById('account-table-body');
+                tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;padding:40px;color:var(--text-gray);">Đang tải dữ liệu trực tiếp từ cơ sở dữ liệu SQL Server...</td></tr>`;
+
+                try {
+                    const response = await fetch('/auth/admin/tai-khoan', {
+                        headers: {'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json'}
+                    });
+                    if (!response.ok) throw new Error("Không thể kết nối đến API cơ sở dữ liệu SQL.");
+
+                    const jsonRes = await response.json();
+                    allAccounts = jsonRes.data || jsonRes.items || jsonRes || [];
+                    currentPage = 1;
+                    renderAccounts(allAccounts);
+                } catch (err) {
+                    console.error("Lỗi kết nối CSDL:", err);
+                    tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;padding:40px;color:#EF4444;">Không thể tải dữ liệu từ cơ sở dữ liệu SQL Server!</td></tr>`;
                 }
             }
+
+            window.changeAccountPage = function(page) {
+                currentPage = page;
+                renderAccounts(allAccounts);
+            };
+
+            function renderAccounts(list) {
+                const tbody = document.getElementById('account-table-body');
+                const searchKey = document.getElementById('search-account').value.toLowerCase();
+                const roleFilter = document.getElementById('filter-role').value;
+                const statusFilter = document.getElementById('filter-status').value;
+
+                if (!list || list.length === 0) {
+                    tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;padding:40px;color:var(--text-gray);">Chưa có bản ghi tài khoản nào trong cơ sở dữ liệu SQL.</td></tr>`;
+                    document.getElementById('pagination-container').style.display = 'none';
+                    return;
+                }
+
+                let filtered = list.filter(acc => {
+                    const name = (acc.ho_ten || acc.name || '').toLowerCase();
+                    const email = (acc.email || '').toLowerCase();
+                    const phone = (acc.so_dien_thoai || acc.phone || '');
+                    const matchSearch = name.includes(searchKey) || email.includes(searchKey) || phone.includes(searchKey);
+
+                    const role = (acc.vai_tro || acc.role || '').toLowerCase().trim();
+                    let matchRole = roleFilter === 'all' || role === roleFilter;
+
+                    const status = String(acc.trang_thai || acc.status || 'active').toLowerCase().trim();
+                    let matchStatus = true;
+
+                    const isDeleted = (status === 'deleted' || status === 'đã xóa');
+                    if (statusFilter === 'all' && isDeleted) {
+                        return false;
+                    }
+
+                    if (statusFilter !== 'all') {
+                        if (statusFilter === 'active') matchStatus = (status === 'active' || status === 'đang hoạt động');
+                        else if (statusFilter === 'locked') matchStatus = (status === 'locked' || status === 'đã khóa');
+                        else if (statusFilter === 'deleted') matchStatus = isDeleted;
+                    }
+
+                    return matchSearch && matchRole && matchStatus;
+                });
+
+                if (filtered.length === 0) {
+                    tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;padding:40px;color:var(--text-gray);">Không tìm thấy tài khoản nào khớp với bộ lọc.</td></tr>`;
+                    document.getElementById('pagination-container').style.display = 'none';
+                    return;
+                }
+
+                const totalRecords = filtered.length;
+                const totalPages = Math.ceil(totalRecords / pageSize);
+                if (currentPage > totalPages) currentPage = totalPages;
+                if (currentPage < 1) currentPage = 1;
+
+                const startIdx = (currentPage - 1) * pageSize;
+                const paginatedList = filtered.slice(startIdx, startIdx + pageSize);
+
+                tbody.innerHTML = paginatedList.map(acc => {
+                    const id = acc.id || acc.ma_nguoi_dung || 1;
+                    const name = acc.ho_ten || acc.name || 'Chưa cập nhật';
+                    const email = acc.email || '';
+                    const phone = acc.so_dien_thoai || acc.phone || 'Chưa cập nhật';
+                    const role = (acc.vai_tro || acc.role || 'patient').toLowerCase();
+                    const status = String(acc.trang_thai || acc.status || 'active').toLowerCase().trim();
+
+                    const reason = acc.ly_do_khoa || acc.reason || '';
+                    const deleteReason = acc.ly_do_xoa || '';
+
+                    let roleBadge = '<span style="padding:4px 10px; border-radius:20px; font-size:11.5px; font-weight:600; background:rgba(139,92,246,0.12); color:#8B5CF6;">Bệnh nhân</span>';
+                    if (role.includes('admin')) roleBadge = '<span style="padding:4px 10px; border-radius:20px; font-size:11.5px; font-weight:600; background:rgba(239,68,68,0.12); color:#EF4444;">Quản trị viên</span>';
+                    else if (role.includes('doctor') || role.includes('bác sĩ')) roleBadge = '<span style="padding:4px 10px; border-radius:20px; font-size:11.5px; font-weight:600; background:rgba(16,185,129,0.12); color:#10B981;">Bác sĩ</span>';
+                    else if (role.includes('receptionist') || role.includes('lễ tân')) roleBadge = '<span style="padding:4px 10px; border-radius:20px; font-size:11.5px; font-weight:600; background:rgba(245,158,11,0.12); color:#F59E0B;">Lễ tân</span>';
+
+                    let statusBadge = '<span style="padding:4px 10px; border-radius:20px; font-size:11.5px; font-weight:600; background:rgba(16,185,129,0.12); color:#10B981;">Đang hoạt động</span>';
+                    if (status === 'deleted' || status === 'đã xóa') {
+                        statusBadge = '<span style="padding:4px 10px; border-radius:20px; font-size:11.5px; font-weight:600; background:rgba(239,68,68,0.12); color:#EF4444;">Đã xóa</span>';
+                    } else if (status === 'locked' || status === 'đã khóa') {
+                        statusBadge = '<span style="padding:4px 10px; border-radius:20px; font-size:11.5px; font-weight:600; background:rgba(245,158,11,0.12); color:#F59E0B;">Đã khóa</span>';
+                    }
+
+                    let actionButtons = '';
+                    if (status === 'deleted' || status === 'đã xóa') {
+                        actionButtons = `
+                            <button type="button" onclick="window.openDeleteModal(${id}, '${encodeURIComponent(deleteReason)}')" style="padding: 5px 10px; background: rgba(239,68,68,0.12); color: #EF4444; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; margin-right: 4px;"><i class="fas id-card"></i> Lý do xóa</button>
+                        `;
+                    } else if (status === 'locked' || status === 'đã khóa') {
+                        actionButtons = `
+                            <button type="button" onclick="window.openLockModal(${id}, '${encodeURIComponent(reason)}')" style="padding: 5px 10px; background: rgba(245,158,11,0.12); color: #F59E0B; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; margin-right: 4px;"><i class="fas fa-lock"></i> Lý do khóa</button>
+                            <button type="button" onclick="window.openDeleteModal(${id}, '')" style="padding: 5px 10px; background: rgba(239,68,68,0.12); color: #EF4444; border: none; border-radius: 6px; cursor: pointer; font-weight: 600;"><i class="fas fa-trash"></i> Xóa</button>
+                        `;
+                    } else {
+                        actionButtons = `
+                            <button type="button" onclick="window.editAccount(${id})" style="padding: 5px 10px; background: var(--primary-light); color: var(--primary-color); border: none; border-radius: 6px; cursor: pointer; font-weight: 600; margin-right: 4px;"><i class="fas fa-edit"></i> Sửa</button>
+                            <button type="button" onclick="window.openLockModal(${id}, '${encodeURIComponent(reason)}')" style="padding: 5px 10px; background: rgba(245,158,11,0.12); color: #F59E0B; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; margin-right: 4px;"><i class="fas fa-lock"></i> Khóa</button>
+                            <button type="button" onclick="window.openDeleteModal(${id}, '')" style="padding: 5px 10px; background: rgba(239,68,68,0.12); color: #EF4444; border: none; border-radius: 6px; cursor: pointer; font-weight: 600;"><i class="fas fa-trash"></i> Xóa</button>
+                        `;
+                    }
+
+                    return `
+                        <tr style="border-bottom: 1px solid var(--border-glass); font-size: 13px;">
+                            <td style="padding: 12px; font-weight: 600; color: var(--primary-color);">TK${String(id).padStart(3, '0')}</td>
+                            <td style="padding: 12px; font-weight: 600; color: var(--secondary-color);">${name}</td>
+                            <td style="padding: 12px; color: var(--text-gray);">${email}</td>
+                            <td style="padding: 12px; color: var(--secondary-color);">${phone}</td>
+                            <td style="padding: 12px;">${roleBadge}</td>
+                            <td style="padding: 12px;">${statusBadge}</td>
+                            <td style="padding: 12px; text-align: center;">${actionButtons}</td>
+                        </tr>
+                    `;
+                }).join('');
+
+                const paginationContainer = document.getElementById('pagination-container');
+                const paginationInfo = document.getElementById('pagination-info');
+                const paginationButtons = document.getElementById('pagination-buttons');
+
+                paginationContainer.style.display = 'flex';
+                paginationInfo.textContent = `Hiển thị bản ghi từ ${startIdx + 1} đến ${Math.min(startIdx + pageSize, totalRecords)} trong tổng số ${totalRecords} tài khoản`;
+
+                let buttonsHtml = '';
+                buttonsHtml += `<button class="btn-page" ${currentPage === 1 ? 'disabled style="opacity:0.4; cursor:not-allowed;"' : 'onclick="window.changeAccountPage(' + (currentPage - 1) + ')"'} style="padding: 6px 12px; background: var(--bg-main); border: 1px solid var(--border-glass); color: var(--secondary-color); border-radius: 6px; cursor: pointer; font-size: 12px; font-weight: 600;">Trước</button>`;
+
+                for (let i = 1; i <= totalPages; i++) {
+                    if (i === 1 || i === totalPages || (i >= currentPage - 1 && i <= currentPage + 1)) {
+                        const activeStyle = i === currentPage ? 'background: var(--primary-color); color: #fff; border-color: var(--primary-color);' : 'background: var(--bg-main); color: var(--secondary-color); border: 1px solid var(--border-glass);';
+                        buttonsHtml += `<button class="btn-page" onclick="window.changeAccountPage(${i})" style="padding: 6px 12px; ${activeStyle} border-radius: 6px; cursor: pointer; font-size: 12px; font-weight: 600;">${i}</button>`;
+                    } else if (i === currentPage - 2 || i === currentPage + 2) {
+                        buttonsHtml += `<span style="padding: 6px 8px; color: var(--text-gray);">...</span>`;
+                    }
+                }
+
+                buttonsHtml += `<button class="btn-page" ${currentPage === totalPages ? 'disabled style="opacity:0.4; cursor:not-allowed;"' : 'onclick="window.changeAccountPage(' + (currentPage + 1) + ')"'} style="padding: 6px 12px; background: var(--bg-main); border: 1px solid var(--border-glass); color: var(--secondary-color); border-radius: 6px; cursor: pointer; font-size: 12px; font-weight: 600;">Sau</button>`;
+
+                paginationButtons.innerHTML = buttonsHtml;
+            }
+
+            document.getElementById('search-account').addEventListener('input', () => { currentPage = 1; renderAccounts(allAccounts); });
+            document.getElementById('filter-role').addEventListener('change', () => { currentPage = 1; renderAccounts(allAccounts); });
+            document.getElementById('filter-status').addEventListener('change', () => { currentPage = 1; renderAccounts(allAccounts); });
+
+            const modal = document.getElementById('account-form-modal');
+            document.getElementById('btn-add-account').addEventListener('click', () => {
+                document.getElementById('form-account-title').textContent = "Thêm Tài khoản Mới";
+                document.getElementById('edit-account-id').value = "";
+                document.getElementById('acc-name').value = "";
+                document.getElementById('acc-email').value = "";
+                document.getElementById('acc-phone').value = "";
+                document.getElementById('acc-role').value = "patient";
+                document.getElementById('acc-password').value = "";
+                modal.style.display = 'flex';
+            });
+
+            document.getElementById('btn-cancel-account').addEventListener('click', () => { modal.style.display = 'none'; });
+
+            document.getElementById('form-account-info').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const editId = document.getElementById('edit-account-id').value;
+                const payload = {
+                    ho_ten: document.getElementById('acc-name').value,
+                    email: document.getElementById('acc-email').value,
+                    so_dien_thoai: document.getElementById('acc-phone').value,
+                    vai_tro: document.getElementById('acc-role').value,
+                    mat_khau: document.getElementById('acc-password').value || "123456"
+                };
+
+                try {
+                    const url = editId ? `/auth/admin/tai-khoan/${editId}` : '/auth/admin/tai-khoan';
+                    const method = editId ? 'PUT' : 'POST';
+
+                    const res = await fetch(url, {
+                        method: method,
+                        headers: {'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json'},
+                        body: JSON.stringify(payload)
+                    });
+                    const resultData = await res.json();
+                    if (!res.ok) throw new Error(resultData.detail || "Không thể lưu dữ liệu.");
+
+                    alert("Lưu tài khoản thành công!");
+                    modal.style.display = 'none';
+                    loadAccounts();
+                } catch (err) { alert("Lỗi: " + err.message); }
+            });
+
+            window.editAccount = function (id) {
+                const acc = allAccounts.find(x => (x.id || x.ma_nguoi_dung) == id);
+                if (!acc) return;
+                document.getElementById('form-account-title').textContent = "Chỉnh sửa Tài khoản";
+                document.getElementById('edit-account-id').value = id;
+                document.getElementById('acc-name').value = acc.ho_ten || acc.name || '';
+                document.getElementById('acc-email').value = acc.email || '';
+                document.getElementById('acc-phone').value = acc.so_dien_thoai || acc.phone || '';
+                document.getElementById('acc-role').value = acc.vai_tro || acc.role || 'patient';
+                document.getElementById('acc-password').value = '';
+                modal.style.display = 'flex';
+            };
+
+            const lockModal = document.getElementById('lock-modal');
+            window.openLockModal = function (id, encodedReason) {
+                document.getElementById('lock-target-id').value = id;
+                let decoded = '';
+                try {
+                    decoded = decodeURIComponent(encodedReason || '');
+                } catch (e) {
+                    decoded = encodedReason || '';
+                }
+                document.getElementById('lock-reason-text').value = decoded;
+                lockModal.style.display = 'flex';
+            };
+
+            document.getElementById('btn-cancel-lock').addEventListener('click', () => { lockModal.style.display = 'none'; });
+
+            document.getElementById('btn-submit-lock').addEventListener('click', async () => {
+                const id = document.getElementById('lock-target-id').value;
+                const reason = document.getElementById('lock-reason-text').value;
+
+                if (!id) {
+                    alert("Không tìm thấy ID tài khoản!");
+                    return;
+                }
+
+                try {
+                    const res = await fetch(`/auth/admin/tai-khoan/${id}/khoa`, {
+                        method: 'POST',
+                        headers: {'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json'},
+                        body: JSON.stringify({ ly_do: reason, ly_do_khoa: reason })
+                    });
+                    const result = await res.json();
+                    if (!res.ok) throw new Error(result.detail || "Không thể khóa tài khoản.");
+
+                    alert("Đã khóa tài khoản và lưu lý do thành công!");
+                    lockModal.style.display = 'none';
+                    loadAccounts();
+                } catch (err) { alert("Lỗi: " + err.message); }
+            });
+
+            document.getElementById('btn-submit-unlock').addEventListener('click', async () => {
+                const id = document.getElementById('lock-target-id').value;
+                const reason = document.getElementById('lock-reason-text').value;
+
+                if (!id) {
+                    alert("Không tìm thấy ID tài khoản!");
+                    return;
+                }
+
+                try {
+                    const res = await fetch(`/auth/admin/tai-khoan/${id}/go-khoa`, {
+                        method: 'POST',
+                        headers: {'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json'},
+                        body: JSON.stringify({ ly_do: reason, ly_do_khoa: reason })
+                    });
+                    const result = await res.json();
+                    if (!res.ok) throw new Error(result.detail || "Không thể gỡ khóa tài khoản.");
+
+                    alert("Đã gỡ khóa tài khoản thành công!");
+                    lockModal.style.display = 'none';
+                    loadAccounts();
+                } catch (err) { alert("Lỗi: " + err.message); }
+            });
+
+            const deleteModal = document.getElementById('delete-modal');
+            window.openDeleteModal = function (id, encodedReason) {
+                document.getElementById('delete-target-id').value = id;
+                let decoded = '';
+                try {
+                    decoded = decodeURIComponent(encodedReason || '');
+                } catch (e) {
+                    decoded = encodedReason || '';
+                }
+                document.getElementById('delete-reason-text').value = decoded;
+
+                const acc = allAccounts.find(x => (x.id || x.ma_nguoi_dung) == id);
+                const isDeleted = acc && (String(acc.trang_thai).toLowerCase().trim() === 'deleted' || String(acc.trang_thai).toLowerCase().trim() === 'đã xóa');
+
+                const btnDelete = document.getElementById('btn-submit-delete');
+                const btnRestore = document.getElementById('btn-submit-restore');
+                const reasonTextarea = document.getElementById('delete-reason-text');
+
+                if (isDeleted) {
+                    btnDelete.style.display = 'none';
+                    btnRestore.style.display = 'inline-block';
+                    reasonTextarea.readOnly = true;
+                } else {
+                    btnDelete.style.display = 'inline-block';
+                    btnRestore.style.display = 'none';
+                    reasonTextarea.readOnly = false;
+                    reasonTextarea.value = '';
+                }
+
+                deleteModal.style.display = 'flex';
+            };
+
+            document.getElementById('btn-cancel-delete').addEventListener('click', () => { deleteModal.style.display = 'none'; });
+
+            document.getElementById('btn-submit-delete').addEventListener('click', async () => {
+                const id = document.getElementById('delete-target-id').value;
+                const reason = document.getElementById('delete-reason-text').value;
+
+                if (!id) {
+                    alert("Không tìm thấy ID tài khoản!");
+                    return;
+                }
+
+                try {
+                    const res = await fetch(`/auth/admin/tai-khoan/${id}/xoa-tam`, {
+                        method: 'POST',
+                        headers: {'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json'},
+                        body: JSON.stringify({ ly_do: reason, ly_do_khoa: reason })
+                    });
+                    const resultData = await res.json();
+                    if (!res.ok) throw new Error(resultData.detail || "Không thể chuyển vào thùng rác.");
+
+                    alert("Đã chuyển tài khoản vào thùng rác và lưu lý do thành công!");
+                    deleteModal.style.display = 'none';
+                    await loadAccounts();
+                } catch (err) { alert("Lỗi: " + err.message); }
+            });
+
+            document.getElementById('btn-submit-restore').addEventListener('click', async () => {
+                const id = document.getElementById('delete-target-id').value;
+                const reasonVal = document.getElementById('delete-reason-text').value;
+
+                if (!id) {
+                    alert("Không tìm thấy ID tài khoản!");
+                    return;
+                }
+
+                try {
+                    const res = await fetch(`/auth/admin/tai-khoan/${id}/khoi-phuc`, {
+                        method: 'POST',
+                        headers: {'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json'},
+                        body: JSON.stringify({ ly_do: reasonVal, ly_do_khoa: reasonVal })
+                    });
+                    const resultData = await res.json();
+                    if (!res.ok) throw new Error(resultData.detail || "Không thể khôi phục tài khoản.");
+
+                    alert("Đã khôi phục tài khoản thành công!");
+                    deleteModal.style.display = 'none';
+                    await loadAccounts();
+                } catch (err) { alert("Lỗi: " + err.message); }
+            });
+
+            loadAccounts();
         });
-    });
+    })();
 </script>
 </body>
 </html>

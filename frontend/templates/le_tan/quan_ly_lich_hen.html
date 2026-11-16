@@ -3,18 +3,164 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MedBooking - Quản lý Lịch hẹn</title>
-    <!-- Favicon hình chú chim cánh cụt y tế -->
-    <link rel="icon" type="image/jpeg" href="../../favicon.jpg">
-    
+    <title>MEDBOOKING - Quản lý Lịch hẹn</title>
+    <!-- Favicon chuẩn hình trái tim xanh dương -->
+    <link rel="icon" type="image/jpeg" href="/static/favicon.jpg">
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Poppins:wght@300;400;500;600;700&display=swap"
+          rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="../../static/css/LT_BS.css">
-    
+    <link rel="stylesheet" href="/static/css/LT_BS.css">
+
     <style>
-        main { max-width: 1400px; margin: 30px auto 80px; padding: 0 20px; }
+        /* THANH HEADER DÀI, RỘNG VÀ CÂN ĐỐI ĐỒNG BỘ */
+        header {
+            width: 100% !important;
+            max-width: 1480px !important;
+            margin: 8px auto 15px auto !important;
+            padding: 8px 30px !important;
+            display: flex !important;
+            justify-content: space-between !important;
+            align-items: center !important;
+            background: var(--bg-card);
+            border-radius: 14px !important;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+            box-sizing: border-box !important;
+            white-space: nowrap !important;
+        }
+
+        header nav ul {
+            display: flex !important;
+            gap: 20px !important;
+            align-items: center !important;
+            margin: 0 !important;
+            padding: 0 !important;
+            list-style: none !important;
+        }
+
+        header nav ul li a {
+            font-size: 13.5px !important;
+            font-weight: 500;
+            white-space: nowrap !important;
+            padding: 8px 12px !important;
+        }
+
+        .header-right {
+            display: flex !important;
+            align-items: center !important;
+            gap: 15px !important;
+            flex-shrink: 0 !important;
+        }
+
+        .user-badge {
+            white-space: nowrap !important;
+            padding: 6px 14px !important;
+        }
+
+        .user-info-text .user-name {
+            font-size: 13.5px !important;
+            max-width: 140px !important;
+            overflow: hidden !important;
+            text-overflow: ellipsis !important;
+        }
+
+        /* Chuông thông báo */
+        .notification-bell-container {
+            position: relative;
+            cursor: pointer;
+        }
+
+        .notification-dropdown {
+            position: absolute;
+            right: 0;
+            top: 50px;
+            width: 380px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 14px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            display: none;
+            z-index: 1000;
+            overflow: hidden;
+            white-space: normal !important;
+            text-align: left;
+        }
+
+        .notification-dropdown.active {
+            display: block;
+        }
+
+        .notification-header {
+            padding: 14px 18px;
+            font-weight: 700;
+            font-size: 15px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--primary-blue-light);
+            color: var(--primary-blue);
+            font-family: 'Playfair Display', serif;
+        }
+
+        .notification-list {
+            max-height: 320px;
+            overflow-y: auto;
+            overflow-x: hidden !important;
+        }
+
+        .notification-item {
+            padding: 12px 18px;
+            border-bottom: 1px solid var(--border-color);
+            font-size: 12.5px;
+            line-height: 1.5;
+            cursor: pointer;
+            transition: background 0.2s;
+            white-space: normal !important;
+            word-break: break-word;
+            color: var(--text-color);
+        }
+
+        .notification-item:hover {
+            background: rgba(37, 99, 235, 0.04);
+        }
+
+        .notification-item.unread {
+            background: rgba(37, 99, 235, 0.02);
+            font-weight: 500;
+        }
+
+        main {
+            max-width: 1400px;
+            margin: 20px auto 80px;
+            padding: 0 20px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: var(--bg-card);
+            padding: 18px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-soft);
+            border: 1px solid var(--border-glass);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-3px);
+        }
 
         .filter-bar {
             background: var(--bg-card);
@@ -29,8 +175,14 @@
             align-items: end;
         }
 
-        .filter-bar .form-group { margin-bottom: 0; }
-        .search-input-wrapper { position: relative; }
+        .filter-bar .form-group {
+            margin-bottom: 0;
+        }
+
+        .search-input-wrapper {
+            position: relative;
+        }
+
         .search-input-wrapper i {
             position: absolute;
             left: 14px;
@@ -40,125 +192,47 @@
             font-size: 14px;
             pointer-events: none;
         }
-        .search-input-wrapper input { padding-left: 40px !important; }
-        .filter-actions { display: flex; gap: 10px; }
 
-        .quick-dates {
-            display: flex;
-            gap: 8px;
-            margin-bottom: 20px;
-            flex-wrap: wrap;
+        .search-input-wrapper input {
+            padding-left: 40px !important;
         }
-        .quick-date-btn {
-            padding: 8px 16px;
-            border-radius: 20px;
-            border: 1px solid var(--border-color);
+
+        .filter-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        /* Khung chọn ngày trực tiếp */
+        .date-picker-container {
             background: var(--bg-card);
-            color: var(--text-gray);
-            cursor: pointer;
-            font-size: 13px;
-            font-weight: 500;
-            font-family: 'Poppins', sans-serif;
-            transition: all 0.3s;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-        .quick-date-btn:hover {
-            border-color: var(--primary-blue);
-            color: var(--primary-blue);
-            background: var(--primary-blue-light);
-        }
-        .quick-date-btn.active {
-            background: var(--primary-blue);
-            color: #fff;
-            border-color: var(--primary-blue);
-            box-shadow: 0 4px 10px rgba(74, 144, 226, 0.3);
-        }
-
-        .alert-banner {
-            background: linear-gradient(135deg, #FFF3CD, #FFE9A8);
-            border-left: 4px solid var(--accent-orange);
-            border-radius: 12px;
-            padding: 14px 20px;
+            border-radius: var(--border-radius);
+            padding: 15px 20px;
+            box-shadow: var(--shadow-soft);
+            border: 1px solid var(--border-glass);
             margin-bottom: 20px;
             display: flex;
             align-items: center;
             gap: 15px;
-            color: #856404;
-            font-size: 14px;
-            animation: slideDown 0.5s ease-out;
-        }
-        .alert-banner i { font-size: 20px; flex-shrink: 0; }
-        .alert-banner strong { display: block; margin-bottom: 3px; }
-        .alert-banner .dismiss-btn {
-            margin-left: auto;
-            background: transparent;
-            border: none;
-            color: #856404;
-            cursor: pointer;
-            font-size: 16px;
-            padding: 5px;
-            border-radius: 5px;
-        }
-        .alert-banner .dismiss-btn:hover { background: rgba(0,0,0,0.1); }
-        @keyframes slideDown {
-            from { opacity: 0; transform: translateY(-20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        [data-theme="dark"] .alert-banner {
-            background: linear-gradient(135deg, #4A3F1A, #3D3416);
-            color: #FFD966;
-        }
-
-        .group-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 12px 18px;
-            background: linear-gradient(135deg, var(--primary-blue-light), var(--primary-blue-soft));
-            border-radius: 12px;
-            margin-bottom: 12px;
-            border-left: 4px solid var(--primary-blue);
-            gap: 15px;
             flex-wrap: wrap;
         }
-        .group-header-left { display: flex; align-items: center; gap: 12px; }
-        .group-icon {
-            width: 40px; height: 40px;
-            border-radius: 10px;
-            background: linear-gradient(135deg, var(--primary-blue), #6FB1F5);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #fff;
-            font-size: 16px;
-            flex-shrink: 0;
-        }
-        .group-info h4 {
-            font-size: 15px;
-            font-family: 'Poppins', sans-serif;
-            font-weight: 700;
-            margin-bottom: 2px;
+
+        .date-picker-container label {
+            font-weight: 600;
+            font-size: 13.5px;
             color: var(--secondary-color);
-        }
-        .group-info p { font-size: 12px; color: var(--text-gray); margin: 0; }
-        .group-select-all {
             display: flex;
             align-items: center;
             gap: 8px;
-            font-size: 13px;
-            color: var(--primary-blue);
-            cursor: pointer;
-            font-weight: 600;
-            padding: 6px 12px;
-            border-radius: 20px;
-            transition: all 0.2s;
         }
-        .group-select-all:hover { background: rgba(74, 144, 226, 0.1); }
-        .group-select-all input {
-            width: 16px; height: 16px;
-            accent-color: var(--primary-blue);
+
+        .date-picker-container input[type="date"] {
+            padding: 8px 14px;
+            border-radius: 10px;
+            border: 1px solid var(--border-color);
+            background: var(--bg-body);
+            color: var(--text-color);
+            font-family: 'Poppins', sans-serif;
+            font-size: 13.5px;
             cursor: pointer;
         }
 
@@ -169,7 +243,7 @@
             box-shadow: var(--shadow-soft);
             border: 1px solid var(--border-glass);
             display: grid;
-            grid-template-columns: auto auto 1fr auto;
+            grid-template-columns: auto 1fr auto;
             gap: 18px;
             align-items: center;
             margin-bottom: 12px;
@@ -177,53 +251,57 @@
             position: relative;
             overflow: hidden;
         }
+
         .appointment-card:hover {
             transform: translateY(-2px);
             box-shadow: var(--shadow-hover);
         }
+
         .appointment-card::before {
             content: '';
             position: absolute;
-            left: 0; top: 0; bottom: 0;
+            left: 0;
+            top: 0;
+            bottom: 0;
             width: 4px;
         }
-        .appointment-card[data-status="pending"]::before { background: var(--accent-orange); }
-        .appointment-card[data-status="confirmed"]::before { background: var(--primary-blue); }
-        .appointment-card[data-status="checked"]::before { background: var(--accent-green); }
-        .appointment-card[data-status="cancelled"]::before { background: var(--text-gray); }
-        .appointment-card[data-status="noshow"]::before { background: var(--accent-red); }
 
-        .appointment-card.just-updated {
-            animation: highlightCard 1.5s ease-out;
-        }
-        @keyframes highlightCard {
-            0% { background: var(--accent-green-light); transform: scale(1.02); }
-            100% { background: var(--bg-card); transform: scale(1); }
+        .appointment-card[data-status="reschedule"]::before {
+            background: #EF4444;
         }
 
-        .appointment-card.locked {
-            opacity: 0.5;
-            pointer-events: none;
-            position: relative;
-        }
-        .appointment-card.locked::after {
-            content: '\f023';
-            font-family: 'Font Awesome 6 Free';
-            font-weight: 900;
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            font-size: 12px;
-            color: var(--text-gray);
+        .appointment-card[data-status="pending_patient"]::before {
+            background: #F59E0B;
         }
 
-        .appt-checkbox {
-            width: 20px;
-            height: 20px;
-            accent-color: var(--primary-blue);
-            cursor: pointer;
+        .appointment-card[data-status="pending"]::before {
+            background: var(--accent-orange);
         }
-        .appt-checkbox:disabled { cursor: not-allowed; opacity: 0.4; }
+
+        .appointment-card[data-status="confirmed"]::before {
+            background: var(--primary-blue);
+        }
+
+        .appointment-card[data-status="checked"]::before {
+            background: var(--accent-green);
+        }
+
+        .appointment-card[data-status="cancelled"]::before {
+            background: var(--text-gray);
+        }
+
+        /* Hiệu ứng nhấp nháy khi được điều hướng */
+        .appointment-card.highlight-pulse {
+            animation: pulseHighlight 1.5s infinite;
+            border: 2px solid #F59E0B !important;
+            background-color: rgba(245, 158, 11, 0.08) !important;
+        }
+
+        @keyframes pulseHighlight {
+            0% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.7); }
+            70% { box-shadow: 0 0 0 12px rgba(245, 158, 11, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0); }
+        }
 
         .appt-time-box {
             text-align: center;
@@ -231,8 +309,8 @@
             background: var(--primary-blue-light);
             border-radius: 12px;
             min-width: 95px;
-            position: relative;
         }
+
         .appt-time-box .time {
             font-size: 20px;
             font-weight: 700;
@@ -240,6 +318,7 @@
             font-family: 'Poppins', sans-serif;
             line-height: 1;
         }
+
         .appt-time-box .ca {
             font-size: 10px;
             color: var(--text-gray);
@@ -248,41 +327,6 @@
             letter-spacing: 0.5px;
             font-weight: 600;
         }
-        .appt-time-box .badge-urgent {
-            position: absolute;
-            top: -8px;
-            right: -8px;
-            background: var(--accent-red);
-            color: #fff;
-            padding: 2px 8px;
-            border-radius: 10px;
-            font-size: 9px;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            box-shadow: 0 3px 8px rgba(231, 76, 60, 0.4);
-            animation: pulse-badge 1.5s ease-in-out infinite;
-        }
-        @keyframes pulse-badge {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.08); }
-        }
-        .appt-time-box .badge-overdue {
-            position: absolute;
-            top: -8px;
-            right: -8px;
-            background: var(--accent-orange);
-            color: #fff;
-            padding: 2px 8px;
-            border-radius: 10px;
-            font-size: 9px;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            box-shadow: 0 3px 8px rgba(243, 156, 18, 0.4);
-        }
-        .appt-time-box.past { background: var(--bg-body); }
-        .appt-time-box.past .time { color: var(--text-gray); }
 
         .appt-info h4 {
             font-size: 16px;
@@ -294,6 +338,7 @@
             gap: 10px;
             flex-wrap: wrap;
         }
+
         .appt-info h4 .appt-code {
             font-weight: 400;
             color: var(--text-gray);
@@ -302,6 +347,7 @@
             padding: 2px 8px;
             border-radius: 6px;
         }
+
         .appt-info .meta {
             display: flex;
             flex-wrap: wrap;
@@ -310,12 +356,17 @@
             color: var(--text-gray);
             margin-bottom: 8px;
         }
+
         .appt-info .meta span {
             display: flex;
             align-items: center;
             gap: 5px;
         }
-        .appt-info .meta i { color: var(--primary-blue); }
+
+        .appt-info .meta i {
+            color: var(--primary-blue);
+        }
+
         .appt-info .note {
             font-size: 12px;
             color: var(--text-gray);
@@ -333,194 +384,120 @@
             min-width: 150px;
             align-items: stretch;
         }
-        .appt-actions .status-badge { justify-content: center; margin-bottom: 5px; }
-        .appt-actions .btn { justify-content: center; padding: 8px 14px; font-size: 12px; }
 
-        .bulk-action-bar {
-            position: fixed;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%) translateY(120px);
-            background: var(--bg-card);
-            border-radius: 50px;
-            padding: 12px 20px;
-            box-shadow: 0 15px 40px rgba(0,0,0,0.2);
-            border: 1px solid var(--border-glass);
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            z-index: 999;
-            transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-            max-width: 90%;
+        .appt-actions .status-badge {
+            justify-content: center;
+            margin-bottom: 5px;
         }
-        .bulk-action-bar.active { transform: translateX(-50%) translateY(0); }
-        .bulk-count {
-            background: var(--primary-blue);
-            color: #fff;
-            padding: 6px 14px;
-            border-radius: 20px;
-            font-size: 13px;
-            font-weight: 700;
-            font-family: 'Poppins', sans-serif;
-            white-space: nowrap;
-        }
-        .bulk-group-info {
+
+        .appt-actions .btn {
+            justify-content: center;
+            padding: 8px 14px;
             font-size: 12px;
-            color: var(--text-gray);
-            max-width: 300px;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
         }
-        .bulk-actions { display: flex; gap: 8px; }
 
         .empty-state {
             text-align: center;
             padding: 80px 20px;
             color: var(--text-gray);
         }
+
         .empty-state i {
             font-size: 72px;
             color: var(--primary-blue-light);
             margin-bottom: 20px;
         }
-        .empty-state h3 { font-size: 18px; margin-bottom: 8px; color: var(--secondary-color); }
-        .empty-state p { font-size: 14px; margin-bottom: 20px; }
 
-        .time-picker-modal {
-            max-width: 700px !important;
-            text-align: left !important;
-            padding: 32px !important;
-        }
-        .time-picker-header {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            margin-bottom: 20px;
-            padding-bottom: 15px;
-            border-bottom: 2px dashed var(--border-color);
-        }
-        .time-picker-header-icon {
-            width: 50px;
-            height: 50px;
-            border-radius: 12px;
-            background: linear-gradient(135deg, var(--primary-blue), #6FB1F5);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #fff;
-            font-size: 22px;
-            flex-shrink: 0;
-        }
-        .time-picker-header-text h3 {
-            font-size: 20px;
-            margin-bottom: 3px;
-            font-family: 'Poppins', sans-serif;
-            font-weight: 700;
-            text-align: left;
-        }
-        .time-picker-header-text p { font-size: 13px; color: var(--text-gray); margin: 0; }
-
-        .current-appt-info {
-            background: var(--primary-blue-light);
-            border-left: 4px solid var(--primary-blue);
-            border-radius: 10px;
-            padding: 14px 18px;
-            margin-bottom: 20px;
-        }
-        .current-appt-info .row {
-            display: flex;
-            justify-content: space-between;
-            padding: 4px 0;
-            font-size: 13px;
-        }
-        .current-appt-info .row .label { color: var(--text-gray); }
-        .current-appt-info .row .value { font-weight: 600; color: var(--secondary-color); }
-
-        .time-picker-section { margin-bottom: 20px; }
-        .time-picker-section h4 {
-            font-size: 14px;
-            font-family: 'Poppins', sans-serif;
-            font-weight: 700;
-            margin-bottom: 12px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
+        .empty-state h3 {
+            font-size: 18px;
+            margin-bottom: 8px;
             color: var(--secondary-color);
         }
-        .time-picker-section h4 i { color: var(--primary-blue); }
-        .time-slots-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
-            gap: 10px;
+
+        .empty-state p {
+            font-size: 14px;
+            margin-bottom: 20px;
         }
-        .time-slot { position: relative; }
-        .time-slot input { display: none; }
-        .time-slot label {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 12px 8px;
-            border: 2px solid var(--input-border);
-            border-radius: 10px;
-            cursor: pointer;
-            font-size: 13px;
-            font-weight: 600;
-            font-family: 'Poppins', sans-serif;
-            color: var(--text-gray);
-            background: var(--input-bg);
-            transition: all 0.3s;
+
+        /* Modal Phiếu Khám Bệnh / Hồ Sơ BỆNH ÁN */
+        .medical-record-modal {
+            max-width: 750px !important;
+            width: 90% !important;
+            text-align: left !important;
+            max-height: 85vh;
+            overflow-y: auto;
+        }
+
+        .medical-record-modal h3 {
             text-align: center;
-        }
-        .time-slot label:hover:not(.disabled) {
-            border-color: var(--primary-blue);
             color: var(--primary-blue);
-            background: var(--primary-blue-light);
-            transform: translateY(-2px);
+            font-family: 'Playfair Display', serif;
+            font-size: 22px;
+            margin-bottom: 5px;
         }
-        .time-slot input:checked + label {
-            background: var(--primary-blue);
-            color: #fff;
-            border-color: var(--primary-blue);
-            box-shadow: 0 4px 12px rgba(74, 144, 226, 0.3);
+
+        .medical-record-modal .clinic-header {
+            text-align: center;
+            margin-bottom: 20px;
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 12px;
         }
-        .time-slot label.disabled {
-            opacity: 0.4;
-            cursor: not-allowed;
-            text-decoration: line-through;
+
+        .medical-record-modal .clinic-header p {
+            font-size: 12px;
+            color: var(--text-gray);
+            margin: 2px 0;
+        }
+
+        .record-section {
+            margin-bottom: 15px;
             background: var(--bg-body);
-            border-color: var(--border-color);
+            padding: 12px 15px;
+            border-radius: 8px;
+            border: 1px solid var(--border-glass);
         }
-        .time-slot label .slot-note {
-            display: block;
-            font-size: 10px;
-            font-weight: 600;
-            margin-top: 4px;
-            color: var(--accent-red);
+
+        .record-section h5 {
+            font-size: 13px;
+            color: var(--primary-blue);
+            margin-bottom: 6px;
+            font-weight: 700;
             text-transform: uppercase;
-            letter-spacing: 0.3px;
+            letter-spacing: 0.5px;
         }
-        .time-slot label.disabled .slot-note { color: var(--text-gray); }
-        .time-slot label.current-slot {
-            border-color: var(--accent-orange);
-            background: var(--accent-orange-light);
-            color: var(--accent-orange);
+
+        .record-section p {
+            font-size: 13.5px;
+            color: var(--text-color);
+            margin: 0;
+            line-height: 1.5;
         }
-        .time-picker-actions {
-            display: flex;
-            gap: 12px;
-            justify-content: flex-end;
-            padding-top: 18px;
-            border-top: 1px solid var(--border-color);
-            margin-top: 20px;
+
+        .record-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 8px;
+            font-size: 13px;
+        }
+
+        .record-table th, .record-table td {
+            border: 1px solid var(--border-color);
+            padding: 8px 10px;
+            text-align: left;
+        }
+
+        .record-table th {
+            background: var(--primary-blue-light);
+            color: var(--primary-blue);
+            font-weight: 600;
         }
 
         /* Nút đăng xuất đồng bộ */
         .logout-btn {
             background: rgba(239, 68, 68, 0.1);
             border: 1px solid rgba(239, 68, 68, 0.2);
-            width: 40px; height: 40px;
+            width: 40px;
+            height: 40px;
             border-radius: 50%;
             cursor: pointer;
             display: flex;
@@ -530,713 +507,991 @@
             font-size: 16px;
             transition: all 0.3s;
         }
+
         .logout-btn:hover {
             background: #EF4444;
             color: #fff;
             transform: translateY(-2px);
         }
 
-        @media (max-width: 1100px) {
-            .filter-bar { grid-template-columns: 1fr 1fr; }
+        @media print {
+            body * {
+                visibility: hidden;
+            }
+
+            #medical-record-print-area, #medical-record-print-area * {
+                visibility: visible;
+            }
+
+            #medical-record-print-area {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%;
+                box-shadow: none;
+                border: none;
+            }
+
+            .modal-actions {
+                display: none !important;
+            }
         }
+
+        @media (max-width: 1100px) {
+            .filter-bar {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
         @media (max-width: 900px) {
-            .filter-bar { grid-template-columns: 1fr; }
-            .appointment-card { grid-template-columns: auto auto 1fr; }
+            .filter-bar {
+                grid-template-columns: 1fr;
+            }
+
+            .appointment-card {
+                grid-template-columns: auto 1fr;
+            }
+
             .appt-actions {
                 grid-column: 1 / -1;
                 flex-direction: row;
                 flex-wrap: wrap;
                 min-width: unset;
             }
-            .appt-actions .status-badge { margin-bottom: 0; }
-            .bulk-action-bar { flex-direction: column; padding: 15px; border-radius: 20px; }
-            .time-picker-actions { flex-direction: column; }
-            .time-picker-actions .btn { width: 100%; justify-content: center; }
-        }
-        @media (max-width: 600px) {
-            .appointment-card { grid-template-columns: 1fr; text-align: center; }
-            .appt-checkbox { margin: 0 auto; }
-            .appt-time-box { margin: 0 auto; }
-            .appt-info .meta { justify-content: center; }
-            .appt-info h4 { justify-content: center; }
-            .time-slots-grid { grid-template-columns: repeat(2, 1fr); }
+
+            .appt-actions .status-badge {
+                margin-bottom: 0;
+            }
         }
     </style>
 </head>
 <body>
 
-    <header>
-        <div class="logo-container">
+<header>
+    <div class="logo-container">
+        <div class="logo-icon"><i class="fa-solid fa-hospital-user"></i></div>
+        <div class="logo-text">
+            <h1>MedBooking</h1>
+            <p>Cổng Lễ Tân</p>
+        </div>
+    </div>
+    <div class="header-right">
+        <nav>
+            <ul>
+                <li><a href="/le_tan/dashboard.html">Tổng quan</a></li>
+                <li><a href="/le_tan/quan_ly_lich_hen.html"><strong>Quản lý lịch hẹn</strong></a></li>
+                <li><a href="/le_tan/danh_sach_lich_hen.html">Danh sách ca trực</a></li>
+                <li><a href="/le_tan/check_in.html">Check-in</a></li>
+                <li><a href="/le_tan/vien_phi.html">Viện phí</a></li>
+            </ul>
+        </nav>
+
+        <!-- CHUÔNG THÔNG BÁO CHO LỄ TÂN -->
+        <div class="notification-bell-container" id="bell-container" onclick="toggleNotificationDropdown()">
+            <button class="theme-toggle" title="Thông báo hệ thống">
+                <i class="fas fa-bell"></i>
+                <span id="notification-badge" style="position: absolute; top: 5px; right: 5px; width: 8px; height: 8px; background: #EF4444; border-radius: 50%; display: none;"></span>
+            </button>
+            <div class="notification-dropdown" id="notification-dropdown" onclick="event.stopPropagation()">
+                <div class="notification-header">
+                    <span>Thông báo mới từ Bác sĩ</span>
+                    <span style="font-size:12px; cursor:pointer; color:var(--primary-blue); font-weight:500;" onclick="markAllNotificationsRead()">Đã đọc tất cả</span>
+                </div>
+                <div class="notification-list" id="notification-list">
+                    <div class="notification-item" style="text-align:center; color:var(--text-gray);">Không có thông báo mới</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="user-badge" onclick="window.location.href='ho_so_ca_nhan.html'">
+            <div class="user-avatar" id="topbar-avatar">LT</div>
+            <div class="user-info-text">
+                <div class="user-name" id="topbar-receptionist-name">Lễ tân</div>
+                <div class="user-role">Lễ tân</div>
+            </div>
+        </div>
+        <!-- Nút chuyển giao diện sáng/tối -->
+        <button class="theme-toggle" id="theme-toggle" title="Chuyển đổi giao diện">
+            <i class="fas fa-moon"></i>
+        </button>
+        <!-- Nút Đăng xuất -->
+        <button class="logout-btn" onclick="window.location.href='../dk_dn/dn.html'" title="Đăng xuất">
+            <i class="fas fa-sign-out-alt"></i>
+        </button>
+    </div>
+</header>
+
+<main>
+    <div class="breadcrumb">
+        <a href="dashboard.html"><i class="fas fa-home"></i> Tổng quan</a>
+        <i class="fas fa-chevron-right"></i>
+        <span>Quản lý lịch hẹn</span>
+    </div>
+
+    <div class="page-title">
+        <div class="page-title-left">
+            <h2><i class="fas fa-calendar-alt"></i> Quản lý Lịch hẹn</h2>
+            <p>Xem và cập nhật trạng thái lịch hẹn của bệnh nhân từ cơ sở dữ liệu</p>
+        </div>
+        <div>
+            <button class="btn btn-outline" onclick="exportExcel()">
+                <i class="fas fa-file-excel"></i> Xuất Excel
+            </button>
+            <button class="btn btn-primary" onclick="window.location.href='check_in.html'">
+                <i class="fas fa-sign-in-alt"></i> Check-in mới
+            </button>
+        </div>
+    </div>
+
+    <!-- CÁC KHUNG THỐNG KÊ -->
+    <div class="stats-grid">
+        <div class="stat-card" style="border-left: 4px solid #EF4444; background: rgba(239, 68, 68, 0.03);" onclick="switchTab('reschedule')">
+            <div class="stat-icon" style="background: #EF4444; color: white;"><i class="fas fa-calendar-times"></i></div>
+            <div class="stat-info">
+                <h4 id="stat-reschedule" style="color: #EF4444;">0</h4>
+                <p>Cần đổi lịch gấp</p>
+            </div>
+        </div>
+        <div class="stat-card" style="border-left: 4px solid #F59E0B; background: rgba(245, 158, 11, 0.03);" onclick="switchTab('pending_patient')">
+            <div class="stat-icon" style="background: #F59E0B; color: white;"><i class="fas fa-clock"></i></div>
+            <div class="stat-info">
+                <h4 id="stat-pending-patient" style="color: #F59E0B;">0</h4>
+                <p>Chờ BN xác nhận</p>
+            </div>
+        </div>
+        <div class="stat-card orange">
+            <div class="stat-icon"><i class="fas fa-hourglass-half"></i></div>
+            <div class="stat-info">
+                <h4 id="stat-pending">0</h4>
+                <p>Chờ xác nhận</p>
+            </div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-icon"><i class="fas fa-check-circle"></i></div>
+            <div class="stat-info">
+                <h4 id="stat-confirmed">0</h4>
+                <p>Đã xác nhận</p>
+            </div>
+        </div>
+        <div class="stat-card green">
+            <div class="stat-icon"><i class="fas fa-user-check"></i></div>
+            <div class="stat-info">
+                <h4 id="stat-checked">0</h4>
+                <p>Đã check-in</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- KHUNG CHỌN NGÀY TÌM KIẾM -->
+    <div class="date-picker-container">
+        <label for="filter-specific-date">
+            <i class="fas fa-calendar-alt" style="color: var(--primary-blue);"></i> Chọn ngày tìm kiếm:
+        </label>
+        <input type="date" id="filter-specific-date" onchange="applyDateFilter()">
+        <button class="btn btn-outline btn-sm" onclick="clearDateFilter()">
+            <i class="fas fa-redo"></i> Xem tất cả ngày
+        </button>
+    </div>
+
+    <div class="filter-bar">
+        <div class="form-group">
+            <label for="filter-ca">Ca trực</label>
+            <select id="filter-ca" onchange="applyFilter()">
+                <option value="">-- Tất cả ca --</option>
+                <option value="sang">Ca sáng (07:30 - 11:30)</option>
+                <option value="chieu">Ca chiều (13:30 - 18:30)</option>
+                <option value="toi">Ca tối (18:30 - 22:30)</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="filter-doctor">Bác sĩ</label>
+            <select id="filter-doctor" onchange="applyFilter()">
+                <option value="">-- Tất cả bác sĩ --</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="filter-keyword">Tìm kiếm</label>
+            <div class="search-input-wrapper">
+                <i class="fas fa-search"></i>
+                <input type="text" id="filter-keyword" placeholder="Mã LH, tên BN, SĐT..." oninput="applyFilter()">
+            </div>
+        </div>
+        <div class="filter-actions">
+            <button class="btn btn-outline" onclick="resetFilter()">
+                <i class="fas fa-redo"></i> Đặt lại
+            </button>
+        </div>
+    </div>
+
+    <!-- CÁC TAB LỌC TRẠNG THÁI -->
+    <div class="filter-tabs">
+        <button class="filter-tab active" data-filter="all" onclick="switchTab('all')">
+            <i class="fas fa-list"></i> Tất cả <span class="count" id="count-all">0</span>
+        </button>
+        <button class="filter-tab" data-filter="reschedule" onclick="switchTab('reschedule')" style="color: #EF4444; border-color: rgba(239, 68, 68, 0.3);">
+            <i class="fas fa-exclamation-triangle"></i> Cần đổi gấp <span class="count" id="count-reschedule" style="background: rgba(239, 68, 68, 0.2); color: #EF4444;">0</span>
+        </button>
+        <button class="filter-tab" data-filter="pending_patient" onclick="switchTab('pending_patient')" style="color: #F59E0B; border-color: rgba(245, 158, 11, 0.3);">
+            <i class="fas fa-clock"></i> Chờ BN xác nhận <span class="count" id="count-pending-patient" style="background: rgba(245, 158, 11, 0.2); color: #F59E0B;">0</span>
+        </button>
+        <button class="filter-tab" data-filter="pending" onclick="switchTab('pending')">
+            <i class="fas fa-hourglass-half"></i> Chờ xác nhận <span class="count" id="count-pending">0</span>
+        </button>
+        <button class="filter-tab" data-filter="confirmed" onclick="switchTab('confirmed')">
+            <i class="fas fa-check-circle"></i> Đã xác nhận <span class="count" id="count-confirmed">0</span>
+        </button>
+        <button class="filter-tab" data-filter="checked" onclick="switchTab('checked')">
+            <i class="fas fa-user-check"></i> Đã check-in <span class="count" id="count-checked">0</span>
+        </button>
+    </div>
+
+    <div id="appointments-list"></div>
+</main>
+
+<footer>
+    <div>
+        <div class="footer-logo">
             <div class="logo-icon"><i class="fa-solid fa-hospital-user"></i></div>
-            <div class="logo-text">
+            <div class="footer-logo-text">
                 <h1>MedBooking</h1>
                 <p>Cổng Lễ Tân</p>
             </div>
         </div>
-        <div class="header-right">
-            <nav>
-                <ul>
-                    <li><a href="dashboard.html">Tổng quan</a></li>
-                    <li><a href="quan_ly_lich_hen.html"><strong>Quản lý lịch hẹn</strong></a></li>
-                    <li><a href="danh_sach_lich_hen.html">Danh sách ca trực</a></li>
-                    <li><a href="check_in.html">Check-in</a></li>
-                    <li><a href="vien_phi.html">Viện phí</a></li>
-                </ul>
-            </nav>
-            <div class="user-badge" onclick="window.location.href='ho_so_ca_nhan.html'">
-                <div class="user-avatar">LT</div>
-                <div class="user-info-text">
-                    <div class="user-name">Nguyễn Thị Lễ Tân</div>
-                    <div class="user-role">Lễ tân</div>
-                </div>
-            </div>
-            <!-- Nút chuyển giao diện sáng/tối -->
-            <button class="theme-toggle" id="theme-toggle" title="Chuyển đổi giao diện">
-                <i class="fas fa-moon"></i>
-            </button>
-            <!-- Nút Đăng xuất nằm cạnh nút giao diện -->
-            <button class="logout-btn" onclick="window.location.href='../dk_dn/dn.html'" title="Đăng xuất">
-                <i class="fas fa-sign-out-alt"></i>
-            </button>
-        </div>
-    </header>
+        <p>Hệ thống quản lý y tế MedBooking - Giải pháp toàn diện cho bệnh viện và phòng khám.</p>
+        <p><strong>"MedBooking chúc quý khách và gia đình luôn có một sức khỏe dồi dào!"</strong></p>
+    </div>
+    <div>
+        <h4>Liên kết nhanh</h4>
+        <ul>
+            <li><a href="dashboard.html">Tổng quan</a></li>
+            <li><a href="quan_ly_lich_hen.html">Quản lý lịch hẹn</a></li>
+            <li><a href="danh_sach_lich_hen.html">Danh sách ca trực</a></li>
+            <li><a href="check_in.html">Check-in</a></li>
+            <li><a href="vien_phi.html">Viện phí</a></li>
+        </ul>
+    </div>
+    <div>
+        <h4>Thông tin liên hệ</h4>
+        <p>Địa chỉ: Số 15, Phố Dịch Vọng Hậu, Quận Cầu Giấy, Hà Nội</p>
+        <p>Hotline: 1900 6868</p>
+        <p>Email: support@medbooking.vn</p>
+    </div>
+    <div>
+        <p>&copy; 2026 MedBooking. Bản quyền thuộc về Đội ngũ phát triển dự án.</p>
+    </div>
+</footer>
 
-    <main>
-        <div class="breadcrumb">
-            <a href="dashboard.html"><i class="fas fa-home"></i> Tổng quan</a>
-            <i class="fas fa-chevron-right"></i>
-            <span>Quản lý lịch hẹn</span>
-        </div>
-
-        <div class="page-title">
-            <div class="page-title-left">
-                <h2><i class="fas fa-calendar-alt"></i> Quản lý Lịch hẹn</h2>
-                <p>Xem, xác nhận, đổi giờ và hủy lịch hẹn của bệnh nhân</p>
-            </div>
-            <div>
-                <button class="btn btn-outline" onclick="exportExcel()">
-                    <i class="fas fa-file-excel"></i> Xuất Excel
-                </button>
-                <button class="btn btn-primary" onclick="window.location.href='check_in.html'">
-                    <i class="fas fa-sign-in-alt"></i> Check-in mới
-                </button>
-            </div>
-        </div>
-
-        <div id="overnight-alert-container"></div>
-
-        <div class="stats-grid">
-            <div class="stat-card orange">
-                <div class="stat-icon"><i class="fas fa-hourglass-half"></i></div>
-                <div class="stat-info">
-                    <h4 id="stat-pending">0</h4>
-                    <p>Chờ xác nhận</p>
-                </div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-icon"><i class="fas fa-check-circle"></i></div>
-                <div class="stat-info">
-                    <h4 id="stat-confirmed">0</h4>
-                    <p>Đã xác nhận</p>
-                </div>
-            </div>
-            <div class="stat-card green">
-                <div class="stat-icon"><i class="fas fa-user-check"></i></div>
-                <div class="stat-info">
-                    <h4 id="stat-checked">0</h4>
-                    <p>Đã check-in</p>
-                </div>
-            </div>
-            <div class="stat-card purple">
-                <div class="stat-icon"><i class="fas fa-times-circle"></i></div>
-                <div class="stat-info">
-                    <h4 id="stat-noshow">0</h4>
-                    <p>Không đến</p>
-                </div>
-            </div>
-        </div>
-
-        <div class="quick-dates">
-            <button class="quick-date-btn active" data-quick="today" onclick="quickDate('today')">
-                <i class="fas fa-calendar-day"></i> Hôm nay
-            </button>
-            <button class="quick-date-btn" data-quick="tomorrow" onclick="quickDate('tomorrow')">
-                <i class="fas fa-calendar-plus"></i> Ngày mai
-            </button>
-            <button class="quick-date-btn" data-quick="week" onclick="quickDate('week')">
-                <i class="fas fa-calendar-week"></i> Tuần này
-            </button>
-            <button class="quick-date-btn" data-quick="all" onclick="quickDate('all')">
-                <i class="fas fa-calendar-alt"></i> Tất cả
-            </button>
-        </div>
-
-        <div class="filter-bar">
-            <div class="form-group">
-                <label for="filter-ca">Ca trực</label>
-                <select id="filter-ca" onchange="applyFilter()">
-                    <option value="">-- Tất cả ca --</option>
-                    <option value="sang">Ca sáng (07:30 - 11:30)</option>
-                    <option value="chieu">Ca chiều (13:30 - 18:30)</option>
-                    <option value="toi">Ca tối (18:30 - 22:30)</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label for="filter-doctor">Bác sĩ</label>
-                <select id="filter-doctor" onchange="applyFilter()">
-                    <option value="">-- Tất cả bác sĩ --</option>
-                    <option value="bs01">ThS.BS Nguyễn Văn A</option>
-                    <option value="bs02">BS.CKI Trần Thị C</option>
-                    <option value="bs03">TS.BS Lê Hoàng D</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label for="filter-keyword">Tìm kiếm</label>
-                <div class="search-input-wrapper">
-                    <i class="fas fa-search"></i>
-                    <input type="text" id="filter-keyword" placeholder="Mã LH, tên BN, SĐT..." oninput="applyFilter()">
-                </div>
-            </div>
-            <div class="filter-actions">
-                <button class="btn btn-outline" onclick="resetFilter()">
-                    <i class="fas fa-redo"></i> Đặt lại
-                </button>
-            </div>
-        </div>
-
-        <div class="filter-tabs">
-            <button class="filter-tab active" data-filter="all" onclick="switchTab('all')">
-                <i class="fas fa-list"></i> Tất cả <span class="count" id="count-all">0</span>
-            </button>
-            <button class="filter-tab" data-filter="pending" onclick="switchTab('pending')">
-                <i class="fas fa-hourglass-half"></i> Chờ xác nhận <span class="count" id="count-pending">0</span>
-            </button>
-            <button class="filter-tab" data-filter="confirmed" onclick="switchTab('confirmed')">
-                <i class="fas fa-check-circle"></i> Đã xác nhận <span class="count" id="count-confirmed">0</span>
-            </button>
-            <button class="filter-tab" data-filter="checked" onclick="switchTab('checked')">
-                <i class="fas fa-user-check"></i> Đã check-in <span class="count" id="count-checked">0</span>
-            </button>
-            <button class="filter-tab" data-filter="noshow" onclick="switchTab('noshow')">
-                <i class="fas fa-user-slash"></i> Không đến <span class="count" id="count-noshow">0</span>
-            </button>
-        </div>
-
-        <div id="appointments-list"></div>
-    </main>
-
-    <div class="bulk-action-bar" id="bulk-bar">
-        <div class="bulk-count"><span id="bulk-count">0</span> đã chọn</div>
-        <div class="bulk-group-info" id="bulk-group-info"></div>
-        <div class="bulk-actions">
-            <button class="btn btn-success btn-sm" onclick="bulkConfirm()" id="bulk-btn-confirm">
-                <i class="fas fa-check"></i> Xác nhận
-            </button>
-            <button class="btn btn-danger btn-sm" onclick="bulkCancel()" id="bulk-btn-cancel">
-                <i class="fas fa-times"></i> Hủy
-            </button>
-            <button class="btn btn-outline btn-sm" onclick="clearSelection()">
-                <i class="fas fa-times-circle"></i> Bỏ chọn
+<!-- MODAL CHUNG & MODAL HỒ SƠ BỆNH ÁN -->
+<div class="modal-overlay" id="modal-overlay">
+    <div class="modal-box" id="modal-box-main">
+        <div class="modal-icon" id="modal-icon"><i class="fas fa-info"></i></div>
+        <h3 id="modal-title">Thông báo</h3>
+        <div class="modal-details" id="modal-details" style="display: none;"></div>
+        <p id="modal-message">Nội dung thông báo</p>
+        <div class="modal-actions" id="modal-actions">
+            <button class="modal-btn modal-btn-primary" id="modal-confirm-btn">
+                <i class="fas fa-check"></i> Đã hiểu
             </button>
         </div>
     </div>
+</div>
 
-    <footer>
-        <div>
-            <div class="footer-logo">
-                <div class="logo-icon"><i class="fa-solid fa-hospital-user"></i></div>
-                <div class="logo-text">
-                    <h1>MedBooking</h1>
-                    <p>Cổng Lễ Tân</p>
-                </div>
-            </div>
-            <p>Hệ thống quản lý y tế MedBooking - Giải pháp toàn diện cho bệnh viện và phòng khám[cite: 7].</p>
-            <p><strong>"MedBooking chúc quý khách và gia đình luôn có một sức khỏe dồi dào!"</strong></p>
-        </div>
-        <div>
-            <h4>Liên kết nhanh</h4>
-            <ul>
-                <li><a href="dashboard.html">Tổng quan</a></li>
-                <li><a href="quan_ly_lich_hen.html">Quản lý lịch hẹn</a></li>
-                <li><a href="check_in.html">Check-in</a></li>
-                <li><a href="vien_phi.html">Viện phí</a></li>
-            </ul>
-        </div>
-        <div>
-            <h4>Thông tin liên hệ</h4>
-            <p>Địa chỉ: Số 15, Phố Dịch Vọng Hậu, Quận Cầu Giấy, Hà Nội</p>
-            <p>Hotline: 1900 6868</p>
-            <p>Email: support@medbooking.vn</p>
-        </div>
-        <div>
-            <p>&copy; 2026 MedBooking. Bản quyền thuộc về Đội ngũ phát triển dự án[cite: 7].</p>
-        </div>
-    </footer>
+<script>
+    let systemNotifications = [];
 
-    <div class="modal-overlay" id="modal-overlay">
-        <div class="modal-box" id="modal-box-main">
-            <div class="modal-icon" id="modal-icon"><i class="fas fa-info"></i></div>
-            <h3 id="modal-title">Thông báo</h3>
-            <div class="modal-details" id="modal-details" style="display: none;"></div>
-            <p id="modal-message">Nội dung thông báo</p>
-            <div class="modal-actions" id="modal-actions">
-                <button class="modal-btn modal-btn-primary" id="modal-confirm-btn">
-                    <i class="fas fa-check"></i> Đã hiểu
-                </button>
-            </div>
-        </div>
-    </div>
+    function getReadNotifications() {
+        try {
+            return JSON.parse(localStorage.getItem('read_notifications') || '[]');
+        } catch(e) {
+            return [];
+        }
+    }
 
-    <div class="modal-overlay" id="time-picker-overlay">
-        <div class="modal-box time-picker-modal">
-            <div class="time-picker-header">
-                <div class="time-picker-header-icon">
-                    <i class="fas fa-clock"></i>
-                </div>
-                <div class="time-picker-header-text">
-                    <h3>Đổi khung giờ khám</h3>
-                    <p>Chọn khung giờ mới cho lịch hẹn</p>
-                </div>
-            </div>
-            <div class="current-appt-info" id="current-appt-info"></div>
-            <div id="time-picker-content"></div>
-            <div class="time-picker-actions">
-                <button class="btn btn-outline" onclick="closeTimePicker()">
-                    <i class="fas fa-times"></i> Hủy bỏ
-                </button>
-                <button class="btn btn-primary" onclick="submitChangeTime()" id="btn-submit-time">
-                    <i class="fas fa-check"></i> Cập nhật khung giờ
-                </button>
-            </div>
-        </div>
-    </div>
+    function saveReadNotification(notifId) {
+        let readList = getReadNotifications();
+        if (!readList.includes(notifId)) {
+            readList.push(notifId);
+            localStorage.setItem('read_notifications', JSON.stringify(readList));
+        }
+    }
 
-    <script src="../../static/js/client.js"></script>
-    <script src="../../static/js/LT_Store.js"></script>
+    document.addEventListener('DOMContentLoaded', async function () {
+        const token = localStorage.getItem('medbooking_token');
+        let receptionistName = 'Lễ tân';
+        let appointments = [];
+        let doctorsList = [];
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            
-            // THEME
-            const themeToggle = document.getElementById('theme-toggle');
-            const icon = themeToggle.querySelector('i');
-            const currentTheme = localStorage.getItem('theme') || 'light';
-            
-            if (currentTheme === 'dark') {
+        try {
+            if (token) {
+                const resMe = await fetch('/auth/me', {
+                    method: 'GET',
+                    headers: {'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json'}
+                });
+                if (resMe.ok) {
+                    const userMe = await resMe.json();
+                    receptionistName = userMe.ho_ten || userMe.fullname || receptionistName;
+                }
+            }
+        } catch (e) {
+            console.error("Lỗi lấy thông tin lễ tân từ SQL:", e);
+        }
+
+        const topbarNameEl = document.getElementById('topbar-receptionist-name');
+        if (topbarNameEl) topbarNameEl.textContent = receptionistName;
+
+        const cleanName = receptionistName.trim();
+        const parts = cleanName.split(/\s+/);
+        let initials = 'LT';
+        if (parts.length >= 2) {
+            initials = (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+        } else if (parts.length === 1 && parts[0].length > 0) {
+            initials = parts[0].slice(0, 2).toUpperCase();
+        }
+        const topbarAvatar = document.getElementById('topbar-avatar');
+        if (topbarAvatar) topbarAvatar.textContent = initials;
+
+        try {
+            const resDoc = await fetch('/doctors', {
+                method: 'GET',
+                headers: {'Content-Type': 'application/json'}
+            });
+            if (resDoc.ok) {
+                const docData = await resDoc.json();
+                doctorsList = docData.items || docData.data || docData || [];
+                const doctorSelect = document.getElementById('filter-doctor');
+                if (doctorSelect) {
+                    doctorSelect.innerHTML = '<option value="">-- Tất cả bác sĩ --</option>' +
+                            doctorsList.map(doc => {
+                                const docId = doc.id;
+                                const docName = doc.ho_ten || (doc.user && doc.user.ho_ten) || doc.name || 'Bác sĩ';
+                                return `<option value="${docId}">${docName}</option>`;
+                            }).join('');
+                }
+            }
+        } catch (e) {
+            console.warn("API /doctors lỗi, bỏ qua bộ lọc bác sĩ.");
+        }
+
+        async function fetchAppointmentsFromDB() {
+            try {
+                if (!token) return;
+
+                let busyShifts = [];
+                try {
+                    const schedRes = await fetch('/appointments/admin/lich-lam-viec', {
+                        method: 'GET',
+                        headers: {'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json'}
+                    });
+                    if (schedRes.ok) {
+                        const schedData = await schedRes.json();
+                        busyShifts = schedData.filter(s => {
+                            const lyDo = String(s.ly_do_ban || s.ly_do || '').trim();
+                            const trangThai = String(s.trang_thai || s.trang_thai_chi_tiet || '').toUpperCase();
+                            const conTrong = s.con_trong;
+
+                            if (conTrong === true || trangThai.includes('XAC_NHAN') || trangThai.includes('DA_XAC_NHAN')) {
+                                return false;
+                            }
+                            return lyDo !== '' || trangThai.includes('HUY') || trangThai.includes('BAC_SI_HUY');
+                        });
+                    }
+                } catch (err) {
+                    console.error("Lỗi tải lịch trực bận:", err);
+                }
+
+                const resAppt = await fetch('/appointments/tat-ca', {
+                    method: 'GET',
+                    headers: {'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json'}
+                });
+                if (resAppt.ok) {
+                    const jsonAppt = await resAppt.json();
+                    const rawData = jsonAppt.data || jsonAppt || [];
+
+                    appointments = rawData.map(item => {
+                        const rawId = String(item.ma_lich_hen || item.id || "");
+                        let st = String(item.trang_thai || 'Chờ xác nhận').toLowerCase().trim();
+
+                        const docId = String(item.bac_si_id || item.doctor_id || '');
+                        const ngayKham = item.ngay_kham || item.date || '';
+                        const apptTime = String(item.khung_gio || item.time || '').trim();
+
+                        let isDoctorBusy = false;
+                        if (!st.includes('chờ bệnh nhân') && !st.includes('pending_patient') && !st.includes('hoàn thành') && !st.includes('hủy') && !st.includes('đã xác nhận') && !st.includes('chờ khám')) {
+                            isDoctorBusy = busyShifts.some(bs => {
+                                const bsId = String(bs.bac_si_id || '');
+                                const bsDate = String(bs.ngay_lam_viec || bs.ngay || '');
+                                const bsSlot = String(bs.khung_gio || '').trim();
+
+                                if (bsId !== docId || bsDate !== ngayKham) return false;
+                                if (!bsSlot || bsSlot.toLowerCase().includes('ca')) return false;
+
+                                return bsSlot.replace(/\s+/g, '') === apptTime.replace(/\s+/g, '');
+                            });
+                        }
+
+                        // ⭐ NHẬN DIỆN CHÍNH XÁC TRẠNG THÁI KHÁM BÙ
+                        if (st.includes('bệnh nhân đã xác nhận lịch khám bù') || st.includes('đã xác nhận lịch khám bù') || st.includes('khám bù')) {
+                            st = 'confirmed_compensate';
+                        } else if (st === 'chờ bệnh nhân xác nhận' || st.includes('bệnh nhân xác nhận') || st === 'pending_patient' || st.includes('chờ bệnh nhân')) {
+                            st = 'pending_patient';
+                        } else if (isDoctorBusy) {
+                            st = 'reschedule';
+                        } else if (st === 'chờ xác nhận' || st === 'waiting' || st === 'pending' || st.includes('chờ khám')) {
+                            st = 'pending';
+                        } else if (st === 'đã xác nhận' || st === 'confirmed') {
+                            st = 'confirmed';
+                        } else if (st === 'đã check-in' || st === 'check-in' || st === 'đã hoàn thành' || st === 'completed') {
+                            st = 'checked';
+                        } else if (st === 'đã hủy' || st === 'cancelled') {
+                            st = 'cancelled';
+                        } else if (st === 'không đến' || st === 'no-show') {
+                            st = 'cancelled';
+                        }
+
+                        const timeStr = item.khung_gio || '08:00';
+                        const startHour = parseInt(timeStr.split(':')[0]) || 8;
+                        let caVal = 'sang';
+                        if (startHour >= 12 && startHour < 18) caVal = 'chieu';
+                        else if (startHour >= 18) caVal = 'toi';
+
+                        return {
+                            id: 'LH' + rawId.padStart(3, '0'),
+                            rawId: rawId,
+                            patientName: item.benh_nhan || item.ten_benh_nhan || item.ho_ten || item.patient_name || ('Bệnh nhân #' + rawId),
+                            phone: item.so_dien_thoai || item.dien_thoai || item.phone || item.sdt || 'Chưa có SĐT',
+                            date: item.ngay_kham || item.date || '',
+                            time: item.khung_gio || '08:00 - 09:00',
+                            ca: caVal,
+                            doctor: item.bac_si_name || item.ten_bac_si || item.bac_si || 'BS. Chuyên khoa',
+                            doctorId: docId,
+                            symptom: item.ghi_chu || item.trieu_chung || item.ly_do_kham || 'Khám tổng quát định kỳ',
+                            status: st,
+
+                            trieu_chung_thuc_the: item.trieu_chung_thuc_the || item.ket_qua_kham || item['Kết Quả Khám'] || item['Kết_Quả_Khám'] || '',
+                            chan_doan: item.chan_doan || item['Chẩn Đoán'] || item['Chẩn_Đoán'] || '',
+                            loi_dan: item.loi_dan || item['Lời Dặn'] || item['Lời_Dặn'] || '',
+                            don_thuoc: item.don_thuoc || item.medicines || null,
+                            thiet_bi_y_te: item.thiet_bi_y_te || item.devices || null
+                        };
+                    });
+                    renderAppointments();
+
+                    const jumpApptId = sessionStorage.getItem('jump_appt_id');
+                    if (jumpApptId) {
+                        sessionStorage.removeItem('jump_appt_id');
+                        setTimeout(() => {
+                            const targetCard = document.getElementById(`appt-card-${jumpApptId}`);
+                            if (targetCard) {
+                                targetCard.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                                targetCard.classList.add('highlight-pulse');
+                                setTimeout(() => targetCard.classList.remove('highlight-pulse'), 5000);
+                            }
+                        }, 300);
+                    }
+                }
+            } catch (e) {
+                console.error("Lỗi tải lịch hẹn từ SQL Server:", e);
+            }
+        }
+
+        const themeToggle = document.getElementById('theme-toggle');
+        const icon = themeToggle.querySelector('i');
+        const currentTheme = localStorage.getItem('theme') || 'light';
+
+        if (currentTheme === 'dark') {
+            document.documentElement.setAttribute('data-theme', 'dark');
+            icon.classList.remove('fa-moon');
+            icon.classList.add('fa-sun');
+        }
+
+        themeToggle.addEventListener('click', function () {
+            let theme = document.documentElement.getAttribute('data-theme');
+            if (theme === 'dark') {
+                document.documentElement.removeAttribute('data-theme');
+                localStorage.setItem('theme', 'light');
+                icon.classList.remove('fa-sun');
+                icon.classList.add('fa-moon');
+            } else {
                 document.documentElement.setAttribute('data-theme', 'dark');
+                localStorage.setItem('theme', 'dark');
                 icon.classList.remove('fa-moon');
                 icon.classList.add('fa-sun');
             }
+        });
 
-            themeToggle.addEventListener('click', function() {
-                let theme = document.documentElement.getAttribute('data-theme');
-                if (theme === 'dark') {
-                    document.documentElement.removeAttribute('data-theme');
-                    localStorage.setItem('theme', 'light');
-                    icon.classList.remove('fa-sun');
-                    icon.classList.add('fa-moon');
-                } else {
-                    document.documentElement.setAttribute('data-theme', 'dark');
-                    localStorage.setItem('theme', 'dark');
-                    icon.classList.remove('fa-moon');
-                    icon.classList.add('fa-sun');
-                }
-            });
+        window.toggleNotificationDropdown = function() {
+            const dropdown = document.getElementById('notification-dropdown');
+            dropdown.classList.toggle('active');
+        };
 
-            // MODAL SYSTEM
-            const modalOverlay = document.getElementById('modal-overlay');
-            const modalIcon = document.getElementById('modal-icon');
-            const modalTitle = document.getElementById('modal-title');
-            const modalMessage = document.getElementById('modal-message');
-            const modalDetails = document.getElementById('modal-details');
-            const modalActions = document.getElementById('modal-actions');
+        const modalOverlay = document.getElementById('modal-overlay');
+        const modalBoxMain = document.getElementById('modal-box-main');
+        const modalIcon = document.getElementById('modal-icon');
+        const modalTitle = document.getElementById('modal-title');
+        const modalMessage = document.getElementById('modal-message');
+        const modalDetails = document.getElementById('modal-details');
+        const modalActions = document.getElementById('modal-actions');
 
-            window.showAlert = function(title, message, type = 'info', callback = null, details = null) {
-                modalIcon.className = 'modal-icon ' + type;
-                const iconEl = modalIcon.querySelector('i');
-                const icons = { success: 'fa-check-circle', warning: 'fa-exclamation-triangle', error: 'fa-times-circle', info: 'fa-info-circle' };
-                iconEl.className = 'fas ' + icons[type];
-                modalTitle.textContent = title;
-                modalMessage.textContent = message;
-                
-                if (details && Object.keys(details).length > 0) {
-                    let detailHTML = '';
-                    for (const [key, value] of Object.entries(details)) {
-                        detailHTML += `<div class="detail-row"><span class="label">${key}</span><span class="value">${value}</span></div>`;
-                    }
-                    modalDetails.innerHTML = detailHTML;
-                    modalDetails.style.display = 'block';
-                } else {
-                    modalDetails.style.display = 'none';
-                }
-                
-                modalActions.innerHTML = `<button class="modal-btn modal-btn-primary" id="modal-confirm-btn"><i class="fas fa-check"></i> Đã hiểu</button>`;
-                modalOverlay.classList.add('active');
-                document.getElementById('modal-confirm-btn').onclick = function() {
-                    closeModal();
-                    if (callback) callback();
-                };
+        window.showAlert = function (title, message, type = 'info', callback = null, details = null) {
+            modalBoxMain.className = 'modal-box';
+            modalIcon.className = 'modal-icon ' + type;
+            const iconEl = modalIcon.querySelector('i');
+            const icons = {
+                success: 'fa-check-circle',
+                warning: 'fa-exclamation-triangle',
+                error: 'fa-times-circle',
+                info: 'fa-info-circle'
             };
+            iconEl.className = 'fas ' + (icons[type] || icons.info);
+            modalTitle.textContent = title;
+            modalMessage.textContent = message;
 
-            window.showConfirm = function(title, message, type, onConfirm, details = null) {
-                modalIcon.className = 'modal-icon ' + type;
-                const iconEl = modalIcon.querySelector('i');
-                const icons = { success: 'fa-check-circle', warning: 'fa-exclamation-triangle', error: 'fa-times-circle', info: 'fa-info-circle' };
-                iconEl.className = 'fas ' + icons[type];
-                modalTitle.textContent = title;
-                modalMessage.textContent = message;
-                
-                if (details && Object.keys(details).length > 0) {
-                    let detailHTML = '';
-                    for (const [key, value] of Object.entries(details)) {
-                        detailHTML += `<div class="detail-row"><span class="label">${key}</span><span class="value">${value}</span></div>`;
-                    }
-                    modalDetails.innerHTML = detailHTML;
-                    modalDetails.style.display = 'block';
-                } else {
-                    modalDetails.style.display = 'none';
+            if (details && Object.keys(details).length > 0) {
+                let detailHTML = '';
+                for (const [key, value] of Object.entries(details)) {
+                    detailHTML += `<div class="detail-row"><span class="label">${key}</span><span class="value">${value}</span></div>`;
                 }
-                
-                modalActions.innerHTML = `
-                    <button class="modal-btn modal-btn-secondary" id="modal-cancel-btn"><i class="fas fa-times"></i> Hủy bỏ</button>
-                    <button class="modal-btn modal-btn-primary" id="modal-confirm-btn"><i class="fas fa-check"></i> Đồng ý</button>
-                `;
-                modalOverlay.classList.add('active');
-                document.getElementById('modal-cancel-btn').onclick = closeModal;
-                document.getElementById('modal-confirm-btn').onclick = function() { closeModal(); onConfirm(); };
-            };
-
-            window.showLateConfirmModal = function(appt, onConfirm, onNoshow, onCancel) {
-                modalIcon.className = 'modal-icon warning';
-                const iconEl = modalIcon.querySelector('i');
-                iconEl.className = 'fas fa-exclamation-triangle';
-                modalTitle.textContent = 'Xác nhận lịch hẹn muộn';
-                modalMessage.textContent = `Lịch hẹn ${appt.id} của bệnh nhân ${appt.patientName} đã qua giờ khám (${appt.time}). Bạn muốn xử lý thế nào?`;
-                
-                modalDetails.innerHTML = `
-                    <div class="detail-row"><span class="label">Bệnh nhân</span><span class="value">${appt.patientName}</span></div>
-                    <div class="detail-row"><span class="label">Giờ hẹn</span><span class="value">${appt.time} - ${formatDateDisplay(appt.date)}</span></div>
-                    <div class="detail-row"><span class="label">Bác sĩ</span><span class="value">${appt.doctor}</span></div>
-                `;
+                modalDetails.innerHTML = detailHTML;
                 modalDetails.style.display = 'block';
-                
-                modalActions.innerHTML = `
-                    <button class="modal-btn modal-btn-secondary" id="modal-cancel-btn"><i class="fas fa-times"></i> Đóng</button>
-                    <button class="modal-btn modal-btn-secondary" id="modal-noshow-btn" style="background: var(--accent-orange); color: #fff; border-color: var(--accent-orange);"><i class="fas fa-user-slash"></i> Đánh dấu No-show</button>
-                    <button class="modal-btn modal-btn-primary" id="modal-confirm-btn"><i class="fas fa-check"></i> Vẫn xác nhận</button>
-                `;
-                
-                modalOverlay.classList.add('active');
-                document.getElementById('modal-cancel-btn').onclick = function() { closeModal(); if(onCancel) onCancel(); };
-                document.getElementById('modal-noshow-btn').onclick = function() { closeModal(); if(onNoshow) onNoshow(); };
-                document.getElementById('modal-confirm-btn').onclick = function() { closeModal(); if(onConfirm) onConfirm(); };
-            };
-
-            function closeModal() { modalOverlay.classList.remove('active'); }
-            modalOverlay.addEventListener('click', function(e) { if (e.target === modalOverlay) closeModal(); });
-            document.addEventListener('keydown', function(e) { if (e.key === 'Escape' && modalOverlay.classList.contains('active')) closeModal(); });
-
-            // ============================================================
-            // ⭐ LẤY DỮ LIỆU TỪ LT_Store
-            // ============================================================
-            let appointments = LT_Store.getAppointments();
-
-            function reloadAppointments() {
-                appointments = LT_Store.getAppointments();
+            } else {
+                modalDetails.style.display = 'none';
             }
 
-            const statusLabels = {
-                pending: 'Chờ xác nhận',
-                confirmed: 'Đã xác nhận',
-                checked: 'Đã check-in',
-                cancelled: 'Đã hủy',
-                noshow: 'Không đến'
+            modalActions.innerHTML = `<button class="modal-btn modal-btn-primary" id="modal-confirm-btn"><i class="fas fa-check"></i> Đã hiểu</button>`;
+            modalOverlay.classList.add('active');
+            document.getElementById('modal-confirm-btn').onclick = function () {
+                closeModal();
+                if (callback) callback();
             };
+        };
 
-            const caLabels = {
-                sang: 'Ca sáng',
-                chieu: 'Ca chiều',
-                toi: 'Ca tối'
-            };
+        window.showMedicalRecordModal = function (rawId) {
+            const appt = appointments.find(a => String(a.rawId) === String(rawId));
+            if (!appt) return;
 
-            const TIME_SLOTS = {
-                sang: [
-                    { value: '07:30-08:30', label: '07:30 - 08:30' },
-                    { value: '08:30-09:30', label: '08:30 - 09:30' },
-                    { value: '09:30-10:30', label: '09:30 - 10:30' },
-                    { value: '10:30-11:30', label: '10:30 - 11:30' }
-                ],
-                chieu: [
-                    { value: '13:30-14:30', label: '13:30 - 14:30' },
-                    { value: '14:30-15:30', label: '14:30 - 15:30' },
-                    { value: '15:30-16:30', label: '15:30 - 16:30' },
-                    { value: '16:30-17:30', label: '16:30 - 17:30' },
-                    { value: '17:30-18:30', label: '17:30 - 18:30' }
-                ],
-                toi: [
-                    { value: '18:30-19:30', label: '18:30 - 19:30 (+10%)' },
-                    { value: '19:30-20:30', label: '19:30 - 20:30 (+10%)' },
-                    { value: '20:30-21:30', label: '20:30 - 21:30 (+10%)' },
-                    { value: '21:30-22:30', label: '21:30 - 22:30 (+10%)' }
-                ]
-            };
+            modalBoxMain.className = 'modal-box medical-record-modal';
+            modalIcon.style.display = 'none';
+            modalTitle.innerHTML = `<i class="fas fa-file-medical"></i> PHIẾU KHÁM BỆNH & HỒ SƠ BỆNH ÁN`;
+            modalMessage.style.display = 'none';
+            modalDetails.style.display = 'none';
 
-            const todayStr = new Date().toISOString().split('T')[0];
-            let currentTab = 'all';
-            let currentQuickDate = 'today';
-            let currentFilterData = { ca: '', doctorId: '', keyword: '', dateRange: { from: todayStr, to: todayStr } };
-            let selectedIds = new Set();
-            let lockedGroupKey = null;
-            let editingApptId = null;
-            let justUpdatedId = null;
-
-            function getGroupKey(appt) {
-                return `${appt.date}|${appt.ca}|${appt.doctorId}|${appt.status}`;
+            let medicinesList = [];
+            try {
+                if (typeof appt.don_thuoc === 'string') {
+                    medicinesList = JSON.parse(appt.don_thuoc);
+                } else if (Array.isArray(appt.don_thuoc)) {
+                    medicinesList = appt.don_thuoc;
+                }
+            } catch (e) {
+                medicinesList = [];
             }
 
-            function getTimeStatus(appt) {
-                const apptDateTime = new Date(`${appt.date}T${appt.time.split('-')[0]}:00`);
-                const nowTime = new Date();
-                const diffMs = apptDateTime - nowTime;
-                const diffMins = diffMs / (1000 * 60);
-
-                if (diffMins < -15 && (appt.status === 'pending' || appt.status === 'confirmed')) {
-                    return 'overdue';
-                }
-                if (diffMins >= 0 && diffMins <= 60 && appt.status !== 'cancelled') {
-                    return 'upcoming';
-                }
-                return 'normal';
-            }
-
-            window.quickDate = function(type) {
-                document.querySelectorAll('.quick-date-btn').forEach(b => b.classList.remove('active'));
-                document.querySelector(`.quick-date-btn[data-quick="${type}"]`).classList.add('active');
-                currentQuickDate = type;
-
-                const now = new Date();
-                const todayStr = now.toISOString().split('T')[0];
-
-                if (type === 'today') {
-                    currentFilterData.dateRange = { from: todayStr, to: todayStr };
-                } else if (type === 'tomorrow') {
-                    const tmr = new Date(now);
-                    tmr.setDate(tmr.getDate() + 1);
-                    const tmrStr = tmr.toISOString().split('T')[0];
-                    currentFilterData.dateRange = { from: tmrStr, to: tmrStr };
-                } else if (type === 'week') {
-                    const endOfWeek = new Date(now);
-                    endOfWeek.setDate(endOfWeek.getDate() + 7);
-                    currentFilterData.dateRange = { from: todayStr, to: endOfWeek.toISOString().split('T')[0] };
-                } else {
-                    currentFilterData.dateRange = null;
-                }
-                clearSelection();
-                renderAppointments();
-            };
-
-            const STATUS_PRIORITY = { 'pending': 1, 'confirmed': 2, 'checked': 3, 'noshow': 4, 'cancelled': 5 };
-
-            function sortAppointments(list) {
-                return [...list].sort((a, b) => {
-                    const priorityA = STATUS_PRIORITY[a.status] || 99;
-                    const priorityB = STATUS_PRIORITY[b.status] || 99;
-                    if (priorityA !== priorityB) return priorityA - priorityB;
-                    if (a.date !== b.date) return a.date.localeCompare(b.date);
-                    return a.time.localeCompare(b.time);
+            let medRowsHTML = '';
+            if (medicinesList.length > 0) {
+                medicinesList.forEach((m, idx) => {
+                    medRowsHTML += `
+                        <tr>
+                            <td>${idx + 1}</td>
+                            <td><strong>${m.name || m.ten || 'Thuốc điều trị'}</strong></td>
+                            <td>${m.dose || m.lieu_luong || 'Theo chỉ định'}</td>
+                            <td>${m.qty || m.so_luong || 1}</td>
+                        </tr>
+                    `;
                 });
+            } else {
+                medRowsHTML = `<tr><td colspan="4" style="text-align:center; color:var(--text-gray);">Không có đơn thuốc chi tiết trong ca khám này.</td></tr>`;
             }
 
-            function renderAppointments() {
-                const list = document.getElementById('appointments-list');
-                let filtered = [...appointments];
+            let htmlContent = `
+                <div id="medical-record-print-area">
+                    <div class="clinic-header">
+                        <h3 style="margin:0; color:var(--primary-blue); font-size:18px;">PHÒNG KHÁM ĐA KHOA MEDBOOKING</h3>
+                        <p>Địa chỉ: Số 15, Phố Dịch Vọng Hậu, Quận Cầu Giấy, Hà Nội | Hotline: 1900 6868</p>
+                        <p><strong>Mã lịch hẹn:</strong> ${appt.id} &nbsp;|&nbsp; <strong>Ngày khám:</strong> ${appt.date} (${appt.time})</p>
+                    </div>
 
-                if (currentTab !== 'all') filtered = filtered.filter(a => a.status === currentTab);
-                if (currentFilterData.ca) filtered = filtered.filter(a => a.ca === currentFilterData.ca);
-                if (currentFilterData.doctorId) filtered = filtered.filter(a => a.doctorId === currentFilterData.doctorId);
-                if (currentFilterData.keyword) {
-                    const kw = currentFilterData.keyword.toLowerCase();
-                    filtered = filtered.filter(a => 
-                        a.id.toLowerCase().includes(kw) || 
+                    <div style="display:grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 12px; font-size:13.5px;">
+                        <div><strong>Họ tên bệnh nhân:</strong> ${appt.patientName}</div>
+                        <div><strong>Số điện thoại:</strong> ${appt.phone}</div>
+                        <div><strong>Bác sĩ khám:</strong> ${appt.doctor}</div>
+                        <div><strong>Triệu chứng ban đầu:</strong> ${appt.symptom}</div>
+                    </div>
+
+                    <div class="record-section">
+                        <h5><i class="fas fa-stethoscope"></i> Triệu chứng thực thể / Khám lâm sàng</h5>
+                        <p>${appt.trieu_chung_thuc_the ? appt.trieu_chung_thuc_the : '<span style="color:var(--text-gray); font-style:italic;">Bác sĩ chưa ghi nhận triệu chứng thực thể.</span>'}</p>
+                    </div>
+
+                    <div class="record-section">
+                        <h5><i class="fas fa-diagnoses"></i> Chẩn đoán của bác sĩ</h5>
+                        <p><strong style="color:var(--accent-red);">${appt.chan_doan ? appt.chan_doan : '<span style="color:var(--text-gray); font-style:italic;">Chưa có chẩn đoán cụ thể.</span>'}</strong></p>
+                    </div>
+
+                    <div class="record-section">
+                        <h5><i class="fas fa-pills"></i> Đơn thuốc điều trị</h5>
+                        <table class="record-table">
+                            <thead>
+                                <tr>
+                                    <th>STT</th>
+                                    <th>Tên thuốc</th>
+                                    <th>Cách dùng / Liều lượng</th>
+                                    <th>Số lượng</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${medRowsHTML}
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <div class="record-section">
+                        <h5><i class="fas fa-comment-medical"></i> Lời dặn của bác sĩ / Lịch hẹn tái khám</h5>
+                        <p>${appt.loi_dan ? appt.loi_dan : '<span style="color:var(--text-gray); font-style:italic;">Không có ghi chú thêm.</span>'}</p>
+                    </div>
+                </div>
+
+                <div class="modal-actions" style="margin-top: 20px; display: flex; justify-content: flex-end; gap: 10px;">
+                    <button class="modal-btn" style="background:var(--border-color); color:var(--text-color);" onclick="closeModal()">
+                        <i class="fas fa-times"></i> Đóng
+                    </button>
+                    <button class="modal-btn modal-btn-primary" onclick="window.print()">
+                        <i class="fas fa-print"></i> In phiếu khám bệnh
+                    </button>
+                </div>
+            `;
+
+            let customContainer = document.getElementById('custom-medical-modal-content');
+            if (!customContainer) {
+                customContainer = document.createElement('div');
+                customContainer.id = 'custom-medical-modal-content';
+                modalBoxMain.appendChild(customContainer);
+            }
+            customContainer.innerHTML = htmlContent;
+            modalOverlay.classList.add('active');
+        };
+
+        function closeModal() {
+            modalOverlay.classList.remove('active');
+            modalIcon.style.display = 'flex';
+            modalTitle.textContent = 'Thông báo';
+            modalMessage.style.display = 'block';
+            let customContainer = document.getElementById('custom-medical-modal-content');
+            if (customContainer) customContainer.innerHTML = '';
+        }
+
+        modalOverlay.addEventListener('click', function (e) {
+            if (e.target === modalOverlay) closeModal();
+        });
+
+        const ALL_TIME_SLOTS = [
+            "07:30 - 08:00", "08:00 - 08:30", "08:30 - 09:00", "09:30 - 10:00", "10:00 - 10:30", "10:30 - 11:00", "11:00 - 11:30",
+            "13:30 - 14:00", "14:00 - 14:30", "14:30 - 15:00", "15:00 - 15:30", "15:30 - 16:00", "16:00 - 16:30", "16:30 - 17:00",
+            "17:00 - 17:30", "17:30 - 18:00", "18:00 - 18:30", "18:30 - 19:00", "19:00 - 19:30", "19:30 - 20:00", "20:00 - 20:30",
+            "20:30 - 21:00", "21:00 - 21:30", "21:30 - 22:00", "22:00 - 22:30"
+        ];
+
+        window.moModalDoiLich = async function (lichHenId, bacSiId, tenBenhNhan) {
+            const now = new Date();
+            const todayStr = now.toISOString().split('T')[0];
+
+            const modalHTML = `
+                <div id="rescheduleModal" style="position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); display:flex; align-items:center; justify-content:center; z-index:99999; backdrop-filter: blur(4px);">
+                    <div style="background:var(--bg-card, #fff); padding:30px; border-radius:16px; width:520px; max-width:95%; box-shadow:0 10px 25px rgba(0,0,0,0.2);">
+                        <h3 style="color:var(--primary-blue, #4A90E2); margin-bottom:12px; font-family:'Playfair Display',serif;"><i class="fas fa-calendar-alt"></i> Đổi lịch khám gấp</h3>
+                        <p style="margin-bottom:15px; font-size:13.5px; color:var(--text-gray);">Bệnh nhân: <b>${tenBenhNhan}</b> (Bác sĩ bận ca cũ). Vui lòng chọn ngày và giờ khám mới:</p>
+
+                        <div style="margin-bottom:15px;">
+                            <label style="display:block; font-size:13px; font-weight:600; margin-bottom:5px;">Chọn Ngày khám mới:</label>
+                            <input type="date" id="newExamDate" value="${todayStr}" min="${todayStr}" style="width:100%; padding:10px 14px; border-radius:10px; border:1px solid var(--border-color); background:var(--bg-body); color:var(--text-color); font-family:'Poppins',sans-serif;" onchange="taiDanhSachGioBan(${bacSiId})">
+                        </div>
+
+                        <div style="margin-bottom:20px;">
+                            <label style="display:block; font-size:13px; font-weight:600; margin-bottom:8px;">Chọn Khung giờ (Các giờ đã kín hoặc bận sẽ tự ẩn):</label>
+                            <div id="timeSlotsContainer" style="display:grid; grid-template-columns: 1fr 1fr; gap:8px; max-height:220px; overflow-y:auto; padding-right:5px;"></div>
+                        </div>
+
+                        <div style="text-align: right; display:flex; justify-content:flex-end; gap:10px;">
+                            <button type="button" class="btn btn-outline" onclick="document.getElementById('rescheduleModal').remove()">Hủy</button>
+                            <button type="button" class="btn btn-primary" onclick="xacNhanDoiLich(${lichHenId}, ${bacSiId})"><i class="fas fa-check"></i> Xác nhận đổi lịch ngay</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            const old = document.getElementById('rescheduleModal');
+            if (old) old.remove();
+            document.body.insertAdjacentHTML('beforeend', modalHTML);
+
+            await taiDanhSachGioBan(bacSiId);
+        };
+
+        window.taiDanhSachGioBan = async function (bacSiId) {
+            const rawDate = document.getElementById('newExamDate').value;
+            if (!rawDate) return;
+
+            let ngayKham = rawDate;
+            if (rawDate.includes('/')) {
+                const parts = rawDate.split('/');
+                if (parts.length === 3) {
+                    ngayKham = `${parts[2]}-${parts[0].padStart(2, '0')}-${parts[1].padStart(2, '0')}`;
+                }
+            }
+
+            const container = document.getElementById('timeSlotsContainer');
+            if (!container) return;
+
+            try {
+                const res = await fetch(`/appointments/bac-si/${bacSiId}/gio-ban?ngay_kham=${ngayKham}`, {
+                    headers: {'Authorization': `Bearer ${token}`}
+                });
+                const data = await res.json();
+                let gioBanList = data.success ? data.gio_ban : [];
+
+                const apptRes = await fetch('/appointments/tat-ca', {
+                    method: 'GET',
+                    headers: {'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json'}
+                });
+                if (apptRes.ok) {
+                    const jsonAppt = await apptRes.json();
+                    const allAppts = jsonAppt.data || jsonAppt || [];
+
+                    allAppts.forEach(a => {
+                        const aDocId = String(a.bac_si_id || a.doctor_id || '');
+                        const aDate = String(a.ngay_kham || a.date || '');
+                        const aTime = String(a.khung_gio || a.time || '').trim();
+                        const aStatus = String(a.trang_thai || '').toLowerCase();
+
+                        if (aDocId === String(bacSiId) && aDate === ngayKham && !aStatus.includes('hủy') && !aStatus.includes('cancelled') && !aStatus.includes('reschedule')) {
+                            if (aTime && !gioBanList.includes(aTime)) {
+                                gioBanList.push(aTime);
+                            }
+                        }
+                    });
+                }
+
+                container.innerHTML = ALL_TIME_SLOTS.map(slot => {
+                    const cleanSlot = slot.replace(/\s+/g, '');
+                    const isBusy = gioBanList.some(gb => {
+                        const cleanGb = String(gb).replace(/\s+/g, '');
+                        return cleanGb === cleanSlot || cleanGb.includes(cleanSlot) || cleanSlot.includes(cleanGb);
+                    });
+
+                    if (isBusy) {
+                        return '';
+                    } else {
+                        return `
+                            <label style="display:flex; align-items:center; gap:8px; padding:10px; background:var(--bg-body); border-radius:8px; cursor:pointer; font-size:13px;" onmouseover="this.style.background='var(--primary-blue-light)'" onmouseout="this.style.background='var(--bg-body)'">
+                                <input type="radio" name="selectedTimeSlot" value="${slot}"> <b>${slot}</b>
+                            </label>
+                        `;
+                    }
+                }).join('');
+
+                if (!container.innerHTML.trim() || container.innerHTML.indexOf('input') === -1) {
+                    container.innerHTML = `<div style="grid-column: span 2; text-align:center; color:#ef4444; font-size:13px; padding:15px; font-weight:600;">⚠️ Ngày này bác sĩ đã bận hoặc kín toàn bộ lịch khám! Vui lòng chọn ngày khác.</div>`;
+                }
+            } catch (e) {
+                console.error("Lỗi tải khung giờ bận và lịch hẹn từ SQL:", e);
+            }
+        };
+
+        window.xacNhanDoiLich = async function (lichHenId, bacSiId) {
+            const rawDate = document.getElementById('newExamDate').value;
+            const selectedRadio = document.querySelector('input[name="selectedTimeSlot"]:checked');
+
+            if (!rawDate || !selectedRadio) {
+                alert("Vui lòng chọn đầy đủ ngày và khung giờ khám mới!");
+                return;
+            }
+
+            let ngayMoi = rawDate;
+            if (rawDate.includes('/')) {
+                const parts = rawDate.split('/');
+                if (parts.length === 3) {
+                    ngayMoi = `${parts[2]}-${parts[0].padStart(2, '0')}-${parts[1].padStart(2, '0')}`;
+                }
+            }
+
+            try {
+                const response = await fetch(`/appointments/doi-lich-hen/${lichHenId}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        ngay_kham_moi: ngayMoi,
+                        khung_gio_moi: selectedRadio.value
+                    })
+                });
+
+                const result = await response.json();
+                if (response.ok && result.success) {
+                    document.getElementById('rescheduleModal').remove();
+                    showAlert('Thành công', 'Đã đổi lịch khám và chuyển trạng thái thành chờ bệnh nhân xác nhận!', 'success', async () => {
+                        await fetchAppointmentsFromDB();
+                    });
+                } else {
+                    alert(result.detail || "Không thể cập nhật lịch hẹn.");
+                }
+            } catch (err) {
+                console.error("Lỗi khi đổi lịch:", err);
+                alert("Lỗi kết nối đến máy chủ.");
+            }
+        };
+
+        const statusLabels = {
+            pending: 'Chờ khám',
+            confirmed: 'Chờ khám',
+            checked: 'Đã check-in',
+            cancelled: 'Đã hủy',
+            reschedule: 'Cần đổi lịch',
+            pending_patient: 'Chờ bệnh nhân xác nhận',
+            confirmed_compensate: 'Lịch khám bù'
+        };
+
+        const caLabels = {
+            sang: 'Ca sáng',
+            chieu: 'Ca chiều',
+            toi: 'Ca tối'
+        };
+
+        let currentTab = 'all';
+        let selectedDateFilter = '';
+        let currentFilterData = {ca: '', doctorId: '', keyword: ''};
+
+        window.applyDateFilter = function () {
+            selectedDateFilter = document.getElementById('filter-specific-date').value;
+            renderAppointments();
+        };
+
+        window.clearDateFilter = function () {
+            document.getElementById('filter-specific-date').value = '';
+            selectedDateFilter = '';
+            renderAppointments();
+        };
+
+        // ⭐ TỐI ƯU RENDER: Cắt giới hạn tối đa 50 bản ghi hiển thị để không bao giờ bị đơ trình duyệt
+        function renderAppointments() {
+            const list = document.getElementById('appointments-list');
+            let filtered = [...appointments];
+
+            if (currentTab !== 'all') filtered = filtered.filter(a => a.status === currentTab);
+            if (currentFilterData.ca) filtered = filtered.filter(a => a.ca === currentFilterData.ca);
+            if (currentFilterData.doctorId) filtered = filtered.filter(a => String(a.doctorId) === String(currentFilterData.doctorId));
+            if (currentFilterData.keyword) {
+                const kw = currentFilterData.keyword.toLowerCase();
+                filtered = filtered.filter(a =>
+                        a.id.toLowerCase().includes(kw) ||
                         a.patientName.toLowerCase().includes(kw) ||
                         a.phone.includes(kw)
-                    );
-                }
-                if (currentFilterData.dateRange) {
-                    filtered = filtered.filter(a => a.date >= currentFilterData.dateRange.from && a.date <= currentFilterData.dateRange.to);
-                }
-
-                filtered = sortAppointments(filtered);
-                updateStats(filtered);
-
-                if (filtered.length === 0) {
-                    list.innerHTML = `
-                        <div class="empty-state">
-                            <i class="fas fa-calendar-times"></i>
-                            <h3>Không có lịch hẹn nào</h3>
-                            <p>Thử thay đổi bộ lọc hoặc chọn ngày khác để xem kết quả.</p>
-                            <button class="btn btn-primary" onclick="resetFilter()">
-                                <i class="fas fa-redo"></i> Đặt lại bộ lọc
-                            </button>
-                        </div>
-                    `;
-                    return;
-                }
-
-                const groups = {};
-                filtered.forEach(appt => {
-                    const key = getGroupKey(appt);
-                    if (!groups[key]) groups[key] = [];
-                    groups[key].push(appt);
-                });
-
-                let html = '';
-                Object.keys(groups).forEach(key => {
-                    const groupAppts = groups[key];
-                    const first = groupAppts[0];
-                    const isGroupSelected = groupAppts.every(a => selectedIds.has(a.id));
-                    const isGroupLocked = lockedGroupKey && lockedGroupKey !== key;
-
-                    html += `
-                        <div class="group-header">
-                            <div class="group-header-left">
-                                <div class="group-icon"><i class="fas fa-layer-group"></i></div>
-                                <div class="group-info">
-                                    <h4>${caLabels[first.ca]} - ${first.doctor}</h4>
-                                    <p>${formatDateDisplay(first.date)} - ${statusLabels[first.status]} - ${groupAppts.length} lịch hẹn</p>
-                                </div>
-                            </div>
-                            <label class="group-select-all">
-                                <input type="checkbox" ${isGroupSelected ? 'checked' : ''} 
-                                       ${isGroupLocked ? 'disabled' : ''}
-                                       onchange="toggleGroup('${key}', this.checked)">
-                                <span>Chọn cả nhóm</span>
-                            </label>
-                        </div>
-                    `;
-
-                    groupAppts.forEach(appt => {
-                        html += renderAppointmentCard(appt, isGroupLocked);
-                    });
-                });
-
-                list.innerHTML = html;
+                );
+            }
+            if (selectedDateFilter) {
+                filtered = filtered.filter(a => a.date === selectedDateFilter);
             }
 
-            function renderAppointmentCard(appt, isGroupLocked) {
-                const isSelected = selectedIds.has(appt.id);
-                const timeStatus = getTimeStatus(appt);
-                const isOverdue = timeStatus === 'overdue';
-                const isUpcoming = timeStatus === 'upcoming';
-                const isPast = new Date(`${appt.date}T${appt.time.split('-')[0]}:00`) < new Date() && appt.status !== 'checked' && appt.status !== 'cancelled' && appt.status !== 'noshow';
-                const isJustUpdated = justUpdatedId === appt.id;
+            updateStats(filtered);
 
+            if (filtered.length === 0) {
+                list.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-calendar-times"></i>
+                        <h3>Không có lịch hẹn nào từ cơ sở dữ liệu</h3>
+                        <p>Thử thay đổi bộ lọc hoặc chọn ngày khác để xem kết quả.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            const totalCount = filtered.length;
+            filtered = filtered.slice(0, 50); // Chỉ render 50 bản ghi đầu tiên để giữ tốc độ siêu mượt
+
+            let html = '';
+            if (totalCount > 50) {
+                html += `
+                    <div style="background: rgba(245, 158, 11, 0.1); border: 1px solid #F59E0B; color: #D97706; padding: 10px; border-radius: 8px; margin-bottom: 12px; font-size: 13px; text-align: center;">
+                        <i class="fas fa-exclamation-triangle"></i> Đang hiển thị <b>50 / ${totalCount}</b> lịch hẹn phù hợp để tối ưu tốc độ. Vui lòng chọn ngày cụ thể hoặc dùng từ khóa tìm kiếm để xem chính xác.
+                    </div>
+                `;
+            }
+
+            filtered.forEach(appt => {
                 let actionsHTML = '';
-                
-                if (appt.status === 'pending') {
-                    if (isOverdue) {
-                        actionsHTML = `
-                            <span class="status-badge" style="background: var(--accent-orange-light); color: var(--accent-orange);"><i class="fas fa-exclamation-triangle"></i> Quá giờ xác nhận</span>
-                            <button class="btn btn-warning btn-sm" onclick="confirmAppointment('${appt.id}')">
-                                <i class="fas fa-check"></i> Xác nhận muộn
-                            </button>
-                            <button class="btn btn-danger btn-sm" onclick="markNoShow('${appt.id}')">
-                                <i class="fas fa-user-slash"></i> Báo No-show
-                            </button>
-                            <button class="btn btn-outline btn-sm" onclick="changeTime('${appt.id}')">
-                                <i class="fas fa-clock"></i> Đổi giờ
-                            </button>
-                        `;
-                    } else {
-                        actionsHTML = `
-                            <span class="status-badge pending">${statusLabels.pending}</span>
-                            <button class="btn btn-success btn-sm" onclick="confirmAppointment('${appt.id}')">
-                                <i class="fas fa-check"></i> Xác nhận
-                            </button>
-                            <button class="btn btn-outline btn-sm" onclick="changeTime('${appt.id}')">
-                                <i class="fas fa-clock"></i> Đổi giờ
-                            </button>
-                            <button class="btn btn-danger btn-sm" onclick="cancelAppointment('${appt.id}')">
-                                <i class="fas fa-times"></i> Hủy
-                            </button>
-                        `;
-                    }
-                } else if (appt.status === 'confirmed') {
-                    if (isOverdue) {
-                        actionsHTML = `
-                            <span class="status-badge" style="background: var(--accent-red-light); color: var(--accent-red);"><i class="fas fa-exclamation-circle"></i> Bệnh nhân lỡ giờ</span>
-                            <button class="btn btn-primary btn-sm" onclick="checkIn('${appt.id}')">
-                                <i class="fas fa-sign-in-alt"></i> Check-in muộn
-                            </button>
-                            <button class="btn btn-warning btn-sm" onclick="markNoShow('${appt.id}')">
-                                <i class="fas fa-user-slash"></i> Báo No-show
-                            </button>
-                            <button class="btn btn-outline btn-sm" onclick="changeTime('${appt.id}')">
-                                <i class="fas fa-clock"></i> Đổi giờ
-                            </button>
-                        `;
-                    } else {
-                        actionsHTML = `
-                            <span class="status-badge confirmed">${statusLabels.confirmed}</span>
-                            <button class="btn btn-primary btn-sm" onclick="checkIn('${appt.id}')">
-                                <i class="fas fa-sign-in-alt"></i> Check-in
-                            </button>
-                            <button class="btn btn-outline btn-sm" onclick="changeTime('${appt.id}')">
-                                <i class="fas fa-clock"></i> Đổi giờ
-                            </button>
-                            <button class="btn btn-danger btn-sm" onclick="cancelAppointment('${appt.id}')">
-                                <i class="fas fa-times"></i> Hủy
-                            </button>
-                        `;
-                    }
-                } else if (appt.status === 'checked') {
+                const stLower = String(appt.status || '').toLowerCase();
+
+                if (stLower === 'confirmed_compensate' || stLower.includes('khám bù') || stLower.includes('bù')) {
                     actionsHTML = `
-                        <span class="status-badge checked">${statusLabels.checked}</span>
-                        <a href="chi_tiet_kham.html?id=${appt.id}" class="btn btn-primary btn-sm">
-                            <i class="fas fa-eye"></i> Xem chi tiết
-                        </a>
-                    `;
-                } else if (appt.status === 'cancelled') {
-                    actionsHTML = `
-                        <span class="status-badge cancelled">${statusLabels.cancelled}</span>
-                        <button class="btn btn-outline btn-sm" onclick="changeTime('${appt.id}')">
-                            <i class="fas fa-clock"></i> Đổi giờ
-                        </button>
-                    `;
-                } else if (appt.status === 'noshow') {
-                    actionsHTML = `
-                        <span class="status-badge noshow">${statusLabels.noshow}</span>
-                        <button class="btn btn-outline btn-sm" onclick="changeTime('${appt.id}')">
-                            <i class="fas fa-clock"></i> Đổi giờ
+                        <span class="status-badge" style="background: rgba(16, 185, 129, 0.15); color: #10B981; font-weight:700;">Lịch khám bù</span>
+                        <button class="btn btn-primary btn-sm" onclick="window.location.href='check_in.html?id=${appt.rawId}'" style="margin-bottom: 4px; background-color: var(--primary-blue); color: #fff;">
+                            <i class="fas fa-sign-in-alt"></i> Check-in
                         </button>
                     `;
                 }
+                else if (stLower === 'reschedule' || stLower === 'ban' || stLower.includes('bận') || stLower.includes('đổi')) {
+                    actionsHTML = `
+                        <span class="status-badge" style="background: rgba(239, 68, 68, 0.15); color: #EF4444; font-weight:700;">Cần đổi lịch gấp</span>
+                        <button class="btn btn-outline btn-sm" style="border-color: #EF4444; color: #EF4444; font-weight:600;" onclick="moModalDoiLich('${appt.rawId}', '${appt.doctorId}', '${appt.patientName}')">
+                            <i class="fas fa-calendar-alt"></i> Đổi lịch ngay
+                        </button>
+                    `;
+                }
+                else if (stLower === 'pending_patient' || stLower.includes('bệnh nhân xác nhận')) {
+                    actionsHTML = `
+                        <span class="status-badge" style="background: rgba(245, 158, 11, 0.15); color: #F59E0B; font-weight:700;">Chờ BN xác nhận</span>
+                        <button class="btn btn-primary btn-sm" onclick="window.location.href='check_in.html?id=${appt.rawId}'" style="margin-bottom: 4px; background-color: var(--primary-blue); color: #fff;">
+                            <i class="fas fa-sign-in-alt"></i> Check-in
+                        </button>
+                    `;
+                }
+                else if (stLower === 'pending' || stLower === 'confirmed' || stLower === 'cho_kham' || stLower.includes('chờ')) {
+                    actionsHTML = `
+                        <span class="status-badge pending">Chờ khám</span>
+                        <button class="btn btn-primary btn-sm" onclick="window.location.href='check_in.html?id=${appt.rawId}'" style="margin-bottom: 4px; background-color: var(--primary-blue); color: #fff;">
+                            <i class="fas fa-sign-in-alt"></i> Check-in
+                        </button>
+                        <button class="btn btn-outline btn-sm" style="border-color: var(--primary-blue); color: var(--primary-blue);" onclick="moModalDoiLich('${appt.rawId}', '${appt.doctorId}', '${appt.patientName}')">
+                            <i class="fas fa-calendar-alt"></i> Đổi lịch sớm
+                        </button>
+                    `;
+                } else if (stLower === 'checked' || stLower.includes('check-in') || stLower.includes('hoàn thành')) {
+                    actionsHTML = `
+                        <span class="status-badge checked">Đã check-in</span>
+                        <button class="btn btn-outline btn-sm" onclick="showMedicalRecordModal('${appt.rawId}')">
+                            <i class="fas fa-file-medical"></i> Hồ sơ bệnh án
+                        </button>
+                    `;
+                } else if (stLower === 'cancelled' || stLower.includes('hủy')) {
+                    actionsHTML = `<span class="status-badge cancelled">Đã hủy</span>`;
+                } else {
+                    actionsHTML = `<span class="status-badge">${statusLabels[appt.status] || appt.status}</span>`;
+                }
 
-                let timeBadge = '';
-                if (isUpcoming) timeBadge = '<div class="badge-urgent">Sắp đến</div>';
-                else if (isOverdue) timeBadge = '<div class="badge-overdue">Quá giờ</div>';
+                const isCompensateCard = (stLower === 'confirmed_compensate' || stLower.includes('khám bù'));
+                const isConflictCard = (stLower === 'reschedule' || stLower === 'ban' || stLower.includes('bận'));
+                const isPendingPatient = (stLower === 'pending_patient');
 
-                const checkboxDisabled = isGroupLocked ? 'disabled' : '';
+                let cardStyle = '';
+                if (isCompensateCard) {
+                    cardStyle = 'border: 2px solid #10B981; background: rgba(16, 185, 129, 0.02);';
+                } else if (isConflictCard) {
+                    cardStyle = 'border: 2px solid #EF4444; background: rgba(239, 68, 68, 0.02);';
+                } else if (isPendingPatient) {
+                    cardStyle = 'border: 2px solid #F59E0B; background: rgba(245, 158, 11, 0.02);';
+                }
 
-                return `
-                    <div class="appointment-card ${isGroupLocked ? 'locked' : ''} ${isJustUpdated ? 'just-updated' : ''}" data-status="${appt.status}">
-                        <input type="checkbox" class="appt-checkbox" ${isSelected ? 'checked' : ''} 
-                               ${checkboxDisabled}
-                               onchange="toggleSelect('${appt.id}', this.checked)">
-                        <div class="appt-time-box ${isPast ? 'past' : ''}">
-                            ${timeBadge}
-                            <div class="time">${appt.time.split('-')[0]}</div>
-                            <div class="ca">${caLabels[appt.ca]}</div>
+                html += `
+                    <div class="appointment-card" data-status="${appt.status}" id="appt-card-${appt.rawId}" style="${cardStyle}">
+                        <div class="appt-time-box" style="${isCompensateCard ? 'background: rgba(16, 185, 129, 0.1); color: #10B981;' : (isConflictCard ? 'background: rgba(239, 68, 68, 0.1); color: #EF4444;' : (isPendingPatient ? 'background: rgba(245, 158, 11, 0.1); color: #F59E0B;' : ''))}">
+                            <div class="time" style="${isCompensateCard ? 'color: #10B981;' : (isConflictCard ? 'color: #EF4444;' : (isPendingPatient ? 'color: #F59E0B;' : ''))}">${appt.time.split('-')[0]}</div>
+                            <div class="ca">${caLabels[appt.ca] || 'Ca khám'}</div>
                         </div>
                         <div class="appt-info">
-                            <h4>
-                                ${appt.patientName}
-                                <span class="appt-code">Mã: ${appt.id}</span>
-                            </h4>
+                            <h4>${appt.patientName} <span class="appt-code">Mã: ${appt.id}</span> ${isCompensateCard ? '<span style="color:#10B981; font-size:11px; margin-left:5px;"><i class="fas fa-check-circle"></i> Lịch khám bù chính thức</span>' : (isConflictCard ? '<span style="color:#EF4444; font-size:11px; margin-left:5px;"><i class="fas fa-exclamation-circle"></i> Bác sĩ bận ca này</span>' : (isPendingPatient ? '<span style="color:#F59E0B; font-size:11px; margin-left:5px;"><i class="fas fa-clock"></i> Chờ bệnh nhân xác nhận</span>' : ''))}</h4>
                             <div class="meta">
-                                <span><i class="fas fa-user-md"></i> ${appt.doctor}</span>
+                                <span><i class="fas fa-user-md" style="${isCompensateCard ? 'color:#10B981;' : (isConflictCard ? 'color:#EF4444;' : (isPendingPatient ? 'color:#F59E0B;' : ''))}"></i> ${appt.doctor}</span>
                                 <span><i class="fas fa-phone"></i> ${appt.phone}</span>
-                                <span><i class="fas fa-calendar"></i> ${formatDateDisplay(appt.date)}</span>
+                                <span><i class="fas fa-calendar"></i> ${appt.date}</span>
                             </div>
                             <div class="note"><i class="fas fa-notes-medical"></i> ${appt.symptom}</div>
                         </div>
@@ -1245,397 +1500,79 @@
                         </div>
                     </div>
                 `;
-            }
-
-            function updateStats(filtered = null) {
-                const data = filtered || appointments;
-                const pending = data.filter(a => a.status === 'pending').length;
-                const confirmed = data.filter(a => a.status === 'confirmed').length;
-                const checked = data.filter(a => a.status === 'checked').length;
-                const noshow = data.filter(a => a.status === 'noshow').length;
-
-                document.getElementById('stat-pending').textContent = pending;
-                document.getElementById('stat-confirmed').textContent = confirmed;
-                document.getElementById('stat-checked').textContent = checked;
-                document.getElementById('stat-noshow').textContent = noshow;
-
-                document.getElementById('count-all').textContent = data.length;
-                document.getElementById('count-pending').textContent = pending;
-                document.getElementById('count-confirmed').textContent = confirmed;
-                document.getElementById('count-checked').textContent = checked;
-                document.getElementById('count-noshow').textContent = noshow;
-            }
-
-            function formatDateDisplay(dateStr) {
-                const d = new Date(dateStr);
-                const today = new Date();
-                today.setHours(0,0,0,0);
-                const tomorrow = new Date(today);
-                tomorrow.setDate(tomorrow.getDate() + 1);
-                const yesterday = new Date(today);
-                yesterday.setDate(yesterday.getDate() - 1);
-                
-                if (d.toDateString() === new Date().toDateString()) return 'Hôm nay';
-                if (d.toDateString() === tomorrow.toDateString()) return 'Ngày mai';
-                if (d.toDateString() === yesterday.toDateString()) return 'Hôm qua';
-                
-                return `${String(d.getDate()).padStart(2, '0')}/${String(d.getMonth() + 1).padStart(2, '0')}/${d.getFullYear()}`;
-            }
-
-            window.switchTab = function(filter) {
-                currentTab = filter;
-                document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
-                document.querySelector(`.filter-tab[data-filter="${filter}"]`).classList.add('active');
-                clearSelection();
-                renderAppointments();
-            };
-
-            window.applyFilter = function() {
-                currentFilterData.ca = document.getElementById('filter-ca').value;
-                currentFilterData.doctorId = document.getElementById('filter-doctor').value;
-                currentFilterData.keyword = document.getElementById('filter-keyword').value.trim();
-                renderAppointments();
-            };
-
-            window.resetFilter = function() {
-                document.getElementById('filter-ca').value = '';
-                document.getElementById('filter-doctor').value = '';
-                document.getElementById('filter-keyword').value = '';
-                currentFilterData.ca = '';
-                currentFilterData.doctorId = '';
-                currentFilterData.keyword = '';
-                quickDate('today');
-            };
-
-            window.toggleSelect = function(id, checked) {
-                const appt = appointments.find(a => a.id === id);
-                if (!appt) return;
-
-                const groupKey = getGroupKey(appt);
-
-                if (checked) {
-                    if (lockedGroupKey && lockedGroupKey !== groupKey) {
-                        showAlert('Chỉ chọn cùng nhóm', 'Bạn chỉ có thể chọn nhiều lịch hẹn cùng nhóm (cùng ca + cùng bác sĩ + cùng trạng thái).', 'warning');
-                        event.target.checked = false;
-                        return;
-                    }
-                    lockedGroupKey = groupKey;
-                    selectedIds.add(id);
-                } else {
-                    selectedIds.delete(id);
-                    if (selectedIds.size === 0) lockedGroupKey = null;
-                }
-                updateBulkBar();
-                renderAppointments();
-            };
-
-            window.toggleGroup = function(groupKey, checked) {
-                if (checked) {
-                    if (lockedGroupKey && lockedGroupKey !== groupKey) {
-                        showAlert('Chỉ chọn cùng nhóm', 'Bạn chỉ có thể chọn nhiều lịch hẹn cùng nhóm.', 'warning');
-                        return;
-                    }
-                    lockedGroupKey = groupKey;
-                    appointments.forEach(appt => {
-                        if (getGroupKey(appt) === groupKey) selectedIds.add(appt.id);
-                    });
-                } else {
-                    appointments.forEach(appt => {
-                        if (getGroupKey(appt) === groupKey) selectedIds.delete(appt.id);
-                    });
-                    if (selectedIds.size === 0) lockedGroupKey = null;
-                }
-                updateBulkBar();
-                renderAppointments();
-            };
-
-            function updateBulkBar() {
-                const bar = document.getElementById('bulk-bar');
-                const count = document.getElementById('bulk-count');
-                const groupInfo = document.getElementById('bulk-group-info');
-                const btnConfirm = document.getElementById('bulk-btn-confirm');
-                const btnCancel = document.getElementById('bulk-btn-cancel');
-
-                if (selectedIds.size > 0) {
-                    bar.classList.add('active');
-                    count.textContent = selectedIds.size;
-
-                    const firstAppt = appointments.find(a => a.id === Array.from(selectedIds)[0]);
-                    if (firstAppt) {
-                        groupInfo.textContent = `Nhóm: ${caLabels[firstAppt.ca]} - ${firstAppt.doctor} - ${statusLabels[firstAppt.status]}`;
-                    }
-
-                    const status = firstAppt.status;
-                    btnConfirm.style.display = (status === 'pending') ? 'inline-flex' : 'none';
-                    btnCancel.style.display = (status === 'pending' || status === 'confirmed') ? 'inline-flex' : 'none';
-                } else {
-                    bar.classList.remove('active');
-                }
-            }
-
-            window.clearSelection = function() {
-                selectedIds.clear();
-                lockedGroupKey = null;
-                document.querySelectorAll('.appt-checkbox').forEach(cb => cb.checked = false);
-                updateBulkBar();
-                renderAppointments();
-            };
-
-            window.bulkConfirm = function() {
-                const ids = Array.from(selectedIds);
-                if (ids.length === 0) return;
-
-                showConfirm('Xác nhận hàng loạt', `Bạn có chắc muốn xác nhận ${ids.length} lịch hẹn đã chọn?`, 'info', function() {
-                    ids.forEach(id => {
-                        LT_Store.updateAppointmentStatus(id, 'confirmed', 'Xác nhận hàng loạt');
-                    });
-                    reloadAppointments();
-                    clearSelection();
-                    renderAppointments();
-                    showAlert('Thành công', `Đã xác nhận ${ids.length} lịch hẹn.`, 'success');
-                });
-            };
-
-            window.bulkCancel = function() {
-                const ids = Array.from(selectedIds);
-                if (ids.length === 0) return;
-
-                showConfirm('Hủy hàng loạt', `Bạn có chắc muốn hủy ${ids.length} lịch hẹn đã chọn?`, 'warning', function() {
-                    ids.forEach(id => {
-                        LT_Store.updateAppointmentStatus(id, 'cancelled', 'Hủy hàng loạt');
-                    });
-                    reloadAppointments();
-                    clearSelection();
-                    renderAppointments();
-                    showAlert('Thành công', `Đã hủy ${ids.length} lịch hẹn.`, 'success');
-                });
-            };
-
-            window.confirmAppointment = function(id) {
-                const appt = appointments.find(a => a.id === id);
-                if (!appt) return;
-
-                const timeStatus = getTimeStatus(appt);
-
-                if (timeStatus === 'overdue') {
-                    showLateConfirmModal(
-                        appt,
-                        function() {
-                            LT_Store.updateAppointmentStatus(id, 'confirmed', 'Xác nhận muộn');
-                            reloadAppointments();
-                            renderAppointments();
-                            showAlert('Đã xác nhận muộn', `Lịch hẹn ${id} đã được xác nhận dù quá giờ.`, 'warning');
-                        },
-                        function() {
-                            LT_Store.updateAppointmentStatus(id, 'noshow', 'Bệnh nhân không đến');
-                            reloadAppointments();
-                            renderAppointments();
-                            showAlert('Đã đánh dấu No-show', `Bệnh nhân ${appt.patientName} không đến.`, 'info');
-                        }
-                    );
-                    return;
-                }
-
-                showConfirm('Xác nhận lịch hẹn', `Xác nhận lịch hẹn ${id} cho ${appt.patientName}?`, 'info', function() {
-                    LT_Store.updateAppointmentStatus(id, 'confirmed', 'Xác nhận bình thường');
-                    reloadAppointments();
-                    renderAppointments();
-                    showAlert('Xác nhận thành công', `Lịch hẹn ${id} đã được xác nhận.`, 'success');
-                });
-            };
-
-            window.cancelAppointment = function(id) {
-                const appt = appointments.find(a => a.id === id);
-                if (!appt) return;
-
-                showConfirm('Xác nhận hủy', `Bạn có chắc muốn hủy lịch hẹn ${id}?`, 'warning', function() {
-                    LT_Store.updateAppointmentStatus(id, 'cancelled', 'Lễ tân hủy');
-                    reloadAppointments();
-                    renderAppointments();
-                    showAlert('Hủy lịch thành công', `Lịch hẹn ${id} đã được hủy.`, 'success');
-                });
-            };
-
-            window.markNoShow = function(id) {
-                const appt = appointments.find(a => a.id === id);
-                if (!appt) return;
-
-                showConfirm('Đánh dấu No-show', `Đánh dấu ${appt.patientName} là KHÔNG ĐẾN?`, 'warning', function() {
-                    LT_Store.updateAppointmentStatus(id, 'noshow', 'Bệnh nhân không đến');
-                    reloadAppointments();
-                    renderAppointments();
-                    showAlert('Đã ghi nhận No-show', `Bệnh nhân ${appt.patientName} không đến.`, 'info');
-                });
-            };
-
-            window.checkIn = function(id) {
-                const appt = appointments.find(a => a.id === id);
-                if (!appt) return;
-
-                const timeStatus = getTimeStatus(appt);
-
-                if (timeStatus === 'overdue') {
-                    showConfirm('Check-in muộn', `Bệnh nhân ${appt.patientName} đã lỡ giờ hẹn. Vẫn check-in?`, 'warning', function() {
-                        window.location.href = `check_in.html?id=${id}&late=1`;
-                    });
-                } else {
-                    window.location.href = `check_in.html?id=${id}`;
-                }
-            };
-
-            window.changeTime = function(id) {
-                const appt = appointments.find(a => a.id === id);
-                if (!appt) return;
-
-                editingApptId = id;
-
-                document.getElementById('current-appt-info').innerHTML = `
-                    <div class="row"><span class="label">Mã lịch hẹn:</span><span class="value">${appt.id}</span></div>
-                    <div class="row"><span class="label">Bệnh nhân:</span><span class="value">${appt.patientName}</span></div>
-                    <div class="row"><span class="label">Bác sĩ:</span><span class="value">${appt.doctor}</span></div>
-                    <div class="row"><span class="label">Ngày khám:</span><span class="value">${formatDateDisplay(appt.date)}</span></div>
-                    <div class="row"><span class="label">Giờ hiện tại:</span><span class="value" style="color: var(--accent-orange);">${appt.time} (${caLabels[appt.ca]})</span></div>
-                `;
-
-                renderTimeSlots(appt);
-                document.getElementById('time-picker-overlay').classList.add('active');
-            };
-
-            function renderTimeSlots(appt) {
-                const container = document.getElementById('time-picker-content');
-                let html = '';
-                
-                ['sang', 'chieu', 'toi'].forEach(ca => {
-                    const caIcon = ca === 'sang' ? 'fa-sun' : (ca === 'chieu' ? 'fa-cloud-sun' : 'fa-moon');
-                    const caLabel = caLabels[ca];
-                    const caRange = ca === 'sang' ? '07:30 - 11:30' : (ca === 'chieu' ? '13:30 - 18:30' : '18:30 - 22:30');
-                    
-                    html += `
-                        <div class="time-picker-section">
-                            <h4><i class="fas ${caIcon}"></i> ${caLabel} (${caRange})</h4>
-                            <div class="time-slots-grid">
-                    `;
-                    
-                    TIME_SLOTS[ca].forEach(slot => {
-                        const booked = !LT_Store.isSlotAvailable(appt.doctorId, appt.date, slot.value, appt.id);
-                        const isCurrent = slot.value === appt.time;
-                        
-                        let labelClass = '';
-                        let noteHTML = '';
-                        
-                        if (booked) {
-                            labelClass = 'disabled';
-                            noteHTML = '<span class="slot-note">Đã đặt</span>';
-                        } else if (isCurrent) {
-                            labelClass = 'current-slot';
-                            noteHTML = '<span class="slot-note" style="color: var(--accent-orange);">Hiện tại</span>';
-                        }
-                        
-                        html += `
-                            <div class="time-slot">
-                                <input type="radio" 
-                                       id="slot-${slot.value}" 
-                                       name="new_time_slot" 
-                                       value="${slot.value}"
-                                       data-ca="${ca}"
-                                       ${booked ? 'disabled' : ''}
-                                       ${isCurrent ? 'checked' : ''}>
-                                <label for="slot-${slot.value}" class="${labelClass}">
-                                    ${slot.label}
-                                    ${noteHTML}
-                                </label>
-                            </div>
-                        `;
-                    });
-                    
-                    html += `</div></div>`;
-                });
-                
-                container.innerHTML = html;
-            }
-
-            window.closeTimePicker = function() {
-                document.getElementById('time-picker-overlay').classList.remove('active');
-                editingApptId = null;
-            };
-
-            window.submitChangeTime = function() {
-                const appt = appointments.find(a => a.id === editingApptId);
-                if (!appt) return;
-
-                const selectedSlot = document.querySelector('input[name="new_time_slot"]:checked');
-                if (!selectedSlot) {
-                    showAlert('Thiếu thông tin', 'Vui lòng chọn khung giờ mới!', 'warning');
-                    return;
-                }
-
-                const newTime = selectedSlot.value;
-                const newCa = selectedSlot.dataset.ca;
-
-                if (newTime === appt.time) {
-                    showAlert('Không thay đổi', 'Khung giờ mới trùng với khung giờ hiện tại.', 'info');
-                    return;
-                }
-
-                const oldTime = appt.time;
-                const oldCa = appt.ca;
-
-                LT_Store.changeAppointmentTime(editingApptId, newTime, newCa);
-                reloadAppointments();
-
-                closeTimePicker();
-                justUpdatedId = appt.id;
-                setTimeout(() => { justUpdatedId = null; }, 1500);
-                renderAppointments();
-
-                const caChanged = oldCa !== newCa;
-                const message = caChanged 
-                    ? `Đã chuyển lịch hẹn ${appt.id} từ ${caLabels[oldCa]} (${oldTime}) sang ${caLabels[newCa]} (${newTime}).`
-                    : `Đã đổi giờ lịch hẹn ${appt.id} từ ${oldTime} sang ${newTime}.`;
-                
-                showAlert('Đổi giờ thành công', message + ' Bệnh nhân sẽ nhận được SMS.', 'success', null, {
-                    'Mã LH': appt.id,
-                    'Bệnh nhân': appt.patientName,
-                    'Giờ cũ': `${oldTime} (${caLabels[oldCa]})`,
-                    'Giờ mới': `${newTime} (${caLabels[newCa]})`
-                });
-            };
-
-            document.getElementById('time-picker-overlay').addEventListener('click', function(e) {
-                if (e.target === this) closeTimePicker();
             });
 
-            document.addEventListener('keydown', function(e) {
-                if (e.key === 'Escape' && document.getElementById('time-picker-overlay').classList.contains('active')) {
-                    closeTimePicker();
-                }
-            });
+            list.innerHTML = html;
+        }
 
-            window.exportExcel = function() {
-                showAlert('Xuất Excel', 'Đang xuất danh sách lịch hẹn ra file Excel... (Demo)', 'info');
-            };
+        function updateStats(filtered = null) {
+            const data = filtered || appointments;
+            const compensate = data.filter(a => String(a.status || '').toLowerCase() === 'confirmed_compensate').length;
+            const reschedule = data.filter(a => String(a.status || '').toLowerCase() === 'reschedule').length;
+            const pendingPatient = data.filter(a => String(a.status || '').toLowerCase() === 'pending_patient').length;
+            const pending = data.filter(a => a.status === 'pending').length;
+            const confirmed = data.filter(a => a.status === 'confirmed').length;
+            const checked = data.filter(a => a.status === 'checked').length;
 
-            // ============================================================
-            // INIT
-            // ============================================================
-            const urlParams = new URLSearchParams(window.location.search);
-            const caFilter = urlParams.get('ca');
-            if (caFilter) {
-                document.getElementById('filter-ca').value = caFilter;
-                currentFilterData.ca = caFilter;
-            }
+            const statCompensateEl = document.getElementById('stat-compensate');
+            if (statCompensateEl) statCompensateEl.textContent = compensate;
 
-            reloadAppointments();
+            const statRescheduleEl = document.getElementById('stat-reschedule');
+            if (statRescheduleEl) statRescheduleEl.textContent = reschedule;
+
+            const statPendingPatientEl = document.getElementById('stat-pending-patient');
+            if (statPendingPatientEl) statPendingPatientEl.textContent = pendingPatient;
+
+            document.getElementById('stat-pending').textContent = pending;
+            document.getElementById('stat-confirmed').textContent = confirmed;
+            document.getElementById('stat-checked').textContent = checked;
+
+            document.getElementById('count-all').textContent = data.length;
+
+            const countCompensateEl = document.getElementById('count-compensate');
+            if (countCompensateEl) countCompensateEl.textContent = compensate;
+
+            const countRescheduleEl = document.getElementById('count-reschedule');
+            if (countRescheduleEl) countRescheduleEl.textContent = reschedule;
+
+            const countPendingPatientEl = document.getElementById('count-pending-patient');
+            if (countPendingPatientEl) countPendingPatientEl.textContent = pendingPatient;
+
+            document.getElementById('count-pending').textContent = pending;
+            document.getElementById('count-confirmed').textContent = confirmed;
+            document.getElementById('count-checked').textContent = checked;
+        }
+
+        window.switchTab = function (filter) {
+            currentTab = filter;
+            document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
+            document.querySelector(`.filter-tab[data-filter="${filter}"]`).classList.add('active');
             renderAppointments();
+        };
 
-            // Multi-tab sync
-            window.addEventListener('storage', function(e) {
-                if (e.key && e.key.startsWith('medbooking_')) {
-                    reloadAppointments();
-                    renderAppointments();
-                }
-            });
-        });
-    </script>
+        window.applyFilter = function () {
+            currentFilterData.ca = document.getElementById('filter-ca').value;
+            currentFilterData.doctorId = document.getElementById('filter-doctor').value;
+            currentFilterData.keyword = document.getElementById('filter-keyword').value.trim();
+            renderAppointments();
+        };
+
+        window.resetFilter = function () {
+            document.getElementById('filter-ca').value = '';
+            document.getElementById('filter-doctor').value = '';
+            document.getElementById('filter-keyword').value = '';
+            currentFilterData.ca = '';
+            currentFilterData.doctorId = '';
+            currentFilterData.keyword = '';
+            clearDateFilter();
+        };
+
+        window.exportExcel = function () {
+            showAlert('Xuất Excel', 'Đang xuất danh sách lịch hẹn từ cơ sở dữ liệu...', 'info');
+        };
+
+        fetchAppointmentsFromDB();
+    });
+</script>
 </body>
 </html>

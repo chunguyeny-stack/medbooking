@@ -3,16 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin - Quản lý Dịch vụ & Giá khám</title>
+    <title>Admin - Quản lý Dịch vụ & Giá khám (SQL Server)</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="icon" type="image/jpeg" href="../../favicon.jpg">
+    <link rel="icon" type="image/jpeg" href="/static/favicon.jpg">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Quicksand:wght@600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="../../static/css/A.css">
-    
     <style>
-        /* Định dạng phông chữ thương hiệu MedBooking */
         .brand-name {
             font-family: 'Quicksand', sans-serif !important;
             font-weight: 700 !important;
@@ -20,14 +18,12 @@
             letter-spacing: -0.01em;
             font-size: 22px;
         }
-
-        /* Hiệu ứng hover sáng lên giống nút thông báo */
         .admin-profile-btn {
-            text-decoration: none; 
-            color: var(--primary-color); 
-            font-weight: 600; 
-            padding: 8px 16px; 
-            background: var(--primary-light); 
+            text-decoration: none;
+            color: var(--primary-color);
+            font-weight: 600;
+            padding: 8px 16px;
+            background: var(--primary-light);
             border-radius: 50px;
             transition: all 0.25s ease;
         }
@@ -37,116 +33,180 @@
             box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);
             transform: translateY(-1px);
         }
+        .custom-modal-overlay {
+            position: fixed !important;
+            top: 0 !important;
+            left: 0 !important;
+            width: 100vw !important;
+            height: 100vh !important;
+            background: rgba(10, 5, 20, 0.8) !important;
+            display: none;
+            align-items: center !important;
+            justify-content: center !important;
+            z-index: 999999 !important;
+            backdrop-filter: blur(5px);
+            margin: 0 !important;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        .custom-modal-content {
+            background: #1E1B4B !important;
+            border: 1px solid rgba(255, 255, 255, 0.15) !important;
+            border-radius: 20px !important;
+            padding: 28px !important;
+            width: 100% !important;
+            max-width: 480px !important;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.6) !important;
+            color: #fff !important;
+        }
     </style>
 </head>
 <body>
 
-    <aside>
-        <button class="sidebar-close" id="sidebar-close" aria-label="Đóng menu"><i class="fas fa-times"></i></button>
-        <div class="brand">
-            <span class="brand-name">MedBooking</span>
-            <span class="brand-sub">ADMIN PANEL</span>
+<aside>
+    <button class="sidebar-close" id="sidebar-close" aria-label="Đóng menu"><i class="fas fa-times"></i></button>
+    <div class="brand">
+        <span class="brand-name">MedBooking</span>
+        <span class="brand-sub">ADMIN PANEL</span>
+    </div>
+    <nav>
+        <h3>QUẢN LÝ NHÂN SỰ & NGƯỜI DÙNG</h3>
+        <ul>
+            <li><a href="/admin/home_a.html">Trang chủ Admin</a></li>
+            <li><a href="/admin/quan_ly_tai_khoan.html">Quản lý tài khoản</a></li>
+            <li><a href="/admin/quan_ly_bac_si.html">Quản lý bác sĩ</a></li>
+        </ul>
+        <h3>DANH MỤC Y TẾ</h3>
+        <ul>
+            <li><a href="/admin/quan_ly_chuyen_khoa.html">Quản lý chuyên khoa</a></li>
+            <li><a href="/admin/quan_ly_dich_vu.html"><strong>Quản lý dịch vụ & giá</strong></a></li>
+            <li><a href="/admin/quan_ly_mapping.html">Quản lý Mapping Triệu chứng</a></li>
+        </ul>
+        <h3>BÁO CÁO & THỐNG KÊ</h3>
+        <ul>
+            <li><a href="/admin/dashboard.html">Dashboard Thống kê & Báo cáo</a></li>
+            <li><a href="/admin/nhat_ky_giao_dich.html">Nhật ký Giao dịch Chi tiết</a></li>
+            <li><a href="/admin/thung_rac.html">Thùng rác hệ thống</a></li>
+        </ul>
+    </nav>
+</aside>
+
+<main>
+    <header>
+        <button class="menu-toggle" id="menu-toggle" aria-label="Mở menu"><i class="fas fa-bars"></i></button>
+        <h1>Quản lý Dịch vụ & Bảng giá Khám chữa bệnh</h1>
+        <div style="display: flex; align-items: center; gap: 12px;">
+            <a href="ho_so_ca_nhan.html" class="admin-profile-btn" id="admin-name-btn">AD Tên Admin</a>
+            <button class="theme-toggle" id="theme-toggle">🌙</button>
+            <a href="../dk_dn/dn.html">Đăng xuất</a>
         </div>
-        <nav>
-            <h3>QUẢN LÝ NHÂN SỰ & NGƯỜI DÙNG</h3>
-            <ul>
-                <li><a href="home_a.html">Trang chủ Admin</a></li>
-                <li><a href="quan_ly_tai_khoan.html">Quản lý tài khoản</a></li>
-                <li><a href="quan_ly_bac_si.html">Quản lý bác sĩ</a></li>
-            </ul>
-            <h3>DANH MỤC Y TẾ</h3>
-            <ul>
-                <li><a href="quan_ly_chuyen_khoa.html">Quản lý chuyên khoa</a></li>
-                <li><a href="quan_ly_dich_vu.html"><strong>Quản lý dịch vụ & giá</strong></a></li>
-                <li><a href="quan_ly_mapping.html">Quản lý Mapping Triệu chứng</a></li>
-            </ul>
-            <h3>BÁO CÁO & THỐNG KÊ</h3>
-            <ul>
-                <li><a href="dashboard.html">Dashboard Thống kê & Báo cáo</a></li>
-                <li><a href="nhat_ky_giao_dich.html">Nhật ký Giao dịch Chi tiết</a></li>
-                <li><a href="thung_rac.html">Thùng rác hệ thống</a></li>
-            </ul>
-        </nav>
-    </aside>
+    </header>
 
-    <main>
-        <header>
-            <button class="menu-toggle" id="menu-toggle" aria-label="Mở menu"><i class="fas fa-bars"></i></button>
-            <h1>Quản lý Dịch vụ & Bảng giá Khám chữa bệnh</h1>
-            <div style="display: flex; align-items: center; gap: 12px;">
-                <!-- Nút AD Tên Admin màu tím nguyên bản, có hiệu ứng hover và chuyển sang trang hồ sơ cá nhân -->
-                <a href="ho_so_ca_nhan.html" class="admin-profile-btn">AD Tên Admin</a>
-                <button class="theme-toggle" id="theme-toggle">🌙</button>
-                <a href="../dk_dn/dn.html">Đăng xuất</a>
-            </div>
-        </header>
+    <section style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; margin-bottom: 20px;">
+        <div style="display: flex; gap: 10px; flex-wrap: wrap; align-items: center;">
+            <input type="text" id="search-service" placeholder="Tìm kiếm tên dịch vụ, mã dịch vụ..."
+                   style="padding: 8px 12px; border-radius: 10px; border: 1px solid var(--border-glass); background: var(--bg-main); color: var(--secondary-color);">
+            <select id="filter-service-specialty"
+                    style="padding: 8px 12px; border-radius: 10px; border: 1px solid var(--border-glass); background: var(--bg-main); color: var(--secondary-color);">
+                <option value="all">Tất cả chuyên khoa</option>
+            </select>
+            <select id="filter-status"
+                    style="padding: 8px 12px; border-radius: 10px; border: 1px solid var(--border-glass); background: var(--bg-main); color: var(--secondary-color);">
+                <option value="all">Tất cả trạng thái</option>
+                <option value="active">Đang hoạt động</option>
+                <option value="deleted">Đã xóa</option>
+            </select>
+        </div>
+        <button type="button" id="btn-add-service"
+                style="padding: 9px 18px; background: var(--primary-gradient); color: #fff; border: none; border-radius: 10px; font-weight: 600; cursor: pointer;">
+            <i class="fas fa-plus" style="margin-right: 6px;"></i> Thêm Dịch Vụ Mới
+        </button>
+    </section>
 
-        <section>
-            <div>
-                <input type="text" id="search-service" placeholder="Tìm kiếm tên dịch vụ, mã dịch vụ...">
-                <select id="filter-service-specialty">
-                    <option value="all">Tất cả chuyên khoa</option>
-                </select>
-            </div>
-            <button type="button" id="btn-add-service">+ Thêm Dịch Vụ Mới</button>
-        </section>
-
-        <section>
-            <h2>Danh sách Dịch vụ Y tế</h2>
-            <table>
+    <section style="background: var(--bg-card); border: 1px solid var(--border-glass); border-radius: 20px; padding: 22px; box-shadow: var(--shadow-soft);">
+        <h2 style="font-size: 15px; font-weight: 700; color: var(--secondary-color); margin-bottom: 16px;">Danh sách Dịch vụ Y tế</h2>
+        <div style="overflow-x: auto;">
+            <table style="width: 100%; border-collapse: collapse; text-align: left;">
                 <thead>
-                    <tr>
-                        <th>Mã DV</th>
-                        <th>Tên dịch vụ</th>
-                        <th>Chuyên khoa</th>
-                        <th>Giá niêm yết</th>
-                        <th>Mô tả</th>
-                        <th>Hành động</th>
-                    </tr>
+                <tr style="border-bottom: 2px solid var(--border-glass); font-size: 12.5px; color: var(--text-gray);">
+                    <th style="padding: 12px;">Mã DV</th>
+                    <th style="padding: 12px;">Tên dịch vụ</th>
+                    <th style="padding: 12px;">Chuyên khoa</th>
+                    <th style="padding: 12px;">Giá niêm yết</th>
+                    <th style="padding: 12px;">Mô tả</th>
+                    <th style="padding: 12px;">Trạng thái</th>
+                    <th style="padding: 12px; text-align: center;">Hành động</th>
+                </tr>
                 </thead>
                 <tbody id="service-table-body">
-                    <tr><td colspan="6" style="text-align:center;padding:40px;color:#8B7FA8;">Đang tải...</td></tr>
+                <tr>
+                    <td colspan="7" style="text-align:center;padding:40px;color:var(--text-gray);">Đang tải dữ liệu trực tiếp từ SQL Server...</td>
+                </tr>
                 </tbody>
             </table>
-        </section>
+        </div>
+    </section>
 
-        <section id="service-form-modal" style="display: none;">
-            <h3 id="form-service-title">Thêm Dịch Vụ Mới</h3>
+    <!-- Modal Thêm / Sửa Dịch vụ -->
+    <div id="service-form-modal" class="custom-modal-overlay">
+        <div class="custom-modal-content">
             <form id="form-service-info">
-                <div>
-                    <label for="serv-name">Tên dịch vụ:</label>
-                    <input type="text" id="serv-name" required>
+                <h3 id="form-service-title" style="font-size: 16px; font-weight: 700; color: #fff; margin-bottom: 16px;">Thêm Dịch Vụ Mới</h3>
+                <input type="hidden" id="edit-service-id">
+                <div style="margin-bottom: 12px;">
+                    <label for="serv-name" style="font-size: 12px; font-weight: 600; color: #D1D5DB; display: block; margin-bottom: 4px;">Tên dịch vụ:</label>
+                    <input type="text" id="serv-name" required style="width: 100%; padding: 8px 12px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.2); background: rgba(0,0,0,0.2); color: #fff; box-sizing: border-box;">
                 </div>
-                <div>
-                    <label for="serv-specialty">Thuộc chuyên khoa:</label>
-                    <select id="serv-specialty" required></select>
+                <div style="margin-bottom: 12px;">
+                    <label for="serv-specialty" style="font-size: 12px; font-weight: 600; color: #D1D5DB; display: block; margin-bottom: 4px;">Thuộc chuyên khoa:</label>
+                    <select id="serv-specialty" required style="width: 100%; padding: 8px 12px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.2); background: #1E1B4B; color: #fff; box-sizing: border-box;"></select>
                 </div>
-                <div>
-                    <label for="serv-price">Giá niêm yết (VNĐ):</label>
-                    <input type="number" id="serv-price" min="0" step="1000" required>
+                <div style="margin-bottom: 12px;">
+                    <label for="serv-price" style="font-size: 12px; font-weight: 600; color: #D1D5DB; display: block; margin-bottom: 4px;">Giá niêm yết (VNĐ):</label>
+                    <input type="number" id="serv-price" min="0" step="1000" required style="width: 100%; padding: 8px 12px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.2); background: rgba(0,0,0,0.2); color: #fff; box-sizing: border-box;">
                 </div>
-                <div>
-                    <label for="serv-desc">Mô tả chi tiết:</label>
-                    <textarea id="serv-desc" rows="3"></textarea>
+                <div style="margin-bottom: 16px;">
+                    <label for="serv-desc" style="font-size: 12px; font-weight: 600; color: #D1D5DB; display: block; margin-bottom: 4px;">Mô tả chi tiết:</label>
+                    <textarea id="serv-desc" rows="3" style="width: 100%; padding: 8px 12px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.2); background: rgba(0,0,0,0.2); color: #fff; box-sizing: border-box;"></textarea>
                 </div>
-                <div>
-                    <button type="submit" id="btn-save-service">Lưu thông tin</button>
-                    <button type="button" id="btn-cancel-service">Hủy bỏ</button>
+                <div style="display: flex; justify-content: flex-end; gap: 10px;">
+                    <button type="button" id="btn-cancel-service" style="padding: 8px 16px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); border-radius: 8px; cursor: pointer; color: #fff;">Hủy bỏ</button>
+                    <button type="submit" id="btn-save-service" style="padding: 8px 18px; background: linear-gradient(135deg, #8B5CF6, #6D28D9); color: #fff; border: none; border-radius: 8px; font-weight: 600; cursor: pointer;">Lưu thông tin</button>
                 </div>
             </form>
-        </section>
-    </main>
+        </div>
+    </div>
 
-    <div class="sidebar-overlay" id="sidebar-overlay"></div>
+    <!-- Modal: Xem/Nhập Lý do XÓA Dịch vụ & Khôi phục -->
+    <div id="delete-modal" class="custom-modal-overlay">
+        <div class="custom-modal-content">
+            <h3 style="font-size: 16px; font-weight: 700; color: #fff; margin-bottom: 12px;"><i class="fas fa-trash" style="color: #EF4444; margin-right: 6px;"></i> Lý do xóa / Khôi phục dịch vụ</h3>
+            <input type="hidden" id="delete-target-id">
+            <div style="margin-bottom: 16px;">
+                <label style="font-size: 12px; font-weight: 600; color: #D1D5DB; display: block; margin-bottom: 4px;">Nội dung lý do:</label>
+                <textarea id="delete-reason-text" rows="3" placeholder="Nhập lý do xóa..." style="width: 100%; padding: 8px 12px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.2); background: rgba(0,0,0,0.2); color: #fff; box-sizing: border-box;"></textarea>
+            </div>
+            <div style="display: flex; justify-content: flex-end; gap: 10px;">
+                <button type="button" id="btn-cancel-delete" style="padding: 8px 16px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); border-radius: 8px; cursor: pointer; color: #fff;">Hủy bỏ</button>
+                <button type="button" id="btn-submit-restore" style="padding: 8px 18px; background: #10B981; color: #fff; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; display: none;">Khôi phục</button>
+                <button type="button" id="btn-submit-delete" style="padding: 8px 18px; background: #EF4444; color: #fff; border: none; border-radius: 8px; font-weight: 600; cursor: pointer;">Xác nhận Xóa</button>
+            </div>
+        </div>
+    </div>
+</main>
 
-    <script src="../../static/js/admin-data.js"></script>
-    <script src="../../static/js/admin.js"></script>
-    <script>
+<div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+<script src="../../static/js/admin.js"></script>
+<script>
     (function () {
         const html = document.documentElement;
         const saved = localStorage.getItem('mb-admin-theme') ||
-                      (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+                (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
         html.setAttribute('data-theme', saved);
+
         document.addEventListener('DOMContentLoaded', () => {
             const themeBtn = document.getElementById('theme-toggle');
             if (themeBtn) {
@@ -158,41 +218,303 @@
                     themeBtn.textContent = next === 'dark' ? '☀️' : '🌙';
                 });
             }
+
             const menuBtn = document.getElementById('menu-toggle');
             const closeBtn = document.getElementById('sidebar-close');
             const sidebar = document.querySelector('aside');
             const overlay = document.getElementById('sidebar-overlay');
-            function openSidebar() { sidebar.classList.add('open'); if (overlay) overlay.classList.add('active'); document.body.style.overflow = 'hidden'; }
-            function closeSidebar() { sidebar.classList.remove('open'); if (overlay) overlay.classList.remove('active'); document.body.style.overflow = ''; }
+
+            function openSidebar() {
+                sidebar.classList.add('open');
+                if (overlay) overlay.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            }
+
+            function closeSidebar() {
+                sidebar.classList.remove('open');
+                if (overlay) overlay.classList.remove('active');
+                document.body.style.overflow = '';
+            }
+
             if (menuBtn) menuBtn.addEventListener('click', openSidebar);
             if (closeBtn) closeBtn.addEventListener('click', closeSidebar);
             if (overlay) overlay.addEventListener('click', closeSidebar);
-            sidebar.querySelectorAll('nav a').forEach(link => {
-                link.addEventListener('click', () => { if (window.innerWidth <= 900) closeSidebar(); });
-            });
-            window.addEventListener('resize', () => { if (window.innerWidth > 900) closeSidebar(); });
-        });
-    })();
-    </script>
-    <script>
-    // Tự động highlight menu đang chọn dựa vào tên file URL
-    document.addEventListener('DOMContentLoaded', () => {
-        const currentPath = window.location.pathname.split('/').pop() || 'home_a.html';
-        const navLinks = document.querySelectorAll('aside nav a');
-        
-        navLinks.forEach(link => {
-            const href = link.getAttribute('href');
-            // Nếu href trùng với tên file hiện tại thì thêm class active
-            if (href === currentPath) {
-                link.classList.add('active');
-                // Xóa thẻ <strong> cũ nếu có (để không bị in đậm 2 lần)
-                const strong = link.querySelector('strong');
-                if (strong) {
-                    link.innerHTML = strong.innerHTML;
+
+            const token = localStorage.getItem('medbooking_token');
+
+            if (token) {
+                fetch('/auth/me', {
+                    headers: {'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json'}
+                })
+                .then(res => res.json())
+                .then(data => {
+                    const adminName = data.ho_ten || data.name || '';
+                    const adminNameBtn = document.getElementById('admin-name-btn');
+                    if (adminNameBtn && adminName) {
+                        adminNameBtn.textContent = `AD ${adminName}`;
+                    }
+                }).catch(err => console.error("Lỗi tải thông tin admin:", err));
+            }
+
+            let allServices = [];
+            let allSpecialties = [];
+
+            async function loadSpecialties() {
+                try {
+                    const res = await fetch('/auth/admin/chuyen-khoa', {
+                        headers: {'Authorization': `Bearer ${token}`}
+                    });
+                    if (res.ok) {
+                        allSpecialties = await res.json();
+                        const filterSelect = document.getElementById('filter-service-specialty');
+                        const servSelect = document.getElementById('serv-specialty');
+
+                        const optionsHtml = '<option value="all">Tất cả chuyên khoa</option>' +
+                            allSpecialties.map(s => `<option value="${s.id}">${s.name}</option>`).join('');
+                        filterSelect.innerHTML = optionsHtml;
+
+                        servSelect.innerHTML = allSpecialties.map(s => `<option value="${s.id}">${s.name}</option>`).join('');
+                    }
+                } catch (e) {
+                    console.error("Lỗi tải danh mục chuyên khoa:", e);
                 }
             }
+
+            async function loadServices() {
+                const tbody = document.getElementById('service-table-body');
+                tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;padding:40px;color:var(--text-gray);">Đang tải dữ liệu trực tiếp từ SQL Server...</td></tr>`;
+
+                try {
+                    const res = await fetch('/auth/admin/dich-vu', {
+                        headers: {'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json'}
+                    });
+                    if (!res.ok) throw new Error("Không thể tải danh sách dịch vụ từ CSDL.");
+
+                    allServices = await res.json();
+                    renderServices(allServices);
+                } catch (err) {
+                    console.error("Lỗi tải danh sách dịch vụ:", err);
+                    tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;padding:40px;color:#EF4444;">Không thể tải dữ liệu dịch vụ từ SQL Server!</td></tr>`;
+                }
+            }
+
+            function renderServices(list) {
+                const tbody = document.getElementById('service-table-body');
+                const searchKey = document.getElementById('search-service').value.toLowerCase();
+                const specialtyFilter = document.getElementById('filter-service-specialty').value;
+                const statusFilter = document.getElementById('filter-status').value;
+
+                let filtered = list.filter(serv => {
+                    const name = (serv.name || '').toLowerCase();
+                    const matchSearch = name.includes(searchKey);
+                    const matchSpecialty = specialtyFilter === 'all' || String(serv.specialtyId) === String(specialtyFilter);
+
+                    const status = String(serv.status || 'active').toLowerCase().trim();
+                    let matchStatus = true;
+
+                    // ⭐ TỰ ĐỘNG ẨN DỊCH VỤ ĐÃ XÓA KHỎI BẢNG CHÍNH (Trừ khi chọn bộ lọc "Đã xóa")
+                    const isDeleted = (status === 'deleted' || status === 'đã xóa');
+                    if (statusFilter === 'all' && isDeleted) {
+                        return false;
+                    }
+
+                    if (statusFilter !== 'all') {
+                        if (statusFilter === 'active') matchStatus = (status === 'active');
+                        else if (statusFilter === 'deleted') matchStatus = isDeleted;
+                    }
+
+                    return matchSearch && matchSpecialty && matchStatus;
+                });
+
+                if (filtered.length === 0) {
+                    tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;padding:40px;color:var(--text-gray);">Không tìm thấy dịch vụ nào khớp với bộ lọc.</td></tr>`;
+                    return;
+                }
+
+                tbody.innerHTML = filtered.map(serv => {
+                    const status = String(serv.status || 'active').toLowerCase().trim();
+                    const deleteReason = serv.ly_do_xoa || '';
+                    const formattedPrice = Number(serv.price || 0).toLocaleString('vi-VN') + ' VNĐ';
+
+                    let statusBadge = '<span style="padding:4px 10px; border-radius:20px; font-size:11.5px; font-weight:600; background:rgba(16,185,129,0.12); color:#10B981;">Đang hoạt động</span>';
+                    if (status === 'deleted' || status === 'đã xóa') {
+                        statusBadge = '<span style="padding:4px 10px; border-radius:20px; font-size:11.5px; font-weight:600; background:rgba(239,68,68,0.12); color:#EF4444;">Đã xóa</span>';
+                    }
+
+                    let actionButtons = '';
+                    if (status === 'deleted' || status === 'đã xóa') {
+                        actionButtons = `
+                            <button type="button" onclick="window.openDeleteModal(${serv.id}, '${encodeURIComponent(deleteReason)}')" style="padding: 5px 10px; background: rgba(239,68,68,0.12); color: #EF4444; border: none; border-radius: 6px; cursor: pointer; font-weight: 600;"><i class="fas fa-eye"></i> Lý do xóa</button>
+                        `;
+                    } else {
+                        actionButtons = `
+                            <button type="button" onclick="window.editService(${serv.id})" style="padding: 5px 10px; background: var(--primary-light); color: var(--primary-color); border: none; border-radius: 6px; cursor: pointer; font-weight: 600; margin-right: 4px;"><i class="fas fa-edit"></i> Sửa</button>
+                            <button type="button" onclick="window.openDeleteModal(${serv.id}, '')" style="padding: 5px 10px; background: rgba(239,68,68,0.12); color: #EF4444; border: none; border-radius: 6px; cursor: pointer; font-weight: 600;"><i class="fas fa-trash"></i> Xóa</button>
+                        `;
+                    }
+
+                    return `
+                        <tr style="border-bottom: 1px solid var(--border-glass); font-size: 13px;">
+                            <td style="padding: 12px; font-weight: 600; color: var(--primary-color);">DV${String(serv.id).padStart(3, '0')}</td>
+                            <td style="padding: 12px; font-weight: 600; color: var(--secondary-color);">${serv.name}</td>
+                            <td style="padding: 12px; color: var(--secondary-color);">${serv.specialtyName || 'Chung'}</td>
+                            <td style="padding: 12px; font-weight: 600; color: #10B981;">${formattedPrice}</td>
+                            <td style="padding: 12px; color: var(--text-gray);">${serv.description || 'Chưa có mô tả'}</td>
+                            <td style="padding: 12px;">${statusBadge}</td>
+                            <td style="padding: 12px; text-align: center;">${actionButtons}</td>
+                        </tr>
+                    `;
+                }).join('');
+            }
+
+            document.getElementById('search-service').addEventListener('input', () => renderServices(allServices));
+            document.getElementById('filter-service-specialty').addEventListener('change', () => renderServices(allServices));
+            document.getElementById('filter-status').addEventListener('change', () => renderServices(allServices));
+
+            // --- Modal Thêm / Sửa Dịch vụ ---
+            const modal = document.getElementById('service-form-modal');
+            document.getElementById('btn-add-service').addEventListener('click', () => {
+                document.getElementById('form-service-title').textContent = "Thêm Dịch Vụ Mới";
+                document.getElementById('edit-service-id').value = "";
+                document.getElementById('serv-name').value = "";
+                document.getElementById('serv-price').value = "";
+                document.getElementById('serv-desc').value = "";
+                if (allSpecialties.length > 0) {
+                    document.getElementById('serv-specialty').value = allSpecialties[0].id;
+                }
+                modal.style.display = 'flex';
+            });
+
+            document.getElementById('btn-cancel-service').addEventListener('click', () => {
+                modal.style.display = 'none';
+            });
+
+            window.editService = function (id) {
+                const serv = allServices.find(x => Number(x.id) === Number(id));
+                if (!serv) return;
+
+                document.getElementById('form-service-title').textContent = "Chỉnh sửa Thông tin Dịch vụ";
+                document.getElementById('edit-service-id').value = serv.id;
+                document.getElementById('serv-name').value = serv.name || '';
+                document.getElementById('serv-price').value = serv.price || 0;
+                document.getElementById('serv-desc').value = serv.description || '';
+                if (serv.specialtyId) {
+                    document.getElementById('serv-specialty').value = serv.specialtyId;
+                }
+                modal.style.display = 'flex';
+            };
+
+            document.getElementById('form-service-info').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const editId = document.getElementById('edit-service-id').value;
+                const payload = {
+                    ten_dich_vu: document.getElementById('serv-name').value,
+                    chuyen_khoa_id: document.getElementById('serv-specialty').value,
+                    gia: parseFloat(document.getElementById('serv-price').value),
+                    mo_ta: document.getElementById('serv-desc').value
+                };
+
+                try {
+                    const url = editId ? `/auth/admin/dich-vu/${editId}` : '/auth/admin/dich-vu';
+                    const method = editId ? 'PUT' : 'POST';
+
+                    const res = await fetch(url, {
+                        method: method,
+                        headers: {'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json'},
+                        body: JSON.stringify(payload)
+                    });
+
+                    const resultData = await res.json();
+                    if (!res.ok) throw new Error(resultData.detail || "Không thể lưu thông tin dịch vụ.");
+
+                    alert("Lưu thông tin dịch vụ thành công!");
+                    modal.style.display = 'none';
+                    loadServices();
+                } catch (err) {
+                    alert("Lỗi: " + err.message);
+                }
+            });
+
+            // --- Modal Xóa & Khôi phục Dịch vụ ---
+            const deleteModal = document.getElementById('delete-modal');
+            window.openDeleteModal = function (id, encodedReason) {
+                document.getElementById('delete-target-id').value = id;
+                let decoded = '';
+                try {
+                    decoded = decodeURIComponent(encodedReason || '');
+                } catch (e) {
+                    decoded = encodedReason || '';
+                }
+                document.getElementById('delete-reason-text').value = decoded;
+
+                const serv = allServices.find(x => Number(x.id) === Number(id));
+                const isDeleted = serv && (String(serv.status).toLowerCase().trim() === 'deleted' || String(serv.status).toLowerCase().trim() === 'đã xóa');
+
+                const btnDelete = document.getElementById('btn-submit-delete');
+                const btnRestore = document.getElementById('btn-submit-restore');
+                const reasonTextarea = document.getElementById('delete-reason-text');
+
+                if (isDeleted) {
+                    btnDelete.style.display = 'none';
+                    btnRestore.style.display = 'inline-block';
+                    reasonTextarea.readOnly = true;
+                } else {
+                    btnDelete.style.display = 'inline-block';
+                    btnRestore.style.display = 'none';
+                    reasonTextarea.readOnly = false;
+                    reasonTextarea.value = '';
+                }
+
+                deleteModal.style.display = 'flex';
+            };
+
+            document.getElementById('btn-cancel-delete').addEventListener('click', () => { deleteModal.style.display = 'none'; });
+
+            document.getElementById('btn-submit-delete').addEventListener('click', async () => {
+                const id = document.getElementById('delete-target-id').value;
+                const reason = document.getElementById('delete-reason-text').value;
+
+                if (!id) { alert("Không tìm thấy ID dịch vụ!"); return; }
+
+                try {
+                    const res = await fetch(`/auth/admin/dich-vu/${id}/xoa-tam`, {
+                        method: 'POST',
+                        headers: {'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json'},
+                        body: JSON.stringify({ ly_do: reason, ly_do_khoa: reason })
+                    });
+                    const resultData = await res.json();
+                    if (!res.ok) throw new Error(resultData.detail || "Không thể chuyển vào thùng rác.");
+
+                    alert("Đã chuyển dịch vụ vào thùng rác thành công!");
+                    deleteModal.style.display = 'none';
+                    loadServices();
+                } catch (err) { alert("Lỗi: " + err.message); }
+            });
+
+            document.getElementById('btn-submit-restore').addEventListener('click', async () => {
+                const id = document.getElementById('delete-target-id').value;
+                const reason = document.getElementById('delete-reason-text').value;
+
+                if (!id) { alert("Not found ID!"); return; }
+
+                try {
+                    const res = await fetch(`/auth/admin/dich-vu/${id}/khoi-phuc`, {
+                        method: 'POST',
+                        headers: {'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json'},
+                        body: JSON.stringify({ ly_do: reason, ly_do_khoa: reason })
+                    });
+                    const resultData = await res.json();
+                    if (!res.ok) throw new Error(resultData.detail || "Không thể khôi phục dịch vụ.");
+
+                    alert("Đã khôi phục dịch vụ thành công!");
+                    deleteModal.style.display = 'none';
+                    loadServices();
+                } catch (err) { alert("Lỗi: " + err.message); }
+            });
+
+            loadSpecialties().then(() => loadServices());
         });
-    });
+    })();
 </script>
 </body>
 </html>

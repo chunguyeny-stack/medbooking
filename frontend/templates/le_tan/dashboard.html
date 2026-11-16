@@ -3,23 +3,136 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MedBooking - Dashboard Lễ Tân</title>
-    <!-- Favicon hình chú chim cánh cụt y tế -->
-    <link rel="icon" type="image/jpeg" href="../../favicon.jpg">
-    
+    <title>MEDBOOKING - Dashboard Lễ Tân</title>
+    <link rel="icon" type="image/jpeg" href="/static/favicon.jpg">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <!-- ⭐ CSS CHUNG LT_BS -->
+
     <link rel="stylesheet" href="../../static/css/LT_BS.css">
-    
-    <!-- CSS riêng của Dashboard -->
+
     <style>
+        /* ⭐ THANH HEADER DÀI, RỘNG VÀ CÂN ĐỐI ĐỒNG BỘ */
+        header {
+            width: 100% !important;
+            max-width: 1480px !important;
+            margin: 8px auto 15px auto !important;
+            padding: 8px 30px !important;
+            display: flex !important;
+            justify-content: space-between !important;
+            align-items: center !important;
+            background: var(--bg-card);
+            border-radius: 14px !important;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+            box-sizing: border-box !important;
+            white-space: nowrap !important;
+        }
+
+        header nav ul {
+            display: flex !important;
+            gap: 20px !important;
+            align-items: center !important;
+            margin: 0 !important;
+            padding: 0 !important;
+            list-style: none !important;
+        }
+
+        header nav ul li a {
+            font-size: 13.5px !important;
+            font-weight: 500;
+            white-space: nowrap !important;
+            padding: 8px 12px !important;
+        }
+
+        .header-right {
+            display: flex !important;
+            align-items: center !important;
+            gap: 15px !important;
+            flex-shrink: 0 !important;
+        }
+
+        .user-badge {
+            white-space: nowrap !important;
+            padding: 6px 14px !important;
+        }
+
+        .user-info-text .user-name {
+            font-size: 13.5px !important;
+            max-width: 140px !important;
+            overflow: hidden !important;
+            text-overflow: ellipsis !important;
+        }
+
+        /* Chuông thông báo */
+        .notification-bell-container {
+            position: relative;
+            cursor: pointer;
+        }
+
+        .notification-dropdown {
+            position: absolute;
+            right: 0;
+            top: 50px;
+            width: 380px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 14px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            display: none;
+            z-index: 1000;
+            overflow: hidden;
+            white-space: normal !important;
+            text-align: left;
+        }
+
+        .notification-dropdown.active {
+            display: block;
+        }
+
+        .notification-header {
+            padding: 14px 18px;
+            font-weight: 700;
+            font-size: 15px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--primary-blue-light);
+            color: var(--primary-blue);
+            font-family: 'Playfair Display', serif;
+        }
+
+        .notification-list {
+            max-height: 320px;
+            overflow-y: auto;
+            overflow-x: hidden !important;
+        }
+
+        .notification-item {
+            padding: 12px 18px;
+            border-bottom: 1px solid var(--border-color);
+            font-size: 12.5px;
+            line-height: 1.5;
+            cursor: pointer;
+            transition: background 0.2s;
+            white-space: normal !important;
+            word-break: break-word;
+            color: var(--text-color);
+        }
+
+        .notification-item:hover {
+            background: rgba(37, 99, 235, 0.04);
+        }
+
+        .notification-item.unread {
+            background: rgba(37, 99, 235, 0.02);
+            font-weight: 500;
+        }
+
         main {
-            max-width: 1400px;
-            margin: 30px auto 80px;
+            max-width: 1450px;
+            margin: 20px auto 80px;
             padding: 0 20px;
         }
 
@@ -76,7 +189,6 @@
             letter-spacing: 1px;
         }
 
-        /* Thêm hiệu ứng bấm được cho các stat-card */
         .stat-card {
             cursor: pointer;
             transition: all 0.3s ease;
@@ -167,18 +279,12 @@
             margin-bottom: 15px;
         }
 
-        .ca-truc-card .progress-bar {
-            margin-top: 10px;
-        }
-
-        /* Two columns */
         .dashboard-grid {
             display: grid;
             grid-template-columns: 2fr 1fr;
             gap: 25px;
         }
 
-        /* Appointment card in dashboard */
         .appointment-mini {
             display: flex;
             align-items: center;
@@ -192,9 +298,7 @@
         }
 
         .appointment-mini:hover { background: var(--primary-blue-soft); }
-
         .appointment-mini.urgent { border-left-color: var(--accent-red); }
-        .appointment-mini.warning { border-left-color: var(--accent-orange); }
 
         .appt-mini-time {
             background: var(--primary-blue-light);
@@ -208,7 +312,6 @@
         }
 
         .appointment-mini.urgent .appt-mini-time { background: var(--accent-red-light); color: var(--accent-red); }
-        .appointment-mini.warning .appt-mini-time { background: var(--accent-orange-light); color: var(--accent-orange); }
 
         .appt-mini-info { flex: 1; }
         .appt-mini-info h5 { font-size: 14px; font-weight: 600; margin-bottom: 3px; font-family: 'Poppins', sans-serif; }
@@ -225,7 +328,6 @@
             border-radius: 6px;
         }
 
-        /* Nút đăng xuất đồng bộ */
         .logout-btn {
             background: rgba(239, 68, 68, 0.1);
             border: 1px solid rgba(239, 68, 68, 0.2);
@@ -266,17 +368,35 @@
         <div class="header-right">
             <nav>
                 <ul>
-                    <li><a href="dashboard.html"><strong>Tổng quan</strong></a></li>
-                    <li><a href="quan_ly_lich_hen.html">Quản lý lịch hẹn</a></li>
-                    <li><a href="danh_sach_lich_hen.html">Danh sách ca trực</a></li>
-                    <li><a href="check_in.html">Check-in</a></li>
-                    <li><a href="vien_phi.html">Viện phí</a></li>
+                    <li><a href="/le_tan/dashboard.html"><strong>Tổng quan</strong></a></li>
+                    <li><a href="/le_tan/quan_ly_lich_hen.html">Quản lý lịch hẹn</a></li>
+                    <li><a href="/le_tan/danh_sach_lich_hen.html">Danh sách ca trực</a></li>
+                    <li><a href="/le_tan/check_in.html">Check-in</a></li>
+                    <li><a href="/le_tan/vien_phi.html">Viện phí</a></li>
                 </ul>
             </nav>
+
+            <!-- CHUÔNG THÔNG BÁO CHO LỄ TÂN -->
+            <div class="notification-bell-container" id="bell-container" onclick="toggleNotificationDropdown()">
+                <button class="theme-toggle" title="Thông báo hệ thống">
+                    <i class="fas fa-bell"></i>
+                    <span id="notification-badge" style="position: absolute; top: 5px; right: 5px; width: 8px; height: 8px; background: #EF4444; border-radius: 50%; display: none;"></span>
+                </button>
+                <div class="notification-dropdown" id="notification-dropdown" onclick="event.stopPropagation()">
+                    <div class="notification-header">
+                        <span>Thông báo hệ thống</span>
+                        <span style="font-size:12px; cursor:pointer; color:var(--primary-blue); font-weight:500;" onclick="markAllNotificationsRead()">Đã đọc tất cả</span>
+                    </div>
+                    <div class="notification-list" id="notification-list">
+                        <div class="notification-item" style="text-align:center; color:var(--text-gray);">Không có thông báo mới</div>
+                    </div>
+                </div>
+            </div>
+
             <div class="user-badge" onclick="window.location.href='ho_so_ca_nhan.html'">
-                <div class="user-avatar">LT</div>
+                <div class="user-avatar" id="topbar-avatar">LT</div>
                 <div class="user-info-text">
-                    <div class="user-name">Nguyễn Thị Lễ Tân</div>
+                    <div class="user-name" id="topbar-receptionist-name">Lễ tân</div>
                     <div class="user-role">Lễ tân</div>
                 </div>
             </div>
@@ -295,8 +415,8 @@
         <!-- Welcome Banner -->
         <div class="welcome-banner">
             <div class="welcome-text">
-                <h2>Xin chào, Nguyễn Thị Lễ Tân! 👋</h2>
-                <p>Chúc bạn một ngày làm việc hiệu quả. Đây là tổng quan ca trực hôm nay.</p>
+                <h2 id="welcome-title">Xin chào! 👋</h2>
+                <p>Chúc bạn một ngày làm việc hiệu quả. Đây là tổng quan ca trực hôm nay từ cơ sở dữ liệu.</p>
             </div>
             <div class="welcome-time">
                 <div class="time" id="current-time">--:--</div>
@@ -305,86 +425,79 @@
         </div>
 
         <!-- Alert -->
-        <div class="alert alert-warning">
+        <div class="alert alert-warning" id="alert-box" style="display: none;">
             <i class="fas fa-exclamation-triangle"></i>
             <div>
-                <strong>⚠️ Có 3 lịch hẹn cần xử lý gấp!</strong> Vui lòng ưu tiên xử lý trước 09:00 sáng nay.
+                <strong id="alert-text">⚠️ Có lịch hẹn cần xử lý!</strong> Vui lòng xem xét các lịch hẹn chờ xác nhận.
             </div>
         </div>
 
-        <!-- Stats tổng quan (Đã thêm sự kiện nhấp chuyển trang) -->
+        <!-- Stats tổng quan -->
         <div class="stats-grid">
             <div class="stat-card" onclick="window.location.href='quan_ly_lich_hen.html'" title="Xem chi tiết Quản lý lịch hẹn">
                 <div class="stat-icon"><i class="fas fa-calendar-check"></i></div>
                 <div class="stat-info">
-                    <h4>45</h4>
-                    <p>Tổng lịch hẹn hôm nay</p>
-                    <div class="trend"><i class="fas fa-arrow-up"></i> +12% so với hôm qua</div>
+                    <h4 id="stat-total">0</h4>
+                    <p>Tổng lịch hẹn hệ thống</p>
+                    <div class="trend"><i class="fas fa-database"></i> Dữ liệu SQL Server</div>
                 </div>
             </div>
-            <div class="stat-card green" onclick="window.location.href='check_in.html'" title="Chuyển đến trang Check-in">
+            <!-- ⭐ ĐÃ SỬA: Chuyển hướng đúng sang trang quản lý lịch hẹn (tab Đã check-in) -->
+            <div class="stat-card green" onclick="sessionStorage.setItem('initial_tab', 'checked'); window.location.href='quan_ly_lich_hen.html'" title="Xem danh sách đã hoàn thành / check-in">
                 <div class="stat-icon"><i class="fas fa-user-check"></i></div>
                 <div class="stat-info">
-                    <h4>28</h4>
-                    <p>Đã check-in</p>
-                    <div class="trend"><i class="fas fa-check"></i> 62% hoàn thành</div>
+                    <h4 id="stat-checked">0</h4>
+                    <p>Đã hoàn thành / Khám</p>
+                    <div class="trend"><i class="fas fa-check"></i> Thời gian thực</div>
                 </div>
             </div>
-            <div class="stat-card orange" onclick="window.location.href='check_in.html'" title="Xem danh sách chờ khám">
+            <!-- ⭐ ĐÃ SỬA: Chuyển hướng đúng sang trang quản lý lịch hẹn (tab Chờ xác nhận) -->
+            <div class="stat-card orange" onclick="sessionStorage.setItem('initial_tab', 'pending'); window.location.href='quan_ly_lich_hen.html'" title="Xem danh sách chờ xác nhận">
                 <div class="stat-icon"><i class="fas fa-hourglass-half"></i></div>
                 <div class="stat-info">
-                    <h4>14</h4>
-                    <p>Đang chờ khám</p>
-                    <div class="trend down"><i class="fas fa-clock"></i> Trung bình 12 phút</div>
+                    <h4 id="stat-waiting">0</h4>
+                    <p>Đang chờ xác nhận / khám</p>
+                    <div class="trend down"><i class="fas fa-clock"></i> Thời gian thực</div>
                 </div>
             </div>
             <div class="stat-card purple" onclick="window.location.href='vien_phi.html'" title="Chuyển đến trang Viện phí">
                 <div class="stat-icon"><i class="fas fa-money-bill-wave"></i></div>
                 <div class="stat-info">
-                    <h4>8.4M</h4>
-                    <p>Viện phí thu hôm nay</p>
-                    <div class="trend"><i class="fas fa-arrow-up"></i> +8% so với hôm qua</div>
+                    <h4 id="stat-revenue">0 VNĐ</h4>
+                    <p>Viện phí ước tính</p>
+                    <div class="trend"><i class="fas fa-arrow-up"></i> Minh bạch</div>
                 </div>
             </div>
         </div>
 
         <!-- Ca trực -->
         <h3 style="margin-bottom: 18px; font-size: 20px; color: var(--secondary-color);">
-            <i class="fas fa-clock" style="color: var(--primary-blue);"></i> Thống kê 3 ca trực hôm nay
+            <i class="fas fa-clock" style="color: var(--primary-blue);"></i> Thống kê phân loại ca trực
         </h3>
 
         <div class="ca-truc-grid">
-            <div class="ca-truc-card sang" onclick="window.location.href='danh_sach_lich_hen.html?ca=sang'">
+            <div class="ca-truc-card sang" onclick="window.location.href='danh_sach_lich_hen.html'">
                 <div class="ca-truc-icon"><i class="fas fa-sun"></i></div>
                 <h4>Ca Sáng</h4>
                 <div class="time-range"><i class="far fa-clock"></i> 07:30 - 11:30</div>
-                <div class="count">18</div>
+                <div class="count" id="count-sang">0</div>
                 <div class="count-label">bệnh nhân</div>
-                <div class="progress-bar">
-                    <div class="progress-bar-fill" style="width: 75%; background: linear-gradient(90deg, #F39C12, #F8C471);"></div>
-                </div>
             </div>
 
-            <div class="ca-truc-card chieu" onclick="window.location.href='danh_sach_lich_hen.html?ca=chieu'">
+            <div class="ca-truc-card chieu" onclick="window.location.href='danh_sach_lich_hen.html'">
                 <div class="ca-truc-icon"><i class="fas fa-cloud-sun"></i></div>
                 <h4>Ca Chiều</h4>
                 <div class="time-range"><i class="far fa-clock"></i> 13:30 - 18:30</div>
-                <div class="count">22</div>
+                <div class="count" id="count-chieu">0</div>
                 <div class="count-label">bệnh nhân</div>
-                <div class="progress-bar">
-                    <div class="progress-bar-fill" style="width: 45%;"></div>
-                </div>
             </div>
 
-            <div class="ca-truc-card toi" onclick="window.location.href='danh_sach_lich_hen.html?ca=toi'">
+            <div class="ca-truc-card toi" onclick="window.location.href='danh_sach_lich_hen.html'">
                 <div class="ca-truc-icon"><i class="fas fa-moon"></i></div>
                 <h4>Ca Tối</h4>
                 <div class="time-range"><i class="far fa-clock"></i> 18:30 - 22:30 <span style="color: var(--accent-red); font-weight: 600;">(+10% phí)</span></div>
-                <div class="count">5</div>
+                <div class="count" id="count-toi">0</div>
                 <div class="count-label">bệnh nhân</div>
-                <div class="progress-bar">
-                    <div class="progress-bar-fill" style="width: 20%; background: linear-gradient(90deg, var(--accent-purple), #BB8FCE);"></div>
-                </div>
             </div>
         </div>
 
@@ -393,60 +506,12 @@
             <!-- Cần xử lý gấp -->
             <div class="card">
                 <div class="card-header">
-                    <h3><i class="fas fa-bolt"></i> Lịch hẹn cần xử lý gấp</h3>
+                    <h3><i class="fas fa-bolt"></i> Lịch hẹn cần xử lý gấp (<span id="urgent-count">0</span>)</h3>
                     <a href="quan_ly_lich_hen.html" class="btn btn-outline btn-sm">Xem tất cả <i class="fas fa-arrow-right"></i></a>
                 </div>
 
-                <div class="appointment-mini urgent">
-                    <div class="appt-mini-time">08:30</div>
-                    <div class="appt-mini-info">
-                        <h5>Nguyễn Văn X</h5>
-                        <p><i class="fas fa-user-md"></i> ThS.BS Nguyễn Văn A • Ca sáng</p>
-                    </div>
-                    <div class="appt-mini-actions">
-                        <button class="btn btn-success btn-sm" onclick="confirmAppointment('LH101')">
-                            <i class="fas fa-check"></i> Xác nhận
-                        </button>
-                    </div>
-                </div>
-
-                <div class="appointment-mini warning">
-                    <div class="appt-mini-time">09:00</div>
-                    <div class="appt-mini-info">
-                        <h5>Lê Thị M</h5>
-                        <p><i class="fas fa-user-md"></i> BS.CKI Trần Thị C • Ca sáng</p>
-                    </div>
-                    <div class="appt-mini-actions">
-                        <button class="btn btn-success btn-sm" onclick="confirmAppointment('LH103')">
-                            <i class="fas fa-check"></i> Xác nhận
-                        </button>
-                    </div>
-                </div>
-
-                <div class="appointment-mini">
-                    <div class="appt-mini-time">14:00</div>
-                    <div class="appt-mini-info">
-                        <h5>Trần Thị B</h5>
-                        <p><i class="fas fa-user-md"></i> BS.CKI Trần Thị C • Ca chiều</p>
-                    </div>
-                    <div class="appt-mini-actions">
-                        <a href="check_in.html" class="btn btn-primary btn-sm">
-                            <i class="fas fa-sign-in-alt"></i> Check-in
-                        </a>
-                    </div>
-                </div>
-
-                <div class="appointment-mini">
-                    <div class="appt-mini-time">18:30</div>
-                    <div class="appt-mini-info">
-                        <h5>Phạm Văn K</h5>
-                        <p><i class="fas fa-user-md"></i> TS.BS Lê Hoàng D • Ca tối (+10%)</p>
-                    </div>
-                    <div class="appt-mini-actions">
-                        <a href="check_in.html" class="btn btn-primary btn-sm">
-                            <i class="fas fa-sign-in-alt"></i> Check-in
-                        </a>
-                    </div>
+                <div id="urgent-appointments-container" style="max-height: 420px; overflow-y: auto; padding-right: 4px;">
+                    <!-- Được sinh động qua API hiển thị toàn bộ lịch chờ xử lý -->
                 </div>
             </div>
 
@@ -482,7 +547,7 @@
                     <p>Cổng Lễ Tân</p>
                 </div>
             </div>
-            <p>Hệ thống quản lý y tế MedBooking - Giải pháp toàn diện cho bệnh viện và phòng khám[cite: 7].</p>
+            <p>Hệ thống quản lý y tế MedBooking - Giải pháp toàn diện cho bệnh viện và phòng khám.</p>
             <p><strong>"MedBooking chúc quý khách và gia đình luôn có một sức khỏe dồi dào!"</strong></p>
         </div>
         <div>
@@ -501,7 +566,7 @@
             <p>Email: support@medbooking.vn</p>
         </div>
         <div>
-            <p>&copy; 2026 MedBooking. Bản quyền thuộc về Đội ngũ phát triển dự án[cite: 7].</p>
+            <p>&copy; 2026 MedBooking. Bản quyền thuộc về Đội ngũ phát triển dự án.</p>
         </div>
     </footer>
 
@@ -520,42 +585,367 @@
     </div>
 
 <script src="../../static/js/client.js"></script>
-<script src="../../static/js/LT_Store.js"></script>
-
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        
-        // =========================================
-        // THEME
-        // =========================================
-        const themeToggle = document.getElementById('theme-toggle');
-        const icon = themeToggle.querySelector('i');
-        const currentTheme = localStorage.getItem('theme') || 'light';
-        
-        if (currentTheme === 'dark') {
-            document.documentElement.setAttribute('data-theme', 'dark');
-            icon.classList.remove('fa-moon');
-            icon.classList.add('fa-sun');
+    let systemNotifications = [];
+
+    function getReadNotifications() {
+        try {
+            return JSON.parse(localStorage.getItem('read_notifications') || '[]');
+        } catch(e) {
+            return [];
+        }
+    }
+
+    function saveReadNotification(notifId) {
+        let readList = getReadNotifications();
+        if (!readList.includes(notifId)) {
+            readList.push(notifId);
+            localStorage.setItem('read_notifications', JSON.stringify(readList));
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', async function() {
+        const token = localStorage.getItem('medbooking_token');
+        let receptionistName = 'Lễ tân';
+        let allAppointments = [];
+
+        if (token) {
+            try {
+                const userRes = await fetch('/auth/me', {
+                    method: 'GET',
+                    headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' }
+                });
+                const userResult = await userRes.json();
+                if (userRes.ok && userResult.ho_ten) {
+                    receptionistName = userResult.ho_ten;
+                }
+
+                const apptRes = await fetch('/appointments/tat-ca', {
+                    method: 'GET',
+                    headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' }
+                });
+                const apptResult = await apptRes.json();
+                if (apptRes.ok && apptResult.success) {
+                    allAppointments = apptResult.data || [];
+                }
+
+                systemNotifications = [];
+
+                // 1. ⭐ LẤY THÔNG BÁO TỪ BÁC SĨ (Báo bận / Sửa lịch)
+                const schedRes = await fetch('/appointments/admin/lich-lam-viec', {
+                    method: 'GET',
+                    headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' }
+                });
+                if (schedRes.ok) {
+                    const schedData = await schedRes.json();
+                    schedData.forEach(item => {
+                        const rawId = String(item.id || "");
+                        const docNameStr = item.doctorName || 'Bác sĩ';
+                        const dateStr = item.ngay_lam_viec || '';
+                        const shiftName = item.ca_lam_viec || 'Ca trực';
+                        const lyDoSuam = item.ly_do_sua || '';
+                        const lyDoBanm = item.ly_do_ban || '';
+                        const docIdVal = String(item.bac_si_id || '');
+
+                        if (lyDoBanm) {
+                            systemNotifications.push({
+                                id: rawId + '_ban_' + dateStr,
+                                type: 'doctor',
+                                doctorId: docIdVal,
+                                date: dateStr,
+                                text: `🩺 Bác sĩ ${docNameStr} đã BÁO BẬN ngày ${dateStr} (${shiftName}). Lý do: ${lyDoBanm}`,
+                                rawId: rawId,
+                                timeOrder: item.updated_at || item.created_at || 0
+                            });
+                        }
+                        if (lyDoSuam) {
+                            systemNotifications.push({
+                                id: rawId + '_sua_' + dateStr,
+                                type: 'doctor',
+                                doctorId: docIdVal,
+                                date: dateStr,
+                                text: `🩺 Bác sĩ ${docNameStr} đã ĐỀ XUẤT SỬA ngày ${dateStr} (${shiftName}). Lý do: ${lyDoSuam}`,
+                                rawId: rawId,
+                                timeOrder: item.updated_at || item.created_at || 0
+                            });
+                        }
+                    });
+                }
+
+                // 2. ⭐ LẤY THÔNG BÁO TỪ BỆNH NHÂN (Đặt lịch mới, chờ xác nhận, đổi lịch, hoặc đã xác nhận lịch khám bù)
+                allAppointments.forEach(appt => {
+                    const apptId = String(appt.ma_lich_hen || appt.id || '');
+                    const patientName = appt.benh_nhan || appt.ho_ten || 'Bệnh nhân';
+                    const apptStatus = String(appt.trang_thai || '').toLowerCase().trim();
+
+                    // ⭐ PHÂN BIỆT CHÍNH XÁC KHI BỆNH NHÂN XÁC NHẬN KHÁM BÙ
+                    if (apptStatus.includes('bệnh nhân đã xác nhận lịch khám bù') || apptStatus.includes('đã xác nhận lịch khám bù')) {
+                        systemNotifications.push({
+                            id: 'appt_confirmed_compensate_' + apptId,
+                            type: 'patient',
+                            apptId: apptId,
+                            text: `✅ Bệnh nhân <b>${patientName}</b> đã xác nhận lịch khám bù cho lịch hẹn (#${apptId}). Vui lòng xác nhận lại lần cuối.`,
+                            rawId: apptId,
+                            timeOrder: appt.updated_at || appt.ngay_kham || 0
+                        });
+                    } else if (apptStatus.includes('chờ xác nhận') || apptStatus === 'pending') {
+                        systemNotifications.push({
+                            id: 'appt_pending_' + apptId,
+                            type: 'patient',
+                            apptId: apptId,
+                            text: `👤 Bệnh nhân <b>${patientName}</b> vừa đặt lịch hẹn mới (#${apptId}), đang chờ xác nhận.`,
+                            rawId: apptId,
+                            timeOrder: appt.updated_at || appt.ngay_kham || 0
+                        });
+                    } else if (apptStatus === 'reschedule' || apptStatus.includes('đổi lịch')) {
+                        systemNotifications.push({
+                            id: 'appt_reschedule_' + apptId,
+                            type: 'patient',
+                            apptId: apptId,
+                            text: `⚠️ Lịch hẹn của bệnh nhân <b>${patientName}</b> (#${apptId}) cần đổi lịch gấp do bác sĩ bận.`,
+                            rawId: apptId,
+                            timeOrder: appt.updated_at || appt.ngay_kham || 0
+                        });
+                    } else if (apptStatus.includes('chờ bệnh nhân') || apptStatus === 'pending_patient') {
+                        systemNotifications.push({
+                            id: 'appt_pending_patient_' + apptId,
+                            type: 'patient',
+                            apptId: apptId,
+                            text: `⏳ Lịch hẹn của bệnh nhân <b>${patientName}</b> (#${apptId}) đang chờ bệnh nhân xác nhận đổi lịch.`,
+                            rawId: apptId,
+                            timeOrder: appt.updated_at || appt.ngay_kham || 0
+                        });
+                    }
+                });
+
+                // ⭐ SẮP XẾP THÔNG BÁO MỚI NHẤT LÊN ĐẦU (Đảo ngược mảng hoặc theo thời gian)
+                systemNotifications.reverse();
+
+                updateNotificationUI();
+
+            } catch (e) {
+                console.error("Lỗi kết nối API:", e);
+            }
         }
 
+        const topbarNameEl = document.getElementById('topbar-receptionist-name');
+        if (topbarNameEl) topbarNameEl.textContent = receptionistName;
+
+        const welcomeTitleEl = document.getElementById('welcome-title');
+        if (welcomeTitleEl) welcomeTitleEl.textContent = `Xin chào, ${receptionistName}! 👋`;
+
+        const initials = receptionistName.trim().slice(0, 2).toUpperCase();
+        const topbarAvatar = document.getElementById('topbar-avatar');
+        if (topbarAvatar) topbarAvatar.textContent = initials;
+
+        const totalToday = allAppointments.length;
+        const checkedIn = allAppointments.filter(a => a.trang_thai === 'Đã hoàn thành' || a.trang_thai === 'completed').length;
+
+        const waitingList = allAppointments.filter(a => {
+            const st = String(a.trang_thai || '').toLowerCase().trim();
+            return st === 'chờ xác nhận' || st === 'waiting' || st === 'pending' ||
+                   st === 'chờ bệnh nhân xác nhận' || st.includes('bệnh nhân xác nhận') || st === 'pending_patient' ||
+                   st === 'reschedule' || st.includes('đổi lịch') || st.includes('dời lịch') ||
+                   st.includes('bệnh nhân đã xác nhận lịch khám bù') || st.includes('đã xác nhận lịch khám bù');
+        });
+        const waiting = waitingList.length;
+
+        document.getElementById('stat-total').textContent = totalToday;
+        document.getElementById('stat-checked').textContent = checkedIn;
+        document.getElementById('stat-waiting').textContent = waiting;
+        document.getElementById('stat-revenue').textContent = (totalToday * 300000).toLocaleString('vi-VN') + ' VNĐ';
+
+        let countSang = 0, countChieu = 0, countToi = 0;
+        allAppointments.forEach(a => {
+            const timeStr = a.khung_gio || '';
+            const startHour = parseInt(timeStr.split(':')[0]) || 8;
+            if (startHour < 12) countSang++;
+            else if (startHour < 18) countChieu++;
+            else countToi++;
+        });
+
+        document.getElementById('count-sang').textContent = countSang;
+        document.getElementById('count-chieu').textContent = countChieu;
+        document.getElementById('count-toi').textContent = countToi;
+
+        if (waiting > 0) {
+            document.getElementById('alert-box').style.display = 'flex';
+            document.getElementById('alert-text').textContent = `⚠️ Có ${waiting} lịch hẹn cần xử lý (xác nhận hoặc duyệt lịch bù)!`;
+        }
+
+        const urgentContainer = document.getElementById('urgent-appointments-container');
+        const urgentCountEl = document.getElementById('urgent-count');
+        if (urgentCountEl) urgentCountEl.textContent = waitingList.length;
+
+        if (waitingList.length === 0) {
+            urgentContainer.innerHTML = `
+                <div style="text-align:center; padding: 30px; color: var(--text-gray);">
+                    <i class="fas fa-check-circle" style="font-size: 36px; color: #10B981; margin-bottom: 10px;"></i>
+                    <p>Không có lịch hẹn nào cần xử lý gấp.</p>
+                </div>
+            `;
+        } else {
+            urgentContainer.innerHTML = waitingList.map(appt => {
+                const stLower = String(appt.trang_thai || '').toLowerCase();
+                const isReschedule = stLower === 'reschedule' || stLower.includes('đổi lịch');
+                const isPendingPatient = stLower.includes('bệnh nhân xác nhận') || stLower === 'pending_patient';
+                const isPatientConfirmedCompensate = stLower.includes('bệnh nhân đã xác nhận lịch khám bù') || stLower.includes('đã xác nhận lịch khám bù');
+
+                let badgeText = 'Chờ xác nhận';
+                let badgeColor = 'var(--accent-orange)';
+                if (isReschedule) {
+                    badgeText = 'Cần đổi lịch (BS bận)';
+                    badgeColor = '#EF4444';
+                } else if (isPendingPatient) {
+                    badgeText = 'Chờ BN xác nhận';
+                    badgeColor = '#F59E0B';
+                } else if (isPatientConfirmedCompensate) {
+                    badgeText = 'BN đã xác nhận lịch bù';
+                    badgeColor = '#10B981';
+                }
+
+                const apptId = appt.ma_lich_hen || appt.id;
+
+                let actionButtonHtml = '';
+                if (isReschedule) {
+                    actionButtonHtml = `
+                        <button class="btn btn-danger btn-sm" style="background: #EF4444; border:none;" onclick="jumpToAppointment('${apptId}')">
+                            <i class="fas fa-calendar-alt"></i> Đổi lịch
+                        </button>
+                    `;
+                } else if (isPendingPatient) {
+                    actionButtonHtml = `
+                        <button class="btn btn-outline btn-sm" style="border-color: #F59E0B; color: #F59E0B;" onclick="jumpToAppointment('${apptId}')">
+                            <i class="fas fa-clock"></i> Xem
+                        </button>
+                    `;
+                } else if (isPatientConfirmedCompensate) {
+                    actionButtonHtml = `
+                        <button class="btn btn-success btn-sm" style="background: #10B981; border:none;" onclick="confirmAppointment(${apptId})" title="Lễ tân xác nhận lại lần cuối">
+                            <i class="fas fa-check-double"></i> Xác nhận lại
+                        </button>
+                    `;
+                } else {
+                    actionButtonHtml = `
+                        <button class="btn btn-success btn-sm" onclick="confirmAppointment(${apptId})">
+                            <i class="fas fa-check"></i> Xác nhận
+                        </button>
+                    `;
+                }
+
+                return `
+                    <div class="appointment-mini urgent" style="border-left-color: ${badgeColor};">
+                        <div class="appt-mini-time" style="background: ${badgeColor}20; color: ${badgeColor};">${appt.khung_gio || '08:30'}</div>
+                        <div class="appt-mini-info">
+                            <h5>${appt.benh_nhan || appt.benh_nhan_name || 'Bệnh nhân'} <span style="font-size: 11px; color: ${badgeColor}; font-weight: 600; margin-left: 5px;">[${badgeText}]</span></h5>
+                            <p><i class="fas fa-user-md"></i> ${appt.bac_si_name || 'Bác sĩ chuyên khoa'} | Ngày khám: <strong>${appt.ngay_kham || ''}</strong> (${appt.khung_gio || ''})</p>
+                        </div>
+                        <div class="appt-mini-actions">
+                            ${actionButtonHtml}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        window.jumpToAppointment = function(id) {
+            sessionStorage.setItem('jump_appt_id', id);
+            window.location.href = 'quan_ly_lich_hen.html';
+        };
+
+        window.toggleNotificationDropdown = function() {
+            const dropdown = document.getElementById('notification-dropdown');
+            dropdown.classList.toggle('active');
+        };
+
+        function updateNotificationUI() {
+            const listEl = document.getElementById('notification-list');
+            const badgeEl = document.getElementById('notification-badge');
+            const readList = getReadNotifications();
+
+            const activeNotifs = systemNotifications.filter(n => !readList.includes(n.id));
+
+            if (activeNotifs.length === 0) {
+                listEl.innerHTML = `<div class="notification-item" style="text-align:center; color:var(--text-gray);">Không có thông báo mới</div>`;
+                if (badgeEl) badgeEl.style.display = 'none';
+                return;
+            }
+
+            if (badgeEl) badgeEl.style.display = 'block';
+            listEl.innerHTML = activeNotifs.map(n => `
+                <div class="notification-item unread" onclick="handleNotificationClick('${n.id}', '${n.type}', '${n.doctorId || n.apptId}', '${n.date || ''}', '${n.rawId || ''}')">
+                    <i class="fas fa-bell" style="color:var(--primary-blue); margin-right:6px;"></i> ${n.text}
+                </div>
+            `).join('');
+        }
+
+        window.handleNotificationClick = function(notifId, type, targetId, dateStr, rawId) {
+            saveReadNotification(notifId);
+            updateNotificationUI();
+
+            if (type === 'patient') {
+                sessionStorage.setItem('jump_appt_id', targetId);
+                window.location.href = 'quan_ly_lich_hen.html';
+            } else {
+                sessionStorage.setItem('jump_doctor_id', targetId);
+                sessionStorage.setItem('jump_date', dateStr);
+                sessionStorage.setItem('jump_notif_id', rawId);
+                window.location.href = 'danh_sach_lich_hen.html';
+            }
+        };
+
+        window.markAllNotificationsRead = function() {
+            systemNotifications.forEach(n => saveReadNotification(n.id));
+            updateNotificationUI();
+        };
+
+        document.addEventListener('click', function(e) {
+            const bellContainer = document.getElementById('bell-container');
+            if (bellContainer && !bellContainer.contains(e.target)) {
+                document.getElementById('notification-dropdown').classList.remove('active');
+            }
+        });
+
+        window.confirmAppointment = async function(id) {
+            if (!token) return;
+            try {
+                const res = await fetch(`/appointments/cap-nhap-trang-thai/${id}?trang_thai_moi=Đã xác nhận`, {
+                    method: 'PUT',
+                    headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' }
+                });
+                const result = await res.json();
+                if (res.ok && result.success) {
+                    showAlert('Thành công', `Đã xác nhận lịch hẹn #${id} thành công chính thức!`, 'success', () => {
+                        window.location.reload();
+                    });
+                } else {
+                    showAlert('Lỗi', result.detail || 'Không thể cập nhật trạng thái', 'error');
+                }
+            } catch (err) {
+                console.error("Lỗi khi xác nhận lịch hẹn:", err);
+                showAlert('Lỗi', 'Không thể kết nối đến máy chủ', 'error');
+            }
+        };
+
+        const themeToggle = document.getElementById('theme-toggle');
+        const icon = themeToggle.querySelector('i');
+        if (localStorage.getItem('theme') === 'dark') {
+            document.documentElement.setAttribute('data-theme', 'dark');
+            icon.classList.replace('fa-moon', 'fa-sun');
+        }
         themeToggle.addEventListener('click', function() {
             let theme = document.documentElement.getAttribute('data-theme');
             if (theme === 'dark') {
                 document.documentElement.removeAttribute('data-theme');
                 localStorage.setItem('theme', 'light');
-                icon.classList.remove('fa-sun');
-                icon.classList.add('fa-moon');
+                icon.classList.replace('fa-sun', 'fa-moon');
             } else {
                 document.documentElement.setAttribute('data-theme', 'dark');
                 localStorage.setItem('theme', 'dark');
-                icon.classList.remove('fa-moon');
-                icon.classList.add('fa-sun');
+                icon.classList.replace('fa-moon', 'fa-sun');
             }
         });
 
-        // =========================================
-        // UPDATE TIME
-        // =========================================
         function updateTime() {
             const now = new Date();
             const hours = String(now.getHours()).padStart(2, '0');
@@ -564,188 +954,22 @@
             const month = String(now.getMonth() + 1).padStart(2, '0');
             const year = now.getFullYear();
             const days = ['Chủ Nhật', 'Thứ Hai', 'Thứ Ba', 'Thứ Tư', 'Thứ Năm', 'Thứ Sáu', 'Thứ Bảy'];
-            
             document.getElementById('current-time').textContent = `${hours}:${minutes}`;
             document.getElementById('current-date').textContent = `${days[now.getDay()]}, ${day}/${month}/${year}`;
         }
         updateTime();
         setInterval(updateTime, 60000);
 
-        // =========================================
-        // MODAL SYSTEM
-        // =========================================
         const modalOverlay = document.getElementById('modal-overlay');
-        const modalIcon = document.getElementById('modal-icon');
-        const modalTitle = document.getElementById('modal-title');
-        const modalMessage = document.getElementById('modal-message');
-        const modalActions = document.getElementById('modal-actions');
-
         window.showAlert = function(title, message, type = 'info', callback = null) {
-            modalIcon.className = 'modal-icon ' + type;
-            const iconEl = modalIcon.querySelector('i');
-            const icons = { success: 'fa-check-circle', warning: 'fa-exclamation-triangle', error: 'fa-times-circle', info: 'fa-info-circle' };
-            iconEl.className = 'fas ' + icons[type];
-            modalTitle.textContent = title;
-            modalMessage.textContent = message;
-            modalActions.innerHTML = `<button class="modal-btn modal-btn-primary" id="modal-confirm-btn"><i class="fas fa-check"></i> Đã hiểu</button>`;
+            document.getElementById('modal-title').textContent = title;
+            document.getElementById('modal-message').textContent = message;
             modalOverlay.classList.add('active');
             document.getElementById('modal-confirm-btn').onclick = function() {
-                closeModal();
+                modalOverlay.classList.remove('active');
                 if (callback) callback();
             };
         };
-
-        window.showConfirm = function(title, message, type, onConfirm) {
-            modalIcon.className = 'modal-icon ' + type;
-            const iconEl = modalIcon.querySelector('i');
-            const icons = { success: 'fa-check-circle', warning: 'fa-exclamation-triangle', error: 'fa-times-circle', info: 'fa-info-circle' };
-            iconEl.className = 'fas ' + icons[type];
-            modalTitle.textContent = title;
-            modalMessage.textContent = message;
-            modalActions.innerHTML = `
-                <button class="modal-btn modal-btn-secondary" id="modal-cancel-btn"><i class="fas fa-times"></i> Hủy bỏ</button>
-                <button class="modal-btn modal-btn-primary" id="modal-confirm-btn"><i class="fas fa-check"></i> Đồng ý</button>
-            `;
-            modalOverlay.classList.add('active');
-            document.getElementById('modal-cancel-btn').onclick = closeModal;
-            document.getElementById('modal-confirm-btn').onclick = function() { closeModal(); onConfirm(); };
-        };
-
-        function closeModal() { modalOverlay.classList.remove('active'); }
-        modalOverlay.addEventListener('click', function(e) { if (e.target === modalOverlay) closeModal(); });
-        document.addEventListener('keydown', function(e) { if (e.key === 'Escape' && modalOverlay.classList.contains('active')) closeModal(); });
-
-        // =========================================
-        // XỬ LÝ QUA NGÀY (auto no-show)
-        // =========================================
-        const overnight = LT_Store.processOvernightAppointments();
-        if (overnight.length > 0) {
-            console.log(`🔔 Đã tự động chuyển ${overnight.length} lịch hẹn qua ngày thành No-show`);
-        }
-
-        // =========================================
-        // RENDER DASHBOARD TỪ STORE
-        // =========================================
-        function renderDashboard() {
-            const stats = LT_Store.getDashboardStats();
-
-            // Update 4 stat cards
-            document.querySelector('.stats-grid .stat-card:nth-child(1) h4').textContent = stats.totalToday;
-            document.querySelector('.stats-grid .stat-card:nth-child(2) h4').textContent = stats.checkedIn;
-            document.querySelector('.stats-grid .stat-card:nth-child(3) h4').textContent = stats.pending + stats.confirmed;
-            document.querySelector('.stats-grid .stat-card:nth-child(4) h4').textContent = (stats.revenueToday / 1000000).toFixed(1) + 'M';
-
-            // Update ca trực cards
-            const caCards = document.querySelectorAll('.ca-truc-card');
-            caCards[0].querySelector('.count').textContent = stats.byCa.sang;
-            caCards[1].querySelector('.count').textContent = stats.byCa.chieu;
-            caCards[2].querySelector('.count').textContent = stats.byCa.toi;
-
-            // Update alert
-            const urgentCount = stats.pending;
-            if (urgentCount > 0) {
-                document.querySelector('.alert-warning strong').textContent = `⚠️ Có ${urgentCount} lịch hẹn cần xử lý gấp!`;
-            } else {
-                document.querySelector('.alert-warning').style.display = 'none';
-            }
-
-            // Render "Lịch hẹn cần xử lý gấp"
-            renderUrgentAppointments();
-        }
-
-        function renderUrgentAppointments() {
-            const container = document.querySelector('.dashboard-grid .card:first-child');
-            const appts = LT_Store.getAppointments();
-            const today = new Date().toISOString().split('T')[0];
-
-            // Lấy các lịch hẹn hôm nay cần xử lý
-            const urgent = appts
-                .filter(a => a.date === today && (a.status === 'pending' || a.status === 'confirmed'))
-                .sort((a, b) => a.time.localeCompare(b.time))
-                .slice(0, 4);
-
-            // Xóa danh sách cũ (giữ header)
-            const header = container.querySelector('.card-header');
-            container.innerHTML = '';
-            container.appendChild(header);
-
-            if (urgent.length === 0) {
-                container.innerHTML += `
-                    <div style="text-align:center; padding: 40px 20px; color: var(--text-gray);">
-                        <i class="fas fa-check-circle" style="font-size: 40px; color: var(--accent-green); margin-bottom: 12px;"></i>
-                        <p style="font-size: 14px;">Không có lịch hẹn cần xử lý gấp</p>
-                    </div>
-                `;
-                return;
-            }
-
-            urgent.forEach(appt => {
-                const div = document.createElement('div');
-                div.className = 'appointment-mini' + (appt.status === 'pending' ? ' urgent' : ' warning');
-                
-                let actionHTML = '';
-                if (appt.status === 'pending') {
-                    actionHTML = `
-                        <button class="btn btn-success btn-sm" onclick="confirmAppointment('${appt.id}')">
-                            <i class="fas fa-check"></i> Xác nhận
-                        </button>
-                    `;
-                } else if (appt.status === 'confirmed') {
-                    actionHTML = `
-                        <a href="check_in.html?id=${appt.id}" class="btn btn-primary btn-sm">
-                            <i class="fas fa-sign-in-alt"></i> Check-in
-                        </a>
-                    `;
-                }
-
-                div.innerHTML = `
-                    <div class="appt-mini-time">${appt.time}</div>
-                    <div class="appt-mini-info">
-                        <h5>${appt.patientName}</h5>
-                        <p><i class="fas fa-user-md"></i> ${appt.doctor} • ${appt.ca === 'sang' ? 'Ca sáng' : appt.ca === 'chieu' ? 'Ca chiều' : 'Ca tối'}</p>
-                    </div>
-                    <div class="appt-mini-actions">${actionHTML}</div>
-                `;
-                container.appendChild(div);
-            });
-        }
-
-        // =========================================
-        // XÁC NHẬN LỊCH HẸN (từ dashboard)
-        // =========================================
-        window.confirmAppointment = function(id) {
-            const appt = LT_Store.getAppointmentById(id);
-            if (!appt) {
-                showAlert('Lỗi', 'Không tìm thấy lịch hẹn!', 'error');
-                return;
-            }
-
-            showConfirm(
-                'Xác nhận lịch hẹn',
-                `Bạn có chắc muốn xác nhận lịch hẹn ${id} cho bệnh nhân ${appt.patientName}? Bệnh nhân sẽ nhận được thông báo qua SMS.`,
-                'info',
-                function() {
-                    const result = LT_Store.updateAppointmentStatus(id, 'confirmed', 'Xác nhận từ Dashboard');
-                    if (result.success) {
-                        renderDashboard();
-                        showAlert('Thành công', `Lịch hẹn ${id} đã được xác nhận. Bệnh nhân đã nhận được thông báo.`, 'success');
-                    }
-                }
-            );
-        };
-
-        // =========================================
-        // INIT
-        // =========================================
-        renderDashboard();
-
-        // Lắng nghe thay đổi từ tab khác (multi-tab sync)
-        window.addEventListener('storage', function(e) {
-            if (e.key && e.key.startsWith('medbooking_')) {
-                console.log('🔄 Dữ liệu thay đổi từ tab khác, đang cập nhật...');
-                renderDashboard();
-            }
-        });
     });
 </script>
 </body>

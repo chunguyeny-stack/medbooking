@@ -5,15 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin - Thùng rác hệ thống</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
-
-    <link rel="icon" type="image/jpeg" href="../../favicon.jpg">
+    <link rel="icon" type="image/jpeg" href="/static/favicon.jpg">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Quicksand:wght@600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="../../static/css/A.css">
-    
+
     <style>
-        /* Định dạng phông chữ thương hiệu MedBooking */
         .brand-name {
             font-family: 'Quicksand', sans-serif !important;
             font-weight: 700 !important;
@@ -22,13 +20,12 @@
             font-size: 22px;
         }
 
-        /* Hiệu ứng hover sáng lên giống nút thông báo */
         .admin-profile-btn {
-            text-decoration: none; 
-            color: var(--primary-color); 
-            font-weight: 600; 
-            padding: 8px 16px; 
-            background: var(--primary-light); 
+            text-decoration: none;
+            color: var(--primary-color);
+            font-weight: 600;
+            padding: 8px 16px;
+            background: var(--primary-light);
             border-radius: 50px;
             transition: all 0.25s ease;
         }
@@ -38,6 +35,32 @@
             box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);
             transform: translateY(-1px);
         }
+        .action-btns {
+            display: flex;
+            gap: 8px;
+        }
+        .btn-restore {
+            background: #10B981;
+            color: white;
+            padding: 6px 12px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        .btn-restore:hover { background: #059669; }
+        .btn-delete-perm {
+            background: #EF4444;
+            color: white;
+            padding: 6px 12px;
+            border-radius: 8px;
+            border: none;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        .btn-delete-perm:hover { background: #DC2626; }
     </style>
 </head>
 <body>
@@ -51,21 +74,21 @@
         <nav>
             <h3>QUẢN LÝ NHÂN SỰ & NGƯỜI DÙNG</h3>
             <ul>
-                <li><a href="home_a.html">Trang chủ Admin</a></li>
-                <li><a href="quan_ly_tai_khoan.html">Quản lý tài khoản</a></li>
-                <li><a href="quan_ly_bac_si.html">Quản lý bác sĩ</a></li>
+                <li><a href="/admin/home_a.html">Trang chủ Admin</a></li>
+                <li><a href="/admin/quan_ly_tai_khoan.html">Quản lý tài khoản</a></li>
+                <li><a href="/admin/quan_ly_bac_si.html">Quản lý bác sĩ</a></li>
             </ul>
             <h3>DANH MỤC Y TẾ</h3>
             <ul>
-                <li><a href="quan_ly_chuyen_khoa.html">Quản lý chuyên khoa</a></li>
-                <li><a href="quan_ly_dich_vu.html">Quản lý dịch vụ & giá</a></li>
-                <li><a href="quan_ly_mapping.html">Quản lý Mapping Triệu chứng</a></li>
+                <li><a href="/admin/quan_ly_chuyen_khoa.html">Quản lý chuyên khoa</a></li>
+                <li><a href="/admin/quan_ly_dich_vu.html">Quản lý dịch vụ & giá</a></li>
+                <li><a href="/admin/quan_ly_mapping.html">Quản lý Mapping Triệu chứng</a></li>
             </ul>
             <h3>BÁO CÁO & THỐNG KÊ</h3>
             <ul>
-                <li><a href="dashboard.html">Dashboard Thống kê & Báo cáo</a></li>
-                <li><a href="nhat_ky_giao_dich.html">Nhật ký Giao dịch Chi tiết</a></li>
-                <li><a href="thung_rac.html"><strong>Thùng rác hệ thống</strong></a></li>
+                <li><a href="/admin/dashboard.html">Dashboard Thống kê & Báo cáo</a></li>
+                <li><a href="/admin/nhat_ky_giao_dich.html">Nhật ký Giao dịch Chi tiết</a></li>
+                <li><a href="/admin/thung_rac.html"><strong>Thùng rác hệ thống</strong></a></li>
             </ul>
         </nav>
     </aside>
@@ -75,8 +98,7 @@
             <button class="menu-toggle" id="menu-toggle" aria-label="Mở menu"><i class="fas fa-bars"></i></button>
             <h1>Thùng rác Hệ thống (Xóa ẩn / Khôi phục)</h1>
             <div style="display: flex; align-items: center; gap: 12px;">
-                <!-- Nút AD Tên Admin màu tím nguyên bản, có hiệu ứng hover và chuyển sang trang hồ sơ cá nhân -->
-                <a href="ho_so_ca_nhan.html" class="admin-profile-btn">AD Tên Admin</a>
+                <a href="ho_so_ca_nhan.html" class="admin-profile-btn" id="admin-name-btn">AD Tên Admin</a>
                 <button class="theme-toggle" id="theme-toggle">🌙</button>
                 <a href="../dk_dn/dn.html">Đăng xuất</a>
             </div>
@@ -85,7 +107,7 @@
         <section>
             <h2>Danh sách bản ghi đã xóa</h2>
             <p style="color:var(--text-gray);font-size:13.5px;margin-bottom:16px;">
-                Danh sách các bản ghi đã bị xóa mềm. Bạn có thể chọn <strong>Khôi phục</strong> hoặc <strong>Xóa vĩnh viễn</strong>.
+                Danh sách toàn bộ các tài khoản, dịch vụ, chuyên khoa và mapping đã bị xóa mềm từ cơ sở dữ liệu SQL Server.
             </p>
             <table>
                 <thead>
@@ -93,26 +115,198 @@
                         <th>Mã bản ghi</th>
                         <th>Loại dữ liệu</th>
                         <th>Tên hiển thị</th>
-                        <th>Thời gian xóa</th>
+                        <th>Lý do / Trạng thái xóa</th>
                         <th>Thao tác</th>
                     </tr>
                 </thead>
                 <tbody id="recycle-bin-body">
-                    <tr><td colspan="5" style="text-align:center;padding:40px;color:#8B7FA8;">Đang tải...</td></tr>
+                    <tr><td colspan="5" style="text-align:center;padding:40px;color:#8B7FA8;">Đang tải dữ liệu từ SQL Server...</td></tr>
                 </tbody>
             </table>
         </section>
     </main>
+
+    <!-- Modal Xác nhận Khôi phục -->
+    <div class="modal-overlay" id="restore-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); justify-content: center; align-items: center; z-index: 1000;">
+        <div class="modal-box" style="background: var(--bg-card); padding: 30px; border-radius: 16px; width: 100%; max-width: 450px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); color: #fff;">
+            <h3 style="margin-bottom: 12px; color: var(--secondary-color); font-size: 18px;"><i class="fas fa-undo" style="color: #10B981;"></i> Xác nhận khôi phục</h3>
+            <p style="font-size: 13.5px; color: var(--text-gray); margin-bottom: 12px;">Bạn có chắc chắn muốn khôi phục bản ghi: <strong id="restore-item-name" style="color: var(--primary-color);"></strong> không?</p>
+            <div style="margin-bottom: 20px;">
+                <label style="font-size: 11.5px; font-weight: 600; color: var(--text-gray); display: block; margin-bottom: 4px; text-transform: uppercase;">Lý do xóa trước đó từ SQL:</label>
+                <div id="restore-item-reason" style="padding: 10px 14px; background: var(--bg-body); border-radius: 8px; font-size: 13px; color: var(--secondary-color); font-style: italic; border-left: 3px solid #10B981;">Không có lý do</div>
+            </div>
+            <div style="display: flex; gap: 10px; justify-content: flex-end;">
+                <button type="button" class="btn btn-outline" id="cancel-restore-btn" style="padding: 8px 16px; border-radius: 8px; cursor: pointer; color:#fff;">Hủy bỏ</button>
+                <button type="button" class="btn btn-primary" id="confirm-restore-btn" style="padding: 8px 16px; border-radius: 8px; background: #10B981; color: white; border: none; cursor: pointer;"><i class="fas fa-check"></i> Đồng ý khôi phục</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Xác nhận Xóa Vĩnh Viễn -->
+    <div class="modal-overlay" id="delete-perm-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); justify-content: center; align-items: center; z-index: 1000;">
+        <div class="modal-box" style="background: var(--bg-card); padding: 30px; border-radius: 16px; width: 100%; max-width: 450px; box-shadow: 0 10px 30px rgba(0,0,0,0.3); color: #fff;">
+            <h3 style="margin-bottom: 12px; color: #EF4444; font-size: 18px;"><i class="fas fa-trash"></i> Cảnh báo: Xóa vĩnh viễn</h3>
+            <p style="font-size: 13.5px; color: var(--text-gray); margin-bottom: 12px;">Bạn có chắc chắn muốn <strong style="color: #EF4444;">XÓA VĨNH VIỄN</strong> bản ghi: <strong id="delete-item-name" style="color: var(--primary-color);"></strong> khỏi cơ sở dữ liệu SQL Server không? Hành động này không thể hoàn tác!</p>
+            <div style="margin-bottom: 20px;">
+                <label style="font-size: 11.5px; font-weight: 600; color: var(--text-gray); display: block; margin-bottom: 4px; text-transform: uppercase;">Lý do xóa trong SQL:</label>
+                <div id="delete-item-reason" style="padding: 10px 14px; background: var(--bg-body); border-radius: 8px; font-size: 13px; color: var(--secondary-color); font-style: italic; border-left: 3px solid #EF4444;">Không có lý do</div>
+            </div>
+            <div style="display: flex; gap: 10px; justify-content: flex-end;">
+                <button type="button" class="btn btn-outline" id="cancel-delete-perm-btn" style="padding: 8px 16px; border-radius: 8px; cursor: pointer; color:#fff;">Hủy bỏ</button>
+                <button type="button" class="btn btn-danger" id="confirm-delete-perm-btn" style="padding: 8px 16px; border-radius: 8px; background: #EF4444; color: white; border: none; cursor: pointer;"><i class="fas fa-trash"></i> Xác nhận Xóa vĩnh viễn</button>
+            </div>
+        </div>
+    </div>
 
     <div class="sidebar-overlay" id="sidebar-overlay"></div>
 
     <script src="../../static/js/admin-data.js"></script>
     <script src="../../static/js/admin.js"></script>
     <script>
+    let selectedRestoreItem = null;
+    let selectedDeleteItem = null;
+    let globalRecycleData = [];
+    const API_BASE = window.location.origin;
+
+    async function loadRecycleBinData() {
+        const tbody = document.getElementById('recycle-bin-body');
+        try {
+            const token = localStorage.getItem('medbooking_token');
+            const res = await fetch(`${API_BASE}/auth/admin/thung-rac`, {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            if (!res.ok) throw new Error("Không thể tải dữ liệu thùng rác");
+
+            globalRecycleData = await res.json();
+            if (!globalRecycleData || globalRecycleData.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="5" style="text-align:center;padding:40px;color:var(--text-gray);">Thùng rác đang trống. Không có bản ghi nào bị xóa.</td></tr>`;
+                return;
+            }
+
+            tbody.innerHTML = globalRecycleData.map((item, index) => {
+                const displayReason = item.ly_do_xoa || item.ly_do || item.ly_do_khoa || item.reason || item.deleted_at || 'Không có lý do';
+                return `
+                    <tr>
+                        <td><strong>${item.id}</strong></td>
+                        <td><span class="badge" style="background:var(--primary-light);color:var(--primary-color);padding:4px 8px;border-radius:6px;font-size:11px;">${item.type}</span></td>
+                        <td>${item.name}</td>
+                        <td style="color:var(--text-gray);font-style:italic;">${displayReason}</td>
+                        <td>
+                            <div class="action-btns">
+                                <button type="button" class="btn-restore" data-index="${index}"><i class="fas fa-undo"></i> Khôi phục</button>
+                                <button type="button" class="btn-delete-perm" data-index="${index}"><i class="fas fa-trash"></i> Xóa vĩnh viễn</button>
+                            </div>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+
+            document.querySelectorAll('.btn-restore').forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    const idx = this.getAttribute('data-index');
+                    openRestoreModal(globalRecycleData[idx]);
+                });
+            });
+
+            document.querySelectorAll('.btn-delete-perm').forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    const idx = this.getAttribute('data-index');
+                    openDeletePermModal(globalRecycleData[idx]);
+                });
+            });
+
+        } catch (e) {
+            console.error(e);
+            tbody.innerHTML = `<tr><td colspan="5" style="text-align:center;padding:40px;color:#EF4444;">Lỗi tải dữ liệu từ cơ sở dữ liệu.</td></tr>`;
+        }
+    }
+
+    // Modal Khôi phục
+    function openRestoreModal(item) {
+        selectedRestoreItem = item;
+        document.getElementById('restore-item-name').textContent = `${item.type}: ${item.name}`;
+        document.getElementById('restore-item-reason').textContent = item.ly_do_xoa || item.ly_do || item.ly_do_khoa || item.reason || item.deleted_at || 'Không có lý do';
+        document.getElementById('restore-modal').style.display = 'flex';
+    }
+
+    function closeRestoreModal() {
+        document.getElementById('restore-modal').style.display = 'none';
+        selectedRestoreItem = null;
+    }
+
+    document.getElementById('cancel-restore-btn').addEventListener('click', closeRestoreModal);
+
+    document.getElementById('confirm-restore-btn').addEventListener('click', async () => {
+        if (!selectedRestoreItem) return;
+        try {
+            const token = localStorage.getItem('medbooking_token');
+            const res = await fetch(`${API_BASE}/auth/admin/thung-rac/khoi-phuc`, {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    table: selectedRestoreItem.table,
+                    id: selectedRestoreItem.raw_id
+                })
+            });
+            if (res.ok) {
+                alert("Khôi phục bản ghi thành công!");
+                closeRestoreModal();
+                loadRecycleBinData();
+            } else {
+                alert("Không thể khôi phục bản ghi từ máy chủ.");
+            }
+        } catch (e) {
+            alert("Lỗi hệ thống khi khôi phục.");
+        }
+    });
+
+    // Modal Xóa vĩnh viễn
+    function openDeletePermModal(item) {
+        selectedDeleteItem = item;
+        document.getElementById('delete-item-name').textContent = `${item.type}: ${item.name}`;
+        document.getElementById('delete-item-reason').textContent = item.ly_do_xoa || item.ly_do || item.ly_do_khoa || item.reason || item.deleted_at || 'Không có lý do';
+        document.getElementById('delete-perm-modal').style.display = 'flex';
+    }
+
+    function closeDeletePermModal() {
+        document.getElementById('delete-perm-modal').style.display = 'none';
+        selectedDeleteItem = null;
+    }
+
+    document.getElementById('cancel-delete-perm-btn').addEventListener('click', closeDeletePermModal);
+
+    document.getElementById('confirm-delete-perm-btn').addEventListener('click', async () => {
+        if (!selectedDeleteItem) return;
+        try {
+            const token = localStorage.getItem('medbooking_token');
+            // ⭐ Sửa đường dẫn chuẩn có tiền tố /auth/admin để khớp hoàn toàn với Backend FastAPI
+            const res = await fetch(`${API_BASE}/auth/admin/thung-rac/xoa-vinh-vien?table=${selectedDeleteItem.table}&id=${selectedDeleteItem.raw_id}`, {
+                method: 'DELETE',
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
+            if (res.ok) {
+                alert("Đã xóa vĩnh viễn thành công khỏi CSDL!");
+                closeDeletePermModal();
+                loadRecycleBinData();
+            } else {
+                alert("Không thể xóa vĩnh viễn bản ghi.");
+            }
+        } catch (e) {
+            alert("Lỗi hệ thống khi xóa vĩnh viễn.");
+        }
+    });
+
     (function () {
         const html = document.documentElement;
         const saved = localStorage.getItem('mb-admin-theme') ||
-                      (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+                    (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
         html.setAttribute('data-theme', saved);
         document.addEventListener('DOMContentLoaded', () => {
             const themeBtn = document.getElementById('theme-toggle');
@@ -134,32 +328,27 @@
             if (menuBtn) menuBtn.addEventListener('click', openSidebar);
             if (closeBtn) closeBtn.addEventListener('click', closeSidebar);
             if (overlay) overlay.addEventListener('click', closeSidebar);
-            sidebar.querySelectorAll('nav a').forEach(link => {
-                link.addEventListener('click', () => { if (window.innerWidth <= 900) closeSidebar(); });
-            });
-            window.addEventListener('resize', () => { if (window.innerWidth > 900) closeSidebar(); });
+
+            loadRecycleBinData();
+
+            const token = localStorage.getItem('medbooking_token');
+            if (token) {
+                fetch('/auth/me', {
+                    headers: {'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json'}
+                })
+                .then(res => res.json())
+                .then(data => {
+                    const adminName = data.ho_ten || data.name || '';
+                    const adminNameBtn = document.getElementById('admin-name-btn');
+                    if (adminNameBtn && adminName) {
+                        adminNameBtn.textContent = `AD ${adminName}`;
+                    }
+                }).catch(err => {
+                    console.error("Không thể tải thông tin admin trên header:", err);
+                });
+            }
         });
     })();
     </script>
-    <script>
-    // Tự động highlight menu đang chọn dựa vào tên file URL
-    document.addEventListener('DOMContentLoaded', () => {
-        const currentPath = window.location.pathname.split('/').pop() || 'home_a.html';
-        const navLinks = document.querySelectorAll('aside nav a');
-        
-        navLinks.forEach(link => {
-            const href = link.getAttribute('href');
-            // Nếu href trùng với tên file hiện tại thì thêm class active
-            if (href === currentPath) {
-                link.classList.add('active');
-                // Xóa thẻ <strong> cũ nếu có (để không bị in đậm 2 lần)
-                const strong = link.querySelector('strong');
-                if (strong) {
-                    link.innerHTML = strong.innerHTML;
-                }
-            }
-        });
-    });
-</script>
 </body>
 </html>

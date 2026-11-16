@@ -4,7 +4,7 @@
    ============================================================ */
 
 const BN_Store = (function() {
-    
+
     const KEYS = {
         APPOINTMENTS: 'medbooking_bn_appointments',
         INITIALIZED: 'medbooking_bn_initialized'
@@ -24,75 +24,75 @@ const BN_Store = (function() {
 
     const INITIAL_APPOINTMENTS = [
         // Lịch sắp tới (pending)
-        { 
-            id: 'LH00123', 
-            date: tomorrowStr, 
-            time: '08:30', 
+        {
+            id: 'LH00123',
+            date: tomorrowStr,
+            time: '08:30',
             ca: 'sang',
             doctorId: 'bs01',
-            doctor: 'ThS.BS Nguyễn Văn A', 
-            specialty: 'Nội Tổng Quát', 
-            symptom: 'Đau đầu kéo dài, mệt mỏi', 
+            doctor: 'ThS.BS Vũ Đăng Khôi',
+            specialty: 'Nội Tổng Quát',
+            symptom: 'Đau đầu kéo dài, mệt mỏi',
             status: 'pending',
             items: [
                 { name: 'Tiền khám chuyên khoa', qty: 1, price: 300000 },
                 { name: 'Xét nghiệm máu cơ bản', qty: 1, price: 150000 }
             ]
         },
-        { 
-            id: 'LH00124', 
-            date: '2026-10-20', 
-            time: '14:00', 
+        {
+            id: 'LH00124',
+            date: '2026-10-20',
+            time: '14:00',
             ca: 'chieu',
             doctorId: 'bs02',
-            doctor: 'BS.CKI Trần Thị C', 
-            specialty: 'Tim Mạch', 
-            symptom: 'Khám định kỳ huyết áp', 
+            doctor: 'BS.Hoàng Kiều Oanh',
+            specialty: 'Tim Mạch',
+            symptom: 'Khám định kỳ huyết áp',
             status: 'pending',
             items: [
                 { name: 'Tiền khám chuyên khoa', qty: 1, price: 300000 }
             ]
         },
         // Lịch sử khám (completed)
-        { 
-            id: 'LH00098', 
-            date: lastWeekStr, 
-            time: '14:00', 
+        {
+            id: 'LH00098',
+            date: lastWeekStr,
+            time: '14:00',
             ca: 'chieu',
             doctorId: 'bs02',
-            doctor: 'BS.CKI Trần Thị C', 
-            specialty: 'Tim Mạch', 
-            symptom: 'Đau thắt ngực nhẹ khi vận động', 
+            doctor: 'BS.Hoàng Kiều Oanh',
+            specialty: 'Tim Mạch',
+            symptom: 'Đau thắt ngực nhẹ khi vận động',
             status: 'completed',
             items: [
                 { name: 'Tiền khám chuyên khoa', qty: 1, price: 300000 },
                 { name: 'Điện tâm đồ (ECG)', qty: 1, price: 200000 }
             ]
         },
-        { 
-            id: 'LH00075', 
-            date: lastMonthStr, 
-            time: '09:30', 
+        {
+            id: 'LH00075',
+            date: lastMonthStr,
+            time: '09:30',
             ca: 'sang',
             doctorId: 'bs05',
-            doctor: 'BS. Nguyễn Thị Nhi', 
-            specialty: 'Nhi Khoa', 
-            symptom: 'Trẻ sốt cao 3 ngày', 
+            doctor: 'BS. Nguyễn Thị Nhi',
+            specialty: 'Nhi Khoa',
+            symptom: 'Trẻ sốt cao 3 ngày',
             status: 'completed',
             items: [
                 { name: 'Tiền khám chuyên khoa', qty: 1, price: 300000 }
             ]
         },
         // Lịch đã hủy (cancelled)
-        { 
-            id: 'LH00045', 
-            date: '2026-08-15', 
-            time: '09:00', 
+        {
+            id: 'LH00045',
+            date: '2026-08-15',
+            time: '09:00',
             ca: 'sang',
             doctorId: 'bs03',
-            doctor: 'TS.BS Lê Hoàng D', 
-            specialty: 'Thần Kinh', 
-            symptom: 'Mất ngủ kinh niên', 
+            doctor: 'TS.BS Nguyễn Văn Hùng',
+            specialty: 'Thần Kinh',
+            symptom: 'Mất ngủ kinh niên',
             status: 'cancelled',
             items: [
                 { name: 'Tiền khám chuyên khoa', qty: 1, price: 300000 }
@@ -103,11 +103,33 @@ const BN_Store = (function() {
     // =========================================
     // INIT
     // =========================================
+   // =========================================
+    // INIT (ĐỒNG BỘ TÊN BÁC SĨ TỰ ĐỘNG THEO DOCTORID)
+    // =========================================
     function init() {
-        if (!localStorage.getItem(KEYS.INITIALIZED)) {
+        // Danh sách ánh xạ chuẩn giữa doctorId và tên bác sĩ mới nhất
+        const doctorMapping = {
+            'bs01': 'ThS.BS Vũ Đăng Khôi',
+            'bs02': 'BS.Hoàng Kiều Oanh',
+            'bs03': 'TS.BS Nguyễn Văn Hùng',
+            'bs05': 'BS. Nguyễn Thị Nhi'
+        };
+
+        const stored = localStorage.getItem(KEYS.APPOINTMENTS);
+        if (!stored) {
             localStorage.setItem(KEYS.APPOINTMENTS, JSON.stringify(INITIAL_APPOINTMENTS));
-            localStorage.setItem(KEYS.INITIALIZED, 'true');
-            console.log('✅ BN_Store: Đã khởi tạo dữ liệu ban đầu');
+            console.log('✅ BN_Store: Khởi tạo dữ liệu ban đầu');
+        } else {
+            let appts = JSON.parse(stored);
+            // Cập nhật lại tên bác sĩ nếu lịch hẹn có doctorId khớp với bảng ánh xạ
+            appts = appts.map(appt => {
+                if (appt.doctorId && doctorMapping[appt.doctorId]) {
+                    appt.doctor = doctorMapping[appt.doctorId];
+                }
+                return appt;
+            });
+            localStorage.setItem(KEYS.APPOINTMENTS, JSON.stringify(appts));
+            console.log('🔄 BN_Store: Đã tự động cập nhật đồng bộ tên bác sĩ mới nhất');
         }
     }
 
@@ -125,7 +147,7 @@ const BN_Store = (function() {
     // =========================================
     // API
     // =========================================
-    
+
     // Lấy 1 lịch hẹn
     function getAppointmentById(id) {
         return getAppointments().find(a => a.id === id);
@@ -134,14 +156,14 @@ const BN_Store = (function() {
     // Tạo lịch hẹn mới
     function createAppointment(data) {
         const appts = getAppointments();
-        
+
         // Sinh mã LH tự động
         const maxId = appts.reduce((max, a) => {
             const num = parseInt(a.id.replace('LH', ''));
             return num > max ? num : max;
         }, 0);
         const newId = 'LH' + String(maxId + 1).padStart(5, '0');
-        
+
         const appointment = {
             id: newId,
             date: data.date,
@@ -157,7 +179,7 @@ const BN_Store = (function() {
             ],
             createdAt: new Date().toISOString()
         };
-        
+
         appts.push(appointment);
         setAppointments(appts);
         return { success: true, appointment };
@@ -168,7 +190,7 @@ const BN_Store = (function() {
         const appts = getAppointments();
         const appt = appts.find(a => a.id === id);
         if (!appt) return { success: false };
-        
+
         appt.status = newStatus;
         appt.updatedAt = new Date().toISOString();
         setAppointments(appts);
@@ -180,7 +202,7 @@ const BN_Store = (function() {
         const appts = getAppointments();
         const appt = appts.find(a => a.id === id);
         if (!appt) return { success: false };
-        
+
         appt.time = newTime;
         appt.ca = newCa;
         appt.updatedAt = new Date().toISOString();
@@ -197,7 +219,7 @@ const BN_Store = (function() {
     function rebookAppointment(oldId) {
         const appt = getAppointmentById(oldId);
         if (!appt) return { success: false };
-        
+
         return {
             success: true,
             data: {
@@ -241,6 +263,7 @@ const BN_Store = (function() {
         init();
         console.log('🔄 BN_Store: Đã reset');
     }
+
 
     // =========================================
     // PUBLIC API

@@ -5,10 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MEDBOOKING - Đăng ký tài khoản bệnh nhân</title>
     <!-- Favicon hình chú chim cánh cụt y tế -->
-    <link rel="icon" type="image/jpeg" href="../../favicon.jpg">
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/jpeg" href="/static/favicon.jpg">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,500;0,700;1,400&family=Plus+Jakarta+Sans:wght@300;400;500;600&display=swap"
+          rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
+
     <style>
         :root {
             --bg-color: #fdfbfb;
@@ -19,64 +20,104 @@
             --card-bg: rgba(255, 255, 255, 0.85);
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
         body {
             font-family: 'Plus Jakarta Sans', sans-serif;
             background-image: url('https://images.unsplash.com/photo-1522383225653-ed111181a951?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80');
-            background-size: cover; background-position: center;
+            background-size: cover;
+            background-position: center;
             background-attachment: fixed;
             background-color: rgba(255, 240, 245, 0.85);
             background-blend-mode: overlay;
-            min-height: 100vh; display: flex; flex-direction: column;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
             color: var(--text-main);
-            animation: pageFadeIn 0.8s ease-out forwards;
+            animation: pageFadeIn 0.5s ease-out forwards;
         }
 
         @keyframes pageFadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
-        /* --- HIỆU ỨNG HOA ANH ĐÀO RƠI --- */
+        /* --- HIỆU ỨNG HOA ANH ĐÀO RƠI NHANH --- */
         .petal-overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            pointer-events: none; z-index: 9999; overflow: hidden;
-            opacity: 0; transition: opacity 0.3s ease;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 9999;
+            overflow: hidden;
+            opacity: 0;
+            transition: opacity 0.15s ease;
         }
-        .petal-overlay.active { opacity: 1; }
+
+        .petal-overlay.active {
+            opacity: 1;
+        }
 
         .petal {
-            position: absolute; top: -50px; width: 20px; height: 20px;
+            position: absolute;
+            top: -50px;
+            width: 20px;
+            height: 20px;
             background: linear-gradient(135deg, #ffb7c5, #ff8fab);
-            border-radius: 150% 0 150% 0; opacity: 0.8;
+            border-radius: 150% 0 150% 0;
+            opacity: 0.9;
             animation: fall linear forwards;
             box-shadow: 0 0 5px rgba(255, 183, 197, 0.5);
         }
+
         .petal:nth-child(odd) {
             border-radius: 0 150% 0 150%;
             background: linear-gradient(135deg, #ffc0cb, #ff69b4);
         }
+
         .petal:nth-child(3n) {
-            width: 15px; height: 15px;
+            width: 15px;
+            height: 15px;
             background: linear-gradient(135deg, #ffd1dc, #ffb6c1);
         }
 
         @keyframes fall {
-            0% { transform: translateY(0) rotate(0deg) translateX(0); opacity: 0.9; }
-            25% { transform: translateY(25vh) rotate(90deg) translateX(30px); }
-            50% { transform: translateY(50vh) rotate(180deg) translateX(-20px); }
-            75% { transform: translateY(75vh) rotate(270deg) translateX(20px); }
-            100% { transform: translateY(110vh) rotate(360deg) translateX(0); opacity: 0; }
+            0% {
+                transform: translateY(0) rotate(0deg) translateX(0);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(110vh) rotate(540deg) translateX(50px);
+                opacity: 0;
+            }
         }
 
         /* =========================================
-            HEADER (LOGO MỚI)
+            HEADER (LOGO)
             ========================================= */
         .site-header {
-            display: flex; justify-content: space-between; align-items: center;
-            padding: 20px 50px; background: transparent;
-            position: absolute; top: 0; left: 0; right: 0; z-index: 10;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 50px;
+            background: transparent;
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 10;
         }
 
         .logo-container {
@@ -84,7 +125,7 @@
             align-items: center;
             gap: 12px;
             cursor: pointer;
-            transition: transform 0.3s ease;
+            transition: transform 0.2s ease;
         }
 
         .logo-container:hover {
@@ -112,11 +153,21 @@
         }
 
         @keyframes heartbeat {
-            0% { transform: scale(1); }
-            14% { transform: scale(1.15); }
-            28% { transform: scale(1); }
-            42% { transform: scale(1.15); }
-            70% { transform: scale(1); }
+            0% {
+                transform: scale(1);
+            }
+            14% {
+                transform: scale(1.15);
+            }
+            28% {
+                transform: scale(1);
+            }
+            42% {
+                transform: scale(1.15);
+            }
+            70% {
+                transform: scale(1);
+            }
         }
 
         .logo-icon::before {
@@ -126,13 +177,17 @@
             left: -50%;
             width: 200%;
             height: 200%;
-            background: radial-gradient(circle, rgba(255,255,255,0.4) 0%, transparent 70%);
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.4) 0%, transparent 70%);
             animation: shine 3s infinite linear;
         }
 
         @keyframes shine {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
         }
 
         .logo-text h1 {
@@ -155,261 +210,428 @@
         }
 
         .hotline {
-            font-size: 14px; color: var(--accent-pink); font-weight: 600;
-            background: rgba(255, 255, 255, 0.7); padding: 8px 20px;
-            border-radius: 20px; border: 1px solid var(--border-pink);
+            font-size: 14px;
+            color: var(--accent-pink);
+            font-weight: 600;
+            background: rgba(255, 255, 255, 0.7);
+            padding: 8px 20px;
+            border-radius: 20px;
+            border: 1px solid var(--border-pink);
             backdrop-filter: blur(5px);
         }
 
         /* --- MAIN CONTAINER --- */
         .register-container {
-            flex: 1; display: flex; justify-content: center; align-items: center;
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
             padding: 100px 20px 40px 20px;
         }
 
         .register-card {
-            background: var(--card-bg); backdrop-filter: blur(15px);
-            border: 2px solid rgba(255, 255, 255, 0.8); border-radius: 30px;
-            width: 100%; max-width: 1000px; display: flex;
+            background: var(--card-bg);
+            backdrop-filter: blur(15px);
+            border: 2px solid rgba(255, 255, 255, 0.8);
+            border-radius: 30px;
+            width: 100%;
+            max-width: 1000px;
+            display: flex;
             box-shadow: 0 15px 50px rgba(214, 77, 122, 0.15);
-            overflow: hidden; position: relative;
+            overflow: hidden;
+            position: relative;
         }
 
         .card-image {
-            flex: 0 0 45%; position: relative; overflow: hidden;
-            display: flex; align-items: center; justify-content: center;
+            flex: 0 0 45%;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .card-image img {
-            width: 100%; height: 100%; object-fit: cover;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
             mask-image: linear-gradient(to right, black 70%, transparent 100%);
             -webkit-mask-image: linear-gradient(to right, black 70%, transparent 100%);
         }
 
         .register-right-side {
-            flex: 1; padding: 50px 60px; display: flex;
-            flex-direction: column; justify-content: center; background: transparent;
+            flex: 1;
+            padding: 50px 60px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            background: transparent;
         }
 
         .back-home {
-            display: inline-block; text-decoration: none; font-size: 12px;
-            text-transform: uppercase; letter-spacing: 1.5px; color: #64748b;
-            font-weight: 600; margin-bottom: 25px; transition: color 0.3s;
+            display: inline-block;
+            text-decoration: none;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: #64748b;
+            font-weight: 600;
+            margin-bottom: 25px;
+            transition: color 0.2s;
         }
-        .back-home:hover { color: var(--accent-pink); }
+
+        .back-home:hover {
+            color: var(--accent-pink);
+        }
 
         .register-right-side h1 {
-            font-family: 'Playfair Display', serif; font-size: 34px;
-            font-weight: 500; color: var(--text-main); margin-bottom: 16px;
-            line-height: 1.2; text-align: center;
+            font-family: 'Playfair Display', serif;
+            font-size: 34px;
+            font-weight: 500;
+            color: var(--text-main);
+            margin-bottom: 16px;
+            line-height: 1.2;
+            text-align: center;
         }
-        .register-right-side h1 i { color: var(--accent-pink); }
+
+        .register-right-side h1 i {
+            color: var(--accent-pink);
+        }
 
         .register-desc {
-            font-size: 14px; color: #475569; margin-bottom: 30px;
-            font-weight: 300; line-height: 1.6; text-align: center;
+            font-size: 14px;
+            color: #475569;
+            margin-bottom: 30px;
+            font-weight: 300;
+            line-height: 1.6;
+            text-align: center;
         }
 
-        .form-group { margin-bottom: 18px; }
+        .form-group {
+            margin-bottom: 18px;
+        }
 
         .form-group label {
-            display: block; font-size: 12px; text-transform: uppercase;
-            letter-spacing: 1.2px; font-weight: 600; color: #475569; margin-bottom: 8px;
+            display: block;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 1.2px;
+            font-weight: 600;
+            color: #475569;
+            margin-bottom: 8px;
         }
 
         .form-group input {
-            width: 100%; padding: 15px 20px; border-radius: 50px;
-            border: 1px solid #ddd; background: #ffffff;
-            font-family: 'Plus Jakarta Sans', sans-serif; font-size: 15px;
-            color: var(--text-main); outline: none; transition: all 0.3s ease;
-            box-shadow: inset 0 2px 5px rgba(0,0,0,0.02);
+            width: 100%;
+            padding: 15px 20px;
+            border-radius: 50px;
+            border: 1px solid #ddd;
+            background: #ffffff;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            font-size: 15px;
+            color: var(--text-main);
+            outline: none;
+            transition: all 0.2s ease;
+            box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.02);
         }
+
         .form-group input:focus {
             border-color: var(--accent-pink);
             box-shadow: 0 0 0 4px rgba(214, 77, 122, 0.1);
         }
 
         .btn-submit {
-            width: 100%; background: var(--accent-pink-light); color: #ffffff;
-            padding: 16px; border-radius: 50px; border: none; font-size: 15px;
-            text-transform: uppercase; letter-spacing: 2px; font-weight: 700;
-            cursor: pointer; box-shadow: 0 5px 15px rgba(214, 77, 122, 0.2);
-            transition: all 0.3s ease; margin-top: 10px; margin-bottom: 25px;
+            width: 100%;
+            background: var(--accent-pink-light);
+            color: #ffffff;
+            padding: 16px;
+            border-radius: 50px;
+            border: none;
+            font-size: 15px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(214, 77, 122, 0.2);
+            transition: all 0.2s ease;
+            margin-top: 10px;
+            margin-bottom: 25px;
         }
+
         .btn-submit:hover {
-            background: var(--accent-pink); transform: translateY(-2px);
+            background: var(--accent-pink);
+            transform: translateY(-2px);
             box-shadow: 0 8px 20px rgba(214, 77, 122, 0.3);
         }
 
-        .login-redirect { text-align: center; }
-        .login-redirect p { font-size: 14px; color: #64748b; }
-        .login-redirect a {
-            color: var(--accent-pink); font-weight: 600; text-decoration: none;
-            border-bottom: 1px solid var(--accent-pink); padding-bottom: 2px;
-            transition: opacity 0.3s;
+        .login-redirect {
+            text-align: center;
         }
-        .login-redirect a:hover { opacity: 0.7; }
+
+        .login-redirect p {
+            font-size: 14px;
+            color: #64748b;
+        }
+
+        .login-redirect a {
+            color: var(--accent-pink);
+            font-weight: 600;
+            text-decoration: none;
+            border-bottom: 1px solid var(--accent-pink);
+            padding-bottom: 2px;
+            transition: opacity 0.2s;
+        }
+
+        .login-redirect a:hover {
+            opacity: 0.7;
+        }
 
         @media (max-width: 900px) {
-            .register-card { flex-direction: column; max-width: 500px; }
-            .card-image { height: 200px; flex: none; }
+            .register-card {
+                flex-direction: column;
+                max-width: 500px;
+            }
+
+            .card-image {
+                height: 200px;
+                flex: none;
+            }
+
             .card-image img {
                 mask-image: linear-gradient(to bottom, black 50%, transparent 100%);
                 -webkit-mask-image: linear-gradient(to bottom, black 50%, transparent 100%);
             }
-            .register-right-side { padding: 30px; }
-            .site-header { padding: 15px 20px; }
-            .hotline { display: none; }
+
+            .register-right-side {
+                padding: 30px;
+            }
+
+            .site-header {
+                padding: 15px 20px;
+            }
+
+            .hotline {
+                display: none;
+            }
         }
     </style>
 </head>
 <body>
 
-    <div class="petal-overlay" id="petalOverlay"></div>
+<div class="petal-overlay" id="petalOverlay"></div>
 
-    <header class="site-header">
-        <div class="logo-container">
-            <div class="logo-icon">
-                <i class="fa-solid fa-heart-pulse"></i>
-            </div>
-            <div class="logo-text">
-                <h1>MedBooking</h1>
-                <p>Chăm sóc sức khỏe toàn diện</p>
-            </div>
+<header class="site-header">
+    <div class="logo-container">
+        <div class="logo-icon">
+            <i class="fa-solid fa-heart-pulse"></i>
         </div>
-        <div class="hotline">Hotline: 1999 0081</div>
-    </header>
+        <div class="logo-text">
+            <h1>MedBooking</h1>
+            <p>Chăm sóc sức khỏe toàn diện</p>
+        </div>
+    </div>
+    <div class="hotline">Hotline: 1999 0081</div>
+</header>
 
-    <main class="register-container">
-        <div class="register-card">
-            <div class="card-image">
-                <img src="https://i.pinimg.com/736x/e6/ff/b3/e6ffb314bced137e57aaf5dfeabe968d.jpg" alt="Hoa anh đào MedBooking">
-            </div>
+<main class="register-container">
+    <div class="register-card">
+        <div class="card-image">
+            <img src="https://i.pinimg.com/736x/e6/ff/b3/e6ffb314bced137e57aaf5dfeabe968d.jpg"
+                 alt="Hoa anh đào MedBooking">
+        </div>
 
-            <section class="register-right-side">
-                <a href="home.html" class="back-home transition-link">← Quay lại trang chủ</a>
-                
-                <h1>Tạo tài khoản <i>MedBooking</i></h1>
-                <p class="register-desc">Điền thông tin bên dưới để tạo hồ sơ số hóa y tế và trải nghiệm dịch vụ đặt lịch khám nhanh chóng.</p>
+        <section class="register-right-side">
+            <a href="/dk_dn/home.html" class="back-home transition-link">← Quay lại trang chủ</a>
 
-                <!-- FORM ĐĂNG KÝ -->
-                <form id="registerForm">
-                    <div class="form-group">
-                        <label for="hoten">Họ và tên</label>
-                        <input type="text" id="hoten" name="hoten" placeholder="Nhập họ và tên" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="email">Gmail</label>
-                        <input type="email" id="email" name="email" placeholder="example@gmail.com" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="password">Mật khẩu</label>
-                        <input type="password" id="password" name="password" placeholder="VD: Abc123 (>=6 ký tự, 1 hoa, 1 số)" required>
-                    </div>
-                    <button type="submit" class="btn-submit">Chấp nhận</button>
-                </form>
+            <h1>Tạo tài khoản <i>MedBooking</i></h1>
+            <p class="register-desc">Điền thông tin bên dưới để tạo hồ sơ số hóa y tế và trải nghiệm dịch vụ đặt lịch
+                khám nhanh chóng.</p>
 
-                <div class="login-redirect">
-                    <p>Đã có tài khoản? <a href="dn.html" class="transition-link">Đăng nhập ngay</a></p>
+            <!-- FORM ĐĂNG KÝ (ĐÃ BỔ SUNG SỐ ĐIỆN THOẠI KHỚP BACKEND) -->
+            <form id="registerForm">
+                <div class="form-group">
+                    <label for="hoten">Họ và tên</label>
+                    <input type="text" id="hoten" name="hoten" placeholder="Nhập họ và tên" required>
                 </div>
-            </section>
-        </div>
-    </main>
+                <div class="form-group">
+                    <label for="email">Gmail</label>
+                    <input type="email" id="email" name="email" placeholder="example@gmail.com" required>
+                </div>
+                <div class="form-group">
+                    <label for="sdt">Số điện thoại</label>
+                    <input type="tel" id="sdt" name="sdt" placeholder="Nhập số điện thoại" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Mật khẩu</label>
+                    <input type="password" id="password" name="password" placeholder="Nhập mật khẩu" required>
+                </div>
+                <button type="submit" class="btn-submit">Chấp nhận</button>
+            </form>
 
-    <!-- SCRIPT HIỆU ỨNG HOA ANH ĐÀO -->
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const links = document.querySelectorAll('.transition-link');
-            const overlay = document.getElementById('petalOverlay');
+            <div class="login-redirect">
+                <p>Đã có tài khoản? <a href="dn.html" class="transition-link">Đăng nhập ngay</a></p>
+            </div>
+        </section>
+    </div>
+</main>
 
-            function createPetals() {
+<!-- SCRIPT HIỆU ỨNG HOA ANH ĐÀO RƠI NHANH VÀ MƯỢT (300ms) -->
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const links = document.querySelectorAll('.transition-link');
+        const overlay = document.getElementById('petalOverlay');
+
+        function createPetals() {
+            overlay.innerHTML = '';
+            overlay.classList.add('active');
+            for (let i = 0; i < 40; i++) {
+                const petal = document.createElement('div');
+                petal.classList.add('petal');
+                petal.style.left = Math.random() * 100 + '%';
+                const size = Math.random() * 12 + 8;
+                petal.style.width = size + 'px';
+                petal.style.height = size + 'px';
+                const duration = Math.random() * 0.2 + 0.2;
+                petal.style.animationDuration = duration + 's';
+                petal.style.animationDelay = Math.random() * 0.1 + 's';
+                petal.style.opacity = Math.random() * 0.3 + 0.7;
+                overlay.appendChild(petal);
+            }
+        }
+
+        links.forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const targetUrl = link.href;
+                createPetals();
+                setTimeout(() => {
+                    window.location.href = targetUrl;
+                }, 300);
+            });
+        });
+    });
+</script>
+
+<!-- ========================================== -->
+<!-- SCRIPT XỬ LÝ ĐĂNG KÝ GỌI TRỰC TIẾP API BACKEND -->
+<!-- ========================================== -->
+<script>
+    document.getElementById('registerForm').addEventListener('submit', async function (e) {
+        e.preventDefault(); // Chặn load lại trang
+
+        const ho_ten = document.getElementById('hoten').value.trim();
+        const email = document.getElementById('email').value.trim();
+        const so_dien_thoai = document.getElementById('sdt').value.trim();
+        const mat_khau = document.getElementById('password').value;
+
+        try {
+            // Gửi request đăng ký trực tiếp đến API /auth/register của Backend FastAPI
+            const response = await fetch('/auth/register', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    ho_ten: ho_ten,
+                    email: email,
+                    so_dien_thoai: so_dien_thoai,
+                    mat_khau: mat_khau
+                })
+            });
+
+            const data = await response.json();
+
+            if (response.ok) {
+                showToast('Đăng ký tài khoản thành công! Đang chuyển sang trang đăng nhập...', 'success');
+
+                // Kích hoạt hiệu ứng hoa rơi tức thì trước khi chuyển trang
+                const overlay = document.getElementById('petalOverlay');
                 overlay.innerHTML = '';
                 overlay.classList.add('active');
-                for (let i = 0; i < 30; i++) {
+                for (let i = 0; i < 40; i++) {
                     const petal = document.createElement('div');
                     petal.classList.add('petal');
                     petal.style.left = Math.random() * 100 + '%';
-                    const size = Math.random() * 15 + 10;
+                    const size = Math.random() * 12 + 8;
                     petal.style.width = size + 'px';
                     petal.style.height = size + 'px';
-                    const duration = Math.random() * 2 + 2;
-                    petal.style.animationDuration = duration + 's';
-                    petal.style.animationDelay = Math.random() * 0.5 + 's';
-                    petal.style.opacity = Math.random() * 0.5 + 0.5;
+                    petal.style.animationDuration = (Math.random() * 0.2 + 0.2) + 's';
+                    petal.style.animationDelay = (Math.random() * 0.1) + 's';
                     overlay.appendChild(petal);
                 }
+
+                setTimeout(() => {
+                    window.location.href = 'dn.html';
+                }, 600);
+            } else {
+                // Xử lý bóc tách lỗi an toàn tuyệt đối, loại bỏ hoàn toàn [object Object]
+                let errorMsg = 'Đăng ký thất bại. Vui lòng kiểm tra lại thông tin!';
+
+                if (data.detail) {
+                    if (typeof data.detail === 'string') {
+                        errorMsg = data.detail;
+                    } else if (Array.isArray(data.detail)) {
+                        errorMsg = data.detail.map(err => err.msg || JSON.stringify(err)).join(' | ');
+                    } else if (typeof data.detail === 'object') {
+                        errorMsg = JSON.stringify(data.detail);
+                    }
+                } else if (data.message) {
+                    errorMsg = data.message;
+                }
+
+                showToast(errorMsg, 'error');
             }
-
-            links.forEach(link => {
-                link.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    const targetUrl = link.href;
-                    createPetals();
-                    setTimeout(() => {
-                        window.location.href = targetUrl;
-                    }, 1500);
-                });
-            });
-        });
-    </script>
-
-    <!-- ========================================== -->
-    <!-- SCRIPT XỬ LÝ ĐĂNG KÝ (NHÚNG TRỰC TIẾP) -->
-    <!-- ========================================== -->
-    <script>
-        document.getElementById('registerForm').addEventListener('submit', function(e) {
-            e.preventDefault(); // Chặn load lại trang
-            
-            const fullname = document.getElementById('hoten').value.trim();
-            const email = document.getElementById('email').value.trim();
-            const password = document.getElementById('password').value;
-
-            // 1. Kiểm tra ràng buộc mật khẩu
-            const passwordRegex = /^(?=.*[A-Z])(?=.*\d).{6,}$/;
-            if (!passwordRegex.test(password)) {
-                showToast('Mật khẩu phải có ít nhất 6 ký tự, bao gồm 1 chữ hoa và 1 số!', 'error');
-                return;
-            }
-
-            // 2. Lấy danh sách user từ localStorage
-            let users = JSON.parse(localStorage.getItem('medbooking_users')) || [];
-
-            // 3. Kiểm tra email tồn tại
-            const existingUser = users.find(u => u.email === email);
-            if (existingUser) {
-                showToast('Email này đã được đăng ký! Vui lòng đăng nhập.', 'error');
-                return;
-            }
-
-            // 4. Lưu user mới
-            users.push({ fullname, email, password });
-            localStorage.setItem('medbooking_users', JSON.stringify(users));
-
-            // 5. Thông báo thành công và chuyển trang
-            showToast('Đăng ký thành công! Đang chuyển sang trang đăng nhập...', 'success');
-            
-            setTimeout(() => {
-                window.location.href = 'dn.html';
-            }, 2000);
-        });
-
-        // Hàm hiển thị thông báo Toast
-        function showToast(message, type = 'info') {
-            const toast = document.createElement('div');
-            toast.innerHTML = `<i class="fa-solid ${type === 'success' ? 'fa-circle-check' : 'fa-circle-exclamation'}"></i> <span>${message}</span>`;
-            
-            Object.assign(toast.style, {
-                position: 'fixed', top: '20px', right: '20px',
-                background: type === 'success' ? '#4caf50' : '#f44336',
-                color: 'white', padding: '15px 25px', borderRadius: '10px',
-                boxShadow: '0 5px 15px rgba(0,0,0,0.2)', zIndex: '10000',
-                display: 'flex', alignItems: 'center', gap: '10px',
-                fontSize: '15px', fontWeight: '500', fontFamily: "'Plus Jakarta Sans', sans-serif"
-            });
-
-            document.body.appendChild(toast);
-            setTimeout(() => toast.remove(), 3000);
+        } catch (error) {
+            console.error('Lỗi kết nối:', error);
+            showToast('Không thể kết nối đến máy chủ Backend! Vui lòng thử lại.', 'error');
         }
-    </script>
+    });
+
+    // Hàm hiển thị thông báo Toast hỗ trợ tiếng Việt sắc nét, chống chồng chéo
+    function showToast(message, type = 'info') {
+        const existingToast = document.querySelector('.custom-toast-notification');
+        if (existingToast) {
+            existingToast.remove();
+        }
+
+        const toast = document.createElement('div');
+        toast.className = 'custom-toast-notification';
+        toast.innerHTML = `<i class="fa-solid ${type === 'success' ? 'fa-circle-check' : 'fa-circle-exclamation'}"></i> <span>${message}</span>`;
+
+        Object.assign(toast.style, {
+            position: 'fixed',
+            top: '25px',
+            right: '25px',
+            background: type === 'success' ? '#22c55e' : '#ef4444',
+            color: 'white',
+            padding: '16px 24px',
+            borderRadius: '12px',
+            boxShadow: '0 10px 25px rgba(0,0,0,0.15)',
+            zIndex: '100000',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '12px',
+            fontSize: '14.5px',
+            fontWeight: '600',
+            fontFamily: "'Plus Jakarta Sans', sans-serif",
+            opacity: '0',
+            transform: 'translateY(-10px)',
+            transition: 'all 0.3s cubic-bezier(0.16, 1, 0.3, 1)'
+        });
+
+        document.body.appendChild(toast);
+
+        requestAnimationFrame(() => {
+            toast.style.opacity = '1';
+            toast.style.transform = 'translateY(0)';
+        });
+
+        setTimeout(() => {
+            toast.style.opacity = '0';
+            toast.style.transform = 'translateY(-10px)';
+            setTimeout(() => toast.remove(), 300);
+        }, 3500);
+    }
+</script>
 </body>
 </html>

@@ -5,15 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>MedBooking - Cổng thông tin & Đặt lịch khám bệnh</title>
     <!-- Favicon chuẩn hình trái tim hồng sóng điện tim -->
-    <link rel="icon" type="image/jpeg" href="../../favicon.jpg">
+    <link rel="icon" type="image/jpeg" href="/static/favicon.jpg">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
+
     <style>
         :root {
-            --primary-pink: #f97aa4;
+            --primary-pink: #FF6B9D;
             --primary-pink-dark: #E84A7F;
             --primary-pink-light: #FFE4EC;
             --secondary-color: #2D3436;
@@ -31,7 +31,7 @@
         }
 
         [data-theme="dark"] {
-            --primary-pink: #b41f50;
+            --primary-pink: #FF85A2;
             --primary-pink-dark: #FF6B9D;
             --primary-pink-light: #3A2A30;
             --secondary-color: #F5F5F5;
@@ -248,7 +248,7 @@
         }
 
         /* =========================================
-            SEARCH BAR (STYLE AKINA)
+            SEARCH BAR
             ========================================= */
         .search-section {
             max-width: 1100px;
@@ -453,18 +453,6 @@
             font-weight: 600;
             margin-bottom: 12px;
         }
-
-        .doctor-rating {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 5px;
-            margin-bottom: 10px;
-            font-size: 14px;
-        }
-        .doctor-rating .stars { color: var(--star-color); }
-        .doctor-rating .score { font-weight: 700; color: var(--secondary-color); }
-        .doctor-rating .count { color: var(--text-gray); font-size: 12px; }
 
         .doctor-exp {
             font-size: 13px;
@@ -683,7 +671,7 @@
             font-size: 16px;
         }
 
-        footer > div:nth-child(2), 
+        footer > div:nth-child(2),
         footer > div:nth-child(3) {
             display: inline-block;
             vertical-align: top;
@@ -765,7 +753,7 @@
                 justify-content: center;
                 margin-top: 10px;
             }
-            footer > div:nth-child(2), 
+            footer > div:nth-child(2),
             footer > div:nth-child(3) {
                 width: 100%;
                 margin-right: 0;
@@ -796,16 +784,16 @@
                 <p>Chăm sóc sức khỏe toàn diện</p>
             </div>
         </div>
-        
+
         <div class="header-right">
             <nav>
                 <ul>
-                    <li><a href="home_bn.html"><strong>Trang chủ</strong></a></li>
-                    <li><a href="danh_sach_bac_si.html">Tìm kiếm Bác sĩ</a></li>
-                    <li><a href="dat_lich.html">Đặt lịch khám</a></li>
-                    <li><a href="danh_sach_lich_hen.html">Lịch hẹn của tôi</a></li>
-                    <li><a href="ho_so_ca_nhan.html">Hồ sơ cá nhân</a></li>
-                    <li><a href="../dk_dn/dn.html">Đăng xuất</a></li>
+                    <li><a href="/benh_nhan/home_bn.html"><strong>Trang chủ</strong></a></li>
+                    <li><a href="/benh_nhan/danh_sach_bac_si.html">Tìm kiếm Bác sĩ</a></li>
+                    <li><a href="/benh_nhan/dat_lich.html">Đặt lịch khám</a></li>
+                    <li><a href="/benh_nhan/danh_sach_lich_hen.html">Lịch hẹn của tôi</a></li>
+                    <li><a href="/benh_nhan/ho_so_ca_nhan.html">Hồ sơ cá nhân</a></li>
+                    <li><a href="/dk_dn/dn.html">Đăng xuất</a></li>
                 </ul>
             </nav>
             <button class="theme-toggle" id="theme-toggle" title="Chuyển đổi chế độ Sáng/Tối">
@@ -831,24 +819,16 @@
                 <label for="search-spec">Chuyên khoa:</label>
                 <select id="search-spec" name="specialty">
                     <option value="">-- Tất cả chuyên khoa --</option>
-                    <option value="noi">1. Nội Tổng Quát</option>
-                    <option value="tim-mach">2. Tim Mạch</option>
-                    <option value="nhi">3. Nhi Khoa</option>
-                    <option value="than-kinh">4. Thần Kinh</option>
-                    <option value="xuong-khop">5. Cơ Xương Khớp</option>
-                    <option value="da-lieu">6. Da Liễu</option>
-                    <option value="tai-mui-hong">7. Tai Mũi Họng</option>
-                    <option value="mat">8. Mắt</option>
-                    <option value="rang-ham-mat">9. Răng Hàm Mặt</option>
-                    <option value="y-hoc-co-truyen">10. Y Học Cổ Truyền</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label for="search-rating">Đánh giá:</label>
-                <select id="search-rating" name="rating">
-                    <option value="">-- Tất cả mức rating --</option>
-                    <option value="4.5">Từ 4.5 sao trở lên</option>
-                    <option value="4.0">Từ 4.0 sao trở lên</option>
+                    <option value="noi">Nội Tổng Quát</option>
+                    <option value="tim-mach">Tim Mạch</option>
+                    <option value="nhi">Nhi Khoa</option>
+                    <option value="than-kinh">Thần Kinh</option>
+                    <option value="xuong-khop">Cơ Xương Khớp</option>
+                    <option value="da-lieu">Da Liễu</option>
+                    <option value="tai-mui-hong">Tai Mũi Họng</option>
+                    <option value="mat">Mắt</option>
+                    <option value="rang-ham-mat">Răng Hàm Mặt</option>
+                    <option value="y-hoc-co-truyen">Y Học Cổ Truyền</option>
                 </select>
             </div>
             <div class="form-group">
@@ -871,67 +851,46 @@
 
     <!-- 4. BÁC SĨ NỔI BẬT -->
     <section class="featured-section">
-        <h2 class="section-title"> Bác sĩ Nổi bật & Tiêu biểu</h2>
-        
+        <h2 class="section-title">Bác sĩ Nổi bật & Tiêu biểu</h2>
+
         <div class="doctors-grid">
-            <!-- Bác sĩ 1 -->
+            <!-- Bác sĩ 1: ThS.BS. Vũ Đăng Khôi (id='bs17') -->
             <div class="doctor-card">
                 <div class="doctor-avatar" style="background-image: url('https://images.unsplash.com/photo-1612349317150-e413f6a5b16d?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80');"></div>
-                <h3><a href="chi_tiet_bac_si.html?id=bs01">ThS.BS Nguyễn Văn A</a></h3>
+                <h3><a href="chi_tiet_bac_si.html?id=bs17">ThS.BS. Vũ Đăng Khôi</a></h3>
                 <span class="doctor-specialty">Nội Tổng Quát</span>
-                <div class="doctor-rating">
-                    <span class="stars">
-                        <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i>
-                    </span>
-                    <span class="score">4.9</span>
-                    <span class="count">(120 đánh giá)</span>
-                </div>
                 <p class="doctor-exp"><i class="fas fa-briefcase"></i> Kinh nghiệm: 12 năm</p>
                 <div class="doctor-actions">
-                    <a href="chi_tiet_bac_si.html?id=bs01" style="flex:1;">
+                    <a href="chi_tiet_bac_si.html?id=bs17" style="flex:1;">
                         <button class="btn btn-view-profile">Xem chi tiết</button>
                     </a>
-                    <a href="dat_lich.html?doctor_id=bs01" style="flex:1;">
+                    <a href="dat_lich.html?doctor_id=bs17" style="flex:1;">
                         <button class="btn btn-book-now">Đặt lịch</button>
                     </a>
                 </div>
             </div>
 
-            <!-- Bác sĩ 2 -->
+            <!-- Bác sĩ 2: BS. Hoàng Kiều Oanh (id='bs11') -->
             <div class="doctor-card">
                 <div class="doctor-avatar" style="background-image: url('https://images.unsplash.com/photo-1594824476967-48c8b964273f?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80');"></div>
-                <h3><a href="chi_tiet_bac_si.html?id=bs02">BS.CKI Trần Thị C</a></h3>
+                <h3><a href="chi_tiet_bac_si.html?id=bs11">BS. Hoàng Kiều Oanh</a></h3>
                 <span class="doctor-specialty">Tim Mạch</span>
-                <div class="doctor-rating">
-                    <span class="stars">
-                        <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i>
-                    </span>
-                    <span class="score">4.8</span>
-                    <span class="count">(98 đánh giá)</span>
-                </div>
                 <p class="doctor-exp"><i class="fas fa-briefcase"></i> Kinh nghiệm: 10 năm</p>
                 <div class="doctor-actions">
-                    <a href="chi_tiet_bac_si.html?id=bs02" style="flex:1;">
+                    <a href="chi_tiet_bac_si.html?id=bs11" style="flex:1;">
                         <button class="btn btn-view-profile">Xem chi tiết</button>
                     </a>
-                    <a href="dat_lich.html?doctor_id=bs02" style="flex:1;">
+                    <a href="dat_lich.html?doctor_id=bs11" style="flex:1;">
                         <button class="btn btn-book-now">Đặt lịch</button>
                     </a>
                 </div>
             </div>
 
-            <!-- Bác sĩ 3 -->
+            <!-- Bác sĩ 3: TS.BS. Nguyễn Văn Hùng (id='bs03') -->
             <div class="doctor-card">
                 <div class="doctor-avatar" style="background-image: url('https://images.unsplash.com/photo-1622253692010-333f2da6031d?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80');"></div>
-                <h3><a href="chi_tiet_bac_si.html?id=bs03">TS.BS Lê Hoàng D</a></h3>
+                <h3><a href="chi_tiet_bac_si.html?id=bs03">TS.BS. Nguyễn Văn Hùng</a></h3>
                 <span class="doctor-specialty">Thần Kinh</span>
-                <div class="doctor-rating">
-                    <span class="stars">
-                        <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
-                    </span>
-                    <span class="score">5.0</span>
-                    <span class="count">(150 đánh giá)</span>
-                </div>
                 <p class="doctor-exp"><i class="fas fa-briefcase"></i> Kinh nghiệm: 18 năm</p>
                 <div class="doctor-actions">
                     <a href="chi_tiet_bac_si.html?id=bs03" style="flex:1;">
@@ -943,19 +902,12 @@
                 </div>
             </div>
 
-            <!-- Bác sĩ 4 -->
+            <!-- Bác sĩ 4: PGS.TS Trần Thị Lan (id='bs04') - Đã cập nhật ảnh nữ -->
             <div class="doctor-card">
-                <div class="doctor-avatar" style="background-image: url('https://images.unsplash.com/photo-1537368910025-700350fe46c7?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80');"></div>
-                <h3><a href="chi_tiet_bac_si.html?id=bs04">BS.CKII Phạm Văn E</a></h3>
-                <span class="doctor-specialty">Cơ Xương Khớp</span>
-                <div class="doctor-rating">
-                    <span class="stars">
-                        <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star-half-alt"></i>
-                    </span>
-                    <span class="score">4.7</span>
-                    <span class="count">(85 đánh giá)</span>
-                </div>
-                <p class="doctor-exp"><i class="fas fa-briefcase"></i> Kinh nghiệm: 15 năm</p>
+                <div class="doctor-avatar" style="background-image: url('https://images.unsplash.com/photo-1559839734-2b71ea197ec2?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80');"></div>
+                <h3><a href="chi_tiet_bac_si.html?id=bs04">PGS.TS Trần Thị Lan</a></h3>
+                <span class="doctor-specialty">Thần Kinh</span>
+                <p class="doctor-exp"><i class="fas fa-briefcase"></i> Kinh nghiệm: 20 năm</p>
                 <div class="doctor-actions">
                     <a href="chi_tiet_bac_si.html?id=bs04" style="flex:1;">
                         <button class="btn btn-view-profile">Xem chi tiết</button>
@@ -990,43 +942,43 @@
         <h2>10 Chuyên khoa Y tế & Triệu chứng Phổ biến</h2>
         <div class="symptoms-grid">
             <div class="symptom-item">
-                <strong>1. Nội Tổng Quát</strong>
+                <strong>Nội Tổng Quát</strong>
                 <span>Sốt, mệt mỏi, sụt cân, đau tức ngực, khó thở...</span>
             </div>
             <div class="symptom-item">
-                <strong>2. Tim Mạch</strong>
+                <strong>Tim Mạch</strong>
                 <span>Đau thắt ngực, hồi hộp, huyết áp cao, chóng mặt...</span>
             </div>
             <div class="symptom-item">
-                <strong>3. Nhi Khoa</strong>
+                <strong>Nhi Khoa</strong>
                 <span>Trẻ sốt cao, ho có đờm, biếng ăn, rối loạn tiêu hóa...</span>
             </div>
             <div class="symptom-item">
-                <strong>4. Thần Kinh</strong>
+                <strong>Thần Kinh</strong>
                 <span>Đau đầu kinh niên, mất ngủ, tê bì chân tay, sa sút...</span>
             </div>
             <div class="symptom-item">
-                <strong>5. Cơ Xương Khớp</strong>
+                <strong>Cơ Xương Khớp</strong>
                 <span>Đau lưng, mỏi cổ vai gáy, cứng khớp buổi sáng...</span>
             </div>
             <div class="symptom-item">
-                <strong>6. Da Liễu</strong>
+                <strong>Da Liễu</strong>
                 <span>Phát ban, mụn trứng cá nặng, mẩn ngứa, viêm da...</span>
             </div>
             <div class="symptom-item">
-                <strong>7. Tai Mũi Họng</strong>
+                <strong>Tai Mũi Họng</strong>
                 <span>Đau rát họng, ù tai, nghẹt mũi, viêm xoang kéo dài...</span>
             </div>
             <div class="symptom-item">
-                <strong>8. Mắt</strong>
+                <strong>Mắt</strong>
                 <span>Mờ mắt, nhức mỏi mắt, khô rát, cộm mắt...</span>
             </div>
             <div class="symptom-item">
-                <strong>9. Răng Hàm Mặt</strong>
+                <strong>Răng Hàm Mặt</strong>
                 <span>Đau răng, sâu răng, viêm lợi, chảy máu chân răng...</span>
             </div>
             <div class="symptom-item">
-                <strong>10. Y Học Cổ Truyền</strong>
+                <strong>Y Học Cổ Truyền</strong>
                 <span>Bồi bổ cơ thể, châm cứu, điều hòa khí huyết...</span>
             </div>
         </div>
@@ -1067,8 +1019,7 @@
         </div>
     </footer>
 
-    <script src="../../js/client.js"></script>
-    <script src="../../static/js/BN_Store.js"></script>
+    <script src="/static/js/BN_Store.js"></script>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
@@ -1076,7 +1027,7 @@
             const themeToggle = document.getElementById('theme-toggle');
             const icon = themeToggle.querySelector('i');
             const currentTheme = localStorage.getItem('theme') || 'light';
-            
+
             if (currentTheme === 'dark') {
                 document.documentElement.setAttribute('data-theme', 'dark');
                 icon.classList.remove('fa-moon');

@@ -1,431 +1,525 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Bác sĩ - Danh sách Ca khám</title>
-<link rel="icon" type="image/jpeg" href="../../favicon.jpg">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MEDBOOKING - Danh sách Ca khám</title>
+    <!-- Favicon SVG hình trái tim đơn giản, ý nghĩa -->
+    <link rel="icon" type="image/jpeg" href="/static/favicon.jpg">
 
-<link rel="stylesheet" href="../../static/css/BS.css">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Quicksand:wght@700&display=swap" rel="stylesheet">
-<style>
-    .brand .logo-text h1 {
-        font-family: 'Quicksand', sans-serif !important;
-        font-weight: 800 !important;
-        font-size: 22px !important;
-        text-transform: none !important;
-        letter-spacing: -0.01em;
-        color: #FFFFFF !important;
-        opacity: 1 !important;
-        visibility: visible !important;
-    }
-    [data-theme="light"] .brand .logo-text h1 {
-        color: #1E293B !important;
-    }
+    <link rel="stylesheet" href="../../static/css/BS.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&family=Quicksand:wght@700&display=swap"
+          rel="stylesheet">
+    <style>
+        /* In đậm và hiển thị rõ ràng logo MedBooking */
+        .brand .logo-text h1 {
+            font-family: 'Quicksand', sans-serif !important;
+            font-weight: 800 !important;
+            font-size: 22px !important;
+            text-transform: none !important;
+            letter-spacing: -0.01em;
+            color: #FFFFFF !important;
+            opacity: 1 !important;
+            visibility: visible !important;
+        }
 
-    .user-chip-container {
-        position: relative;
-        cursor: pointer;
-        display: inline-flex;
-        align-items: center;
-    }
-    .topbar-right .user-chip {
-        transition: all 0.25s ease;
-    }
-    .user-chip-container:hover .user-chip {
-        background: var(--primary-light, #f3e8ff);
-        box-shadow: 0 4px 12px rgba(139, 92, 246, 0.2);
-        transform: translateY(-1px);
-    }
+        [data-theme="light"] .brand .logo-text h1 {
+            color: #1E293B !important;
+        }
 
-    .notify-dot {
-        display: inline-block;
-        width: 8px;
-        height: 8px;
-        background: #F472B6;
-        border-radius: 50%;
-        position: absolute;
-        top: 10px;
-        right: 10px;
-        border: 2px solid var(--bg-card);
-    }
+        /* Hiệu ứng hover cho user-chip của bác sĩ */
+        .user-chip-container {
+            position: relative;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+        }
 
-    .notification-dropdown, 
-    .user-dropdown {
-        position: absolute !important;
-        top: 60px !important;
-        background-color: #FFFFFF !important;
-        backdrop-filter: none !important;
-        -webkit-backdrop-filter: none !important;
-        opacity: 1 !important;
-        border: 2px solid #CBD5E1 !important;
-        border-radius: 18px !important;
-        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5) !important;
-        display: none;
-        z-index: 2147483647 !important;
-        overflow: hidden;
-    }
+        .topbar-right .user-chip {
+            transition: all 0.25s ease;
+        }
 
-    [data-theme="dark"] .notification-dropdown,
-    [data-theme="dark"] .user-dropdown,
-    html.dark .notification-dropdown,
-    html.dark .user-dropdown {
-        background-color: #0F172A !important;
-        border-color: #334155 !important;
-    }
-    [data-theme="dark"] .notify-dot {
-        border-color: #0F172A;
-    }
+        .user-chip-container:hover .user-chip {
+            background: var(--primary-light, #f3e8ff);
+            box-shadow: 0 4px 12px rgba(139, 92, 246, 0.2);
+            transform: translateY(-1px);
+        }
 
-    .notification-dropdown.active, 
-    .user-dropdown.active {
-        display: block !important;
-    }
+        /* Khung dropdown thông báo và menu user: Nền đặc hoàn toàn, tách lớp rõ ràng */
+        .notification-dropdown,
+        .user-dropdown {
+            position: absolute !important;
+            top: 60px !important;
+            background-color: #FFFFFF !important;
+            backdrop-filter: none !important;
+            -webkit-backdrop-filter: none !important;
+            opacity: 1 !important;
+            border: 2px solid #CBD5E1 !important;
+            border-radius: 18px !important;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5) !important;
+            display: none;
+            z-index: 2147483647 !important;
+            overflow: hidden;
+        }
 
-    .notification-header {
-        padding: 12px 16px;
-        font-weight: 700;
-        font-size: 13px;
-        background: linear-gradient(135deg, rgba(16, 185, 129, 0.12), rgba(52, 211, 153, 0.08)) !important;
-        border-bottom: 2px solid rgba(16, 185, 129, 0.2);
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-    }
-    .notification-header span:first-child {
-        background: linear-gradient(135deg, #10B981, #34D399);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-        font-weight: 800;
-        font-size: 13.5px;
-    }
+        /* Khi ở chế độ tối (Dark mode) */
+        [data-theme="dark"] .notification-dropdown,
+        [data-theme="dark"] .user-dropdown,
+        html.dark .notification-dropdown,
+        html.dark .user-dropdown {
+            background-color: #0F172A !important;
+            border-color: #334155 !important;
+        }
 
-    .notification-list {
-        max-height: 280px;
-        overflow-y: auto;
-        background-color: transparent !important;
-    }
+        .notification-dropdown.active,
+        .user-dropdown.active {
+            display: block !important;
+        }
 
-    .notification-item {
-        padding: 10px 16px;
-        border-bottom: 1px solid rgba(16, 185, 129, 0.15);
-        font-size: 12px;
-        background-color: transparent !important;
-        cursor: pointer;
-        transition: background 0.2s;
-    }
-    .notification-item:hover {
-        background-color: rgba(16, 185, 129, 0.12) !important;
-    }
-    
-    .notification-item strong {
-        display: block;
-        margin-bottom: 2px;
-        font-size: 12.5px;
-        font-weight: 800;
-        background: linear-gradient(135deg, #10B981, #34D399);
-        -webkit-background-clip: text;
-        -webkit-text-fill-color: transparent;
-    }
+        .notification-header {
+            padding: 12px 16px;
+            font-weight: 700;
+            font-size: 13px;
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.12), rgba(236, 72, 153, 0.08)) !important;
+            border-bottom: 2px solid rgba(139, 92, 246, 0.2);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
 
-    .user-dropdown {
-        right: 0 !important;
-        width: 170px !important;
-    }
-    .user-dropdown a {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        padding: 12px 16px;
-        font-size: 13px;
-        font-weight: 700;
-        color: #EF4444 !important;
-        text-decoration: none;
-        background-color: transparent !important;
-        transition: all 0.2s;
-    }
-    .user-dropdown a:hover {
-        background-color: rgba(239, 68, 68, 0.15) !important;
-    }
+        .notification-header span:first-child {
+            background: linear-gradient(135deg, #8B5CF6, #EC4899);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 800;
+            font-size: 13.5px;
+        }
 
-    @keyframes fadeIn {
-        from { opacity: 0; transform: translateY(-8px); }
-        to { opacity: 1; transform: translateY(0); }
-    }
-</style>
+        .notification-list {
+            max-height: 280px;
+            overflow-y: auto;
+            background-color: transparent !important;
+        }
+
+        .notification-item {
+            padding: 10px 16px;
+            border-bottom: 1px solid rgba(139, 92, 246, 0.15);
+            font-size: 12px;
+            background-color: transparent !important;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .notification-item:hover {
+            background-color: rgba(139, 92, 246, 0.12) !important;
+        }
+
+        .notification-item strong {
+            display: block;
+            margin-bottom: 2px;
+            font-size: 12.5px;
+            font-weight: 800;
+            background: linear-gradient(135deg, #3B82F6, #8B5CF6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        /* Định dạng riêng cho menu Đăng xuất */
+        .user-dropdown {
+            right: 0 !important;
+            width: 170px !important;
+        }
+
+        .user-dropdown a {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 16px;
+            font-size: 13px;
+            font-weight: 700;
+            color: #EF4444 !important;
+            text-decoration: none;
+            background-color: transparent !important;
+            transition: all 0.2s;
+        }
+
+        .user-dropdown a:hover {
+            background-color: rgba(239, 68, 68, 0.15) !important;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-8px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
 </head>
 <body>
 <div class="app-layout">
-  <aside class="sidebar">
-    <div class="brand">
-      <div class="logo-container">
-        <div class="logo-icon"><i class="fas fa-notes-medical"></i></div>
-        <div class="logo-text">
-          <h1>MedBooking</h1>
-          <p>Bác sĩ</p>
-        </div>
-      </div>
-    </div>
-    <div class="nav-section">
-      <div class="nav-title">Tổng quan</div>
-      <ul class="nav-list"><li><a href="home_bs.html" class="nav-link"><i class="fas fa-house-medical"></i><span>Trang chủ Bác sĩ</span></a></li></ul>
-    </div>
-    <div class="nav-section">
-      <div class="nav-title">Tác nghiệp khám bệnh</div>
-      <ul class="nav-list">
-        <li><a href="danh_sach_ca_kham.html" class="nav-link active"><i class="fas fa-calendar-check"></i><span>Lịch hẹn & Ca khám</span></a></li>
-        <li><a href="ho_so_ca_nhan.html" class="nav-link"><i class="fas fa-user-doctor"></i><span>Hồ sơ & Xin nghỉ</span></a></li>
-      </ul>
-    </div>
-    <div class="sidebar-footer">
-      <div class="avatar-sm">NA</div>
-      <div class="info"><strong>BS. Nguyễn Văn A</strong><span>Nội Tổng Quát</span></div>
-    </div>
-  </aside>
-
-  <div class="main-area">
-    <header class="topbar">
-      <div class="topbar-left">
-        <button class="icon-btn" id="sidebar-toggle"><i class="fas fa-bars"></i></button>
-        <h1 class="page-title">Lịch hẹn & Ca khám</h1>
-      </div>
-      <div class="topbar-right" style="position: relative; display: flex; align-items: center; gap: 12px;">
-        <button class="icon-btn theme-toggle" id="theme-toggle"><i class="fas fa-moon"></i><i class="fas fa-sun"></i></button>
-        <button class="icon-btn" id="btn-notify" style="position: relative;">
-            <i class="fas fa-bell"></i>
-            <i class="notify-dot badge"></i>
-        </button>
-        
-        <div class="notification-dropdown" id="notification-dropdown">
-            <div class="notification-header">
-                <span>Thông báo mới</span>
-                <span style="font-size:11px; font-weight:700; color:#10B981; cursor:pointer;" id="mark-all-read">Đánh dấu đã đọc</span>
-            </div>
-            <div class="notification-list">
-                <div class="notification-item">
-                    <strong>Lịch hẹn mới</strong>
-                    Bệnh nhân Nguyễn Văn A vừa đặt lịch khám vào lúc 09:00 sáng mai.
-                </div>
-                <div class="notification-item">
-                    <strong>Cập nhật lịch trực</strong>
-                    Admin đã duyệt lịch trực tuần tới của bạn.
-                </div>
-                <div class="notification-item">
-                    <strong>Kết quả xét nghiệm</strong>
-                    Bệnh nhân Trần Thị B đã có kết quả cận lâm sàng.
+    <aside class="sidebar">
+        <div class="brand">
+            <div class="logo-container">
+                <div class="logo-icon"><i class="fas fa-headset"></i></div>
+                <div class="logo-text">
+                    <h1>MedBooking</h1>
+                    <p>Bác sĩ</p>
                 </div>
             </div>
         </div>
-
-        <div class="user-chip-container" id="user-menu-btn">
-          <div class="user-chip"><div class="avatar">NA</div><span class="name">BS. Nguyễn Văn A</span></div>
-          
-          <div class="user-dropdown" id="user-dropdown">
-              <a href="../dk_dn/dn.html"><i class="fas fa-sign-out-alt"></i> Đăng xuất</a>
-          </div>
+        <div class="nav-section">
+            <div class="nav-title">Tổng quan</div>
+            <ul class="nav-list">
+                <li><a href="/bac_si/home_bs.html" class="nav-link"><i class="fas fa-house-medical"></i><span>Trang chủ Bác sĩ</span></a>
+                </li>
+            </ul>
         </div>
-
-      </div>
-    </header>
-
-    <main class="content">
-      <section class="card">
-        <div class="card-header"><h2 class="card-title"><i class="fas fa-filter"></i> Bộ lọc tìm kiếm</h2></div>
-        <div class="filter-bar">
-          <div class="form-group" style="margin:0;">
-            <label class="form-label" for="filter-date">Chọn ngày</label>
-            <input type="date" id="filter-date" class="form-control">
-          </div>
-          <div class="form-group" style="margin:0;">
-            <label class="form-label" for="search-patient">Tìm bệnh nhân</label>
-            <input type="text" id="search-patient" class="form-control" placeholder="Tên hoặc mã LH...">
-          </div>
-          <div class="form-group" style="margin:0;">
-            <label class="form-label" for="filter-status">Trạng thái</label>
-            <select id="filter-status" class="form-control">
-              <option value="all">Tất cả trạng thái</option>
-              <option value="waiting">Chờ khám</option>
-              <option value="in-progress">Đang khám</option>
-              <option value="completed">Đã hoàn thành</option>
-              <option value="cancelled">Đã hủy</option>
-            </select>
-          </div>
-          <button type="button" class="btn btn-primary" id="btn-apply-filter">
-            <i class="fas fa-magnifying-glass"></i> Lọc dữ liệu
-          </button>
+        <div class="nav-section">
+            <div class="nav-title">Tác nghiệp khám bệnh</div>
+            <ul class="nav-list">
+                <li><a href="/bac_si/danh_sach_ca_kham.html" class="nav-link active"><i
+                        class="fas fa-calendar-check"></i><span>Lịch hẹn & Ca khám</span></a></li>
+                <li><a href="/bac_si/ho_so_ca_nhan.html" class="nav-link"><i class="fas fa-user-doctor"></i><span>Hồ sơ & Lịch trực</span></a>
+                </li>
+            </ul>
         </div>
-      </section>
+        <div class="sidebar-footer">
+            <div class="avatar-sm" id="sidebar-avatar">BS</div>
+            <div class="info"><strong id="sidebar-doctor-name">BS. Đang tải...</strong><span
+                    id="sidebar-doctor-specialty">Nội Tổng Quát</span></div>
+        </div>
+    </aside>
 
-      <section class="card">
-        <div class="card-header">
-          <h2 class="card-title"><i class="fas fa-list-check"></i> Danh sách Bệnh nhân</h2>
-          <span style="font-size:12.5px;color:var(--text-muted);">Tổng: <strong id="count-total">0</strong> ca</span>
-        </div>
-        <div class="table-wrap">
-          <table class="table">
-            <thead>
-              <tr>
-                <th>Giờ khám</th><th>Mã LH</th><th>Họ tên</th><th>Tuổi / GT</th>
-                <th>Triệu chứng</th><th>Trạng thái</th><th>Hành động</th>
-              </tr>
-            </thead>
-            <tbody id="appointment-table-body"></tbody>
-          </table>
-        </div>
-      </section>
-    </main>
-  </div>
+    <div class="main-area">
+        <header class="topbar">
+            <div class="topbar-left">
+                <button class="icon-btn" id="sidebar-toggle"><i class="fas fa-bars"></i></button>
+                <h1 class="page-title">Lịch hẹn & Ca khám</h1>
+            </div>
+            <div class="topbar-right" style="position: relative; display: flex; align-items: center; gap: 12px;">
+                <button class="icon-btn theme-toggle" id="theme-toggle"><i class="fas fa-moon"></i><i
+                        class="fas fa-sun"></i></button>
+                <button class="icon-btn" id="btn-notify"><i class="fas fa-bell"></i><span class="badge"
+                                                                                          id="notification-badge"
+                                                                                          style="display:inline-block; width:8px; height:8px; background:#F472B6; border-radius:50%; position:absolute; top:8px; right:60px;"></span>
+                </button>
+
+                <!-- Khung dropdown thông báo động từ SQL Server -->
+                <div class="notification-dropdown" id="notification-dropdown">
+                    <div class="notification-header">
+                        <span>Thông báo lịch hẹn mới</span>
+                        <span style="font-size:11px; font-weight:700; color:#38BDF8; cursor:pointer;"
+                              id="mark-all-read">Đã đọc</span>
+                    </div>
+                    <div class="notification-list" id="notification-list-content">
+                        <div class="notification-item">
+                            <strong>Đang tải thông báo...</strong>
+                            Hệ thống đang đồng bộ dữ liệu từ cơ sở dữ liệu.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Nút thông tin bác sĩ bấm vào hiện menu Đăng xuất -->
+                <div class="user-chip-container" id="user-menu-btn">
+                    <div class="user-chip">
+                        <div class="avatar" id="topbar-avatar">BS</div>
+                        <span class="name" id="topbar-doctor-name">BS. Đang tải...</span>
+                    </div>
+
+                    <div class="user-dropdown" id="user-dropdown">
+                        <a href="../dk_dn/dn.html"><i class="fas fa-sign-out-alt"></i> Đăng xuất</a>
+                    </div>
+                </div>
+
+            </div>
+        </header>
+
+        <main class="content">
+            <section class="card">
+                <div class="card-header"><h2 class="card-title"><i class="fas fa-filter"></i> Bộ lọc tìm kiếm</h2></div>
+                <div class="filter-bar">
+                    <div class="form-group" style="margin:0;">
+                        <label class="form-label" for="filter-date">Chọn ngày</label>
+                        <input type="date" id="filter-date" class="form-control">
+                    </div>
+                    <div class="form-group" style="margin:0;">
+                        <label class="form-label" for="search-patient">Tìm bệnh nhân</label>
+                        <input type="text" id="search-patient" class="form-control" placeholder="Tên hoặc mã LH...">
+                    </div>
+                    <div class="form-group" style="margin:0;">
+                        <label class="form-label" for="filter-status">Trạng thái</label>
+                        <select id="filter-status" class="form-control">
+                            <option value="all">Tất cả trạng thái</option>
+                            <option value="Chờ xác nhận">Chờ xác nhận</option>
+                            <option value="waiting">Chờ khám</option>
+                            <option value="in-progress">Đang khám</option>
+                            <option value="completed">Đã hoàn thành</option>
+                            <option value="cancelled">Đã hủy</option>
+                        </select>
+                    </div>
+                    <button type="button" class="btn btn-primary" id="btn-apply-filter">
+                        <i class="fas fa-magnifying-glass"></i> Lọc dữ liệu
+                    </button>
+                </div>
+            </section>
+
+            <section class="card">
+                <div class="card-header">
+                    <h2 class="card-title"><i class="fas fa-list-check"></i> Danh sách Bệnh nhân</h2>
+                    <span style="font-size:12.5px;color:var(--text-muted);">Tổng: <strong id="count-total">0</strong> ca</span>
+                </div>
+                <div class="table-wrap">
+                    <table class="table">
+                        <thead>
+                        <tr>
+                            <th>Giờ khám</th>
+                            <th>Mã LH</th>
+                            <th>Họ tên</th>
+                            <th>Ngày khám</th>
+                            <th>Triệu chứng / Ghi chú</th>
+                            <th>Trạng thái</th>
+                            <th>Hành động</th>
+                        </tr>
+                        </thead>
+                        <tbody id="appointment-table-body"></tbody>
+                    </table>
+                </div>
+            </section>
+        </main>
+    </div>
 </div>
 
 <div class="sidebar-overlay" id="sidebar-overlay"></div>
 
 <script src="../../static/js/bac_si.js"></script>
 <script>
-window.MB_PAGE_INIT = function () {
-  const STORAGE_KEY = 'medbooking_doctor_appointments';
+    window.MB_PAGE_INIT = async function () {
+        const token = localStorage.getItem('medbooking_token');
+        let doctorName = 'Bác sĩ';
+        let allAppointments = [];
 
-  function getAppointments() {
-    let list = MB_STORAGE.get(STORAGE_KEY, null);
-    if (!list) {
-      list = JSON.parse(JSON.stringify(MB_MOCK.appointments));
-      MB_STORAGE.set(STORAGE_KEY, list);
-    }
-    return list;
-  }
+        try {
+            // 1. Lấy thông tin tên bác sĩ từ SQL Server thông qua API /auth/me
+            if (token) {
+                try {
+                    const response = await fetch('/auth/me', {
+                        method: 'GET',
+                        headers: {
+                            'Authorization': `Bearer ${token}`,
+                            'Content-Type': 'application/json'
+                        }
+                    });
+                    const result = await response.json();
+                    if (response.ok && result.ho_ten) {
+                        doctorName = result.ho_ten;
+                    }
+                } catch (e) {
+                    console.error("Lỗi kết nối lấy thông tin từ SQL:", e);
+                }
+            }
 
-  const badgeMap = {
-    waiting:       ['badge-waiting',   'Chờ khám'],
-    'in-progress': ['badge-progress',  'Đang khám'],
-    completed:     ['badge-completed', 'Đã hoàn thành'],
-    cancelled:     ['badge-cancelled', 'Đã hủy']
-  };
+            const formattedName = doctorName.startsWith('BS.') ? doctorName : `BS. ${doctorName}`;
 
-  const dateInput = document.getElementById('filter-date');
-  if (dateInput) {
-      const today = new Date();
-      const yyyy = today.getFullYear();
-      const mm = String(today.getMonth() + 1).padStart(2, '0');
-      const dd = String(today.getDate()).padStart(2, '0');
-      dateInput.value = `${yyyy}-${mm}-${dd}`;
-  }
+            const topbarNameEl = document.getElementById('topbar-doctor-name');
+            if (topbarNameEl) topbarNameEl.textContent = formattedName;
 
-  function render(list) {
-    const tbody = document.getElementById('appointment-table-body');
-    document.getElementById('count-total').textContent = list.length;
+            const sidebarNameEl = document.getElementById('sidebar-doctor-name');
+            if (sidebarNameEl) sidebarNameEl.textContent = formattedName;
 
-    if (!list.length) {
-      tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;padding:30px;color:var(--text-muted);">
-        Không có ca khám nào phù hợp</td></tr>`;
-      return;
-    }
+            const cleanName = doctorName.replace(/^BS\.\s*/i, '').trim();
+            const parts = cleanName.split(/\s+/);
+            let initials = 'BS';
+            if (parts.length >= 2) {
+                initials = (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+            } else if (parts.length === 1 && parts[0].length > 0) {
+                initials = parts[0].slice(0, 2).toUpperCase();
+            }
 
-    tbody.innerHTML = list.map((a) => {
-      const [cls, txt] = badgeMap[a.status] || ['badge-waiting', a.status];
-      const isWaiting = a.status === 'waiting';
-      const isInProgress = a.status === 'in-progress';
-      const isCompleted = a.status === 'completed';
-      const isCancelled = a.status === 'cancelled';
-      
-      let btnCls = 'btn-outline';
-      let btnTxt = 'Xem lại';
-      let btnIcon = 'fa-eye';
+            const topbarAvatar = document.getElementById('topbar-avatar');
+            const sidebarAvatar = document.getElementById('sidebar-avatar');
+            if (topbarAvatar) topbarAvatar.textContent = initials;
+            if (sidebarAvatar) sidebarAvatar.textContent = initials;
 
-      if (isWaiting) {
-        btnCls = 'btn-primary';
-        btnTxt = 'Check-in & Khám';
-        btnIcon = 'fa-stethoscope';
-      } else if (isInProgress) {
-        btnCls = 'btn-primary';
-        btnTxt = 'Tiếp tục khám';
-        btnIcon = 'fa-notes-medical';
-      } else if (isCompleted) {
-        btnCls = 'btn-outline';
-        btnTxt = 'Xem lại';
-        btnIcon = 'fa-eye';
-      } else if (isCancelled) {
-        btnCls = 'btn-outline';
-        btnTxt = 'Xem lại';
-        btnIcon = 'fa-eye';
-      }
+            // 2. Lấy danh sách lịch hẹn thật từ API Backend FastAPI (bảng dbo.lich_hen)
+            if (token) {
+                const apptResponse = await fetch('/appointments/bac-si/cua-toi', {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+                const apptResult = await apptResponse.json();
+                if (apptResponse.ok && apptResult.success) {
+                    allAppointments = (apptResult.data || []).map(item => {
+                        const rawId = item.ma_lich_hen || item.id;
 
-      return `
-        <tr>
-          <td><strong>${a.time}</strong></td>
-          <td>${a.id}</td>
-          <td>${a.name}</td>
-          <td>${a.age} / ${a.gender}</td>
-          <td>${a.symptom}</td>
-          <td><span class="badge-status ${cls}">${txt}</span></td>
-          <td>
-            <a href="chan_doan_ke_don.html?id=${a.id}" class="btn ${btnCls} btn-sm">
-              <i class="fas ${btnIcon}"></i> ${btnTxt}
-            </a>
-          </td>
-        </tr>`;
-    }).join('');
-  }
+                        // ⭐ Ưu tiên lấy đúng trường triệu chứng từ Backend
+                        const patientSymptom = (
+                                item.trieu_chung ||
+                                item.trieu_chung_khai_bao ||
+                                item.trieu_chung_thuc_the ||
+                                item.trieu_chung_benh ||
+                                item.ghi_chu ||
+                                'Khám tổng quát định kỳ'
+                        );
 
-  function applyFilter() {
-    const status = document.getElementById('filter-status').value;
-    const keyword = document.getElementById('search-patient').value.trim().toLowerCase();
+                        return {
+                            id: 'LH' + String(rawId).padStart(3, '0'),
+                            rawId: rawId,
+                            time: item.khung_gio || '08:00 - 09:00',
+                            name: item.benh_nhan || item.benh_nhan_name || ('Bệnh nhân #' + rawId),
+                            date: item.ngay_kham || '',
+                            symptom: patientSymptom,
+                            status: item.trang_thai === 'Chờ xác nhận' ? 'waiting' : (item.trang_thai || 'waiting')
+                        };
+                    });
+                }
+            }
+        } catch (e) {
+            console.error("Không thể tải thông tin ca khám từ cơ sở dữ liệu:", e);
+        }
 
-    let list = getAppointments();
-    if (status !== 'all') list = list.filter((a) => a.status === status);
-    if (keyword) {
-      list = list.filter((a) =>
-        a.name.toLowerCase().includes(keyword) ||
-        a.id.toLowerCase().includes(keyword)
-      );
-    }
-    render(list);
-  }
+        // Render danh sách thông báo động dựa trên ca khám từ SQL
+        const notifyListContainer = document.getElementById('notification-list-content');
+        const notificationBadge = document.getElementById('notification-badge');
 
-  document.getElementById('btn-apply-filter').addEventListener('click', () => {
-    applyFilter();
-    showToast('Đã áp dụng bộ lọc', 'success', 1500);
-  });
+        if (allAppointments.length === 0) {
+            notifyListContainer.innerHTML = `
+              <div class="notification-item">
+                <strong>Không có lịch hẹn mới</strong>
+                Hiện chưa có bệnh nhân nào đặt lịch trong hệ thống.
+              </div>`;
+            if (notificationBadge) notificationBadge.style.display = 'none';
+        } else {
+            notifyListContainer.innerHTML = allAppointments.slice(0, 5).map(a => `
+              <div class="notification-item" onclick="window.location.href='danh_sach_ca_kham.html'">
+                <strong>Lịch hẹn mới: ${a.name}</strong>
+                Giờ khám: ${a.time} | Ngày: ${a.date}
+              </div>
+            `).join('');
+            if (notificationBadge) notificationBadge.style.display = 'inline-block';
+        }
 
-  document.getElementById('search-patient').addEventListener('input', applyFilter);
-  document.getElementById('filter-status').addEventListener('change', applyFilter);
+        const badgeMap = {
+            waiting: ['badge-waiting', 'Chờ khám'],
+            'Chờ xác nhận': ['badge-waiting', 'Chờ xác nhận'],
+            'in-progress': ['badge-progress', 'Đang khám'],
+            completed: ['badge-completed', 'Đã hoàn thành'],
+            'Đã hoàn thành': ['badge-completed', 'Đã hoàn thành'],
+            cancelled: ['badge-cancelled', 'Đã hủy']
+        };
 
-  const btnNotify = document.getElementById('btn-notify');
-  const notifyDropdown = document.getElementById('notification-dropdown');
-  const badgeDot = btnNotify.querySelector('.badge');
+        function render(list) {
+            const tbody = document.getElementById('appointment-table-body');
+            document.getElementById('count-total').textContent = list.length;
 
-  btnNotify.addEventListener('click', (e) => {
-    e.stopPropagation();
-    userDropdown.classList.remove('active');
-    notifyDropdown.classList.toggle('active');
-  });
+            if (!list.length) {
+                tbody.innerHTML = `<tr><td colspan="7" style="text-align:center;padding:30px;color:var(--text-muted);">
+                Không có ca khám thực tế nào từ hệ thống cơ sở dữ liệu</td></tr>`;
+                return;
+            }
 
-  const userMenuBtn = document.getElementById('user-menu-btn');
-  const userDropdown = document.getElementById('user-dropdown');
+            tbody.innerHTML = list.map((a) => {
+                const [cls, txt] = badgeMap[a.status] || ['badge-waiting', a.status];
 
-  userMenuBtn.addEventListener('click', (e) => {
-    e.stopPropagation();
-    notifyDropdown.classList.remove('active');
-    userDropdown.classList.toggle('active');
-  });
+                const isCompleted = a.status === 'completed' || a.status === 'Đã hoàn thành';
+                const actionBtnHtml = isCompleted
+                    ? `<a href="chan_doan_ke_don.html?id=${a.rawId}" class="btn btn-sm" style="background: #0ea5e9; color: #fff; border-radius: 50px; padding: 6px 16px; font-weight: 600;">
+                         <i class="fas fa-file-medical"></i> Chi tiết bệnh án
+                       </a>`
+                    : `<a href="chan_doan_ke_don.html?id=${a.rawId}" class="btn btn-primary btn-sm">
+                         <i class="fas fa-stethoscope"></i> Khám bệnh
+                       </a>`;
 
-  document.addEventListener('click', () => {
-    notifyDropdown.classList.remove('active');
-    userDropdown.classList.remove('active');
-  });
+                return `
+                <tr>
+                  <td><strong>${a.time}</strong></td>
+                  <td>${a.id}</td>
+                  <td>${a.name}</td>
+                  <td>${a.date}</td>
+                  <td>${a.symptom}</td>
+                  <td><span class="badge-status ${cls}">${txt}</span></td>
+                  <td>${actionBtnHtml}</td>
+                </tr>`;
+            }).join('');
+        }
 
-  document.getElementById('mark-all-read').addEventListener('click', (e) => {
-    e.stopPropagation();
-    if(badgeDot) badgeDot.style.display = 'none';
-    notifyDropdown.classList.remove('active');
-    if(typeof showToast === 'function') {
-      showToast('Đã đánh dấu tất cả thông báo là đã đọc', 'success', 2000);
-    }
-  });
+        function applyFilter() {
+            const status = document.getElementById('filter-status').value;
+            const keyword = document.getElementById('search-patient').value.trim().toLowerCase();
+            const selectedDate = document.getElementById('filter-date').value;
 
-  render(getAppointments());
-};
+            let list = allAppointments.slice();
+            if (status !== 'all') {
+                if (status === 'completed') {
+                    list = list.filter((a) => a.status === 'completed' || a.status === 'Đã hoàn thành');
+                } else {
+                    list = list.filter((a) => a.status === status);
+                }
+            }
+            if (selectedDate) list = list.filter((a) => a.date === selectedDate);
+            if (keyword) {
+                list = list.filter((a) =>
+                        a.name.toLowerCase().includes(keyword) ||
+                        a.id.toLowerCase().includes(keyword)
+                );
+            }
+            render(list);
+        }
+
+        document.getElementById('btn-apply-filter').addEventListener('click', () => {
+            applyFilter();
+            if (typeof showToast === 'function') showToast('Đã lọc dữ liệu từ SQL Server', 'success', 1500);
+        });
+
+        document.getElementById('search-patient').addEventListener('input', applyFilter);
+        document.getElementById('filter-status').addEventListener('change', applyFilter);
+        document.getElementById('filter-date').addEventListener('change', applyFilter);
+
+        const btnNotify = document.getElementById('btn-notify');
+        const notifyDropdown = document.getElementById('notification-dropdown');
+        const badgeDot = btnNotify.querySelector('.badge');
+
+        btnNotify.addEventListener('click', (e) => {
+            e.stopPropagation();
+            userDropdown.classList.remove('active');
+            notifyDropdown.classList.toggle('active');
+        });
+
+        const userMenuBtn = document.getElementById('user-menu-btn');
+        const userDropdown = document.getElementById('user-dropdown');
+
+        userMenuBtn.addEventListener('click', (e) => {
+            e.stopPropagation();
+            notifyDropdown.classList.remove('active');
+            userDropdown.classList.toggle('active');
+        });
+
+        document.addEventListener('click', () => {
+            notifyDropdown.classList.remove('active');
+            userDropdown.classList.remove('active');
+        });
+
+        document.getElementById('mark-all-read').addEventListener('click', (e) => {
+            e.stopPropagation();
+            if (badgeDot) badgeDot.style.display = 'none';
+            notifyDropdown.classList.remove('active');
+            if (typeof showToast === 'function') {
+                showToast('Đã đánh dấu tất cả thông báo là đã đọc', 'success', 2000);
+            }
+        });
+
+        // Hiển thị danh sách ban đầu lấy từ DB
+        render(allAppointments);
+    };
 </script>
 </body>
 </html>

@@ -3,14 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin - Quản lý Chuyên khoa</title>
+    <title>Admin - Quản lý Danh mục Chuyên khoa (SQL Server)</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="icon" type="image/jpeg" href="../../favicon.jpg">
+    <link rel="icon" type="image/jpeg" href="/static/favicon.jpg">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@500;600;700;800&family=Quicksand:wght@600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="../../static/css/A.css">
-    
     <style>
         .brand-name {
             font-family: 'Quicksand', sans-serif !important;
@@ -20,11 +19,11 @@
             font-size: 22px;
         }
         .admin-profile-btn {
-            text-decoration: none; 
-            color: var(--primary-color); 
-            font-weight: 600; 
-            padding: 8px 16px; 
-            background: var(--primary-light); 
+            text-decoration: none;
+            color: var(--primary-color);
+            font-weight: 600;
+            padding: 8px 16px;
+            background: var(--primary-light);
             border-radius: 50px;
             transition: all 0.25s ease;
         }
@@ -34,103 +33,167 @@
             box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);
             transform: translateY(-1px);
         }
+        .custom-modal-overlay {
+            position: fixed !important;
+            top: 0 !important;
+            left: 0 !important;
+            width: 100vw !important;
+            height: 100vh !important;
+            background: rgba(10, 5, 20, 0.8) !important;
+            display: none;
+            align-items: center !important;
+            justify-content: center !important;
+            z-index: 999999 !important;
+            backdrop-filter: blur(5px);
+            margin: 0 !important;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        .custom-modal-content {
+            background: #1E1B4B !important;
+            border: 1px solid rgba(255, 255, 255, 0.15) !important;
+            border-radius: 20px !important;
+            padding: 28px !important;
+            width: 100% !important;
+            max-width: 480px !important;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.6) !important;
+            color: #fff !important;
+        }
     </style>
 </head>
 <body>
 
-    <aside>
-        <button class="sidebar-close" id="sidebar-close" aria-label="Đóng menu"><i class="fas fa-times"></i></button>
-        <div class="brand">
-            <span class="brand-name">MedBooking</span>
-            <span class="brand-sub">ADMIN PANEL</span>
+<aside>
+    <button class="sidebar-close" id="sidebar-close" aria-label="Đóng menu"><i class="fas fa-times"></i></button>
+    <div class="brand">
+        <span class="brand-name">MedBooking</span>
+        <span class="brand-sub">ADMIN PANEL</span>
+    </div>
+    <nav>
+        <h3>QUẢN LÝ NHÂN SỰ & NGƯỜI DÙNG</h3>
+        <ul>
+            <li><a href="/admin/home_a.html">Trang chủ Admin</a></li>
+            <li><a href="/admin/quan_ly_tai_khoan.html">Quản lý tài khoản</a></li>
+            <li><a href="/admin/quan_ly_bac_si.html">Quản lý bác sĩ</a></li>
+        </ul>
+        <h3>DANH MỤC Y TẾ</h3>
+        <ul>
+            <li><a href="/admin/quan_ly_chuyen_khoa.html"><strong>Quản lý chuyên khoa</strong></a></li>
+            <li><a href="/admin/quan_ly_dich_vu.html">Quản lý dịch vụ & giá</a></li>
+            <li><a href="/admin/quan_ly_mapping.html">Quản lý Mapping Triệu chứng</a></li>
+        </ul>
+        <h3>BÁO CÁO & THỐNG KÊ</h3>
+        <ul>
+            <li><a href="/admin/dashboard.html">Dashboard Thống kê & Báo cáo</a></li>
+            <li><a href="/admin/nhat_ky_giao_dich.html">Nhật ký Giao dịch Chi tiết</a></li>
+            <li><a href="/admin/thung_rac.html">Thùng rác hệ thống</a></li>
+        </ul>
+    </nav>
+</aside>
+
+<main>
+    <header>
+        <button class="menu-toggle" id="menu-toggle" aria-label="Mở menu"><i class="fas fa-bars"></i></button>
+        <h1>Quản lý Danh mục Chuyên khoa</h1>
+        <div style="display: flex; align-items: center; gap: 12px;">
+            <a href="ho_so_ca_nhan.html" class="admin-profile-btn" id="admin-name-btn">AD Tên Admin</a>
+            <button class="theme-toggle" id="theme-toggle">🌙</button>
+            <a href="../dk_dn/dn.html">Đăng xuất</a>
         </div>
-        <nav>
-            <h3>QUẢN LÝ NHÂN SỰ & NGƯỜI DÙNG</h3>
-            <ul>
-                <li><a href="home_a.html">Trang chủ Admin</a></li>
-                <li><a href="quan_ly_tai_khoan.html">Quản lý tài khoản</a></li>
-                <li><a href="quan_ly_bac_si.html">Quản lý bác sĩ</a></li>
-            </ul>
-            <h3>DANH MỤC Y TẾ</h3>
-            <ul>
-                <li><a href="quan_ly_chuyen_khoa.html"><strong>Quản lý chuyên khoa</strong></a></li>
-                <li><a href="quan_ly_dich_vu.html">Quản lý dịch vụ & giá</a></li>
-                <li><a href="quan_ly_mapping.html">Quản lý Mapping Triệu chứng</a></li>
-            </ul>
-            <h3>BÁO CÁO & THỐNG KÊ</h3>
-            <ul>
-                <li><a href="dashboard.html">Dashboard Thống kê & Báo cáo</a></li>
-                <li><a href="nhat_ky_giao_dich.html">Nhật ký Giao dịch Chi tiết</a></li>
-                <li><a href="thung_rac.html">Thùng rác hệ thống</a></li>
-            </ul>
-        </nav>
-    </aside>
+    </header>
 
-    <main>
-        <header>
-            <button class="menu-toggle" id="menu-toggle" aria-label="Mở menu"><i class="fas fa-bars"></i></button>
-            <h1>Quản lý Danh mục Chuyên khoa</h1>
-            <div style="display: flex; align-items: center; gap: 12px;">
-                <a href="ho_so_ca_nhan.html" class="admin-profile-btn">AD Tên Admin</a>
-                <button class="theme-toggle" id="theme-toggle">🌙</button>
-                <a href="../dk_dn/dn.html">Đăng xuất</a>
-            </div>
-        </header>
+    <section style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; margin-bottom: 20px;">
+        <div style="display: flex; gap: 10px; flex-wrap: wrap; align-items: center;">
+            <input type="text" id="search-specialty" placeholder="Tìm kiếm tên chuyên khoa..."
+                   style="padding: 8px 12px; border-radius: 10px; border: 1px solid var(--border-glass); background: var(--bg-main); color: var(--secondary-color);">
+            <select id="filter-status"
+                    style="padding: 8px 12px; border-radius: 10px; border: 1px solid var(--border-glass); background: var(--bg-main); color: var(--secondary-color);">
+                <option value="all">Tất cả trạng thái</option>
+                <option value="active">Đang hoạt động</option>
+                <option value="deleted">Đã xóa</option>
+            </select>
+        </div>
+        <button type="button" id="btn-add-specialty"
+                style="padding: 9px 18px; background: var(--primary-gradient); color: #fff; border: none; border-radius: 10px; font-weight: 600; cursor: pointer;">
+            <i class="fas fa-plus" style="margin-right: 6px;"></i> Thêm Chuyên khoa Mới
+        </button>
+    </section>
 
-        <section>
-            <div>
-                <input type="text" id="search-specialty" placeholder="Tìm kiếm tên chuyên khoa...">
-            </div>
-            <button type="button" id="btn-add-specialty">+ Thêm Chuyên khoa Mới</button>
-        </section>
-
-        <section>
-            <h2>Danh sách Chuyên khoa Y tế</h2>
-            <table>
+    <section style="background: var(--bg-card); border: 1px solid var(--border-glass); border-radius: 20px; padding: 22px; box-shadow: var(--shadow-soft);">
+        <h2 style="font-size: 15px; font-weight: 700; color: var(--secondary-color); margin-bottom: 16px;">Danh sách Chuyên khoa Y tế</h2>
+        <div style="overflow-x: auto;">
+            <table style="width: 100%; border-collapse: collapse; text-align: left;">
                 <thead>
-                    <tr>
-                        <th>Mã CK</th>
-                        <th>Tên chuyên khoa</th>
-                        <th>Mô tả sơ lược</th>
-                        <th>Số lượng bác sĩ</th>
-                        <th>Hành động</th>
-                    </tr>
+                <tr style="border-bottom: 2px solid var(--border-glass); font-size: 12.5px; color: var(--text-gray);">
+                    <th style="padding: 12px;">Mã CK</th>
+                    <th style="padding: 12px;">Tên chuyên khoa</th>
+                    <th style="padding: 12px;">Mô tả sơ lược</th>
+                    <th style="padding: 12px;">Số lượng bác sĩ</th>
+                    <th style="padding: 12px;">Trạng thái</th>
+                    <th style="padding: 12px; text-align: center;">Hành động</th>
+                </tr>
                 </thead>
                 <tbody id="specialty-table-body">
-                    <tr><td colspan="5" style="text-align:center;padding:40px;color:#8B7FA8;">Đang tải...</td></tr>
+                <tr>
+                    <td colspan="6" style="text-align:center;padding:40px;color:var(--text-gray);">Đang tải dữ liệu trực tiếp từ SQL Server...</td>
+                </tr>
                 </tbody>
             </table>
-        </section>
+        </div>
+    </section>
 
-        <section id="specialty-form-modal" style="display: none;">
-            <h3 id="form-specialty-title">Thêm Chuyên khoa Mới</h3>
+    <!-- Modal Thêm / Sửa Chuyên khoa -->
+    <div id="specialty-form-modal" class="custom-modal-overlay">
+        <div class="custom-modal-content">
             <form id="form-specialty-info">
-                <div>
-                    <label for="spec-name">Tên chuyên khoa:</label>
-                    <input type="text" id="spec-name" required>
+                <h3 id="form-specialty-title" style="font-size: 16px; font-weight: 700; color: #fff; margin-bottom: 16px;">Thêm Chuyên khoa Mới</h3>
+                <input type="hidden" id="edit-specialty-id">
+                <div style="margin-bottom: 12px;">
+                    <label for="spec-name" style="font-size: 12px; font-weight: 600; color: #D1D5DB; display: block; margin-bottom: 4px;">Tên chuyên khoa:</label>
+                    <input type="text" id="spec-name" required style="width: 100%; padding: 8px 12px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.2); background: rgba(0,0,0,0.2); color: #fff; box-sizing: border-box;">
                 </div>
-                <div>
-                    <label for="spec-desc">Mô tả chi tiết:</label>
-                    <textarea id="spec-desc" rows="4"></textarea>
+                <div style="margin-bottom: 16px;">
+                    <label for="spec-desc" style="font-size: 12px; font-weight: 600; color: #D1D5DB; display: block; margin-bottom: 4px;">Mô tả chi tiết:</label>
+                    <textarea id="spec-desc" rows="4" style="width: 100%; padding: 8px 12px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.2); background: rgba(0,0,0,0.2); color: #fff; box-sizing: border-box;"></textarea>
                 </div>
-                <div>
-                    <button type="submit" id="btn-save-specialty">Lưu thông tin</button>
-                    <button type="button" id="btn-cancel-specialty">Hủy bỏ</button>
+                <div style="display: flex; justify-content: flex-end; gap: 10px;">
+                    <button type="button" id="btn-cancel-specialty" style="padding: 8px 16px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); border-radius: 8px; cursor: pointer; color: #fff;">Hủy bỏ</button>
+                    <button type="submit" id="btn-save-specialty" style="padding: 8px 18px; background: linear-gradient(135deg, #8B5CF6, #6D28D9); color: #fff; border: none; border-radius: 8px; font-weight: 600; cursor: pointer;">Lưu thông tin</button>
                 </div>
             </form>
-        </section>
-    </main>
+        </div>
+    </div>
 
-    <div class="sidebar-overlay" id="sidebar-overlay"></div>
+    <!-- Modal: Xem/Nhập Lý do XÓA Chuyên khoa & Khôi phục -->
+    <div id="delete-modal" class="custom-modal-overlay">
+        <div class="custom-modal-content">
+            <h3 style="font-size: 16px; font-weight: 700; color: #fff; margin-bottom: 12px;"><i class="fas fa-trash" style="color: #EF4444; margin-right: 6px;"></i> Lý do xóa / Khôi phục chuyên khoa</h3>
+            <input type="hidden" id="delete-target-id">
+            <div style="margin-bottom: 16px;">
+                <label style="font-size: 12px; font-weight: 600; color: #D1D5DB; display: block; margin-bottom: 4px;">Nội dung lý do:</label>
+                <textarea id="delete-reason-text" rows="3" placeholder="Nhập lý do xóa..." style="width: 100%; padding: 8px 12px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.2); background: rgba(0,0,0,0.2); color: #fff; box-sizing: border-box;"></textarea>
+            </div>
+            <div style="display: flex; justify-content: flex-end; gap: 10px;">
+                <button type="button" id="btn-cancel-delete" style="padding: 8px 16px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); border-radius: 8px; cursor: pointer; color: #fff;">Hủy bỏ</button>
+                <button type="button" id="btn-submit-restore" style="padding: 8px 18px; background: #10B981; color: #fff; border: none; border-radius: 8px; font-weight: 600; cursor: pointer; display: none;">Khôi phục</button>
+                <button type="button" id="btn-submit-delete" style="padding: 8px 18px; background: #EF4444; color: #fff; border: none; border-radius: 8px; font-weight: 600; cursor: pointer;">Xác nhận Xóa</button>
+            </div>
+        </div>
+    </div>
+</main>
 
-    <script src="../../static/js/admin-data.js"></script>
-    <script src="../../static/js/admin.js"></script>
-    <script>
+<div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+<script src="../../static/js/admin.js"></script>
+<script>
     (function () {
         const html = document.documentElement;
         const saved = localStorage.getItem('mb-admin-theme') ||
-                      (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+                (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
         html.setAttribute('data-theme', saved);
+
         document.addEventListener('DOMContentLoaded', () => {
             const themeBtn = document.getElementById('theme-toggle');
             if (themeBtn) {
@@ -142,41 +205,266 @@
                     themeBtn.textContent = next === 'dark' ? '☀️' : '🌙';
                 });
             }
+
             const menuBtn = document.getElementById('menu-toggle');
             const closeBtn = document.getElementById('sidebar-close');
             const sidebar = document.querySelector('aside');
             const overlay = document.getElementById('sidebar-overlay');
-            function openSidebar() { sidebar.classList.add('open'); if (overlay) overlay.classList.add('active'); document.body.style.overflow = 'hidden'; }
-            function closeSidebar() { sidebar.classList.remove('open'); if (overlay) overlay.classList.remove('active'); document.body.style.overflow = ''; }
+
+            function openSidebar() {
+                sidebar.classList.add('open');
+                if (overlay) overlay.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            }
+
+            function closeSidebar() {
+                sidebar.classList.remove('open');
+                if (overlay) overlay.classList.remove('active');
+                document.body.style.overflow = '';
+            }
+
             if (menuBtn) menuBtn.addEventListener('click', openSidebar);
             if (closeBtn) closeBtn.addEventListener('click', closeSidebar);
             if (overlay) overlay.addEventListener('click', closeSidebar);
-            sidebar.querySelectorAll('nav a').forEach(link => {
-                link.addEventListener('click', () => { if (window.innerWidth <= 900) closeSidebar(); });
-            });
-            window.addEventListener('resize', () => { if (window.innerWidth > 900) closeSidebar(); });
-        });
-    })();
-    </script>
-    <script>
-    // Tự động highlight menu đang chọn dựa vào tên file URL
-    document.addEventListener('DOMContentLoaded', () => {
-        const currentPath = window.location.pathname.split('/').pop() || 'home_a.html';
-        const navLinks = document.querySelectorAll('aside nav a');
-        
-        navLinks.forEach(link => {
-            const href = link.getAttribute('href');
-            // Nếu href trùng với tên file hiện tại thì thêm class active
-            if (href === currentPath) {
-                link.classList.add('active');
-                // Xóa thẻ <strong> cũ nếu có (để không bị in đậm 2 lần)
-                const strong = link.querySelector('strong');
-                if (strong) {
-                    link.innerHTML = strong.innerHTML;
+
+            const token = localStorage.getItem('medbooking_token');
+
+            if (token) {
+                fetch('/auth/me', {
+                    headers: {'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json'}
+                })
+                .then(res => res.json())
+                .then(data => {
+                    const adminName = data.ho_ten || data.name || '';
+                    const adminNameBtn = document.getElementById('admin-name-btn');
+                    if (adminNameBtn && adminName) {
+                        adminNameBtn.textContent = `AD ${adminName}`;
+                    }
+                }).catch(err => console.error("Lỗi tải thông tin admin:", err));
+            }
+
+            let allSpecialties = [];
+
+            async function loadSpecialties() {
+                const tbody = document.getElementById('specialty-table-body');
+                tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;padding:40px;color:var(--text-gray);">Đang tải dữ liệu trực tiếp từ SQL Server...</td></tr>`;
+
+                try {
+                    const res = await fetch('/auth/admin/chuyen-khoa', {
+                        headers: {'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json'}
+                    });
+                    if (!res.ok) throw new Error("Không thể tải danh sách chuyên khoa từ CSDL.");
+
+                    allSpecialties = await res.json();
+                    renderSpecialties(allSpecialties);
+                } catch (err) {
+                    console.error("Lỗi tải danh mục chuyên khoa:", err);
+                    tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;padding:40px;color:#EF4444;">Không thể tải dữ liệu chuyên khoa từ SQL Server!</td></tr>`;
                 }
             }
+
+            function renderSpecialties(list) {
+                const tbody = document.getElementById('specialty-table-body');
+                const searchKey = document.getElementById('search-specialty').value.toLowerCase();
+                const statusFilter = document.getElementById('filter-status').value;
+
+                let filtered = list.filter(spec => {
+                    const name = (spec.name || '').toLowerCase();
+                    const matchSearch = name.includes(searchKey);
+
+                    const status = String(spec.status || 'active').toLowerCase().trim();
+                    let matchStatus = true;
+
+                    // ⭐ TỰ ĐỘNG ẨN CHUYÊN KHOA ĐÃ XÓA KHỎI BẢNG CHÍNH (Trừ khi chọn bộ lọc "Đã xóa")
+                    const isDeleted = (status === 'deleted' || status === 'đã xóa');
+                    if (statusFilter === 'all' && isDeleted) {
+                        return false;
+                    }
+
+                    if (statusFilter !== 'all') {
+                        if (statusFilter === 'active') matchStatus = (status === 'active');
+                        else if (statusFilter === 'deleted') matchStatus = isDeleted;
+                    }
+
+                    return matchSearch && matchStatus;
+                });
+
+                if (filtered.length === 0) {
+                    tbody.innerHTML = `<tr><td colspan="6" style="text-align:center;padding:40px;color:var(--text-gray);">Không tìm thấy chuyên khoa nào khớp với bộ lọc.</td></tr>`;
+                    return;
+                }
+
+                tbody.innerHTML = filtered.map(spec => {
+                    const status = String(spec.status || 'active').toLowerCase().trim();
+                    const deleteReason = spec.ly_do_xoa || '';
+
+                    let statusBadge = '<span style="padding:4px 10px; border-radius:20px; font-size:11.5px; font-weight:600; background:rgba(16,185,129,0.12); color:#10B981;">Đang hoạt động</span>';
+                    if (status === 'deleted' || status === 'đã xóa') {
+                        statusBadge = '<span style="padding:4px 10px; border-radius:20px; font-size:11.5px; font-weight:600; background:rgba(239,68,68,0.12); color:#EF4444;">Đã xóa</span>';
+                    }
+
+                    let actionButtons = '';
+                    if (status === 'deleted' || status === 'đã xóa') {
+                        actionButtons = `
+                            <button type="button" onclick="window.openDeleteModal(${spec.id}, '${encodeURIComponent(deleteReason)}')" style="padding: 5px 10px; background: rgba(239,68,68,0.12); color: #EF4444; border: none; border-radius: 6px; cursor: pointer; font-weight: 600;"><i class="fas fa-eye"></i> Lý do xóa</button>
+                        `;
+                    } else {
+                        actionButtons = `
+                            <button type="button" onclick="window.editSpecialty(${spec.id})" style="padding: 5px 10px; background: var(--primary-light); color: var(--primary-color); border: none; border-radius: 6px; cursor: pointer; font-weight: 600; margin-right: 4px;"><i class="fas fa-edit"></i> Sửa</button>
+                            <button type="button" onclick="window.openDeleteModal(${spec.id}, '')" style="padding: 5px 10px; background: rgba(239,68,68,0.12); color: #EF4444; border: none; border-radius: 6px; cursor: pointer; font-weight: 600;"><i class="fas fa-trash"></i> Xóa</button>
+                        `;
+                    }
+
+                    return `
+                        <tr style="border-bottom: 1px solid var(--border-glass); font-size: 13px;">
+                            <td style="padding: 12px; font-weight: 600; color: var(--primary-color);">CK${String(spec.id).padStart(3, '0')}</td>
+                            <td style="padding: 12px; font-weight: 600; color: var(--secondary-color);">${spec.name}</td>
+                            <td style="padding: 12px; color: var(--text-gray);">${spec.description || 'Chưa có mô tả'}</td>
+                            <td style="padding: 12px; color: var(--secondary-color); font-weight: 600;">${spec.doctor_count || 0} bác sĩ</td>
+                            <td style="padding: 12px;">${statusBadge}</td>
+                            <td style="padding: 12px; text-align: center;">${actionButtons}</td>
+                        </tr>
+                    `;
+                }).join('');
+            }
+
+            document.getElementById('search-specialty').addEventListener('input', () => renderSpecialties(allSpecialties));
+            document.getElementById('filter-status').addEventListener('change', () => renderSpecialties(allSpecialties));
+
+            // --- Modal Thêm / Sửa Chuyên khoa ---
+            const modal = document.getElementById('specialty-form-modal');
+            document.getElementById('btn-add-specialty').addEventListener('click', () => {
+                document.getElementById('form-specialty-title').textContent = "Thêm Chuyên khoa Mới";
+                document.getElementById('edit-specialty-id').value = "";
+                document.getElementById('spec-name').value = "";
+                document.getElementById('spec-desc').value = "";
+                modal.style.display = 'flex';
+            });
+
+            document.getElementById('btn-cancel-specialty').addEventListener('click', () => {
+                modal.style.display = 'none';
+            });
+
+            window.editSpecialty = function (id) {
+                const spec = allSpecialties.find(x => Number(x.id) === Number(id));
+                if (!spec) return;
+
+                document.getElementById('form-specialty-title').textContent = "Chỉnh sửa Thông tin Chuyên khoa";
+                document.getElementById('edit-specialty-id').value = spec.id;
+                document.getElementById('spec-name').value = spec.name || '';
+                document.getElementById('spec-desc').value = spec.description || '';
+                modal.style.display = 'flex';
+            };
+
+            document.getElementById('form-specialty-info').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                const editId = document.getElementById('edit-specialty-id').value;
+                const payload = {
+                    ten_chuyen_khoa: document.getElementById('spec-name').value,
+                    mo_ta: document.getElementById('spec-desc').value
+                };
+
+                try {
+                    const url = editId ? `/auth/admin/chuyen-khoa/${editId}` : '/auth/admin/chuyen-khoa';
+                    const method = editId ? 'PUT' : 'POST';
+
+                    const res = await fetch(url, {
+                        method: method,
+                        headers: {'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json'},
+                        body: JSON.stringify(payload)
+                    });
+
+                    const resultData = await res.json();
+                    if (!res.ok) throw new Error(resultData.detail || "Không thể lưu thông tin chuyên khoa.");
+
+                    alert("Lưu thông tin chuyên khoa thành công!");
+                    modal.style.display = 'none';
+                    loadSpecialties();
+                } catch (err) {
+                    alert("Lỗi: " + err.message);
+                }
+            });
+
+            // --- Modal Xóa & Khôi phục Chuyên khoa ---
+            const deleteModal = document.getElementById('delete-modal');
+            window.openDeleteModal = function (id, encodedReason) {
+                document.getElementById('delete-target-id').value = id;
+                let decoded = '';
+                try {
+                    decoded = decodeURIComponent(encodedReason || '');
+                } catch (e) {
+                    decoded = encodedReason || '';
+                }
+                document.getElementById('delete-reason-text').value = decoded;
+
+                const spec = allSpecialties.find(x => Number(x.id) === Number(id));
+                const isDeleted = spec && (String(spec.status).toLowerCase().trim() === 'deleted' || String(spec.status).toLowerCase().trim() === 'đã xóa');
+
+                const btnDelete = document.getElementById('btn-submit-delete');
+                const btnRestore = document.getElementById('btn-submit-restore');
+                const reasonTextarea = document.getElementById('delete-reason-text');
+
+                if (isDeleted) {
+                    btnDelete.style.display = 'none';
+                    btnRestore.style.display = 'inline-block';
+                    reasonTextarea.readOnly = true;
+                } else {
+                    btnDelete.style.display = 'inline-block';
+                    btnRestore.style.display = 'none';
+                    reasonTextarea.readOnly = false;
+                    reasonTextarea.value = '';
+                }
+
+                deleteModal.style.display = 'flex';
+            };
+
+            document.getElementById('btn-cancel-delete').addEventListener('click', () => { deleteModal.style.display = 'none'; });
+
+            document.getElementById('btn-submit-delete').addEventListener('click', async () => {
+                const id = document.getElementById('delete-target-id').value;
+                const reason = document.getElementById('delete-reason-text').value;
+
+                if (!id) { alert("Không tìm thấy ID chuyên khoa!"); return; }
+
+                try {
+                    const res = await fetch(`/auth/admin/chuyen-khoa/${id}/xoa-tam`, {
+                        method: 'POST',
+                        headers: {'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json'},
+                        body: JSON.stringify({ ly_do: reason, ly_do_khoa: reason })
+                    });
+                    const resultData = await res.json();
+                    if (!res.ok) throw new Error(resultData.detail || "Không thể chuyển vào thùng rác.");
+
+                    alert("Đã chuyển chuyên khoa vào thùng rác thành công!");
+                    deleteModal.style.display = 'none';
+                    loadSpecialties();
+                } catch (err) { alert("Lỗi: " + err.message); }
+            });
+
+            document.getElementById('btn-submit-restore').addEventListener('click', async () => {
+                const id = document.getElementById('delete-target-id').value;
+                const reason = document.getElementById('delete-reason-text').value;
+
+                if (!id) { alert("Không tìm thấy ID chuyên khoa!"); return; }
+
+                try {
+                    const res = await fetch(`/auth/admin/chuyen-khoa/${id}/khoi-phuc`, {
+                        method: 'POST',
+                        headers: {'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json'},
+                        body: JSON.stringify({ ly_do: reason, ly_do_khoa: reason })
+                    });
+                    const resultData = await res.json();
+                    if (!res.ok) throw new Error(resultData.detail || "Không thể khôi phục chuyên khoa.");
+
+                    alert("Đã khôi phục chuyên khoa thành công!");
+                    deleteModal.style.display = 'none';
+                    loadSpecialties();
+                } catch (err) { alert("Lỗi: " + err.message); }
+            });
+
+            loadSpecialties();
         });
-    });
+    })();
 </script>
 </body>
 </html>
