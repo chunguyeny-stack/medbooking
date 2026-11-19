@@ -7,11 +7,11 @@ from passlib.context import CryptContext
 from sqlalchemy import func
 import json
 
-from database.database import get_db
-from models.models import NguoiDung, BenhNhan, DichVu
-from models.lich_hen import LichHen, LichLamViec
-from models.bac_si import BacSi
-from routers import auth_router as root_auth
+from app.database.database import get_db
+from app.models.models import NguoiDung, BenhNhan, DichVu
+from app.models.lich_hen import LichHen, LichLamViec
+from app.models.bac_si import BacSi
+from app.routers import auth_router as root_auth
 
 router = APIRouter(prefix="/appointments", tags=["Quản lý Lịch hẹn"])
 tai_khoan_router = APIRouter(tags=["Tài khoản"])

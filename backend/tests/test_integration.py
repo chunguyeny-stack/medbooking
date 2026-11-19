@@ -1,4 +1,5 @@
 import os
+os.environ["DATABASE_URL"] = "sqlite:///./test_integration.db"
 # Tự động xóa database cũ trước khi chạy test
 for file in ["test_auth.db", "test_integration.db"]:
     if os.path.exists(file):
@@ -137,7 +138,7 @@ def test_full_booking_flow(setup_data):
     
     # Bước 1: Đăng ký
     register_response = client.post(
-        "/api/auth/register",
+        "/auth/register",
         json={
             "ho_ten": "Bệnh Nhân Test",
             "email": "benhnhan@test.com",
@@ -151,9 +152,9 @@ def test_full_booking_flow(setup_data):
     
     # Bước 2: Đăng nhập
     login_response = client.post(
-        "/api/auth/login",
-        data={
-            "username": "benhnhan@test.com",
+        "/auth/login",
+        json={
+            "email": "benhnhan@test.com",
             "password": "Patient123"
         }
     )
@@ -162,6 +163,6 @@ def test_full_booking_flow(setup_data):
     headers = {"Authorization": f"Bearer {token}"}
     
     # Bước 3: Lấy thông tin user
-    me_response = client.get("/api/auth/me", headers=headers)
+    me_response = client.get("/auth/me", headers=headers)
     assert me_response.status_code == 200
     assert me_response.json()["email"] == "benhnhan@test.com"

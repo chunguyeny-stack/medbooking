@@ -6,12 +6,12 @@ from pydantic import BaseModel
 from sqlalchemy.orm import Session
 from sqlalchemy import func, text
 
-from database.database import get_db
-from models.models import NguoiDung, BenhNhan, DichVu, ChuyenKhoa
-from models.lich_hen import LichHen, LogTrangThai, LichLamViec
-from models.bac_si import BacSi
+from app.database.database import get_db
+from app.models.models import NguoiDung, BenhNhan, DichVu, ChuyenKhoa
+from app.models.lich_hen import LichHen, LogTrangThai, LichLamViec
+from app.models.bac_si import BacSi
 
-import auth as root_auth
+from app import auth as root_auth
 
 router = APIRouter(prefix="/appointments", tags=["Quản lý Lịch hẹn"])
 tai_khoan_router = APIRouter(tags=["Tài khoản"])
