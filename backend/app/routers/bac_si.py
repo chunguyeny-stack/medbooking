@@ -6,21 +6,21 @@ from sqlalchemy.orm.attributes import flag_modified
 from pydantic import BaseModel, Field
 from datetime import datetime, timezone, date
 
-from database.database import get_db
-from models.models import NguoiDung, BenhNhan
-from models.bac_si import BacSi
-from models.lich_hen import LichHen, LichLamViec, LogTrangThai
-from schemas.bac_si import (
+from app.database.database import get_db
+from app.models.models import NguoiDung, BenhNhan
+from app.models.bac_si import BacSi
+from app.models.lich_hen import LichHen, LichLamViec, LogTrangThai
+from app.schemas.bac_si import (
     BacSiCreate,
     BacSiUpdate,
     BacSiResponse,
     BacSiPaginationResponse
 )
 
-from services.bac_si_service import BacSiService
+from app.services.bac_si_service import BacSiService
 
 # Nạp module auth từ thư mục gốc
-import auth as root_auth
+from app import auth as root_auth
 
 router = APIRouter(prefix="/doctors", tags=["Quản lý Bác sĩ"])
 

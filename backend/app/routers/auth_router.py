@@ -7,13 +7,13 @@ from jose import jwt, JWTError
 from datetime import datetime
 from sqlalchemy import text, func
 
-from database.database import get_db
-from models.models import NguoiDung, BenhNhan, ChuyenKhoa, DichVu, TrieuChung, TrieuChungBacSi
-from models.bac_si import BacSi
-from models.lich_hen import LichHen
-from models.le_tan import LeTan
+from app.database.database import get_db
+from app.models.models import NguoiDung, BenhNhan, ChuyenKhoa, DichVu, TrieuChung, TrieuChungBacSi
+from app.models.bac_si import BacSi
+from app.models.lich_hen import LichHen
+from app.models.le_tan import LeTan
 
-import auth as root_auth
+from app import auth as root_auth
 
 router = APIRouter(prefix="/auth", tags=["Xác thực & Tài khoản"])
 tai_khoan_router = APIRouter(tags=["Quản lý Hồ sơ Cá nhân độc lập"])

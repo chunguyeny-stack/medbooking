@@ -5,16 +5,16 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 # Import kết nối database và session
-from database.database import engine, Base, get_db
+from app.database.database import engine, Base, get_db
 # Khởi tạo bảng dữ liệu nếu chưa có
-Base.metadata.create_all(bind=engine)
+#Base.metadata.create_all(bind=engine)
 # 2. Import TẤT CẢ các router từ thư mục routers
-from routers.auth_router import router as auth_router
-from routers.lich_hen import router as lich_hen_router, tai_khoan_router
-from routers.bac_si import router as bac_si_router
-from routers.le_tan import router as le_tan_router
+from app.routers.auth_router import router as auth_router
+from app.routers.lich_hen import router as lich_hen_router, tai_khoan_router
+from app.routers.bac_si import router as bac_si_router
+from app.routers.le_tan import router as le_tan_router
 # Đảm bảo nạp models để tự động sinh bảng dữ liệu
-Base.metadata.create_all(bind=engine)
+#Base.metadata.create_all(bind=engine)
 
 # Xác định đường dẫn thư mục gốc
 BASE_DIR = Path(__file__).resolve().parent

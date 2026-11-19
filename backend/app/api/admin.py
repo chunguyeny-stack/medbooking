@@ -5,11 +5,11 @@ from fastapi import APIRouter, Depends, Query
 from pydantic import BaseModel, Field
 from sqlalchemy.orm import Session
 
-from database.database import get_db
-from models.models import NguoiDung
-from services.admin_service import AdminService
+from app.database.database import get_db
+from app.models.models import NguoiDung
+from app.services.admin_service import AdminService
 
-import auth as root_auth
+from app import auth as root_auth
 
 router = APIRouter(prefix="/admin", tags=["Phân hệ Admin"])
 
